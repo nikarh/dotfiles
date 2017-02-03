@@ -1,0 +1,21 @@
+[alias]
+	lg = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+    fixup = commit -a --amend --no-edit
+[core]
+	editor = vim
+    autocrlf = input
+	trustctime = false
+	ignorecase = false
+	preloadindex = true
+	fscache = true
+[i18n]
+	filesEncoding = utf-8
+[user]
+	name = Nikolay Arhipov
+	email = nikolajs.arhipovs@gmail.com
+[pull]
+	rebase = true
+[color]
+	ui = true
+[gc]
+	auto = 256

@@ -1,0 +1,4 @@
+export QT_QPA_PLATFORMTHEME=gtk2
+export XDG_CURRENT_DESKTOP=gnome
+
+setxkbmap -option caps:escape
