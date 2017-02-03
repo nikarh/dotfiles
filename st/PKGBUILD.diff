@@ -1,0 +1,9 @@
+13a14
+>         http://st.suckless.org/patches/st-hidecursor-20160727-308bfbf.diff
+16c17,18
+<          '9cb789e3912df36f296a219e1b9da850')
+---
+>          '8ff8a77b34dfc09a4dd0d2cf876d68e7'
+>          'd90bf25674537b03e3bc2b1a6f557403')
+22a25
+>   patch < ../st-hidecursor-20160727-308bfbf.diff
