@@ -14,6 +14,13 @@ function install_vim_plug() {
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 }
 
+function install_nvim_dotfiles() {
+    mkdir ~/.config
+    mkdir ~/.vim
+    ln -s ~/.vim ~/.config/nvim
+    ln -s ~/.vimrc ~/.config/nvim/init.vim
+}
+
 function install_bash_aliases() {
     cat >> ~/.bashrc <<EOF
 alias l='ls -lAh'
@@ -48,3 +55,4 @@ install_dotfiles \
     .inputrc \
     .Xdefaults \
     .gitconfig
+install_nvim_dotfiles

@@ -9,13 +9,21 @@ if has('win32') || has('win64')
 endif
 
 call plug#begin()
-Plug 'tpope/vim-sensible'
+if !has('nvim')
+    Plug 'tpope/vim-sensible'
+endif
+
+" UI
 Plug 'altercation/vim-colors-solarized'
-Plug 'elzr/vim-json'
-Plug 'pangloss/vim-javascript'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+
+" Integrations
 Plug 'airblade/vim-gitgutter'
+
+" Language support
+Plug 'elzr/vim-json'
+Plug 'pangloss/vim-javascript'
 Plug 'hashivim/vim-terraform'
 call plug#end()
 
