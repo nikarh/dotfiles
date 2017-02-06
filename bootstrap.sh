@@ -54,5 +54,6 @@ install_dotfiles \
     .xprofile \
     .inputrc \
     .Xdefaults \
+    .Xkbmap \
     .gitconfig
 install_nvim_dotfiles
