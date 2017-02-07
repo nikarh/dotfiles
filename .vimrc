@@ -115,6 +115,8 @@ endif
 
 nnoremap <leader>n :NERDTreeToggle<CR>
 
+let g:vim_markdown_folding_disabled = 1
+
 " Close VIM if NERDTree is last open window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
