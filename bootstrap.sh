@@ -4,7 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 function install_dotfiles() {
     for file in "$@"; do
-        ln -s $DIR/$file ~/
+        ln -s $DIR/$file ~/$file
     done
 }
 
@@ -21,6 +21,13 @@ function install_nvim_dotfiles() {
     ln -s ~/.vimrc ~/.config/nvim/init.vim
 }
 
+function install_bash_logout() {
+    cat ~/.bash_logout <<EOF
+clear
+reset
+EOF
+}
+
 function install_bash_aliases() {
     cat >> ~/.bashrc <<EOF
 alias l='ls -lAh'
@@ -29,6 +36,14 @@ alias df='df -h'
 # Trim long pwd names
 PROMPT_DIRTRIM=2
 
+EOF
+}
+
+function install_bash_completion() {
+    cat >> ~/.bashrc <<EOF
+# Enable tab completion
+[[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
+        . /usr/share/bash-completion/bash_completion
 EOF
 }
 
@@ -45,15 +60,18 @@ EOF
 }
 
 # Add symlinks to dotfiles
-install_vim_plug
-install_bash_aliases
-install_git_prompt
+#install_vim_plug
+#install_bash_aliases
+#install_git_prompt
 install_dotfiles \
     .vimrc \
     .tmux.conf \
     .xprofile \
     .inputrc \
-    .Xdefaults \
+    .Xresources \
     .Xkbmap \
-    .gitconfig
-install_nvim_dotfiles
+    .gitconfig \
+    .config/awesome
+#install_nvim_dotfiles
+#install_bash_completion
+#install_bash_logout
