@@ -1,15 +1,12 @@
--- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
-require("awful.autofocus")
--- Widget and layout library
 local wibox = require("wibox")
--- Theme handling library
 local beautiful = require("beautiful")
--- Notification library
 local naughty = require("naughty")
 local lain = require("lain")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
+
+require("awful.autofocus")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -56,13 +53,11 @@ end
 beautiful.init("/home/nikarh/.config/awesome/material/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-runcmd = "rofi -show run -terminal st -font"
-runapp = "rofi -combi-modi window,drun -show combi -modi combi"
-terminal = "st -t Terminal"
-editor = os.getenv("EDITOR") or "nvim"
-editor_cmd = terminal .. " -e " .. editor
+local runcmd = "rofi -show run -terminal st -font"
+local runapp = "rofi -combi-modi window,drun -show combi -modi combi"
+local terminal = "st -t Terminal"
 
-modkey = "Mod4"
+local modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
@@ -89,13 +84,10 @@ end
 
 -- }}}
 
--- Keyboard map indicator and switcher
-mykeyboardlayout = awful.widget.keyboardlayout()
 
 -- {{{ Wibar
--- Create a textclock widget
-mytextclock = wibox.widget.textclock("%a %d %b %R")
-
+local mykeyboardlayout = awful.widget.keyboardlayout()
+local mytextclock = wibox.widget.textclock("%a %d %b %R")
 lain.widget.calendar({
     attach_to = { mytextclock },
     cal = "/usr/bin/cal -m --color=always",
@@ -107,7 +99,7 @@ lain.widget.calendar({
 })
 
 
-separator = wibox.widget {
+local separator = wibox.widget {
     wibox.widget {
         wibox.widget {
             markup = '&#xE0B3;',
@@ -207,7 +199,6 @@ awful.screen.connect_for_each_screen(function(s)
         {
             -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            -- mylauncher,
             s.mytaglist,
         },
         s.mytasklist, -- Middle widget
@@ -233,8 +224,9 @@ end)
 -- }}}
 
 -- {{{ Key bindings
-globalkeys = awful.util.table.join(awful.key({ modkey, }, "s", hotkeys_popup.show_help,
-    { description = "show help", group = "awesome" }),
+local globalkeys = awful.util.table.join(
+    awful.key({ modkey, }, "s", hotkeys_popup.show_help,
+        { description = "show help", group = "awesome" }),
     awful.key({ modkey, }, "Left", awful.tag.viewprev,
         { description = "view previous", group = "tag" }),
     awful.key({ modkey, }, "Right", awful.tag.viewnext,
@@ -310,8 +302,9 @@ globalkeys = awful.util.table.join(awful.key({ modkey, }, "s", hotkeys_popup.sho
     awful.key({ modkey }, "F2", function() awful.spawn(runapp) end,
         { description = "application fuzzy search", group = "launcher" }))
 
-clientkeys = awful.util.table.join(awful.key({ modkey, }, "f", function(c) c.fullscreen = not c.fullscreen; c:raise() end,
-    { description = "toggle fullscreen", group = "client" }),
+local clientkeys = awful.util.table.join(
+    awful.key({ modkey, }, "f", function(c) c.fullscreen = not c.fullscreen; c:raise() end,
+        { description = "toggle fullscreen", group = "client" }),
 
     awful.key({ modkey, "Shift" }, "c", function(c) c:kill() end,
         { description = "close", group = "client" }),
@@ -383,7 +376,8 @@ for i = 1, 9 do
             { description = "toggle focused client on tag #" .. i, group = "tag" }))
 end
 
-clientbuttons = awful.util.table.join(awful.button({}, 1, function(c) client.focus = c; c:raise() end),
+local clientbuttons = awful.util.table.join(
+    awful.button({}, 1, function(c) client.focus = c; c:raise() end),
     awful.button({ modkey }, 1, awful.mouse.client.move),
     awful.button({ modkey }, 3, awful.mouse.client.resize))
 
@@ -393,9 +387,7 @@ root.keys(globalkeys)
 
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
-awful.rules.rules = {
-    -- All clients will match this rule.
-    {
+awful.rules.rules = { {
         rule = {},
         properties = {
             border_width = beautiful.border_width,
@@ -408,27 +400,11 @@ awful.rules.rules = {
             placement = awful.placement.no_offscreen,
             titlebars_enabled = false
         }
-    },
-
-    -- Floating clients.
-    {
+    }, {
         rule_any = {
-            instance = {
-                "DTA", -- Firefox addon DownThemAll.
-                "copyq", -- Includes session name in class.
-            },
             class = {
-                "Arandr",
-                "Gpick",
-                "Kruler",
-                "MessageWin", -- kalarm.
-                "Sxiv",
-                "Wpa_gui",
-                "pinentry",
-                "veromix",
                 "insync.py",
                 "jetbrains-toolbox",
-                "xtightvncviewer"
             },
             name = {
                 "Event Tester", -- xev.
@@ -439,25 +415,19 @@ awful.rules.rules = {
             }
         },
         properties = { floating = true }
-    },
-
-    {
+    }, {
         rule_any = { class = {"chromium", "Firefox"} },
         properties = { screen = 1, tag = tags.web }
-    },
-    {
+    }, {
         rule_any = { class = {"mail", "Thunderbird"} },
         properties = { screen = 1, tag = tags.mail }
-    },
-    {
+    }, {
         rule = { class = "st-256color" },
         properties = { screen = 1, tag = tags.term }
-    },
-    {
+    }, {
         rule = { class = "jetbrains-idea" },
         properties = { screen = 1, tag = tags.dev }
-    },
-    {
+    }, {
         rule = { class = "keepassxc" },
         properties = { screen = 1, tag = tags.sec }
     },
@@ -467,10 +437,6 @@ awful.rules.rules = {
 -- {{{ Signals
 -- Signal function to execute when a new client appears.
 client.connect_signal("manage", function(c)
-    -- Set the windows at the slave,
-    -- i.e. put it at the end of others instead of setting it master.
-    -- if not awesome.startup then awful.client.setslave(c) end
-
     if awesome.startup and
             not c.size_hints.user_position
             and not c.size_hints.program_position then
