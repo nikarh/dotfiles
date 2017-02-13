@@ -21,14 +21,26 @@ end
 
 
 local tags = {
-    term = "  \u{f120}  ",
-    web  = "  \u{f0ac}  ",
-    dev  = "  \u{f121}  ",
-    mail = "  \u{f003}  ",
-    sec  = "  \u{f13e}  "
+    term = " \u{f120} ",
+    web  = " \u{f0ac} ",
+    dev  = " \u{f121} ",
+    mail = " \u{f0e0} ",
+    pass = " \u{f23e} ",
+    chat = " \u{f198} ",
+    file = " \u{f07c} ",
 }
 
-local taglist = { tags.term, tags.web, tags.dev, tags.mail, tags.sec, "6", "7", "8", "9"}
+local taglist = { 
+    tags.term, 
+    tags.web, 
+    tags.dev, 
+    tags.mail, 
+    tags.pass, 
+    tags.chat, 
+    tags.file, 
+    " 8 ", 
+    " 9 "
+}
 
 -- Handle runtime errors after startup
 do
@@ -207,7 +219,12 @@ awful.screen.connect_for_each_screen(function(s)
             layout = wibox.layout.fixed.horizontal,
             mykeyboardlayout,
             separator,
-            wibox.widget.systray(),
+            {
+                wibox.widget.systray(),
+                top = 1,
+                bottom = 1,
+                widget = wibox.container.margin
+            },
             separator,
             mytextclock,
             separator,
@@ -416,21 +433,24 @@ awful.rules.rules = { {
         },
         properties = { floating = true }
     }, {
-        rule_any = { class = {"chromium", "Firefox"} },
-        properties = { screen = 1, tag = tags.web }
+        rule_any = { class = {"chromium", "Chromium", "Firefox"} },
+        properties = { tag = tags.web }
     }, {
         rule_any = { class = {"mail", "Thunderbird"} },
-        properties = { screen = 1, tag = tags.mail }
+        properties = { tag = tags.mail }
     }, {
         rule = { class = "st-256color" },
-        properties = { screen = 1, tag = tags.term }
+        properties = { tag = tags.term }
     }, {
         rule = { class = "jetbrains-idea" },
-        properties = { screen = 1, tag = tags.dev }
+        properties = { tag = tags.dev }
     }, {
         rule = { class = "keepassxc" },
-        properties = { screen = 1, tag = tags.sec }
-    },
+        properties = { tag = tags.pass }
+    }, {
+        rule_any = { class = { "Slack", "slack" } },
+        properties = { tag = tag.chat }
+    }
 }
 -- }}}
 

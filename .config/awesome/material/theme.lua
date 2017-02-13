@@ -6,11 +6,11 @@
 -- {{{ Main
 theme = {}
 theme.path = os.getenv("HOME") .. "/.config/awesome/material/"
-theme.wallpaper = "/usr/share/wallpapers/deepin/Architect.jpg"
+theme.wallpaper = theme.path .. "/wallpaper.png"
 -- }}}
 
 -- {{{ Styles
-theme.font      = "Noto Sans UI 9"
+theme.font      = "Noto Mono 9"
 
 -- {{{ Colors
 theme.fg_normal  = "#90A4AE"
