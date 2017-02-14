@@ -2,9 +2,9 @@ Xcursor.size:               32
 
 Xft.dpi:                    140
 Xft.antialias:              true
-Xft.rgba:                   rgb
+Xft.rgba:                   rgba
 Xft.hinting:                true
-Xft.hintstyle:              hintslight
+Xft.hintstyle:              hintsfull
 
 ! ------------------------------------------------------------------------------
 ! ROFI Color theme
