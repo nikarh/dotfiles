@@ -34,14 +34,9 @@ theme.titlebar_bg_normal = theme.bg_normal
 theme.titlebar_bg_focus  = theme.bg_focus
 -- }}}
 
--- {{{ WidgetS
-theme.fg_widget        = "#AECF96"
-theme.bg_widget        = "#494B4F"
--- }}}
-
--- {{{ Mouse finder
-theme.mouse_finder_color = "#CC9393"
--- mouse_finder_[timeout|animate_timeout|radius|factor]
+-- {{{ Widgets
+theme.fg_widget        = theme.fg_normal
+theme.bg_widget        = theme.bg_normal
 -- }}}
 
 -- {{{ Taglist

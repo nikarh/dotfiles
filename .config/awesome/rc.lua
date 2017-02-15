@@ -8,6 +8,8 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 
 require("awful.autofocus")
 
+local tags = require("tags")
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -18,29 +20,6 @@ if awesome.startup_errors then
         text = awesome.startup_errors
     })
 end
-
-
-local tags = {
-    term = " \u{f120} ",
-    web  = " \u{f0ac} ",
-    dev  = " \u{f121} ",
-    mail = " \u{f0e0} ",
-    pass = " \u{f23e} ",
-    chat = " \u{f198} ",
-    file = " \u{f07c} ",
-}
-
-local taglist = { 
-    tags.term, 
-    tags.web, 
-    tags.dev, 
-    tags.mail, 
-    tags.pass, 
-    tags.chat, 
-    tags.file, 
-    " 8 ", 
-    " 9 "
-}
 
 -- Handle runtime errors after startup
 do
@@ -64,7 +43,6 @@ end
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init("/home/nikarh/.config/awesome/material/theme.lua")
 
--- This is used later as the default terminal and editor to run.
 local runcmd = "rofi -show run -terminal st -font"
 local runapp = "rofi -combi-modi window,drun -show combi -modi combi"
 local terminal = "st -t Terminal"
@@ -80,22 +58,6 @@ awful.layout.layouts = {
 }
 -- }}}
 
--- {{{ Helper functions
-local function client_menu_toggle_fn()
-    local instance
-
-    return function()
-        if instance and instance.wibox.visible then
-            instance:hide()
-            instance = nil
-        else
-            instance = awful.menu.clients({ theme = { width = 250 } })
-        end
-    end
-end
-
--- }}}
-
 
 -- {{{ Wibar
 local mykeyboardlayout = awful.widget.keyboardlayout()
@@ -105,8 +67,6 @@ lain.widget.calendar({
     cal = "/usr/bin/cal -m --color=always",
     notification_preset = {
         font = "Hack 11",
-        fg = theme.fg_focus,
-        bg = theme.bg_focus,
     }
 })
 
@@ -143,29 +103,25 @@ local taglist_buttons = awful.util.table.join(
     awful.button({}, 4, function(t) awful.tag.viewnext(t.screen) end),
     awful.button({}, 5, function(t) awful.tag.viewprev(t.screen) end))
 
-local tasklist_buttons = awful.util.table.join(awful.button({}, 1, function(c)
-    if c == client.focus then
-        c.minimized = true
-    else
-        -- Without this, the following
-        -- :isvisible() makes no sense
-        c.minimized = false
-        if not c:isvisible() and c.first_tag then
-            c.first_tag:view_only()
+local tasklist_buttons = awful.util.table.join(
+    awful.button({}, 1, function(c)
+        if c == client.focus then
+            c.minimized = true
+        else
+            -- Without this, the following
+            -- :isvisible() makes no sense
+            c.minimized = false
+            if not c:isvisible() and c.first_tag then
+                c.first_tag:view_only()
+            end
+            -- This will also un-minimize
+            -- the client, if needed
+            client.focus = c
+            c:raise()
         end
-        -- This will also un-minimize
-        -- the client, if needed
-        client.focus = c
-        c:raise()
-    end
-end),
-    awful.button({}, 3, client_menu_toggle_fn()),
-    awful.button({}, 4, function()
-        awful.client.focus.byidx(1)
     end),
-    awful.button({}, 5, function()
-        awful.client.focus.byidx(-1)
-    end))
+    awful.button({}, 4, function() awful.client.focus.byidx(1) end),
+    awful.button({}, 5, function() awful.client.focus.byidx(-1) end))
 
 local function set_wallpaper(s)
     -- Wallpaper
@@ -186,36 +142,25 @@ awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
     set_wallpaper(s)
 
-    awful.tag(taglist, s, awful.layout.layouts[1])
+    awful.tag(tags.list, s, awful.layout.layouts[1])
 
-    -- Create an imagebox widget which will contains an icon indicating which layout we're using.
-    -- We need one layoutbox per screen.
     s.mylayoutbox = awful.widget.layoutbox(s)
-    s.mylayoutbox:buttons(awful.util.table.join(
-        awful.button({}, 1, function() awful.layout.inc(1) end),
-        awful.button({}, 3, function() awful.layout.inc(-1) end),
-        awful.button({}, 4, function() awful.layout.inc(1) end),
-        awful.button({}, 5, function() awful.layout.inc(-1) end)))
-    -- Create a taglist widget
     s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
-
-    -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
-
-    -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s })
 
-    -- Add widgets to the wibox
     s.mywibox:setup {
         layout = wibox.layout.align.horizontal,
+
+        -- Left widgets
         {
-            -- Left widgets
             layout = wibox.layout.fixed.horizontal,
             s.mytaglist,
         },
-        s.mytasklist, -- Middle widget
+        -- Middle widget
+        s.mytasklist,
+        -- Right widgets
         {
-            -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             mykeyboardlayout,
             separator,
@@ -404,7 +349,8 @@ root.keys(globalkeys)
 
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
-awful.rules.rules = { {
+awful.rules.rules = {
+    {
         rule = {},
         properties = {
             border_width = beautiful.border_width,
@@ -417,7 +363,8 @@ awful.rules.rules = { {
             placement = awful.placement.no_offscreen,
             titlebars_enabled = false
         }
-    }, {
+    },
+    {
         rule_any = {
             class = {
                 "insync.py",
@@ -432,25 +379,35 @@ awful.rules.rules = { {
             }
         },
         properties = { floating = true }
-    }, {
+    },
+    {
         rule_any = { class = {"chromium", "Chromium", "Firefox"} },
-        properties = { tag = tags.web }
-    }, {
+        properties = { tag = tags.names.web }
+    },
+    {
         rule_any = { class = {"mail", "Thunderbird"} },
-        properties = { tag = tags.mail }
-    }, {
+        properties = { tag = tags.names.mail }
+    },
+    {
         rule = { class = "st-256color" },
-        properties = { tag = tags.term }
-    }, {
+        properties = { tag = tags.names.term }
+    },
+    {
         rule = { class = "jetbrains-idea" },
-        properties = { tag = tags.dev }
-    }, {
+        properties = { tag = tags.names.dev }
+    },
+    {
         rule = { class = "keepassxc" },
-        properties = { tag = tags.pass }
-    }, {
+        properties = { tag = tags.names.pass }
+    },
+    {
         rule_any = { class = { "Slack", "slack" } },
-        properties = { tag = tag.chat }
-    }
+        properties = { tag = tags.names.chat }
+    },
+    {
+        rule_any = { class = { "Thunar", "pcmanfm" } },
+        properties = { tag = tags.names.file }
+    },
 }
 -- }}}
 

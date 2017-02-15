@@ -4,5 +4,4 @@ export XDG_CURRENT_DESKTOP=gnome
 [[ -f ~/.Xresources ]] && xrdb -all -load ~/.Xresources
 
 xbindkeys --poll-rc
-#dex -a -e Awesome
 lxsession&
