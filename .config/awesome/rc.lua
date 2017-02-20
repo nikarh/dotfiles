@@ -86,6 +86,54 @@ local separator = wibox.widget {
     widget = wibox.container.margin
 }
 
+local prb = wibox.widget {
+    widget        = wibox.widget.progressbar,
+    color            = theme.fg_focus,
+    background_color = "#616161",
+    shape = function(cr, width, height)
+        local pin_offset = height / 4;
+        local offset = 0
+        local h = 2;
+        local r = 2;
+
+        cr:move_to(offset + r, r)
+        cr:arc(offset + r, r, r, 1*math.pi, 1.5*math.pi)
+        cr:line_to(offset + width - h - r, 0)
+        cr:arc(offset + width - h - r, r, r, 1.5*math.pi, 2*math.pi)
+        cr:line_to(offset + width - h, pin_offset)
+        cr:line_to(offset + width, pin_offset)
+        cr:line_to(offset + width, pin_offset * 2)
+        cr:line_to(offset + width, pin_offset * 3)
+        cr:line_to(offset + width - h, pin_offset * 3)
+        cr:line_to(offset + width - h, height)
+        cr:arc(offset + width - h - r, height -r, r, 0*math.pi, 0.5*math.pi)
+        cr:line_to(offset + r, height)
+        cr:arc(offset + r, height - r, r, 0.5*math.pi, 1*math.pi)
+        cr:line_to(offset, r)
+        cr:close_path()
+    end,
+    max_value     = 1,
+    value         = 0.5,
+    margins = {
+        left = 5,
+        right = 5,
+        top = 8,
+        bottom = 8,
+    },
+}
+local pb = wibox.widget {
+    prb,
+    forced_height = 10,
+    forced_width  = 35,
+    layout = wibox.container.rotate,
+}
+
+prb.timer = timer({ timeout = 10 })
+prb.timer:connect_signal("timeout", function()
+    prb:set_value(4)
+end)
+prb.timer:start()
+
 -- Create a wibox for each screen and add it
 local taglist_buttons = awful.util.table.join(
     awful.button({}, 1, function(t) t:view_only() end),
@@ -108,14 +156,10 @@ local tasklist_buttons = awful.util.table.join(
         if c == client.focus then
             c.minimized = true
         else
-            -- Without this, the following
-            -- :isvisible() makes no sense
             c.minimized = false
             if not c:isvisible() and c.first_tag then
                 c.first_tag:view_only()
             end
-            -- This will also un-minimize
-            -- the client, if needed
             client.focus = c
             c:raise()
         end
@@ -142,13 +186,13 @@ awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
     set_wallpaper(s)
 
-    awful.tag(tags.list, s, awful.layout.layouts[1])
+    awful.tag(tags.layout, s, awful.layout.layouts[1])
 
     s.mylayoutbox = awful.widget.layoutbox(s)
     s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
-    s.mywibox = awful.wibar({ position = "top", screen = s })
 
+    s.mywibox = awful.wibar({ position = "top", screen = s })
     s.mywibox:setup {
         layout = wibox.layout.align.horizontal,
 
@@ -361,7 +405,7 @@ awful.rules.rules = {
             buttons = clientbuttons,
             screen = awful.screen.preferred,
             placement = awful.placement.no_offscreen,
-            titlebars_enabled = false
+            titlebars_enabled = false,
         }
     },
     {
@@ -420,6 +464,57 @@ client.connect_signal("manage", function(c)
         -- Prevent clients from being unreachable after screen count changes.
         awful.placement.no_offscreen(c)
     end
+end)
+
+
+-- Add a titlebar if titlebars_enabled is set to true in the rules.
+client.connect_signal("request::titlebars", function(c)
+    -- buttons for the titlebar
+    local buttons = awful.util.table.join(
+        awful.button({ }, 1, function()
+            client.focus = c
+            c:raise()
+            awful.mouse.client.move(c)
+        end),
+        awful.button({ }, 3, function()
+            client.focus = c
+            c:raise()
+            awful.mouse.client.resize(c)
+        end)
+    )
+
+    awful.titlebar(c) : setup {
+        { -- Left
+            {
+                awful.titlebar.widget.iconwidget(c),
+                buttons = buttons,
+                layout  = wibox.layout.fixed.horizontal
+            },
+            left = 5,
+            right = 5,
+            top = 5,
+            bottom = 5,
+            layout  = wibox.container.margin
+        },
+        { -- Middle
+            { -- Title
+                align  = "left",
+                font = theme.titlebar_font,
+                widget = awful.titlebar.widget.titlewidget(c)
+            },
+            buttons = buttons,
+            layout  = wibox.layout.flex.horizontal
+        },
+        { -- Right
+            awful.titlebar.widget.floatingbutton (c),
+            awful.titlebar.widget.maximizedbutton(c),
+            awful.titlebar.widget.stickybutton   (c),
+            awful.titlebar.widget.ontopbutton    (c),
+            awful.titlebar.widget.closebutton    (c),
+            layout = wibox.layout.fixed.horizontal()
+        },
+        layout = wibox.layout.align.horizontal
+    }
 end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)

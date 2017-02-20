@@ -1,4 +1,4 @@
-local names = {
+local t = {
     term = " \u{f120} ",
     web  = " \u{f0ac} ",
     dev  = " \u{f121} ",
@@ -8,19 +8,7 @@ local names = {
     file = " \u{f07c} ",
 }
 
-local list = {
-    names.term,
-    names.web,
-    names.dev,
-    names.mail,
-    names.pass,
-    names.chat,
-    names.file,
-    " 8 ",
-    " 9 "
-}
-
 return {
-    names = names,
-    list  = list
+    names = t,
+    layout = { t.term, t.web, t.dev, t.mail, t.pass, t.chat, t.file }
 }
