@@ -3,7 +3,6 @@ local awful = require("awful")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local naughty = require("naughty")
-local lain = require("lain")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 
 require("awful.autofocus")
@@ -43,9 +42,10 @@ end
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init("/home/nikarh/.config/awesome/material/theme.lua")
 
+
 local runcmd = "rofi -show run -terminal st -font"
 local runapp = "rofi -combi-modi window,drun -show combi -modi combi"
-local terminal = "st -t Terminal"
+local terminal = "st -t Terminal tmux"
 
 local modkey = "Mod4"
 
@@ -61,78 +61,11 @@ awful.layout.layouts = {
 
 -- {{{ Wibar
 local mykeyboardlayout = awful.widget.keyboardlayout()
-local mytextclock = wibox.widget.textclock("%a %d %b %R")
-lain.widget.calendar({
-    attach_to = { mytextclock },
-    cal = "/usr/bin/cal -m --color=always",
-    notification_preset = {
-        font = "Hack 11",
-    }
-})
 
-
-local separator = wibox.widget {
-    wibox.widget {
-        wibox.widget {
-            markup = '&#xE0B3;',
-            font = 'Hack 16',
-            widget = wibox.widget.textbox
-        },
-        fg = "#37474f",
-        widget = wibox.container.background
-    },
-    left = 5,
-    right = 5,
-    widget = wibox.container.margin
-}
-
-local prb = wibox.widget {
-    widget        = wibox.widget.progressbar,
-    color            = theme.fg_focus,
-    background_color = "#616161",
-    shape = function(cr, width, height)
-        local pin_offset = height / 4;
-        local offset = 0
-        local h = 2;
-        local r = 2;
-
-        cr:move_to(offset + r, r)
-        cr:arc(offset + r, r, r, 1*math.pi, 1.5*math.pi)
-        cr:line_to(offset + width - h - r, 0)
-        cr:arc(offset + width - h - r, r, r, 1.5*math.pi, 2*math.pi)
-        cr:line_to(offset + width - h, pin_offset)
-        cr:line_to(offset + width, pin_offset)
-        cr:line_to(offset + width, pin_offset * 2)
-        cr:line_to(offset + width, pin_offset * 3)
-        cr:line_to(offset + width - h, pin_offset * 3)
-        cr:line_to(offset + width - h, height)
-        cr:arc(offset + width - h - r, height -r, r, 0*math.pi, 0.5*math.pi)
-        cr:line_to(offset + r, height)
-        cr:arc(offset + r, height - r, r, 0.5*math.pi, 1*math.pi)
-        cr:line_to(offset, r)
-        cr:close_path()
-    end,
-    max_value     = 1,
-    value         = 0.5,
-    margins = {
-        left = 5,
-        right = 5,
-        top = 8,
-        bottom = 8,
-    },
-}
-local pb = wibox.widget {
-    prb,
-    forced_height = 10,
-    forced_width  = 35,
-    layout = wibox.container.rotate,
-}
-
-prb.timer = timer({ timeout = 10 })
-prb.timer:connect_signal("timeout", function()
-    prb:set_value(4)
-end)
-prb.timer:start()
+local batmon = require("widgets/battery_indicator")
+local clock = require("widgets/clock")
+local separator = require("widgets/separator")
+local window_rules = require("window_rules")
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = awful.util.table.join(
@@ -215,7 +148,7 @@ awful.screen.connect_for_each_screen(function(s)
                 widget = wibox.container.margin
             },
             separator,
-            mytextclock,
+            clock,
             separator,
             {
                 s.mylayoutbox,
@@ -250,14 +183,19 @@ local globalkeys = awful.util.table.join(
         { description = "swap with next client by index", group = "client" }),
     awful.key({ modkey, "Shift" }, "k", function() awful.client.swap.byidx(-1) end,
         { description = "swap with previous client by index", group = "client" }),
+
     awful.key({ modkey, "Control" }, "j", function() awful.screen.focus_relative(1) end,
         { description = "focus the next screen", group = "screen" }),
     awful.key({ modkey, "Control" }, "k", function() awful.screen.focus_relative(-1) end,
         { description = "focus the previous screen", group = "screen" }),
+    awful.key({ modkey, "Control" }, "Left", function() awful.screen.focus_relative(1) end,
+        { description = "focus the previous screen", group = "screen" }),
+    awful.key({ modkey, "Control" }, "Right", function() awful.screen.focus_relative(-1) end,
+        { description = "focus the next screen", group = "screen" }),
+
     awful.key({ modkey, }, "u", awful.client.urgent.jumpto,
         { description = "jump to urgent client", group = "client" }),
-    awful.key({ modkey, }, "Tab",
-        function()
+    awful.key({ modkey, }, "Tab", function()
             awful.client.focus.history.previous()
             if client.focus then
                 client.focus:raise()
@@ -305,7 +243,7 @@ local globalkeys = awful.util.table.join(
     awful.key({ modkey }, "r", function() awful.spawn(runcmd) end,
         { description = "run prompt", group = "launcher" }),
     -- Run .desktop file or switch window
-    awful.key({ modkey }, "F2", function() awful.spawn(runapp) end,
+    awful.key({ modkey }, "x", function() awful.spawn(runapp) end,
         { description = "application fuzzy search", group = "launcher" }))
 
 local clientkeys = awful.util.table.join(
@@ -393,7 +331,7 @@ root.keys(globalkeys)
 
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
-awful.rules.rules = {
+awful.rules.rules = awful.util.table.join({
     {
         rule = {},
         properties = {
@@ -407,52 +345,9 @@ awful.rules.rules = {
             placement = awful.placement.no_offscreen,
             titlebars_enabled = false,
         }
-    },
-    {
-        rule_any = {
-            class = {
-                "insync.py",
-                "jetbrains-toolbox",
-            },
-            name = {
-                "Event Tester", -- xev.
-            },
-            role = {
-                "AlarmWindow", -- Thunderbird's calendar.
-                "pop-up", -- e.g. Google Chrome's (detached) Developer Tools.
-            }
-        },
-        properties = { floating = true }
-    },
-    {
-        rule_any = { class = {"chromium", "Chromium", "Firefox"} },
-        properties = { tag = tags.names.web }
-    },
-    {
-        rule_any = { class = {"mail", "Thunderbird"} },
-        properties = { tag = tags.names.mail }
-    },
-    {
-        rule = { class = "st-256color" },
-        properties = { tag = tags.names.term }
-    },
-    {
-        rule = { class = "jetbrains-idea" },
-        properties = { tag = tags.names.dev }
-    },
-    {
-        rule = { class = "keepassxc" },
-        properties = { tag = tags.names.pass }
-    },
-    {
-        rule_any = { class = { "Slack", "slack" } },
-        properties = { tag = tags.names.chat }
-    },
-    {
-        rule_any = { class = { "Thunar", "pcmanfm" } },
-        properties = { tag = tags.names.file }
-    },
-}
+    }
+}, window_rules)
+
 -- }}}
 
 -- {{{ Signals

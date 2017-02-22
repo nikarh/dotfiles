@@ -1,11 +1,11 @@
--------------------------------------
--- "Material" awesome wm theme     --
+----------------------------------
+-- "Material" awesome wm theme  --
 -- By https://github.com/nikarh --
--------------------------------------
+----------------------------------
 
 local fonts = {
-    sans = "Noto Sans UI 8",
-    sans_bold = "Noto Sans UI Bold 8",
+    sans = "Noto Sans UI 9",
+    sans_bold = "Noto Sans UI Bold 9",
     mono = "Noto Mono 9",
     fa = "FontAwesome 12"
 }
@@ -77,8 +77,13 @@ theme.taglist_font = fonts.fa
 -- }}}
 
 -- {{{ Tasklist
-theme.tasklist_font = fonts.default
+theme.tasklist_font = fonts.sans
 -- }}}
+
+theme.tooltip_font = fonts.sans
+theme.tooltip_bg = theme.bg_normal
+theme.tooltip_border_width = 0
+theme.tooltip_align = "bottom"
 
 -- {{{ Layout
 theme.layout_tile = theme.path .. "layouts/tile.png"
