@@ -33,36 +33,49 @@ function install_bash_aliases() {
 alias l='ls -lAh'
 alias df='df -h'
 
-# Trim long pwd names
-PROMPT_DIRTRIM=2
-
 EOF
 }
 
 function install_bash_completion() {
     cat >> ~/.bashrc <<EOF
-# Enable tab completion
 [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
         . /usr/share/bash-completion/bash_completion
+
 EOF
 }
 
-# Install bash-git-prompt
-function install_git_prompt() {
-    cd ~
-	git clone https://github.com/magicmonty/bash-git-prompt.git .bash-git-prompt --depth=1
+function install_bash_sensible() {
+    git clone git@github.com:mrzool/bash-sensible.git ~/.bash-sensible
+    # cdable_vars is awesome but clutters tab completion since git prompt adds many env vars
+    sed 's/^shopt -s cdable_vars/#shopt -s cdable_vars/' ~/.bash-sensible/sensible.bash > ~/.bash-sensible/sensible.bash
+    cat >> ~/.bashrc <<EOF
+if [ -f ~/.bash-sensible/sensible.bash ]; then
+    source ~/.bash-sensible/sensible.bash
+fi
+
+EOF
+
+}
+
+function install_bash_git_prompt() {
+	git clone https://github.com/magicmonty/bash-git-prompt.git ~/.bash-git-prompt --depth=1
 	cat >> ~/.bashrc <<EOF
-# Add git prompt
-GIT_PROMPT_THEME="Single_line_NoExitState"
-source ~/.bash-git-prompt/gitprompt.sh
+if [ -f ~/.bash-git-prompt/gitprompt.sh ]; then
+    GIT_PROMPT_THEME="Single_line_NoExitState"
+    source ~/.bash-git-prompt/gitprompt.sh
+fi
 
 EOF
 }
 
-# Add symlinks to dotfiles
-#install_vim_plug
-#install_bash_aliases
-#install_git_prompt
+install_bash_sensible
+install_bash_aliases
+install_bash_completion
+install_bash_git_prompt
+install_bash_logout
+
+install_vim_plug
+
 install_dotfiles \
     .vimrc \
     .tmux.conf \
@@ -72,6 +85,5 @@ install_dotfiles \
     .Xkbmap \
     .gitconfig \
     .config/awesome
-#install_nvim_dotfiles
-#install_bash_completion
-#install_bash_logout
+install_nvim_dotfiles
+
