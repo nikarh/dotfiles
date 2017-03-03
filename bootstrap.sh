@@ -84,6 +84,8 @@ install_dotfiles \
     .Xresources \
     .Xkbmap \
     .gitconfig \
+    .pacontrol.sh \
+    .xbindkeysrc \
     .config/awesome
 install_nvim_dotfiles
 
