@@ -8,13 +8,16 @@
 	ignorecase = false
 	preloadindex = true
 	fscache = true
+	excludesfile = ~/.gitignore_global
 [i18n]
 	filesEncoding = utf-8
 [user]
 	name = Nikolay Arhipov
 	email = nikolajs.arhipovs@gmail.com
 [pull]
-	rebase = true
+    rebase = true
+[rebase]
+	autoStash = true
 [color]
 	ui = true
 [gc]

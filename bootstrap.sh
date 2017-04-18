@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -38,6 +38,8 @@ EOF
 
 function install_bash_completion() {
     cat >> ~/.bashrc <<EOF
+type brew &> /dev/null && [[ -s "`brew --prefix`/etc/bash_completion" ]] &&
+    source "`brew --prefix`/etc/bash_completion"
 [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
         . /usr/share/bash-completion/bash_completion
 
@@ -47,7 +49,7 @@ EOF
 function install_bash_sensible() {
     git clone git@github.com:mrzool/bash-sensible.git ~/.bash-sensible
     # cdable_vars is awesome but clutters tab completion since git prompt adds many env vars
-    sed 's/^shopt -s cdable_vars/#shopt -s cdable_vars/' ~/.bash-sensible/sensible.bash > ~/.bash-sensible/sensible.bash
+    sed 's/^shopt -s cdable_vars/#shopt -s cdable_vars/' ~/.bash-sensible/sensible.bash >| ~/.bash-sensible/sensible.bash
     cat >> ~/.bashrc <<EOF
 if [ -f ~/.bash-sensible/sensible.bash ]; then
     source ~/.bash-sensible/sensible.bash
@@ -84,8 +86,10 @@ install_dotfiles \
     .Xresources \
     .Xkbmap \
     .gitconfig \
+    .gitignore_global \
     .pacontrol.sh \
     .xbindkeysrc \
     .config/awesome
+
 install_nvim_dotfiles
 

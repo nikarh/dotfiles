@@ -1,0 +1,17 @@
+*.class
+*.hi
+*.iml
+*.ipr
+*.iws
+*.lock
+*.o
+*.out
+*.swo
+*.swp
+*.tmproj
+*~
+.DS_Store
+.idea/
+Icon
+Thumbs.db
+npm-debug.log

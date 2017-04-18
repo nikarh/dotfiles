@@ -18,9 +18,11 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdtree'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
 " Integrations
 Plug 'airblade/vim-gitgutter'
+Plug 'editorconfig/editorconfig-vim'
 
 " Language support
 Plug 'elzr/vim-json'
@@ -28,6 +30,7 @@ Plug 'pangloss/vim-javascript'
 Plug 'hashivim/vim-terraform'
 Plug 'plasticboy/vim-markdown'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+Plug 'direnv/direnv.vim'
 
 call plug#end()
 
@@ -87,7 +90,7 @@ set hlsearch   " when there is a previous search pattern, highlight all its matc
 
 " sync clipboard
 set clipboard=unnamed,unnamedplus
-if has('unix')
+if has('unix') && !has('mac')
     " Do not clear clipboard when exiting vim
     autocmd VimLeave * call system("xsel -ib", getreg('+'))
 endif
