@@ -49,4 +49,8 @@ return {
         rule = { class = "gsimplecal" },
         properties = { floating = true }
     },
+    {
+        rule = { class = "zoom" },
+        properties = { tag = tags.names.video }
+    },
 };

@@ -5,10 +5,11 @@ local t = {
     mail = " \u{f0e0} ",
     pass = " \u{f23e} ",
     chat = " \u{f198} ",
+    video = " \u{f03d} ",
     file = " \u{f07c} ",
 }
 
 return {
     names = t,
-    layout = { t.term, t.web, t.dev, t.mail, t.pass, t.chat, t.file }
+    layout = { t.term, t.web, t.dev, t.mail, t.pass, t.chat, t.video, t.file }
 }
