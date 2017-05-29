@@ -18,18 +18,19 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdtree'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 
 " Integrations
 Plug 'airblade/vim-gitgutter'
 Plug 'editorconfig/editorconfig-vim'
 
 " Language support
+Plug 'w0rp/ale'
 Plug 'elzr/vim-json'
 Plug 'pangloss/vim-javascript'
 Plug 'hashivim/vim-terraform'
 Plug 'plasticboy/vim-markdown'
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+"Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'direnv/direnv.vim'
 
 call plug#end()
@@ -43,8 +44,6 @@ set shiftwidth=4      " reindentation control
 set hidden            " Do not force buffer saving when switching
 set autochdir         " Change directory to the one edited file is in
 
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
 colorscheme solarized
 
 if has('gui_running')
@@ -123,37 +122,12 @@ let g:vim_markdown_folding_disabled = 1
 " Close VIM if NERDTree is last open window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-" Go key bindings
-au FileType go nmap <localleader>r <Plug>(go-run)
-au FileType go nmap <localleader>b <Plug>(go-build)
-au FileType go nmap <localleader>t <Plug>(go-test)
-au FileType go nmap <localleader>c <Plug>(go-coverage)
+" vim-airline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
 
-if has('nvim') 
-    au FileType go nmap <localleader>rt <Plug>(go-run-tab)
-    au FileType go nmap <localleader>rs <Plug>(go-run-split)
-    au FileType go nmap <localleader>rv <Plug>(go-run-vertical)
-endif
-
-
-au FileType go nmap <localleader>ds <Plug>(go-def-split)
-au FileType go nmap <localleader>dv <Plug>(go-def-vertical)
-au FileType go nmap <localleader>dt <Plug>(go-def-tab)
-
-au FileType go nmap <localleader>gd <Plug>(go-doc)
-au FileType go nmap <localleader>gv <Plug>(go-doc-vertical)
-au FileType go nmap <localleader>gb <Plug>(go-doc-browser)
-au FileType go nmap <localleader>s <Plug>(go-implements)
-au FileType go nmap <localleader>i <Plug>(go-info)
-au FileType go nmap <localleader>e <Plug>(go-rename)
-
-let g:go_list_type = "quickfix"
-let g:go_fmt_command = "goimports"
-let g:go_fmt_fail_silently = 1
-
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_types = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
+" ale
+let g:ale_sign_error = 'X'
+let g:ale_sign_warning = '!'
+highlight ALEWarningSign ctermfg='brown' cterm=bold
+highlight ALEErrorSign ctermfg='red' cterm=bold

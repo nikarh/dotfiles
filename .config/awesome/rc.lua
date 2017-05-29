@@ -9,6 +9,8 @@ require("awful.autofocus")
 
 local tags = require("tags")
 
+naughty.config.defaults.icon_size = 48
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)

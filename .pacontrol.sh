@@ -22,16 +22,18 @@ sinkname() {
 }
 
 volume() {
-    local PERCENT=$(pacmd list-sinks \
-        | awk '/^\s+name: /{indefault = $2 == "<'$1'>"}/^\s+volume: / && indefault {print $5; exit}')
-    echo ${PERCENT::-1}
+    local PERCENT
+    PERCENT=$(pacmd list-sinks \
+        | awk '/^\s+name: /{indefault = $2 == "<'"$1"'>"}/^\s+volume: / && indefault {print $5; exit}')
+    echo "${PERCENT::-1}"
 }
 
 status() {
-    local STATUS=$(pacmd list-sinks \
-        | awk '/^\s+name: /{indefault = $2 == "<'$1'>"}/^\s+muted: / && indefault {print $2; exit}')
+    local STATUS
+    STATUS=$(pacmd list-sinks \
+        | awk '/^\s+name: /{indefault = $2 == "<'"$1"'>"}/^\s+muted: / && indefault {print $2; exit}')
 
-    if [ $STATUS == 'no' ]; then 
+    if [ "$STATUS" == 'no' ]; then 
         echo unmuted
     else 
         echo muted
@@ -39,29 +41,34 @@ status() {
 }
 
 inc() {
-    local SINK=$(sinkname)
-    local VOL=$(( $(volume $SINK) + 5 ))
-    VOL=$(( $VOL >= 100 ? 100 : $VOL ))
+    local SINK
+    local VOL
+    SINK=$(sinkname)
+    VOL=$(( $(volume "$SINK") + 5 ))
+    VOL=$(( VOL >= 100 ? 100 : VOL ))
 
-    pactl set-sink-mute $SINK false
-    pactl set-sink-volume $SINK $VOL%
+    pactl set-sink-mute "$SINK" false
+    pactl set-sink-volume "$SINK" "$VOL%"
     notify "Volume set to $VOL%"
 }
 
 dec() {
-    local SINK=$(sinkname)
-    local VOL=$(( $(volume $SINK) - 5 ))
-    VOL=$(( $VOL <= 0 ? 0 : $VOL ))
+    local SINK
+    local VOL
+    SINK=$(sinkname)
+    VOL=$(( $(volume "$SINK") - 5 ))
+    VOL=$(( VOL <= 0 ? 0 : VOL ))
 
-    pactl set-sink-mute $SINK false
-    pactl set-sink-volume $SINK $VOL%
+    pactl set-sink-mute "$SINK" false
+    pactl set-sink-volume "$SINK" "$VOL%"
     notify "Volume set to $VOL%"
 }
 
 toggle() {
-    local SINK=$(sinkname)
-    pactl set-sink-mute $SINK toggle
-    notify "Audio device $(status $SINK)"
+    local SINK
+    SINK=$(sinkname)
+    pactl set-sink-mute "$SINK" toggle
+    notify "Audio device $(status "$SINK")"
 }
 
 
