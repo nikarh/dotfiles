@@ -1,15 +1,45 @@
+local awful = require("awful")
+
 local t = {
-    term = " \u{f120} ",
-    web  = " \u{f0ac} ",
-    dev  = " \u{f121} ",
-    mail = " \u{f0e0} ",
-    pass = " \u{f23e} ",
-    chat = " \u{f198} ",
+    term  = " \u{f120} ",
+    web   = " \u{f0ac} ",
+    dev   = " \u{f121} ",
+    mail  = " \u{f0e0} ",
+    pass  = " \u{f23e} ",
+    chat  = " \u{f198} ",
     video = " \u{f03d} ",
-    file = " \u{f07c} ",
+    file  = " \u{f07c} ",
+}
+
+local layout = {
+    {name = t.term, settings = {
+        layout   = awful.layout.suit.tile,
+        selected = true
+    }},
+    {name = t.web, settings = {
+        layout = awful.layout.suit.tile
+    }},
+    {name = t.dev, settings = {
+        layout = awful.layout.suit.tile
+    }},
+    {name = t.mail, settings = {
+        layout = awful.layout.suit.tile
+    }},
+    {name = t.pass, settings = {
+        layout = awful.layout.suit.tile
+    }},
+    {name = t.chat, settings = {
+        layout = awful.layout.suit.max
+    }},
+    {name = t.video, settings = {
+        layout = awful.layout.suit.floating
+    }},
+    {name = t.file, settings = {
+        layout = awful.layout.suit.tile
+    }},
 }
 
 return {
     names = t,
-    layout = { t.term, t.web, t.dev, t.mail, t.pass, t.chat, t.video, t.file }
+    layout = layout
 }

@@ -121,7 +121,11 @@ awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
     set_wallpaper(s)
 
-    awful.tag(tags.layout, s, awful.layout.layouts[1])
+    for _, tag in ipairs(tags.layout) do
+        tag["settings"]["screen"] = s
+        awful.tag.add(tag.name, tag.settings)
+    end
+    --awful.tag(tags.layout, s, awful.layout.layouts[1])
 
     s.mylayoutbox = awful.widget.layoutbox(s)
     s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
