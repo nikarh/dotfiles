@@ -87,7 +87,7 @@ install_dotfiles \
     .Xkbmap \
     .gitconfig \
     .gitignore_global \
-    .pacontrol.sh \
+    .control.sh \
     .xbindkeysrc \
     .config/awesome
 

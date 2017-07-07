@@ -1,13 +1,13 @@
 # Increase volume
-"~/.pacontrol.sh inc"
+"~/.control.sh volume inc"
    XF86AudioRaiseVolume
 
 # Decrease volume
-"~/.pacontrol.sh dec"
+"~/.control.sh volume dec"
    XF86AudioLowerVolume
 
 # Decrease volume
-"~/.pacontrol.sh toggle"
+"~/.control.sh volume toggle"
    XF86AudioMute
 
 "xbacklight -inc 8"
@@ -15,3 +15,6 @@
 
 "xbacklight -dec 8"
    XF86MonBrightnessDown
+
+"~/.control.sh touchpad toggle"
+   XF86TouchpadToggle
