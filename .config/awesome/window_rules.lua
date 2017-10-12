@@ -34,6 +34,10 @@ return {
         properties = { tag = tags.names.dev }
     },
     {
+        rule_any = { class = { "insomnia", "Insomnia" } },
+        properties = { tag = tags.names.web }
+    },
+    {
         rule = { class = "keepassxc" },
         properties = { tag = tags.names.pass }
     },
@@ -42,7 +46,19 @@ return {
         properties = { tag = tags.names.chat }
     },
     {
-        rule_any = { class = { "Thunar", "pcmanfm" } },
+        rule = { instance = "agile-stacks.slack.com", class = "Chromium"},
+        properties = { tag = tags.names.chat, floating = false }
+    },
+    {
+        rule = { instance = "parisiancafe.slack.com", class = "Chromium" },
+        properties = { tag = tags.names.chat, floating = false }
+    },
+    {
+        rule = { instance = "messenger.com", class = "Chromium" },
+        properties = { tag = tags.names.chat, floating = false }
+    },
+    {
+        rule_any = { class = { "Thunar", "pcmanfm", "Pcmanfm" } },
         properties = { tag = tags.names.file }
     },
     {

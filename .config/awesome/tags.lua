@@ -17,7 +17,7 @@ local layout = {
         selected = true
     }},
     {name = t.web, settings = {
-        layout = awful.layout.suit.tile
+        layout = awful.layout.suit.max
     }},
     {name = t.dev, settings = {
         layout = awful.layout.suit.tile

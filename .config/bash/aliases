@@ -1,0 +1,10 @@
+alias ls='ls --color=auto'
+alias l='ls -lAh'
+alias df='df -h'
+alias less='less -r'
+
+if type -P exa > /dev/null; then
+    alias ls='exa'
+    alias l='exa -la'
+    alias e='exa -la'
+fi

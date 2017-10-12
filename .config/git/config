@@ -1,6 +1,8 @@
+# vi: ft=gitconfig
 [alias]
 	lg = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
     fixup = commit -a --amend --no-edit
+	git = !exec git
 [core]
 	editor = nvim
     autocrlf = input
@@ -8,7 +10,7 @@
 	ignorecase = false
 	preloadindex = true
 	fscache = true
-	excludesfile = ~/.gitignore_global
+	excludesfile = ~/.config/git/gitignore_global
 [i18n]
 	filesEncoding = utf-8
 [user]

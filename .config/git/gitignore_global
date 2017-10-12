@@ -1,6 +1,7 @@
+# vi: ft=gitignore
 *.class
 *.hi
-*.iml
+../.idea/.dotfiles.iml
 *.ipr
 *.iws
 *.lock
@@ -12,6 +13,7 @@
 *~
 .DS_Store
 .idea/
-Icon
+Icon
+
 Thumbs.db
 npm-debug.log

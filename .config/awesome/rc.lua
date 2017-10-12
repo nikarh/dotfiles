@@ -45,9 +45,9 @@ end
 beautiful.init("/home/nikarh/.config/awesome/material/theme.lua")
 
 
-local runcmd = "rofi -show run -terminal st -font"
+local runcmd = "rofi -show run -terminal alacritty -font"
 local runapp = "rofi -combi-modi window,drun -show combi -modi combi"
-local terminal = "st -t Terminal tmux"
+local terminal = "alacritty -t Terminal -e tmux"
 
 local modkey = "Mod4"
 
