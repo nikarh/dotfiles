@@ -8,5 +8,6 @@ xrdb -all -load ~/.config/Xorg/Xresources
 xbindkeys -f ~/.config/Xorg/xbindkeysrc --poll-rc
 setxkbmap $(cat ~/.config/Xorg/Xkbmap)
 compton -i 0.95 --backend glx --glx-swap-method=buffer-age -b
+xset r rate 200 60
 
 lxsession&
