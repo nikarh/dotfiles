@@ -1,19 +1,19 @@
 # Increase volume
-"~/.config/Xorg/control.sh volume inc"
+"~/.config/Xorg/control/bin/control volume inc"
    XF86AudioRaiseVolume
 
 # Decrease volume
-"~/.config/Xorg/control.sh volume dec"
+"~/.config/Xorg/control/bin/control volume dec"
    XF86AudioLowerVolume
 
 # Decrease volume
-"~/.config/Xorg/control.sh volume toggle"
+"~/.config/Xorg/control/bin/control volume toggle"
    XF86AudioMute
 
-"xbacklight -inc 8"
+"~/.config/Xorg/control/bin/control brightness inc"
    XF86MonBrightnessUp
 
-"xbacklight -dec 8"
+"~/.config/Xorg/control/bin/control brightness dec"
    XF86MonBrightnessDown
 
 "~/.config/Xorg/control.sh touchpad toggle"

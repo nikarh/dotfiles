@@ -13,61 +13,6 @@ notify() {
         int32:1000
 }
 
-pa_sinkname() {
-    pacmd stat \
-        | awk -F": " '/^Default sink name: /{print $2}'
-}
-
-pa_volume() {
-    local PERCENT
-    PERCENT=$(pacmd list-sinks \
-        | awk '/^\s+name: /{indefault = $2 == "<'"$1"'>"}/^\s+volume: / && indefault {print $5; exit}')
-    echo "${PERCENT::-1}"
-}
-
-pa_status() {
-    local STATUS
-    STATUS=$(pacmd list-sinks \
-        | awk '/^\s+name: /{indefault = $2 == "<'"$1"'>"}/^\s+muted: / && indefault {print $2; exit}')
-
-    if [ "$STATUS" == 'no' ]; then 
-        echo unmuted
-    else 
-        echo muted
-    fi
-}
-
-pa_inc() {
-    local SINK
-    local VOL
-    SINK=$(pa_sinkname)
-    VOL=$(( $(pa_volume "$SINK") + 5 ))
-    VOL=$(( VOL >= 100 ? 100 : VOL ))
-
-    pactl set-sink-mute "$SINK" false
-    pactl set-sink-volume "$SINK" "$VOL%"
-    notify pacontrol "Volume set to $VOL%"
-}
-
-pa_dec() {
-    local SINK
-    local VOL
-    SINK=$(pa_sinkname)
-    VOL=$(( $(pa_volume "$SINK") - 5 ))
-    VOL=$(( VOL <= 0 ? 0 : VOL ))
-
-    pactl set-sink-mute "$SINK" false
-    pactl set-sink-volume "$SINK" "$VOL%"
-    notify pacontrol "Volume set to $VOL%"
-}
-
-pa_toggle() {
-    local SINK
-    SINK=$(pa_sinkname)
-    pactl set-sink-mute "$SINK" toggle
-    notify pacontrol "Audio device $(pa_status "$SINK")"
-}
-
 touch_toggle() {
     local ID
     local STATE
@@ -83,19 +28,9 @@ touch_toggle() {
 }
 
 case "$1" in
-    volume)
-        case "$2" in
-            inc)
-                pa_inc;;
-            dec)
-                pa_dec;;
-            toggle)
-                pa_toggle;;
-        esac;;
     touchpad)
         case "$2" in
             toggle)
                 touch_toggle;;
         esac;;
-
 esac

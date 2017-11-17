@@ -1,4 +1,4 @@
-" vi: ft=vimrc
+" vi: ft=vim
 
 set nocompatible
 set encoding=utf-8
@@ -14,6 +14,8 @@ call plug#begin()
 if !has('nvim')
     Plug 'tpope/vim-sensible'
 endif
+
+Plug 'tpope/vim-unimpaired'
 
 " UI
 Plug 'altercation/vim-colors-solarized'
@@ -78,10 +80,7 @@ noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 
-" Jumping between buffers:
-noremap <C-n> :bnext<CR>
-noremap <C-p> :bprev<CR>
-noremap <C-e> :b#<CR>
+noremap <C-e> :History <Cr>
 
 " Improve search
 set incsearch  " While typing a search command, show pattern matches as it is typed
@@ -128,6 +127,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 " vim-airline
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':~'
 let g:airline_powerline_fonts = 1
 
 " ale

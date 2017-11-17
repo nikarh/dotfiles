@@ -47,6 +47,7 @@ install_git:
 install_xprofile:
 	@mkdir -p ~/.config
 	${ln} -s ${PWD}/.config/Xorg ~/.config/Xorg
+	cd ~/.config/Xorg/control && make deps build clean
 	${ln} -s ~/.config/Xorg/xprofile ~/.xprofile
 
 install_packages:

@@ -1,0 +1,34 @@
+{
+	"ImportPath": "control",
+	"GoVersion": "go1.9",
+	"GodepVersion": "v79",
+	"Deps": [
+		{
+			"ImportPath": "github.com/alexflint/go-filemutex",
+			"Rev": "d358565f3c3f5334209f1e80693e4f621650c489"
+		},
+		{
+			"ImportPath": "github.com/auroralaboratories/pulse",
+			"Rev": "8fd6de5e7945a3b2f41cbe6f691148516f27c194"
+		},
+		{
+			"ImportPath": "github.com/esiqveland/notify",
+			"Rev": "21a10e207052b33cb36ac9e1e166ffa1a55cb3c5"
+		},
+		{
+			"ImportPath": "github.com/godbus/dbus",
+			"Comment": "v4.1.0",
+			"Rev": "a389bdde4dd695d414e47b755e95e72b7826432c"
+		},
+		{
+			"ImportPath": "github.com/satori/go.uuid",
+			"Comment": "v1.1.0-8-g5bf94b6",
+			"Rev": "5bf94b69c6b68ee1b541973bb8e1144db23a194b"
+		},
+		{
+			"ImportPath": "github.com/shutterstock/go-stockutil/stringutil",
+			"Comment": "0.2.3-7-g39a961c",
+			"Rev": "39a961cfa60878cca33570f9431c09db1600e4db"
+		}
+	]
+}
