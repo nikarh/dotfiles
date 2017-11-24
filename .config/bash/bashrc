@@ -1,4 +1,4 @@
-# vi: ft=bashrc
+# vi: ft=sh
 
 trysource() {
     if [ -f "$1" ]; then source $1; fi
@@ -12,9 +12,12 @@ trysource ~/.config/bash-sensible/sensible.bash
 
 GIT_PROMPT_THEME="Single_line_NoExitState"
 trysource /usr/lib/bash-git-prompt/gitprompt.sh
+trysource ~/.bash-git-prompt/gitprompt.sh
 
 
 trysource /usr/share/bash-completion/bash_completion
+type brew &> /dev/null && [[ -s "`brew --prefix`/etc/bash_completion" ]] &&
+    source "`brew --prefix`/etc/bash_completion"
 
 if type -P direnv > /dev/null; then
     eval "$(direnv hook bash)"
@@ -29,3 +32,4 @@ fi
 FZF_TMUX=1
 trysource /usr/share/fzf/completion.bash
 trysource /usr/share/fzf/key-bindings.bash
+trysource ~/.fzf.bash
