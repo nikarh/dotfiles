@@ -9,7 +9,34 @@ require("awful.autofocus")
 
 local tags = require("tags")
 
+function dirLookup(dir)
+    local arr = {}
+    local p = io.popen('find "'..dir..'" -type d')
+    for file in p:lines() do
+        arr[#arr + 1] = filename
+    end
+
+    return arr
+end
+
 naughty.config.defaults.icon_size = 48
+naughty.config.icon_dirs = {
+
+    os.getenv("HOME") .. "/.icons/Flat-Remix/status/",
+    "/usr/share/icons/Flat-Remix/",
+    "/usr/share/icons/Flat-Remix/base/",
+    "/usr/share/icons/Flat-Remix/symbolic/",
+    "/usr/share/icons/Flat-Remix/apps/scalable/",
+    "/usr/share/icons/Flat-Remix/status/",
+    "/usr/share/icons/hicolor/",
+    "/usr/share/icons/",
+    "/usr/share/pixmaps/",
+}
+naughty.config.icon_formats = { "svgz", "svg", "png", "gif" }
+naughty.config.width = 600
+naughty.config.notify_callback = function(args)
+    return args
+end
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -253,7 +280,10 @@ local globalkeys = awful.util.table.join(
         { description = "run prompt", group = "launcher" }),
     -- Run .desktop file or switch window
     awful.key({ modkey }, "x", function() awful.spawn(runapp) end,
-        { description = "application fuzzy search", group = "launcher" }))
+        { description = "application fuzzy search", group = "launcher" }),
+    -- Run pcmanfm
+    awful.key({ modkey }, "e", function() awful.spawn("pcmanfm") end,
+        { description = "file explorer", group = "launcher" }))
 
 local clientkeys = awful.util.table.join(
     awful.key({ modkey, }, "f", function(c) c.fullscreen = not c.fullscreen; c:raise() end,

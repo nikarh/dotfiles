@@ -13,23 +13,34 @@ import (
 	"github.com/alexflint/go-filemutex"
 )
 
-func doNotify(summary, body string, id int) {
+func getAudioLevelIconName(volume float64) string {
+	switch {
+	case volume == 0:
+		return "audio-volume-muted"
+	case volume < 35:
+		return "audio-volume-low"
+	case volume < 70:
+		return "audio-volume-medium"
+	default:
+		return "audio-volume-high"
+	}
+}
+
+func doNotify(summary, body string, icon string, id int) {
 	conn, err := dbus.SessionBus()
 	if err != nil {
 		panic(err)
 	}
 
-	// Basic usage
-	// Create a Notification to send
 	n := notify.Notification{
 		AppName:       "control.sh",
+		AppIcon:       icon,
 		ReplacesID:    uint32(id),
 		Summary:       summary,
 		Body:          body,
 		ExpireTimeout: int32(5000),
 	}
 
-	// Ship it!
 	_, err = notify.SendNotification(conn, n)
 	if err != nil {
 		log.Printf("error sending notification: %v", err.Error())
@@ -65,7 +76,9 @@ func volumeInc() {
 		}
 
 		doNotify("",
-			fmt.Sprintf("Voume set to %.f%%", s.VolumeFactor*100), 1)
+			fmt.Sprintf("Voume set to %.f%%", s.VolumeFactor*100),
+			getAudioLevelIconName(s.VolumeFactor * 100),
+			1)
 	}
 
 }
@@ -88,7 +101,9 @@ func volumeDec() {
 		}
 
 		doNotify("",
-			fmt.Sprintf("Voume set to %.f%%", s.VolumeFactor*100), 1)
+			fmt.Sprintf("Voume set to %.f%%", s.VolumeFactor*100),
+			getAudioLevelIconName(s.VolumeFactor * 100),
+			1)
 	}
 }
 
@@ -110,32 +125,39 @@ func volumeToggle() {
 		}
 
 		if s.Muted {
-			doNotify("", fmt.Sprintf("Audio device muted"), 1)
+			doNotify("",
+				fmt.Sprintf("Audio device muted"),
+				getAudioLevelIconName(0),
+				1)
 		} else {
-			doNotify("", fmt.Sprintf("Audio device unmuted"), 1)
+			doNotify("",
+				fmt.Sprintf("Audio device unmuted"),
+				getAudioLevelIconName(s.VolumeFactor * 100),
+				1)
 		}
 	}
 }
 
 func brightnessDec() {
-	defer waitLock("backlight-control")()
+	unlock := waitLock("backlight-control")
+	defer unlock()
 
 	out, _ := exec.Command("xbacklight").Output()
 	level, _ := strconv.ParseFloat(string(out[0:len(out)-1]), 64)
 
-	newLevel := math.Max(1, math.Ceil(level - math.Ceil(math.Log(level*1.7))))
+	newLevel := math.Max(1, math.Ceil(level-math.Ceil(math.Log(level*1.7))))
 
 	exec.Command("xbacklight", "-set", fmt.Sprintf("%f", newLevel)).Run()
 }
 
 func brightnessInc() {
-	defer waitLock("backlight-control")()
+	unlock := waitLock("backlight-control")
+	defer unlock()
 
 	out, _ := exec.Command("xbacklight").Output()
 	level, _ := strconv.ParseFloat(string(out[0:len(out)-1]), 64)
 
-
-	newLevel := math.Min(100, math.Ceil(level + math.Ceil(math.Log(level*1.7))))
+	newLevel := math.Min(100, math.Ceil(level+math.Ceil(math.Log(level*1.7))))
 
 	exec.Command("xbacklight", "-set", fmt.Sprintf("%f", newLevel)).Run()
 }

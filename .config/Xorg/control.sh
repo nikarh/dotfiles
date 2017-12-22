@@ -5,7 +5,7 @@ notify() {
         /org/freedesktop/Notifications org.freedesktop.Notifications.Notify \
         string:"$1" \
         uint32:1 \
-        string:'' \
+        string:"$3" \
         string:'' \
         string:"$2"\
         array:string:'' \
@@ -20,10 +20,10 @@ touch_toggle() {
     STATE=$(xinput list-props "$ID" | grep 'Device Enabled' | awk '{print $4}')
     if [ "$STATE" -eq 1 ]; then
         xinput disable "$ID"
-        notify touchpad "Touchpad disabled"
+        notify touchpad "Touchpad disabled" touchpad-disabled-symbolic
     else
         xinput enable "$ID"
-        notify touchpad "Touchpad enabled"
+        notify touchpad "Touchpad enabled" touchpad-enabled-symbolic
     fi
 }
 

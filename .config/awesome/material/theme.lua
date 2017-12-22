@@ -100,4 +100,10 @@ theme.layout_magnifier = theme.path .. "layouts/magnifier.png"
 theme.layout_floating = theme.path .. "layouts/floating.png"
 -- }}}
 
+-- {{{ Naughty
+theme.notification_width = 550
+theme.notification_font =  "Noto Sans UI 11"
+-- }}}
+
+
 return theme
