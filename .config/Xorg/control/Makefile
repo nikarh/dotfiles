@@ -1,4 +1,8 @@
-default: deps build
+.DEFAULT_GOAL: deps build
+
+export GOPATH            ?= $(abspath .)
+export GOBIN             ?= $(GOPATH)/bin
+export PATH              ?= $(GOBIN):$(PATH)
 
 deps:
 	cd src/control && godep restore
