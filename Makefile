@@ -18,7 +18,7 @@ install_profile:
 
 install_bash:
 	@mkdir -p ~/.config
-	${ln} -s ${PWD}/.config/bash ~/.config/bash
+	${ln} -s ${PWD}/.config/bash ~/.config/
 	${ln} -s ~/.config/bash/bashrc ~/.bashrc
 	${ln} -s ~/.config/bash/bash_logout ~/.bash_logout
 	${ln} -s ~/.config/bash/inputrc ~/.inputrc
@@ -42,11 +42,11 @@ install_tmux:
 
 install_git:
 	@mkdir -p ~/.config
-	${ln} -s ${PWD}/.config/git ~/.config/git
+	${ln} -s ${PWD}/.config/git ~/.config/
 
 install_xprofile:
 	@mkdir -p ~/.config
-	${ln} -s ${PWD}/.config/Xorg ~/.config/Xorg
+	${ln} -s ${PWD}/.config/Xorg ~/.config/
 	cd ~/.config/Xorg/control && make deps build clean
 	${ln} -s ~/.config/Xorg/xprofile ~/.xprofile
 
