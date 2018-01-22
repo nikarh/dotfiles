@@ -11,7 +11,7 @@ local tags = require("tags")
 
 function dirLookup(dir)
     local arr = {}
-    local p = io.popen('find "'..dir..'" -type d')
+    local p = io.popen('find "' .. dir .. '" -type d')
     for file in p:lines() do
         arr[#arr + 1] = filename
     end
@@ -21,7 +21,6 @@ end
 
 naughty.config.defaults.icon_size = 48
 naughty.config.icon_dirs = {
-
     os.getenv("HOME") .. "/.icons/Flat-Remix/status/",
     "/usr/share/icons/Flat-Remix/",
     "/usr/share/icons/Flat-Remix/base/",
@@ -97,8 +96,7 @@ local separator = require("widgets/separator")
 local window_rules = require("window_rules")
 
 -- Create a wibox for each screen and add it
-local taglist_buttons = awful.util.table.join(
-    awful.button({}, 1, function(t) t:view_only() end),
+local taglist_buttons = awful.util.table.join(awful.button({}, 1, function(t) t:view_only() end),
     awful.button({ modkey }, 1, function(t)
         if client.focus then
             client.focus:move_to_tag(t)
@@ -113,19 +111,18 @@ local taglist_buttons = awful.util.table.join(
     awful.button({}, 4, function(t) awful.tag.viewnext(t.screen) end),
     awful.button({}, 5, function(t) awful.tag.viewprev(t.screen) end))
 
-local tasklist_buttons = awful.util.table.join(
-    awful.button({}, 1, function(c)
-        if c == client.focus then
-            c.minimized = true
-        else
-            c.minimized = false
-            if not c:isvisible() and c.first_tag then
-                c.first_tag:view_only()
-            end
-            client.focus = c
-            c:raise()
+local tasklist_buttons = awful.util.table.join(awful.button({}, 1, function(c)
+    if c == client.focus then
+        c.minimized = true
+    else
+        c.minimized = false
+        if not c:isvisible() and c.first_tag then
+            c.first_tag:view_only()
         end
-    end),
+        client.focus = c
+        c:raise()
+    end
+end),
     awful.button({}, 4, function() awful.client.focus.byidx(1) end),
     awful.button({}, 5, function() awful.client.focus.byidx(-1) end))
 
@@ -196,9 +193,8 @@ end)
 -- }}}
 
 -- {{{ Key bindings
-local globalkeys = awful.util.table.join(
-    awful.key({ modkey, }, "s", hotkeys_popup.show_help,
-        { description = "show help", group = "awesome" }),
+local globalkeys = awful.util.table.join(awful.key({ modkey, }, "s", hotkeys_popup.show_help,
+    { description = "show help", group = "awesome" }),
     awful.key({ modkey, }, "Left", awful.tag.viewprev,
         { description = "view previous", group = "tag" }),
     awful.key({ modkey, }, "Right", awful.tag.viewnext,
@@ -229,11 +225,11 @@ local globalkeys = awful.util.table.join(
     awful.key({ modkey, }, "u", awful.client.urgent.jumpto,
         { description = "jump to urgent client", group = "client" }),
     awful.key({ modkey, }, "Tab", function()
-            awful.client.focus.history.previous()
-            if client.focus then
-                client.focus:raise()
-            end
-        end,
+        awful.client.focus.history.previous()
+        if client.focus then
+            client.focus:raise()
+        end
+    end,
         { description = "go back", group = "client" }),
 
     -- Standard program
@@ -281,13 +277,12 @@ local globalkeys = awful.util.table.join(
     -- Run .desktop file or switch window
     awful.key({ modkey }, "x", function() awful.spawn(runapp) end,
         { description = "application fuzzy search", group = "launcher" }),
-    -- Run pcmanfm
-    awful.key({ modkey }, "e", function() awful.spawn("pcmanfm") end,
+    -- Run file manager
+    awful.key({ modkey }, "e", function() awful.spawn("thunar") end,
         { description = "file explorer", group = "launcher" }))
 
-local clientkeys = awful.util.table.join(
-    awful.key({ modkey, }, "f", function(c) c.fullscreen = not c.fullscreen; c:raise() end,
-        { description = "toggle fullscreen", group = "client" }),
+local clientkeys = awful.util.table.join(awful.key({ modkey, }, "f", function(c) c.fullscreen = not c.fullscreen; c:raise() end,
+    { description = "toggle fullscreen", group = "client" }),
 
     awful.key({ modkey, "Shift" }, "c", function(c) c:kill() end,
         { description = "close", group = "client" }),
@@ -359,8 +354,7 @@ for i = 1, 9 do
             { description = "toggle focused client on tag #" .. i, group = "tag" }))
 end
 
-local clientbuttons = awful.util.table.join(
-    awful.button({}, 1, function(c) client.focus = c; c:raise() end),
+local clientbuttons = awful.util.table.join(awful.button({}, 1, function(c) client.focus = c; c:raise() end),
     awful.button({ modkey }, 1, awful.mouse.client.move),
     awful.button({ modkey }, 3, awful.mouse.client.resize))
 
@@ -404,47 +398,49 @@ end)
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function(c)
     -- buttons for the titlebar
-    local buttons = awful.util.table.join(
-        awful.button({ }, 1, function()
-            client.focus = c
-            c:raise()
-            awful.mouse.client.move(c)
-        end),
-        awful.button({ }, 3, function()
+    local buttons = awful.util.table.join(awful.button({}, 1, function()
+        client.focus = c
+        c:raise()
+        awful.mouse.client.move(c)
+    end),
+        awful.button({}, 3, function()
             client.focus = c
             c:raise()
             awful.mouse.client.resize(c)
-        end)
-    )
+        end))
 
-    awful.titlebar(c) : setup {
-        { -- Left
+    awful.titlebar(c):setup {
+        {
+            -- Left
             {
                 awful.titlebar.widget.iconwidget(c),
                 buttons = buttons,
-                layout  = wibox.layout.fixed.horizontal
+                layout = wibox.layout.fixed.horizontal
             },
             left = 5,
             right = 5,
             top = 5,
             bottom = 5,
-            layout  = wibox.container.margin
+            layout = wibox.container.margin
         },
-        { -- Middle
-            { -- Title
-                align  = "left",
+        {
+            -- Middle
+            {
+                -- Title
+                align = "left",
                 font = theme.titlebar_font,
                 widget = awful.titlebar.widget.titlewidget(c)
             },
             buttons = buttons,
-            layout  = wibox.layout.flex.horizontal
+            layout = wibox.layout.flex.horizontal
         },
-        { -- Right
-            awful.titlebar.widget.floatingbutton (c),
+        {
+            -- Right
+            awful.titlebar.widget.floatingbutton(c),
             awful.titlebar.widget.maximizedbutton(c),
-            awful.titlebar.widget.stickybutton   (c),
-            awful.titlebar.widget.ontopbutton    (c),
-            awful.titlebar.widget.closebutton    (c),
+            awful.titlebar.widget.stickybutton(c),
+            awful.titlebar.widget.ontopbutton(c),
+            awful.titlebar.widget.closebutton(c),
             layout = wibox.layout.fixed.horizontal()
         },
         layout = wibox.layout.align.horizontal
