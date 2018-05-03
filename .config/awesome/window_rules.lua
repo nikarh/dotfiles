@@ -18,6 +18,11 @@ return {
         properties = { floating = true }
     },
     {
+        rule = { class = "REAPER"  },
+        except = { name = ".*REAPER.*" },
+        properties = { floating = true }
+    },
+    {
         rule_any = { class = { "chromium", "Chromium", "Firefox" } },
         properties = { tag = tags.names.web }
     },
