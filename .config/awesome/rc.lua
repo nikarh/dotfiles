@@ -278,7 +278,7 @@ local globalkeys = awful.util.table.join(awful.key({ modkey, }, "s", hotkeys_pop
     awful.key({ modkey }, "x", function() awful.spawn(runapp) end,
         { description = "application fuzzy search", group = "launcher" }),
     -- Run file manager
-    awful.key({ modkey }, "e", function() awful.spawn("thunar") end,
+    awful.key({ modkey }, "e", function() awful.spawn("pcmanfm") end,
         { description = "file explorer", group = "launcher" }))
 
 local clientkeys = awful.util.table.join(awful.key({ modkey, }, "f", function(c) c.fullscreen = not c.fullscreen; c:raise() end,

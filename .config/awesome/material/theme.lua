@@ -4,8 +4,8 @@
 ----------------------------------
 
 local fonts = {
-    sans = "Noto Sans UI 9",
-    sans_bold = "Noto Sans UI Bold 9",
+    sans = "Noto Sans 9",
+    sans_bold = "Noto Sans Bold 9",
     mono = "Noto Mono 9",
     fa = "FontAwesome 12"
 }
