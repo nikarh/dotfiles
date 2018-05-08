@@ -9,6 +9,7 @@ local t = {
     chat  = " \u{f198} ",
     video = " \u{f03d} ",
     file  = " \u{f07c} ",
+    music = " \u{f025} "
 }
 
 local layout = {
@@ -20,13 +21,13 @@ local layout = {
         layout = awful.layout.suit.max
     }},
     {name = t.dev, settings = {
-        layout = awful.layout.suit.tile
+        layout = awful.layout.suit.max
     }},
     {name = t.mail, settings = {
-        layout = awful.layout.suit.tile
+        layout = awful.layout.suit.max
     }},
     {name = t.pass, settings = {
-        layout = awful.layout.suit.tile
+        layout = awful.layout.suit.max
     }},
     {name = t.chat, settings = {
         layout = awful.layout.suit.max
@@ -36,6 +37,9 @@ local layout = {
     }},
     {name = t.file, settings = {
         layout = awful.layout.suit.tile
+    }},
+    {name = t.music, settings = {
+        layout = awful.layout.suit.max
     }},
 }
 

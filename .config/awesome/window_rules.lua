@@ -23,6 +23,10 @@ return {
         properties = { floating = true }
     },
     {
+        rule_any = { class = { "REAPER", "deadbeef", "gmpc", "spotify", "Spotify", "Deadbeef", "Gmpc" } },
+        properties = { tag = tags.names.music }
+    },
+    {
         rule_any = { class = { "chromium", "Chromium", "Firefox" } },
         properties = { tag = tags.names.web }
     },
