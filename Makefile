@@ -10,7 +10,8 @@ install: install_profile \
 		 install_tmux \
 		 install_git \
 		 install_xprofile \
-		 install_packages
+		 install_packages \
+		 autostart
 .PHONY: install
 
 install_profile:
@@ -51,4 +52,21 @@ install_xprofile:
 	${ln} -s ~/.config/Xorg/xprofile ~/.xprofile
 
 install_packages:
-	@yaourt -S nvim tmux bash-git-prompt rofi
+	@sudo pacman --noconfirm -S neovim tmux rofi bash-completion fzf exa fd httpie ripgrep jq
+	@sudo pacman --noconfirm -S awesome cbatticon pavucontrol gpicview-gtk3 gsimplecal noto-fonts noto-fonts-emoji ttf-dejavu ttf-hack xarchiver xclip xdg-utils xorg-xev xorg-xinput xorg-xrandr xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap xorg-xkbcomp
+	@sudo pacman --noconfirm -S alsa-tools dnscrypt-proxy docker
+	@sudo pacman --noconfirm -S firefox chromium thunderbird keepassxc blueman lxappearance-gtk3 lxsession-gtk3 qt5-styleplugins
+	@sudo pacman --noconfirm -S arc-gtk-theme arc-solid-gtk-theme
+	@yaourt -S bash-git-prompt insync systemd-boot-pacman-hook direnv 
+	@yaourt -S adapta-grk-theme-git alacritty-git paper-gtk-theme-git super-flat-remix-icon-theme ttf-font-awesome-4
+
+autostart:
+	@mkdir -p ~/.config/autostart
+	@ln -s /usr/share/applications/insync.desktop ~/.config/autostart/
+	@ln -s /usr/share/applications/org.keepassxc.KeePassXC.desktop ~/.config/autostart/
+	@ln -s /usr/share/applications/firefox.desktop ~/.config/autostart
+	@ln -s /usr/share/applications/org.keepassxc.KeePassXC.desktop ~/.config/autostart/
+	@ln -s /usr/share/applications/pasystray.desktop ~/.config/autostart
+	@ln -s /usr/share/applications/libinput-gestures.desktop ~/.config/autostart
+	
+
