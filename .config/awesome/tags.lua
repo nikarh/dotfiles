@@ -32,9 +32,6 @@ local layout = {
     {name = t.chat, settings = {
         layout = awful.layout.suit.max
     }},
-    {name = t.video, settings = {
-        layout = awful.layout.suit.floating
-    }},
     {name = t.file, settings = {
         layout = awful.layout.suit.tile
     }},
