@@ -1,7 +1,11 @@
 .DEFAULT_GOAL: install
 
-ln 	?= ln -f
-PWD ?= $(shell pwd)
+ln			?= ln -f
+PWD			?= $(shell pwd)
+pacman		?= sudo pacman --noconfirm
+aur			?= yaourt --noconfirm
+systemctl	?= sudo systemctl
+user		?= id -un
 
 install: install_profile \
 		 install_bash \
@@ -11,62 +15,101 @@ install: install_profile \
 		 install_git \
 		 install_xprofile \
 		 install_packages \
-		 autostart
+		 install_autostart \
+		 install_localtime \
+		 add_groups
 .PHONY: install
 
-install_profile:
-	${ln} -s ${PWD}/.profile ~/.profile
-
-install_bash:
+create_config:
 	@mkdir -p ~/.config
-	${ln} -s ${PWD}/.config/bash ~/.config/
-	${ln} -s ~/.config/bash/bashrc ~/.bashrc
-	${ln} -s ~/.config/bash/bash_logout ~/.bash_logout
-	${ln} -s ~/.config/bash/inputrc ~/.inputrc
+	@mkdir -p ~/.config/autostart
 
-install_bash_sensible:
+install_profile:
+	$(ln) -s $(PWD)/.profile ~/.profile
+
+install_bash: create_config
+	$(ln) -s $(PWD)/.config/bash ~/.config/
+	$(ln) -s ~/.config/bash/bashrc ~/.bashrc
+	$(ln) -s ~/.config/bash/bash_logout ~/.bash_logout
+	$(ln) -s ~/.config/bash/inputrc ~/.inputrc
+
+delete_bash_sensible:
+	rm -rf ~/.config/bash-sensible
+
+install_bash_sensible: delete_bash_sensible create_config
 	@mkdir -p ~/.config/bash-sensible
 	@git clone git@github.com:mrzool/bash-sensible.git ~/.config/bash-sensible
 	@sed -i 's/^shopt -s cdable_vars/#shopt -s cdable_vars/' \
 		~/.config/bash-sensible/sensible.bash
 
-install_nvim:
+install_nvim: create_config
 	@mkdir -p ~/.config/nvim
-	${ln} -s ${PWD}/.config/nvim/init.vim ~/.config/nvim/init.vim
+	$(ln) -s $(PWD)/.config/nvim/init.vim ~/.config/nvim/init.vim
 	curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs \
             https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-install_tmux:
+delete_tmux:
+	rm -rf ~/.config/tmux/plugins/tpm
+
+install_tmux: delete_tmux create_config
 	@mkdir -p ~/.config/tmux
 	@git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
-	${ln} -s ${PWD}/.tmux.conf ~/.tmux.conf
+	$(ln) -s $(PWD)/.tmux.conf ~/.tmux.conf
 
-install_git:
-	@mkdir -p ~/.config
-	${ln} -s ${PWD}/.config/git ~/.config/
+install_git: create_config
+	$(ln) -s $(PWD)/.config/git ~/.config/
 
-install_xprofile:
-	@mkdir -p ~/.config
-	${ln} -s ${PWD}/.config/Xorg ~/.config/
+install_xprofile: create_config
+	$(ln) -s $(PWD)/.config/Xorg ~/.config/
 	cd ~/.config/Xorg/control && make deps build clean
-	${ln} -s ~/.config/Xorg/xprofile ~/.xprofile
+	$(ln) -s ~/.config/Xorg/xprofile ~/.xprofile
 
 install_packages:
-	@sudo pacman --noconfirm -S neovim tmux rofi bash-completion fzf exa fd httpie ripgrep jq
-	@sudo pacman --noconfirm -S awesome cbatticon pavucontrol gpicview-gtk3 gsimplecal noto-fonts noto-fonts-emoji ttf-dejavu ttf-hack xarchiver xclip xdg-utils xorg-xev xorg-xinput xorg-xrandr xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap xorg-xkbcomp
-	@sudo pacman --noconfirm -S alsa-tools dnscrypt-proxy docker
-	@sudo pacman --noconfirm -S firefox chromium thunderbird keepassxc blueman lxappearance-gtk3 lxsession-gtk3 qt5-styleplugins
-	@sudo pacman --noconfirm -S arc-gtk-theme arc-solid-gtk-theme
-	@yaourt -S bash-git-prompt insync systemd-boot-pacman-hook direnv 
-	@yaourt -S adapta-grk-theme-git alacritty-git paper-gtk-theme-git super-flat-remix-icon-theme ttf-font-awesome-4
+	# Console utils
+	$(pacman) -S tmux neovim bash-completion fzf exa fd httpie ripgrep jq \
+		alsa-tools dnscrypt-proxy docker
+	# Xorg apps and utils
+	$(pacman) -S awesome rofi cbatticon pavucontrol \
+		firefox chromium thunderbird keepassxc blueman \
+		lxappearance-gtk3 lxsession-gtk3 qt5-styleplugins \
+		gpicview-gtk3 xarchiver gsimplecal \
+		xclip xdg-utils xorg-xev xorg-xinput xorg-xrandr \
+		xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap xorg-xkbcomp
+	# Themes
+	$(pacman) -S noto-fonts noto-fonts-emoji ttf-dejavu ttf-hack \
+	 	arc-gtk-theme arc-solid-gtk-theme
 
-autostart:
+	# AUR non-GUI
+	$(aur) -S bash-git-prompt systemd-boot-pacman-hook direnv \
+		intel-hybrid-codec-driver libva-intel-driver-hybrid \
+		terminess-powerline-font-git
+	# AUR GUI tools
+	$(aur) -S alacritty-git insync freshplayerplugin libinput-gestures light
+	# AUR Themes
+	$(aur) -S adapta-grk-theme-git super-flat-remix-icon-theme ttf-font-awesome-4
+
+	# Enable services
+	$(systemctl) enable --now docker.service
+
+install_autostart:
 	@mkdir -p ~/.config/autostart
-	@ln -s /usr/share/applications/insync.desktop ~/.config/autostart/
-	@ln -s /usr/share/applications/org.keepassxc.KeePassXC.desktop ~/.config/autostart/
-	@ln -s /usr/share/applications/firefox.desktop ~/.config/autostart
-	@ln -s /usr/share/applications/org.keepassxc.KeePassXC.desktop ~/.config/autostart/
-	@ln -s /usr/share/applications/pasystray.desktop ~/.config/autostart
-	@ln -s /usr/share/applications/libinput-gestures.desktop ~/.config/autostart
+	$(ln) @ln -s /usr/share/applications/insync.desktop $(PWD)/.config/autostart/
+	$(ln) @ln -s /usr/share/applications/org.keepassxc.KeePassXC.desktop ~/.config/autostart/
+	$(ln) @ln -s /usr/share/applications/firefox.desktop ~/.config/autostart
+	$(ln) @ln -s /usr/share/applications/org.keepassxc.KeePassXC.desktop ~/.config/autostart/
+	$(ln) @ln -s /usr/share/applications/pasystray.desktop ~/.config/autostart
+	$(ln) @ln -s /usr/share/applications/libinput-gestures.desktop ~/.config/autostart
 	
+install_localtime:
+	$(aur) -S localtime-git
+	$(systemctl) enable --now localtime.service
 
+add_groups:
+	gpasswd --add $(user) docker
+	gpasswd --add $(user) audio
+	gpasswd --add $(user) video
+	gpasswd --add $(user) storage
+	gpasswd --add $(user) input
+	gpasswd --add $(user) sudo
+	gpasswd --add $(user) lp
+	gpasswd --add $(user) systemd-journal
