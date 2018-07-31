@@ -23,7 +23,7 @@ return {
         properties = { floating = true }
     },
     {
-        rule_any = { class = { "REAPER", "deadbeef", "gmpc", "spotify", "Spotify", "Deadbeef", "Gmpc" } },
+        rule_any = { class = { "REAPER", "deadbeef", "gmpc", "spotify", "Spotify", "Deadbeef", "Gmpc", "Pavucontrol", "pavucontrol", "spotify" } },
         properties = { tag = tags.names.music }
     },
     {
