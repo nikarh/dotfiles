@@ -86,17 +86,16 @@ install_packages:
 	# AUR GUI tools
 	$(aur) -S alacritty-git insync freshplayerplugin libinput-gestures light
 	# AUR Themes
-	$(aur) -S adapta-grk-theme-git super-flat-remix-icon-theme ttf-font-awesome-4
+	$(aur) -S adapta-gtk-theme-git flat-remix-git ttf-font-awesome-4
 
 	# Enable services
 	$(systemctl) enable --now docker.service
 
 install_autostart:
 	@mkdir -p ~/.config/autostart
-	$(ln) @ln -s /usr/share/applications/insync.desktop $(PWD)/.config/autostart/
+	$(ln) @ln -s /usr/share/applications/insync.desktop ~/.config/autostart/
 	$(ln) @ln -s /usr/share/applications/org.keepassxc.KeePassXC.desktop ~/.config/autostart/
 	$(ln) @ln -s /usr/share/applications/firefox.desktop ~/.config/autostart
-	$(ln) @ln -s /usr/share/applications/org.keepassxc.KeePassXC.desktop ~/.config/autostart/
 	$(ln) @ln -s /usr/share/applications/pasystray.desktop ~/.config/autostart
 	$(ln) @ln -s /usr/share/applications/libinput-gestures.desktop ~/.config/autostart
 	
