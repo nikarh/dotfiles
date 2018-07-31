@@ -138,28 +138,25 @@ func volumeToggle() {
 	}
 }
 
-func brightnessDec() {
-	unlock := waitLock("backlight-control")
-	defer unlock()
-
-	out, _ := exec.Command("xbacklight").Output()
+func getBrightness() float64 {
+    out, _ := exec.Command("xbacklight", "-get").Output()
 	level, _ := strconv.ParseFloat(string(out[0:len(out)-1]), 64)
 
-	newLevel := math.Max(1, math.Ceil(level-math.Ceil(math.Log(level*1.7))))
+    return level
+}
 
-	exec.Command("xbacklight", "-set", fmt.Sprintf("%f", newLevel)).Run()
+func brightnessDec() {
+    level := getBrightness() 
+	diff := math.Log(1 + level*5)
+	exec.Command("light", "-A", fmt.Sprintf("%f", diff)).Run()
 }
 
 func brightnessInc() {
-	unlock := waitLock("backlight-control")
-	defer unlock()
+    level := getBrightness()
+	diff := math.Log(1 + level*5)
 
-	out, _ := exec.Command("xbacklight").Output()
-	level, _ := strconv.ParseFloat(string(out[0:len(out)-1]), 64)
+	exec.Command("light", "-U", fmt.Sprintf("%f", diff)).Run()
 
-	newLevel := math.Min(100, math.Ceil(level+math.Ceil(math.Log(level*1.7))))
-
-	exec.Command("xbacklight", "-set", fmt.Sprintf("%f", newLevel)).Run()
 }
 
 func touchpadToggle() {
