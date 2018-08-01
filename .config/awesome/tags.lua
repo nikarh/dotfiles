@@ -1,43 +1,81 @@
 local awful = require("awful")
 
 local t = {
-    term  = " \u{f120} ",
-    web   = " \u{f0ac} ",
-    dev   = " \u{f121} ",
-    mail  = " \u{f0e0} ",
-    pass  = " \u{f23e} ",
-    chat  = " \u{f198} ",
+    term = " \u{f120} ",
+    web = " \u{f0ac} ",
+    dev = " \u{f121} ",
+    mail = " \u{f0e0} ",
+    pass = " \u{f23e} ",
+    chat = " \u{f198} ",
     video = " \u{f03d} ",
-    file  = " \u{f07c} ",
+    file = " \u{f07c} ",
     music = " \u{f025} "
 }
 
-local layout = {
-    {name = t.term, settings = {
-        layout   = awful.layout.suit.tile,
+local layouts = {}
+layouts[t.term] = {
+    name = t.term,
+    settings = {
+        layout = awful.layout.suit.tile,
         selected = true
-    }},
-    {name = t.web, settings = {
+    }
+}
+layouts[t.web] = {
+    name = t.web,
+    settings = {
         layout = awful.layout.suit.max
-    }},
-    {name = t.dev, settings = {
+    }
+}
+layouts[t.dev] = {
+    name = t.dev,
+    settings = {
         layout = awful.layout.suit.max
-    }},
-    {name = t.mail, settings = {
+    }
+}
+layouts[t.mail] = {
+    name = t.mail,
+    settings = {
         layout = awful.layout.suit.max
-    }},
-    {name = t.pass, settings = {
+    }
+}
+layouts[t.pass] = {
+    name = t.pass,
+    settings = {
         layout = awful.layout.suit.max
-    }},
-    {name = t.chat, settings = {
+    }
+}
+
+layouts[t.chat] = {
+    name = t.chat,
+    settings = {
         layout = awful.layout.suit.max
-    }},
-    {name = t.file, settings = {
+    }
+}
+
+layouts[t.file] = {
+    name = t.file,
+    settings = {
         layout = awful.layout.suit.tile
-    }},
-    {name = t.music, settings = {
+    }
+}
+
+layouts[t.music] = {
+    name = t.music,
+    settings = {
         layout = awful.layout.suit.max
-    }},
+    }
+}
+
+
+local layout = {
+    layouts[t.term],
+    layouts[t.web],
+    layouts[t.dev],
+    layouts[t.mail],
+    layouts[t.pass],
+    layouts[t.chat],
+    layouts[t.file],
+    layouts[t.music]
 }
 
 return {
