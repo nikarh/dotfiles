@@ -77,7 +77,7 @@ install_packages:
 		xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap xorg-xkbcomp
 	# Themes
 	$(pacman) -S noto-fonts noto-fonts-emoji ttf-dejavu ttf-hack \
-	 	arc-gtk-theme arc-solid-gtk-theme
+	 	arc-gtk-theme arc-solid-gtk-theme adapta-gtk-theme
 
 	# AUR non-GUI
 	$(aur) -S bash-git-prompt systemd-boot-pacman-hook direnv \
@@ -86,7 +86,7 @@ install_packages:
 	# AUR GUI tools
 	$(aur) -S alacritty-git insync freshplayerplugin libinput-gestures light
 	# AUR Themes
-	$(aur) -S adapta-gtk-theme-git flat-remix-git ttf-font-awesome-4
+	$(aur) -S flat-remix-git ttf-font-awesome-4
 
 	# Enable services
 	$(systemctl) enable --now docker.service
@@ -98,7 +98,7 @@ install_autostart:
 	$(ln) @ln -s /usr/share/applications/firefox.desktop ~/.config/autostart
 	$(ln) @ln -s /usr/share/applications/pasystray.desktop ~/.config/autostart
 	$(ln) @ln -s /usr/share/applications/libinput-gestures.desktop ~/.config/autostart
-	
+
 install_localtime:
 	$(aur) -S localtime-git
 	$(systemctl) enable --now localtime.service
