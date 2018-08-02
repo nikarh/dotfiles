@@ -10,4 +10,13 @@ setxkbmap $(cat ~/.config/Xorg/Xkbmap)
 compton -i 0.95 --backend glx --glx-swap-method=buffer-age --no-fading-openclose -b
 xset r rate 200 60
 
+SCREENS=$(xrandr --listmonitors | awk '{ print $NF }' | paste -sd "," -)
+
+if [[ "$HOSTNAME" -eq "bilderlings" && "$SCREENS" -eq "3,eDP1,HDMI1,DP1" ]]; then
+    xrandr \
+        --output HDMI1 --mode 1920x1080 --pos 3840x0 --rotate normal \
+        --output DP1 --primary --mode 1920x1080 --pos 1920x0 --rotate normal \
+        --output eDP1 --mode 1920x1080 --pos 0x0 --rotate normal 
+fi
+
 lxsession&

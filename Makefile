@@ -74,7 +74,7 @@ install_packages:
 		lxappearance-gtk3 lxsession-gtk3 qt5-styleplugins \
 		gpicview-gtk3 xarchiver gsimplecal \
 		xclip xdg-utils xorg-xev xorg-xinput xorg-xrandr \
-		xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap xorg-xkbcomp
+		xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap xorg-xkbcomp xbindkeys
 	# Themes
 	$(pacman) -S noto-fonts noto-fonts-emoji ttf-dejavu ttf-hack \
 	 	arc-gtk-theme arc-solid-gtk-theme adapta-gtk-theme
