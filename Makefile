@@ -67,7 +67,7 @@ install_xprofile: create_config
 install_packages:
 	# Console utils
 	$(pacman) -S tmux neovim bash-completion fzf exa fd httpie ripgrep jq \
-		alsa-tools dnscrypt-proxy docker
+		alsa-tools dnscrypt-proxy docker diff-so-fancy
 	# Xorg apps and utils
 	$(pacman) -S awesome rofi cbatticon pavucontrol \
 		firefox chromium thunderbird keepassxc blueman \
