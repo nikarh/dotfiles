@@ -11,12 +11,19 @@
    XF86AudioMute
 
 #"~/.config/Xorg/control/bin/control brightness inc"
-"light -A 8"
-   XF86MonBrightnessUp
+#"light -A 8"
+#   XF86MonBrightnessUp
 
 #"~/.config/Xorg/control/bin/control brightness dec"
-"light -U 8"
-   XF86MonBrightnessDown
+#"light -U 8"
+#   XF86MonBrightnessDown
 
 "~/.config/Xorg/control.sh touchpad toggle"
    XF86TouchpadToggle
+
+"gnome-screenshot -ac"
+   Print
+
+"gnome-screenshot -ic"
+   Control + Print
+
