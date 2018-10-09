@@ -82,9 +82,9 @@ install_packages:
 	# AUR non-GUI
 	$(aur) -S bash-git-prompt systemd-boot-pacman-hook direnv \
 		intel-hybrid-codec-driver libva-intel-driver-hybrid \
-		terminess-powerline-font-git
+		terminess-powerline-font-git light
 	# AUR GUI tools
-	$(aur) -S alacritty-git insync freshplayerplugin libinput-gestures light
+	$(aur) -S alacritty-git insync freshplayerplugin libinput-gestures
 	# AUR Themes
 	$(aur) -S flat-remix-git ttf-font-awesome-4
 

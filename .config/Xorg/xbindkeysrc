@@ -11,12 +11,12 @@
    XF86AudioMute
 
 #"~/.config/Xorg/control/bin/control brightness inc"
-#"light -A 8"
-#   XF86MonBrightnessUp
+"light -S 100"
+   XF86MonBrightnessUp
 
 #"~/.config/Xorg/control/bin/control brightness dec"
-#"light -U 8"
-#   XF86MonBrightnessDown
+"light -S 1"
+   XF86MonBrightnessDown
 
 "~/.config/Xorg/control.sh touchpad toggle"
    XF86TouchpadToggle

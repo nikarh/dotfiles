@@ -8,8 +8,6 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/esiqveland/notify"
 	"log"
-	"os/exec"
-	"strconv"
 	"github.com/alexflint/go-filemutex"
 )
 
@@ -138,31 +136,6 @@ func volumeToggle() {
 	}
 }
 
-func getBrightness() float64 {
-    out, _ := exec.Command("xbacklight", "-get").Output()
-	level, _ := strconv.ParseFloat(string(out[0:len(out)-1]), 64)
-
-    return level
-}
-
-func brightnessDec() {
-    level := getBrightness() 
-	diff := math.Log(1 + level*5)
-	exec.Command("light", "-A", fmt.Sprintf("%f", diff)).Run()
-}
-
-func brightnessInc() {
-    level := getBrightness()
-	diff := math.Log(1 + level*5)
-
-	exec.Command("light", "-U", fmt.Sprintf("%f", diff)).Run()
-
-}
-
-func touchpadToggle() {
-
-}
-
 func main() {
 	flag.Parse()
 	cmd, subcmd := flag.Arg(0), flag.Arg(1)
@@ -178,24 +151,6 @@ func main() {
 			volumeToggle()
 		default:
 			fmt.Printf("unknown subcommand '%s'", subcmd)
-		}
-	case "touchpad":
-		switch subcmd {
-		case "toggle":
-			touchpadToggle()
-		default:
-			fmt.Printf("unknown subcommand '%s'", subcmd)
-		}
-	case "brightness":
-		{
-			switch subcmd {
-			case "inc":
-				brightnessInc()
-			case "dec":
-				brightnessDec()
-			default:
-				fmt.Printf("unknown subcommand '%s'", subcmd)
-			}
 		}
 	default:
 		fmt.Printf("unknown command '%s'", cmd)
