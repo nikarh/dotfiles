@@ -75,7 +75,7 @@ install_packages:
 		gpicview-gtk3 xarchiver gsimplecal \
 		xclip xdg-utils xorg-xev xorg-xinput xorg-xrandr autorandr \
 		xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap xorg-xkbcomp xbindkeys \
-		gnome-screenshot
+		gnome-screenshot alacritty
 	# Themes
 	$(pacman) -S noto-fonts noto-fonts-emoji ttf-dejavu ttf-hack \
 	 	arc-gtk-theme arc-solid-gtk-theme adapta-gtk-theme
@@ -85,7 +85,7 @@ install_packages:
 		intel-hybrid-codec-driver libva-intel-driver-hybrid \
 		terminess-powerline-font-git light
 	# AUR GUI tools
-	$(aur) -S alacritty-git insync freshplayerplugin libinput-gestures
+	$(aur) -S insync freshplayerplugin libinput-gestures
 	# AUR Themes
 	$(aur) -S flat-remix-git ttf-font-awesome-4
 
