@@ -20,7 +20,6 @@ return {
     {
         rule = { class = "REAPER"  },
         except = { name = ".*REAPER.*" },
-        properties = { floating = true }
     },
     {
         rule_any = { class = { "REAPER", "deadbeef", "gmpc", "spotify", "Spotify", "Deadbeef", "Gmpc", "Pavucontrol", "pavucontrol", "spotify" } },
