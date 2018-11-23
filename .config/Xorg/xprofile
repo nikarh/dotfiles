@@ -6,8 +6,9 @@ export QT_AUTO_SCREEN_SCALE_FACTOR=0.99
 
 xrdb -all -load ~/.config/Xorg/Xresources
 xbindkeys -f ~/.config/Xorg/xbindkeysrc --poll-rc
-setxkbmap $(cat ~/.config/Xorg/Xkbmap)
 compton -i 0.95 --backend glx --glx-swap-method=buffer-age --no-fading-openclose -b
-xset r rate 200 60
+source ~/.config/Xorg/keyboard.sh
+autocutsel -fork
+~/.config/Xorg/watch_keyboard.py &
 
 lxsession&

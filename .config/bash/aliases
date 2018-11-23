@@ -2,7 +2,7 @@ alias ls='ls --color=auto'
 alias l='ls -lAh'
 alias df='df -h'
 alias less='less -r'
-alias yaourt='pacaur'
+alias yaourt='yay'
 
 if type -P exa > /dev/null; then
     alias ls='exa'
