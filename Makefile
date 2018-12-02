@@ -17,6 +17,7 @@ install: install_profile \
 		 install_packages \
 		 install_autostart \
 		 install_localtime \
+		 install_awesome \
 		 add_groups
 .PHONY: install
 
@@ -26,6 +27,13 @@ create_config:
 
 install_profile:
 	$(ln) -s $(PWD)/.profile ~/.profile
+
+delete_awesome:
+	rm -rf ~/.config/awesome/tyrannical
+
+install_awesome: delete_awesome
+	$(ln) -s $(PWD)/.config/awesome ~/.config/awesome
+	cd ~/.config/awesome && git clone git@github.com:Elv13/tyrannical.git
 
 install_bash: create_config
 	$(ln) -s $(PWD)/.config/bash ~/.config/

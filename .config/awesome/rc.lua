@@ -1,75 +1,20 @@
 local gears = require("gears")
 local awful = require("awful")
 local wibox = require("wibox")
-local beautiful = require("beautiful")
-local naughty = require("naughty")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 
+local beautiful = require("beautiful")
+beautiful.init("/home/nikarh/.config/awesome/material/theme.lua")
+
 require("awful.autofocus")
+require("tags")
 
-local tags = require("tags")
-
-function dirLookup(dir)
-    local arr = {}
-    local p = io.popen('find "' .. dir .. '" -type d')
-    for file in p:lines() do
-        arr[#arr + 1] = filename
-    end
-
-    return arr
-end
-
-naughty.config.defaults.icon_size = 48
-naughty.config.icon_dirs = {
-    os.getenv("HOME") .. "/.icons/Flat-Remix/status/",
-    "/usr/share/icons/Flat-Remix/",
-    "/usr/share/icons/Flat-Remix/base/",
-    "/usr/share/icons/Flat-Remix/symbolic/",
-    "/usr/share/icons/Flat-Remix/apps/scalable/",
-    "/usr/share/icons/Flat-Remix/status/",
-    "/usr/share/icons/hicolor/",
-    "/usr/share/icons/",
-    "/usr/share/pixmaps/",
-}
-naughty.config.icon_formats = { "svgz", "svg", "png", "gif" }
-naughty.config.width = 600
-naughty.config.notify_callback = function(args)
-    return args
-end
-
--- {{{ Error handling
--- Check if awesome encountered an error during startup and fell back to
--- another config (This code will only ever execute for the fallback config)
-if awesome.startup_errors then
-    naughty.notify({
-        preset = naughty.config.presets.critical,
-        title = "Oops, there were errors during startup!",
-        text = awesome.startup_errors
-    })
-end
-
--- Handle runtime errors after startup
-do
-    local in_error = false
-    awesome.connect_signal("debug::error", function(err)
-        -- Make sure we don't go into an endless error loop
-        if in_error then return end
-        in_error = true
-
-        naughty.notify({
-            preset = naughty.config.presets.critical,
-            title = "Oops, an error happened!",
-            text = tostring(err)
-        })
-        in_error = false
-    end)
-end
--- }}}
+require("naughty_cfg")
+require("errors_cfg")
+require("wallpaper_cfg")
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init("/home/nikarh/.config/awesome/material/theme.lua")
-
 
 local runcmd = "rofi -show run -terminal alacritty -font"
 local runapp = "rofi -combi-modi window,drun -show combi -modi combi"
@@ -77,26 +22,23 @@ local terminal = "alacritty -t Terminal -e tmux"
 
 local modkey = "Mod4"
 
--- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
     awful.layout.suit.tile,
     awful.layout.suit.tile.bottom,
     awful.layout.suit.max,
     awful.layout.suit.floating,
 }
--- }}}
-
 
 -- {{{ Wibar
-local mykeyboardlayout = awful.widget.keyboardlayout()
-
+local keyboard_layout = awful.widget.keyboardlayout()
 local batmon = require("widgets/battery_indicator")
 local clock = require("widgets/clock")
 local separator = require("widgets/separator")
-local window_rules = require("window_rules")
+-- local window_rules = require("window_rules")
 
 -- Create a wibox for each screen and add it
-local taglist_buttons = awful.util.table.join(awful.button({}, 1, function(t) t:view_only() end),
+local taglist_buttons = awful.util.table.join(
+    awful.button({}, 1, function(t) t:view_only() end),
     awful.button({ modkey }, 1, function(t)
         if client.focus then
             client.focus:move_to_tag(t)
@@ -111,46 +53,23 @@ local taglist_buttons = awful.util.table.join(awful.button({}, 1, function(t) t:
     awful.button({}, 4, function(t) awful.tag.viewnext(t.screen) end),
     awful.button({}, 5, function(t) awful.tag.viewprev(t.screen) end))
 
-local tasklist_buttons = awful.util.table.join(awful.button({}, 1, function(c)
-    if c == client.focus then
-        c.minimized = true
-    else
-        c.minimized = false
-        if not c:isvisible() and c.first_tag then
-            c.first_tag:view_only()
+local tasklist_buttons = awful.util.table.join(
+    awful.button({}, 1, function(c)
+        if c == client.focus then
+            c.minimized = true
+        else
+            c.minimized = false
+            if not c:isvisible() and c.first_tag then
+                c.first_tag:view_only()
+            end
+            client.focus = c
+            c:raise()
         end
-        client.focus = c
-        c:raise()
-    end
-end),
+    end),
     awful.button({}, 4, function() awful.client.focus.byidx(1) end),
     awful.button({}, 5, function() awful.client.focus.byidx(-1) end))
 
-local function set_wallpaper(s)
-    -- Wallpaper
-    if beautiful.wallpaper then
-        local wallpaper = beautiful.wallpaper
-        -- If wallpaper is a function, call it with the screen
-        if type(wallpaper) == "function" then
-            wallpaper = wallpaper(s)
-        end
-        gears.wallpaper.maximized(wallpaper, s, true)
-    end
-end
-
--- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
-screen.connect_signal("property::geometry", set_wallpaper)
-
 awful.screen.connect_for_each_screen(function(s)
-    -- Wallpaper
-    set_wallpaper(s)
-
-    for _, tag in ipairs(tags.layout) do
-        tag["settings"]["screen"] = s
-        awful.tag.add(tag.name, tag.settings)
-    end
-    --awful.tag(tags.layout, s, awful.layout.layouts[1])
-
     s.mylayoutbox = awful.widget.layoutbox(s)
     s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
@@ -169,7 +88,7 @@ awful.screen.connect_for_each_screen(function(s)
         -- Right widgets
         {
             layout = wibox.layout.fixed.horizontal,
-            mykeyboardlayout,
+            keyboard_layout,
             separator,
             {
                 wibox.widget.systray(),
@@ -193,8 +112,9 @@ end)
 -- }}}
 
 -- {{{ Key bindings
-local globalkeys = awful.util.table.join(awful.key({ modkey, }, "s", hotkeys_popup.show_help,
-    { description = "show help", group = "awesome" }),
+local globalkeys = awful.util.table.join(
+    awful.key({ modkey, }, "s", hotkeys_popup.show_help,
+        { description = "show help", group = "awesome" }),
     awful.key({ modkey, }, "Left", awful.tag.viewprev,
         { description = "view previous", group = "tag" }),
     awful.key({ modkey, }, "Right", awful.tag.viewnext,
@@ -278,12 +198,12 @@ local globalkeys = awful.util.table.join(awful.key({ modkey, }, "s", hotkeys_pop
     awful.key({ modkey }, "x", function() awful.spawn(runapp) end,
         { description = "application fuzzy search", group = "launcher" }),
     -- Run file manager
-    awful.key({ modkey }, "e", function() awful.spawn("pcmanfm") end,
+    awful.key({ modkey }, "e", function() awful.spawn("thunar") end,
         { description = "file explorer", group = "launcher" }))
 
-local clientkeys = awful.util.table.join(awful.key({ modkey, }, "f", function(c) c.fullscreen = not c.fullscreen; c:raise() end,
-    { description = "toggle fullscreen", group = "client" }),
-
+local clientkeys = awful.util.table.join(
+    awful.key({ modkey, }, "f", function(c) c.fullscreen = not c.fullscreen; c:raise() end,
+        { description = "toggle fullscreen", group = "client" }),
     awful.key({ modkey, "Shift" }, "c", function(c) c:kill() end,
         { description = "close", group = "client" }),
 
@@ -354,7 +274,8 @@ for i = 1, 9 do
             { description = "toggle focused client on tag #" .. i, group = "tag" }))
 end
 
-local clientbuttons = awful.util.table.join(awful.button({}, 1, function(c) client.focus = c; c:raise() end),
+local clientbuttons = awful.util.table.join(
+    awful.button({}, 1, function(c) client.focus = c; c:raise() end),
     awful.button({ modkey }, 1, awful.mouse.client.move),
     awful.button({ modkey }, 3, awful.mouse.client.resize))
 
@@ -364,7 +285,7 @@ root.keys(globalkeys)
 
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
-awful.rules.rules = awful.util.table.join({
+awful.rules.rules = awful.util.table.join(awful.rules.rules, {
     {
         rule = {},
         properties = {
@@ -379,7 +300,7 @@ awful.rules.rules = awful.util.table.join({
             titlebars_enabled = false,
         }
     }
-}, window_rules)
+})
 
 -- }}}
 
