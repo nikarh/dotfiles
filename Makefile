@@ -87,7 +87,6 @@ install_packages:
 	# Themes
 	$(pacman) -S noto-fonts noto-fonts-emoji ttf-dejavu ttf-hack \
 	 	arc-gtk-theme arc-solid-gtk-theme adapta-gtk-theme
-
 	# AUR non-GUI
 	$(aur) -S bash-git-prompt systemd-boot-pacman-hook direnv \
 		intel-hybrid-codec-driver libva-intel-driver-hybrid \
@@ -96,7 +95,8 @@ install_packages:
 	$(aur) -S insync freshplayerplugin libinput-gestures
 	# AUR Themes
 	$(aur) -S flat-remix-git ttf-font-awesome-4
-
+	$(pacman) -S thunar gvfs-smb
+	$(aur) -S pulseaudio-modules-bt-git
 	# Enable services
 	$(systemctl) enable --now docker.service
 
