@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Facebook Messenger
+Comment=Launch chromium with Messenger
+Categories=Laptop;
+Exec=chromium --app="https://messenger.com"
+Terminal=false
