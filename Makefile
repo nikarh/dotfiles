@@ -3,7 +3,7 @@
 ln			?= ln -f
 PWD			?= $(shell pwd)
 pacman		?= sudo pacman --noconfirm
-aur			?= yaourt --noconfirm
+aur			?= yay --noconfirm
 systemctl	?= sudo systemctl
 user		?= id -un
 
@@ -121,3 +121,4 @@ add_groups:
 	gpasswd --add $(user) sudo
 	gpasswd --add $(user) lp
 	gpasswd --add $(user) systemd-journal
+	gpasswd --add $(user) wireshark
