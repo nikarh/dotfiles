@@ -14,7 +14,7 @@ local layouts = {}
 layouts[t.term] = {
     name = t.term,
     settings = {
-        layout = awful.layout.suit.tile,
+        layout = awful.layout.suit.max,
         selected = true
     }
 }
