@@ -20,9 +20,6 @@ return {
     {
         rule = { class = "REAPER"  },
         except = { name = ".*REAPER.*" },
-    },
-    {
-        rule_any = { class = { "REAPER", "deadbeef", "gmpc", "spotify", "Spotify", "Deadbeef", "Gmpc", "Pavucontrol", "pavucontrol", "spotify" } },
         properties = { tag = tags.names.music }
     },
     {
@@ -30,16 +27,24 @@ return {
         properties = { tag = tags.names.web }
     },
     {
+        rule_any = { class = { "REAPER", "deadbeef", "gmpc", "spotify", "Spotify", "Deadbeef", "Gmpc", "Pavucontrol", "pavucontrol", "spotify", "open.spotify.com__collection_playlists" } },
+        properties = { tag = tags.names.music, floating = false }
+    },
+    {
+        rule = { instance = "Your Library - Playlists", class = "Chromium" },
+        properties = { tag = tags.names.music }
+    },
+    {
+        rule = { instance = "Browse - Featured", class = "Chromium" },
+        properties = { tag = tags.names.music, floating = false }
+    },
+    {
         rule = { class = "st-256color", name = "Main Terminal" },
         properties = { tag = tags.names.term }
     },
     {
-        rule = { class = "jetbrains-idea" },
+        rule_any = { class = { "jetbrains-idea", "code-oss", "insomnia", "Insomnia", "sun-awt-X11-XDialogPeer", "sun-awt-X11-XFramePeer", "sun-awt-X11-XWindowPeer" } },
         properties = { tag = tags.names.dev }
-    },
-    {
-        rule_any = { class = { "insomnia", "Insomnia" } },
-        properties = { tag = tags.names.web }
     },
     {
         rule = { class = "keepassxc" },
@@ -50,11 +55,7 @@ return {
         properties = { tag = tags.names.chat }
     },
     {
-        rule = { instance = "agile-stacks.slack.com", class = "Chromium"},
-        properties = { tag = tags.names.chat, floating = false }
-    },
-    {
-        rule = { instance = "parisiancafe.slack.com", class = "Chromium" },
+        rule = { instance = "bilderlings-pay.slack.com", class = "Chromium" },
         properties = { tag = tags.names.chat, floating = false }
     },
     {
@@ -68,9 +69,5 @@ return {
     {
         rule = { class = "gsimplecal" },
         properties = { floating = true }
-    },
-    {
-        rule = { class = "zoom" },
-        properties = { tag = tags.names.video }
     },
 };

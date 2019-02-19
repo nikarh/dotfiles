@@ -11,77 +11,92 @@ tyrannical.settings.no_focus_stealing_out = true
 
 tyrannical.tags = {
     {
+        layout = awful.layout.suit.max,
         name = " \u{f120} ",
         init = true, -- Load the tag on startup
-        exclusive = true, -- Refuse any other type of clients (by classes)
+        exclusive = false, -- Refuse any other type of clients (by classes)
         screen = { 1, 2, 3 },
         class = { "xterm", "urxvt", "aterm", "URxvt", "XTerm", "Alacritty" }
     },
     {
+        layout = awful.layout.suit.max,
         name = " \u{f0ac} ",
         init = true,
         exclusive = true,
-        screen = { 1, 2, 3 },
+        screen = screen.count() > 1 and 2 or 1,
         class = { "Opera", "Firefox", "Chromium" }
     },
     {
+        layout = awful.layout.suit.max,
         name = " \u{f121} ",
         init = true,
         exclusive = false,
-        screen = { 1, 2, 3 },
+        screen = 1,
         class = {
             "jetbrains-idea",
             "sun-awt-X11-XDialogPeer",
             "sun-awt-X11-XFramePeer",
             "sun-awt-X11-XWindowPeer",
-            "insomnia", "Insomnia"
+            "insomnia", "Insomnia",
+            "code-oss"
         }
     },
     {
+        layout = awful.layout.suit.max,
         name = " \u{f23e} ",
-        init = true,
-        exclusive = true,
-        screen = { 1, 2, 3 },
+        init = false,
+        exclusive = false,
+        screen = 1,
         class = { "keepassxc" }
     },
     {
+        layout = awful.layout.suit.max,
         name = " \u{f198} ",
-        init = true,
-        exclusive = true,
-        screen = { 1, 2, 3 },
-        instance = { "messenger.com" },
+        init = false,
+        exclusive = false,
+        screen = 1,
+        instance = { "messenger.com", "bilderlings-pay.slack.com" },
         class = { "Slack", "slack" }
     },
     {
+        layout = awful.layout.suit.max,
         name = " \u{f07c} ",
-        init = true,
-        exclusive = true,
+        init = false,
+        exclusive = false,
         screen = { 1, 2, 3 },
         class = {
-            "Thunar", "pcmanfm", "Pcmanfm", "qdirstat", "QDirStat"
+            "Thunar", "pcmanfm", "Pcmanfm", 
+            "qdirstat", "QDirStat"
         }
     },
     {
+        layout = awful.layout.suit.max,
         name = " \u{f03d} ",
-        init = true,
-        exclusive = true,
-        screen = { 1, 2, 3 },
+        init = false,
+        exclusive = false,
+        screen = 1,
         class = { "smplayer" }
     },
     {
+        layout = awful.layout.suit.max,
         name = " \u{f025} ",
-        init = true,
-        exclusive = true,
+        init = false,
+        exclusive = false,
         screen = { 1, 2, 3 },
+        instance = {
+            "Your Library - Playlists"
+        }
         class = {
             "deadbeef", "gmpc",
-            "spotify", "Spotify", "Pavucontrol"
+            "spotify", "Spotify", "Pavucontrol",
+            "open.spotify.com__collection_playlists"
         }
     },
     {
+        layout = awful.layout.suit.max,
         name = " \u{f293} ",
         init = false,
-        exclusive = true,
+        exclusive = false,
         screen = { 1, 2, 3 },
         class = { "blueman-manager", "blueman-applet" }
     },
