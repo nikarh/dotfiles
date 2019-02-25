@@ -81,6 +81,7 @@ install_autostart: init
 	$(ln) -s /usr/share/applications/libinput-gestures.desktop ~/.config/autostart/
 	$(ln) -s ~/.local/share/applications/firefox.desktop ~/.config/autostart/
 	$(ln) -s ~/.local/share/applications/cbatticon.desktop ~/.config/autostart/
+	$(ln) -s ~/.local/share/applications/redshift-gtk.desktop ~/.config/autostart/
 	cp /etc/xdg/autostart/{gnome-keyring-secrets.desktop,gnome-keyring-ssh.desktop} ~/.config/autostart/
 	sed -i '/^OnlyShowIn.*$$/d' ~/.config/autostart/gnome-keyring-secrets.desktop
 	sed -i '/^OnlyShowIn.*$$/d' ~/.config/autostart/gnome-keyring-ssh.desktop

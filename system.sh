@@ -52,14 +52,15 @@ fi
 pkg openssh networkmanager nm-connection-editor networkmanager-openvpn \
     network-manager-applet
 # Basic tools
-pkg systemd-swap systemd-boot-pacman-hook pacman-contrib mlocate \
+pkg intel-undervolt systemd-swap systemd-boot-pacman-hook pacman-contrib mlocate \
     bluez bluez-libs bluez-utils \
     alsa-tools alsa-utils alsa-plugins pulseaudio-alsa \
     pulseaudio-modules-bt-git \
     htop neovim tmux bash-completion fzf exa fd httpie ripgrep jq bat \
     bash-git-prompt direnv diff-so-fancy docker dnscrypt-proxy \
     localtime-git terminess-powerline-font-git \
-    intel-hybrid-codec-driver libva-intel-driver
+    intel-hybrid-codec-driver libva-intel-driver \
+    libmp4v2 lame flac ffmpeg
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa xf86-video-intel \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
@@ -81,14 +82,6 @@ pkg lxappearance-gtk3 qt5-styleplugins \
 # Development
 pkg go jdk-openjdk openjdk8-src openjdk8-doc jdk8-openjdk jetbrains-toolbox nvm code \
     visualvm java-openjfx-src java-openjfx-doc java-openjfx
-
-# Start services
-sudo systemctl enable --now NetworkManager.service
-sudo systemctl enable --now docker.service
-sudo systemctl enable --now localtime.service
-sudo systemctl enable --now lightdm-plymouth.service
-sudo systemctl enable --now bluetooth.service
-sudo systemctl enable --now systemd-swap.service
 
 # Blacklist nouveau
 if ! grep -qlr 'blacklist\s*.*\s*nouveau' /etc/modprobe.d/; then
@@ -154,6 +147,21 @@ if ! grep -q module-switch-on-connect /etc/pulse/default.pa; then
     sudo sed -i -e "\$a# automatically switch to newly-connected devices" /etc/pulse/default.pa
     sudo sed -i -e "\$aload-module module-switch-on-connect" /etc/pulse/default.pa
 fi
+
+# intel-udervolt
+sudo cp system/intel-undervolt.conf /etc/intel-undervolt.conf
+
+# swap
+sudo cp system/swap.conf /etc/systemd/swap.conf.d/00-swap.conf
+
+# Start services
+sudo systemctl enable --now NetworkManager.service
+sudo systemctl enable --now docker.service
+sudo systemctl enable --now localtime.service
+sudo systemctl enable --now lightdm-plymouth.service
+sudo systemctl enable --now bluetooth.service
+sudo systemctl enable --now systemd-swap.service
+sudo systemctl enable --now intel-undervolt.service
 
 # Create special groups
 create-groups bluetooth sudo wireshark
