@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+REBUILD_KERNEL_IMAGE=0
+
 function makepkg-safe {
     rm -rf /tmp/makepkg-safe;
     git clone $1 /tmp/makepkg-safe;
@@ -23,7 +25,7 @@ function pkg {
 if ! pacman -Qi yay > /dev/null ; then
     sudo pacman --noconfirm -S base-devel git go
     makepkg-safe https://aur.archlinux.org/yay.git
-    sudo pacman --noconfirm -U /tmp/makepkg-safe/yay*.pkg.tar.xz;
+    sudo pacman --noconfirm -U /tmp/makepkg-safe/yay*.pkg.tar.xz
 fi
 
 # Colorize pacman
@@ -44,7 +46,7 @@ pkg systemd-boot-pacman-hook pacman-contrib alsa-tools \
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xclip xdg-utils \
-    autorandr light compton libinput-gestures \
+    autorandr light compton autocutsel libinput-gestures \
     plymouth lightdm lightdm-gtk-greeter
 # X applications
 pkg awesome lxsession-gtk3 rofi alacritty \
@@ -65,6 +67,24 @@ pkg go jdk-openjdk openjdk8-src openjdk8-doc jdk8-openjdk jetbrains-toolbox nvm 
 sudo systemctl enable --now NetworkManager.service
 sudo systemctl enable --now docker.service
 sudo systemctl enable --now localtime.service
+sudo systemctl enable --now lightdm-plymouth.service
+
+# Blacklist nouveau
+if [ $(grep -lr 'blacklist\s*.*\s*nouveau' /etc/modprobe.d/ | wc -c) -eq 0 ]; then
+    echo "blacklist nouveau" | sudo tee /etc/modprobe.d/nouveau.conf > /dev/null
+    REBUILD_KERNEL_IMAGE=1
+fi
+
+# Install plymouth
+if [ $(grep HOOKS.*plymouth /etc/mkinitcpio.conf | wc -c) -eq 0]; then
+    sudo sed -E -i 's/^(HOOKS=.*udev)(.*)/\1 plymouth\2/' /etc/mkinitcpio.conf
+    REBUILD_KERNEL_IMAGE=1
+fi
+
+# Rebuild kernel image
+if [ $REBUILD_KERNEL_IMAGE -eq 1 ]; then
+    sudo mkinitcpio -p linux
+fi
 
 # Add to groups
 sudo gpasswd --add ${USER} docker
