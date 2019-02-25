@@ -1,14 +1,4 @@
-.DEFAULT_GOAL: deps build
-
-export GOPATH            ?= $(abspath .)
-export GOBIN             ?= $(GOPATH)/bin
-export PATH              ?= $(GOBIN):$(PATH)
-
-deps:
-	cd src/control && godep restore
+.DEFAULT_GOAL: build
 
 build:
-	go install -ldflags "-s -w" control
-
-clean:
-	rm -rf pkg src/github.com src/control/vendor
+	go install -ldflags "-s -w" xcontrol

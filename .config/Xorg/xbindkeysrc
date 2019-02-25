@@ -1,20 +1,18 @@
 # Increase volume
-"~/.config/Xorg/control/bin/control volume inc"
+"~/.config/Xorg/control/xcontrol volume inc"
    XF86AudioRaiseVolume
 
 # Decrease volume
-"~/.config/Xorg/control/bin/control volume dec"
+"~/.config/Xorg/control/xcontrol volume dec"
    XF86AudioLowerVolume
 
 # Decrease volume
-"~/.config/Xorg/control/bin/control volume toggle"
+"~/.config/Xorg/control/xcontrol volume toggle"
    XF86AudioMute
 
-#"~/.config/Xorg/control/bin/control brightness inc"
 "light -S 100"
    XF86MonBrightnessUp
 
-#"~/.config/Xorg/control/bin/control brightness dec"
 "light -S 1"
    XF86MonBrightnessDown
 

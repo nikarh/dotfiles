@@ -5,7 +5,6 @@ import os.path
 import pyudev
 import subprocess
 
-
 def main():
     BASE_PATH = os.path.abspath(os.path.dirname(__file__))
     path = functools.partial(os.path.join, BASE_PATH)
@@ -13,13 +12,11 @@ def main():
 
     context = pyudev.Context()
     monitor = pyudev.Monitor.from_netlink(context)
-    monitor.filter_by(subsystem='usb')  # Remove this line to listen for all devices.
+    monitor.filter_by(subsystem='usb')
     monitor.start()
 
     for device in iter(monitor.poll, None):
-        # I can add more logic here, to run only certain kinds of devices are plugged.
         call('keyboard.sh')
-
 
 if __name__ == '__main__':
     main()
