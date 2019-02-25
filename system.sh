@@ -60,7 +60,7 @@ pkg intel-undervolt systemd-swap systemd-boot-pacman-hook pacman-contrib mlocate
     bash-git-prompt direnv diff-so-fancy docker dnscrypt-proxy \
     localtime-git terminess-powerline-font-git \
     intel-hybrid-codec-driver libva-intel-driver \
-    libmp4v2 lame flac ffmpeg
+    libmp4v2 lame flac ffmpeg x265 libmad
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa xf86-video-intel \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
@@ -73,7 +73,8 @@ pkg awesome lxsession-gtk3 rofi alacritty \
     gpicview-gtk3 xarchiver gsimplecal redshift \
     firefox freshplayerplugin chromium \
     keepassxc gnome-screenshot qbittorrent insync \
-    thunar gvfs-smb qdirstat gnome-keyring libsecret seahorse slack-desktop
+    thunar gvfs-smb qdirstat gnome-keyring libsecret seahorse slack-desktop \
+    chromium-widevine
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
     noto-fonts noto-fonts-emoji ttf-ubuntu-font-family \
