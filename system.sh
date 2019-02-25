@@ -30,6 +30,12 @@ function create-groups {
     done
 }
 
+function add-user-to-groups {
+    for group in "$@"; do
+        sudo gpasswd --add ${USER} ${group} > /dev/null
+    done
+}
+
 # Install yay
 if ! pacman -Qi yay > /dev/null ; then
     sudo pacman --noconfirm -S base-devel git go
@@ -124,9 +130,6 @@ fi
 # Allow non-root users to use bluetooth
 sudo cp system/bluetooth-policy.conf /etc/polkit-1/rules.d/51-blueman.rules 
 
-# Create special groups
-create-groups bluetooth sudo wireshark
-
 # Rotate systemd logs
 sudo mkdir -p /etc/systemd/journald.conf.d/
 sudo cp system/systemd-journal-size.conf /etc/systemd/journald.conf.d/00-journal-size.conf
@@ -152,14 +155,8 @@ if ! grep -q module-switch-on-connect /etc/pulse/default.pa; then
     sudo sed -i -e "\$aload-module module-switch-on-connect" /etc/pulse/default.pa
 fi
 
+# Create special groups
+create-groups bluetooth sudo wireshark
+
 # Add user to groups
-sudo gpasswd --add ${USER} docker > /dev/null
-sudo gpasswd --add ${USER} audio > /dev/null
-sudo gpasswd --add ${USER} video > /dev/null
-sudo gpasswd --add ${USER} storage > /dev/null
-sudo gpasswd --add ${USER} input > /dev/null
-sudo gpasswd --add ${USER} lp > /dev/null
-sudo gpasswd --add ${USER} systemd-journal > /dev/null
-sudo gpasswd --add ${USER} bluetooth > /dev/null
-sudo gpasswd --add ${USER} sudo > /dev/null
-sudo gpasswd --add ${USER} wireshark > /dev/null
+add-user-to-groups docker storage audio video input lp systemd-journal bluetooth sudo wireshark
