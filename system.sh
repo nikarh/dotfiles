@@ -46,8 +46,9 @@ fi
 pkg openssh networkmanager nm-connection-editor networkmanager-strongswan \
     network-manager-applet
 # Basic tools
-pkg systemd-boot-pacman-hook pacman-contrib alsa-tools alsa-utils alsa-plugins \
-    neovim tmux bash-completion fzf exa fd httpie ripgrep jq bat \
+pkg systemd-swap systemd-boot-pacman-hook pacman-contrib \
+    alsa-tools alsa-utils alsa-plugins \
+    htop neovim tmux bash-completion fzf exa fd httpie ripgrep jq bat \
     bash-git-prompt direnv diff-so-fancy docker dnscrypt-proxy \
     localtime-git pulseaudio-modules-bt-git terminess-powerline-font-git \
     intel-hybrid-codec-driver libva-intel-driver
@@ -78,6 +79,7 @@ sudo systemctl enable --now docker.service
 sudo systemctl enable --now localtime.service
 sudo systemctl enable --now lightdm-plymouth.service
 sudo systemctl enable --now bluetooth.service
+sudo systemctl enable --now systemd-swap.service
 
 # Blacklist nouveau
 if ! grep -qlr 'blacklist\s*.*\s*nouveau' /etc/modprobe.d/; then
@@ -119,8 +121,11 @@ fi
 # Allow non-root users to use bluetooth
 sudo cp system/bluetooth-policy.conf /etc/polkit-1/rules.d/51-blueman.rules 
 
-# Add special groups
+# Create special groups
 create-groups bluetooth sudo wireshark
+
+# Rotate systemd logs
+sudo cp system/systemd-jounral-size.conf /etc/systemd/journald.conf.d/00-journal-size.conf
 
 # Lightdm
 sudo mkdir -p /usr/share/backgrounds

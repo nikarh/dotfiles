@@ -84,8 +84,9 @@ install_autostart: init
 
 install_vscode:
 	@$(mkdir) ~/.config/Code\ -\ OSS/User
-	$(ln) -s $(PWD)/.config/vscode/settings.json ~/.config/Code\ -\ OSS/User/
+	$(ln) -s $(PWD)/.config/vscode/* ~/.config/Code\ -\ OSS/User/
 	code --install-extension k--kato.intellij-idea-keybindings
+	code --install-extension pkief.material-icon-theme
 
 install_firefox:
 	@cd $$(find ~/.mozilla/firefox/ -name '*.default') && $(mkdir) chrome && \

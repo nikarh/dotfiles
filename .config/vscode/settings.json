@@ -6,5 +6,9 @@
     "editor.renderIndentGuides": true,
     "workbench.editor.showTabs": false,
     "explorer.confirmDelete": false,
-    "files.defaultLanguage": "markdown"
+    "files.defaultLanguage": "markdown",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.tree.indent": 20,
+    "typescript.referencesCodeLens.enabled": true,
+    "window.zoomLevel": -1
 }
