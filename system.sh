@@ -134,7 +134,7 @@ if ! grep -q ^AutoEnable=true$ /etc/bluetooth/main.conf; then
     sudo sed -i 's/^#AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf;
 fi
 
-# Install custom polkit policies
+# Install custom polkit rules
 sudo cp system/policy/* /etc/polkit-1/rules.d/ 
 
 # Rotate systemd logs
