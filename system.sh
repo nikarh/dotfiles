@@ -123,7 +123,7 @@ if ! grep -q ^AutoEnable=true$ /etc/bluetooth/main.conf; then
 fi
 
 # Allow non-root users to use bluetooth
-sudo cp system/bluetooth-policy.conf /etc/polkit-1/rules.d/51-blueman.rules 
+sudo cp system/policy/* /etc/polkit-1/rules.d/ 
 
 # Rotate systemd logs
 sudo mkdir -p /etc/systemd/journald.conf.d/
@@ -150,10 +150,10 @@ if ! grep -q module-switch-on-connect /etc/pulse/default.pa; then
     sudo sed -i -e "\$aload-module module-switch-on-connect" /etc/pulse/default.pa
 fi
 
-# intel-udervolt
+# CPU undervolt
 sudo cp system/intel-undervolt.conf /etc/intel-undervolt.conf
 
-# swap
+# Swap configuration
 sudo cp system/swap.conf /etc/systemd/swap.conf.d/00-swap.conf
 
 # Start services

@@ -10,5 +10,8 @@
     "workbench.iconTheme": "material-icon-theme",
     "workbench.tree.indent": 20,
     "typescript.referencesCodeLens.enabled": true,
-    "window.zoomLevel": -1
+    "window.zoomLevel": -1,
+    "files.associations": {
+        "*.rules": "javascript"
+    }
 }

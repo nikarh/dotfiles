@@ -1,4 +1,4 @@
-polkit.addRule(function(action, subject) {
+polkit.addRule(function (action, subject) {
     if ((action.id == "org.blueman.network.setup" ||
          action.id == "org.blueman.dhcp.client" ||
          action.id == "org.blueman.rfkill.setstate" ||
