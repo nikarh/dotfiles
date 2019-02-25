@@ -82,7 +82,8 @@ pkg lxappearance-gtk3 qt5-styleplugins \
     arc-solid-gtk-theme flat-remix-git
 # Development
 pkg go jdk-openjdk openjdk8-src openjdk8-doc jdk8-openjdk jetbrains-toolbox nvm code \
-    visualvm java-openjfx-src java-openjfx-doc java-openjfx
+    visualvm java-openjfx-src java-openjfx-doc java-openjfx \
+    terraform kubectl-bin kubectx kubernetes-helm-bin upx
 
 # Blacklist nouveau
 if ! grep -qlr 'blacklist\s*.*\s*nouveau' /etc/modprobe.d/; then
