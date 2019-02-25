@@ -3,7 +3,7 @@ Version=1.0
 Name=Firefox
 GenericName=Web Browser
 Comment=Browse the Web
-Exec=/usr/lib/firefox/firefox %u
+Exec=/usr/lib/firefox/firefox
 Icon=firefox
 Terminal=false
 Type=Application
@@ -16,8 +16,8 @@ Actions=new-window;new-private-window;
 
 [Desktop Action new-window]
 Name=New Window
-Exec=/usr/lib/firefox/firefox --new-window %u
+Exec=/usr/lib/firefox/firefox --new-window
 
 [Desktop Action new-private-window]
 Name=New Private Window
-Exec=/usr/lib/firefox/firefox --private-window %u
+Exec=/usr/lib/firefox/firefox --private-window

@@ -43,17 +43,19 @@ if ! grep -q ^Color$ /etc/pacman.conf; then
 fi
 
 # Network
-pkg openssh networkmanager nm-connection-editor networkmanager-strongswan \
+pkg openssh networkmanager nm-connection-editor networkmanager-openvpn \
     network-manager-applet
 # Basic tools
-pkg systemd-swap systemd-boot-pacman-hook pacman-contrib \
-    alsa-tools alsa-utils alsa-plugins \
+pkg systemd-swap systemd-boot-pacman-hook pacman-contrib mlocate \
+    bluez bluez-libs bluez-utils \
+    alsa-tools alsa-utils alsa-plugins pulseaudio-alsa \
+    pulseaudio-modules-bt-git \
     htop neovim tmux bash-completion fzf exa fd httpie ripgrep jq bat \
     bash-git-prompt direnv diff-so-fancy docker dnscrypt-proxy \
-    localtime-git pulseaudio-modules-bt-git terminess-powerline-font-git \
+    localtime-git terminess-powerline-font-git \
     intel-hybrid-codec-driver libva-intel-driver
 # Basic X
-pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
+pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa xf86-video-intel \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
     autorandr light compton autocutsel libinput-gestures \
@@ -64,7 +66,7 @@ pkg awesome lxsession-gtk3 rofi alacritty \
     gpicview-gtk3 xarchiver gsimplecal redshift \
     firefox freshplayerplugin chromium \
     keepassxc gnome-screenshot qbittorrent insync \
-    thunar gvfs-smb  \
+    thunar gvfs-smb qdirstat gnome-keyring libsecret seahorse slack-desktop
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
     noto-fonts noto-fonts-emoji ttf-ubuntu-font-family \
@@ -125,12 +127,29 @@ sudo cp system/bluetooth-policy.conf /etc/polkit-1/rules.d/51-blueman.rules
 create-groups bluetooth sudo wireshark
 
 # Rotate systemd logs
-sudo cp system/systemd-jounral-size.conf /etc/systemd/journald.conf.d/00-journal-size.conf
+sudo mkdir -p /etc/systemd/journald.conf.d/
+sudo cp system/systemd-journal-size.conf /etc/systemd/journald.conf.d/00-journal-size.conf
 
 # Lightdm
 sudo mkdir -p /usr/share/backgrounds
 sudo cp wallpaper.png /usr/share/backgrounds/
 sudo cp ./system/lightdm-gtk-greeter.conf /etc/lightdm/
+
+# Unlock gnome-keyring via PAM
+if ! grep -q pam_gnome_keyring /etc/pam.d/login; then
+    sudo sed -i -e "\$a-auth       optional     pam_gnome_keyring.so" /etc/pam.d/login
+    sudo sed -i -e "\$a-session    optional     pam_gnome_keyring.so auto_start" /etc/pam.d/login
+fi
+if ! grep -q pam_gnome_keyring /etc/pam.d/passwd; then
+    sudo sed -i -e "\$a-password   optional     pam_gnome_keyring.so" /etc/pam.d/passwd
+fi
+
+# Pulseaudio bluetooth
+if ! grep -q module-switch-on-connect /etc/pulse/default.pa; then
+    echo | sudo tee -a /etc/pulse/default.pa > /dev/null
+    sudo sed -i -e "\$a# automatically switch to newly-connected devices" /etc/pulse/default.pa
+    sudo sed -i -e "\$aload-module module-switch-on-connect" /etc/pulse/default.pa
+fi
 
 # Add user to groups
 sudo gpasswd --add ${USER} docker > /dev/null
