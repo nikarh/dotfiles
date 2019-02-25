@@ -85,7 +85,7 @@ pkg go jdk-openjdk openjdk8-src openjdk8-doc jdk8-openjdk jetbrains-toolbox nvm 
     visualvm java-openjfx-src java-openjfx-doc java-openjfx \
     terraform kubectl-bin kubectx kubernetes-helm-bin upx
 
-# Blacklist nouveau
+# Blacklist nouveau, since it causes random freezes on 1060
 if ! grep -qlr 'blacklist\s*.*\s*nouveau' /etc/modprobe.d/; then
     echo "blacklist nouveau" | sudo tee /etc/modprobe.d/nouveau.conf > /dev/null
     REBUILD_INITRD=1
@@ -98,8 +98,20 @@ if ! grep -qlr 'i915.*enable_guc=2' /etc/modprobe.d/; then
 fi
 
 # Install plymouth hook
-if ! grep -q HOOKS.*plymouth /etc/mkinitcpio.conf; then
+if ! grep -q ^HOOKS.*plymouth /etc/mkinitcpio.conf; then
     sudo sed -E -i 's/^(HOOKS=.*udev)(.*)/\1 plymouth\2/' /etc/mkinitcpio.conf
+    REBUILD_INITRD=1
+fi
+
+# Add i915 intel module for plymouth to initrd
+if ! grep -q ^MODULES.*i915 /etc/mkinitcpio.conf; then
+    sudo sed -E -i 's/^(MODULES=\()(.*)/\1i915 \2/; s/^(MODULES.*) (\).*)/\1\2/' /etc/mkinitcpio.conf
+    REBUILD_INITRD=1
+fi
+
+# Enable lz4 initrd compression for faster boot
+if ! grep -q ^COMPRESSION.* /etc/mkinitcpio.conf; then
+    sudo sed -i '/^#COMPRESSION="lz4"/s/^#//' /etc/mkinitcpio.conf;
     REBUILD_INITRD=1
 fi
 
@@ -114,7 +126,7 @@ if [ $REBUILD_INITRD -eq 1 ]; then
     sudo mkinitcpio -p linux
 fi
 
-# Enable VSYNC for intel cards
+# Enable VSYNC for intel cards in X11
 sudo cp system/xorg-intel-sna.conf /etc/X11/xorg.conf.d/20-intel.conf
 
 # Enable bluetooth card
@@ -122,7 +134,7 @@ if ! grep -q ^AutoEnable=true$ /etc/bluetooth/main.conf; then
     sudo sed -i 's/^#AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf;
 fi
 
-# Allow non-root users to use bluetooth
+# Install custom polkit policies
 sudo cp system/policy/* /etc/polkit-1/rules.d/ 
 
 # Rotate systemd logs
