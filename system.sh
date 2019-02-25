@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-REBUILD_KERNEL_IMAGE=0
+REBUILD_INITRD=0
 
 function makepkg-safe {
     rm -rf /tmp/makepkg-safe;
@@ -17,8 +17,8 @@ function pkg {
     local requested=$(echo $@ | tr " " "\n" | sort)
 
     yay --noconfirm -S $(comm --output-delimiter=--- -3 \
-        <(echo $requested | tr " " "\n") \
-        <(echo $installed | tr " " "\n") | grep -v ^---)
+        <(echo "$requested") \
+        <(echo "$installed") | grep -v ^---)
 }
 
 # Install yay
@@ -47,7 +47,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xclip xdg-utils \
     autorandr light compton autocutsel libinput-gestures \
-    plymouth lightdm lightdm-gtk-greeter
+    plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter
 # X applications
 pkg awesome lxsession-gtk3 rofi alacritty \
     cbatticon pavucontrol pasystray blueman \
@@ -68,25 +68,39 @@ sudo systemctl enable --now NetworkManager.service
 sudo systemctl enable --now docker.service
 sudo systemctl enable --now localtime.service
 sudo systemctl enable --now lightdm-plymouth.service
+sudo systemctl enable --now bluetooth.service
 
 # Blacklist nouveau
 if [ $(grep -lr 'blacklist\s*.*\s*nouveau' /etc/modprobe.d/ | wc -c) -eq 0 ]; then
     echo "blacklist nouveau" | sudo tee /etc/modprobe.d/nouveau.conf > /dev/null
-    REBUILD_KERNEL_IMAGE=1
+    REBUILD_INITRD=1
 fi
 
-# Install plymouth
-if [ $(grep HOOKS.*plymouth /etc/mkinitcpio.conf | wc -c) -eq 0]; then
+# Install plymouth hook
+if [ $(grep HOOKS.*plymouth /etc/mkinitcpio.conf | wc -c) -eq 0 ]; then
     sudo sed -E -i 's/^(HOOKS=.*udev)(.*)/\1 plymouth\2/' /etc/mkinitcpio.conf
-    REBUILD_KERNEL_IMAGE=1
+    REBUILD_INITRD=1
 fi
 
-# Rebuild kernel image
-if [ $REBUILD_KERNEL_IMAGE -eq 1 ]; then
+# Configure plymouth
+PLYMOUTH_CONFIG="[Daemon]
+Theme=monoarch
+ShowDelay=0
+"
+if [ $(diff <(cat /etc/plymouth/plymouthd.conf) <(echo "$PLYMOUTH_CONFIG") | wc -c) -gt 0 ]; then
+    echo "$PLYMOUTH_CONFIG" | sudo tee /etc/plymouth/plymouthd.conf > /dev/null
+    REBUILD_INITRD=1
+fi
+
+# Rebuild initrd
+if [ $REBUILD_INITRD -eq 1 ]; then
     sudo mkinitcpio -p linux
 fi
 
-# Add to groups
+# Enable bluetooth card
+sudo sed -i 's/^#AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf;
+
+# Add user to groups
 sudo gpasswd --add ${USER} docker
 sudo gpasswd --add ${USER} audio
 sudo gpasswd --add ${USER} video
