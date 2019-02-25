@@ -13,7 +13,7 @@ local fonts = {
 -- {{{ Main
 theme = {}
 theme.path = os.getenv("HOME") .. "/.config/awesome/material/"
-theme.wallpaper = theme.path .. "/wallpaper.png"
+theme.wallpaper = os.getenv("HOME") .. "/.dotfiles/wallpaper.png"
 -- }}}
 
 -- {{{ Styles

@@ -1,0 +1,10 @@
+{
+    "editor.fontFamily": "Hack",
+    "explorer.confirmDragAndDrop": false,
+    "files.autoSave": "onFocusChange",
+    "editor.renderWhitespace": "boundary",
+    "editor.renderIndentGuides": true,
+    "workbench.editor.showTabs": false,
+    "explorer.confirmDelete": false,
+    "files.defaultLanguage": "markdown"
+}

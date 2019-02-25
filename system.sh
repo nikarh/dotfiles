@@ -21,6 +21,15 @@ function pkg {
         <(echo "$installed") | grep -v ^---)
 }
 
+function create-groups {
+    local ALL_GROUPS=$(cut -d: -f1 /etc/group)
+    for group in "$@"; do
+        if ! echo "$ALL_GROUPS" | grep -q ^${group}$; then
+            sudo groupadd ${group}
+        fi
+    done
+}
+
 # Install yay
 if ! pacman -Qi yay > /dev/null ; then
     sudo pacman --noconfirm -S base-devel git go
@@ -29,7 +38,7 @@ if ! pacman -Qi yay > /dev/null ; then
 fi
 
 # Colorize pacman
-if [ $(grep ^Color$ /etc/pacman.conf | wc -c) -eq 0 ]; then
+if ! grep -q ^Color$ /etc/pacman.conf; then
     sudo sed -i '/^#Color/s/^#//' /etc/pacman.conf;
 fi
 
@@ -37,7 +46,7 @@ fi
 pkg openssh networkmanager nm-connection-editor networkmanager-strongswan \
     network-manager-applet
 # Basic tools
-pkg systemd-boot-pacman-hook pacman-contrib alsa-tools \
+pkg systemd-boot-pacman-hook pacman-contrib alsa-tools alsa-utils alsa-plugins \
     neovim tmux bash-completion fzf exa fd httpie ripgrep jq bat \
     bash-git-prompt direnv diff-so-fancy docker dnscrypt-proxy \
     localtime-git pulseaudio-modules-bt-git terminess-powerline-font-git \
@@ -71,42 +80,54 @@ sudo systemctl enable --now lightdm-plymouth.service
 sudo systemctl enable --now bluetooth.service
 
 # Blacklist nouveau
-if [ $(grep -lr 'blacklist\s*.*\s*nouveau' /etc/modprobe.d/ | wc -c) -eq 0 ]; then
+if ! grep -qlr 'blacklist\s*.*\s*nouveau' /etc/modprobe.d/; then
     echo "blacklist nouveau" | sudo tee /etc/modprobe.d/nouveau.conf > /dev/null
     REBUILD_INITRD=1
 fi
 
 # Install plymouth hook
-if [ $(grep HOOKS.*plymouth /etc/mkinitcpio.conf | wc -c) -eq 0 ]; then
+if ! grep -q HOOKS.*plymouth /etc/mkinitcpio.conf; then
     sudo sed -E -i 's/^(HOOKS=.*udev)(.*)/\1 plymouth\2/' /etc/mkinitcpio.conf
     REBUILD_INITRD=1
 fi
 
 # Configure plymouth
-PLYMOUTH_CONFIG="[Daemon]
-Theme=monoarch
-ShowDelay=0
-"
-if [ $(diff <(cat /etc/plymouth/plymouthd.conf) <(echo "$PLYMOUTH_CONFIG") | wc -c) -gt 0 ]; then
-    echo "$PLYMOUTH_CONFIG" | sudo tee /etc/plymouth/plymouthd.conf > /dev/null
+if [ $(diff /etc/plymouth/plymouthd.conf ./system/plymouth.conf | wc -c) -gt 0 ]; then
+    sudo cp ./system/plymouth.conf /etc/plymouth/plymouthd.conf
     REBUILD_INITRD=1
 fi
 
-# Rebuild initrd
+# Rebuild initrd if required
 if [ $REBUILD_INITRD -eq 1 ]; then
     sudo mkinitcpio -p linux
 fi
 
 # Enable bluetooth card
-sudo sed -i 's/^#AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf;
+if ! grep -q ^AutoEnable=true$ /etc/bluetooth/main.conf; then
+    sudo sed -i 's/^#AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf;
+fi
+
+# Allow non-root users to use bluetooth
+if sudo test ! -f /etc/polkit-1/rules.d/51-blueman.rules; then
+    sudo cp system/bluetooth-policy.conf /etc/polkit-1/rules.d/51-blueman.rules 
+fi
+
+# Add special groups
+create-groups bluetooth sudo wireshark
+
+# Lightdm
+sudo mkdir -p /usr/share/backgrounds
+sudo cp wallpaper.png /usr/share/backgrounds/
+sudo cp ./system/lightdm-gtk-greeter.conf /etc/lightdm/
 
 # Add user to groups
-sudo gpasswd --add ${USER} docker
-sudo gpasswd --add ${USER} audio
-sudo gpasswd --add ${USER} video
-sudo gpasswd --add ${USER} storage
-sudo gpasswd --add ${USER} input
-sudo gpasswd --add ${USER} lp
-sudo gpasswd --add ${USER} systemd-journal
-sudo gpasswd --add ${USER} sudo
-sudo gpasswd --add ${USER} wireshark
+sudo gpasswd --add ${USER} docker > /dev/null
+sudo gpasswd --add ${USER} audio > /dev/null
+sudo gpasswd --add ${USER} video > /dev/null
+sudo gpasswd --add ${USER} storage > /dev/null
+sudo gpasswd --add ${USER} input > /dev/null
+sudo gpasswd --add ${USER} lp > /dev/null
+sudo gpasswd --add ${USER} systemd-journal > /dev/null
+sudo gpasswd --add ${USER} bluetooth > /dev/null
+sudo gpasswd --add ${USER} sudo > /dev/null
+sudo gpasswd --add ${USER} wireshark > /dev/null

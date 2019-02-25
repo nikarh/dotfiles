@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=cbatticon
+GenericName=Battery tray icon
+Comment=Launch cbatticon
+Categories=Laptop;
+Exec=cbatticon
+Terminal=false
