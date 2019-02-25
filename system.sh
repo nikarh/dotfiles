@@ -73,7 +73,8 @@ pkg lxappearance-gtk3 qt5-styleplugins \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix-git
 # Development
-pkg go jdk-openjdk openjdk8-src openjdk8-doc jdk8-openjdk jetbrains-toolbox nvm code
+pkg go jdk-openjdk openjdk8-src openjdk8-doc jdk8-openjdk jetbrains-toolbox nvm code \
+    visualvm java-openjfx-src java-openjfx-doc java-openjfx
 
 # Start services
 sudo systemctl enable --now NetworkManager.service
