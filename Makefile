@@ -91,6 +91,7 @@ install_vscode:
 	$(ln) -s $(PWD)/.config/vscode/* ~/.config/Code\ -\ OSS/User/
 	code --install-extension k--kato.intellij-idea-keybindings
 	code --install-extension pkief.material-icon-theme
+	code --install-extension fallenwood.viml
 
 install_firefox:
 	@cd $$(find ~/.mozilla/firefox/ -name '*.default') && $(mkdir) chrome && \
