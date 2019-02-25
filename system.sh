@@ -50,11 +50,11 @@ pkg systemd-boot-pacman-hook pacman-contrib alsa-tools alsa-utils alsa-plugins \
     neovim tmux bash-completion fzf exa fd httpie ripgrep jq bat \
     bash-git-prompt direnv diff-so-fancy docker dnscrypt-proxy \
     localtime-git pulseaudio-modules-bt-git terminess-powerline-font-git \
-    intel-hybrid-codec-driver libva-intel-driver-hybrid
+    intel-hybrid-codec-driver libva-intel-driver
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
-    xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xclip xdg-utils \
+    xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
     autorandr light compton autocutsel libinput-gestures \
     plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter
 # X applications
@@ -66,9 +66,9 @@ pkg awesome lxsession-gtk3 rofi alacritty \
     thunar gvfs-smb  \
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
-    noto-fonts noto-fonts-emoji ttf-dejavu ttf-hack ttf-font-awesome-4 \
-    arc-gtk-theme arc-solid-gtk-theme adapta-gtk-theme \
-    flat-remix-git
+    noto-fonts noto-fonts-emoji ttf-ubuntu-font-family \
+    ttf-dejavu ttf-hack ttf-font-awesome-4 \
+    arc-solid-gtk-theme flat-remix-git
 # Development
 pkg go jdk-openjdk openjdk8-src openjdk8-doc jdk8-openjdk jetbrains-toolbox nvm code
 
@@ -82,6 +82,12 @@ sudo systemctl enable --now bluetooth.service
 # Blacklist nouveau
 if ! grep -qlr 'blacklist\s*.*\s*nouveau' /etc/modprobe.d/; then
     echo "blacklist nouveau" | sudo tee /etc/modprobe.d/nouveau.conf > /dev/null
+    REBUILD_INITRD=1
+fi
+
+# Enable Intel GPU firmware upgrade
+if ! grep -qlr 'i915.*enable_guc=2' /etc/modprobe.d/; then
+    echo "options i915 enable_guc=2" | sudo tee /etc/modprobe.d/i915.conf > /dev/null
     REBUILD_INITRD=1
 fi
 
@@ -102,15 +108,16 @@ if [ $REBUILD_INITRD -eq 1 ]; then
     sudo mkinitcpio -p linux
 fi
 
+# Enable VSYNC for intel cards
+sudo cp system/xorg-intel-sna.conf /etc/X11/xorg.conf.d/20-intel.conf
+
 # Enable bluetooth card
 if ! grep -q ^AutoEnable=true$ /etc/bluetooth/main.conf; then
     sudo sed -i 's/^#AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf;
 fi
 
 # Allow non-root users to use bluetooth
-if sudo test ! -f /etc/polkit-1/rules.d/51-blueman.rules; then
-    sudo cp system/bluetooth-policy.conf /etc/polkit-1/rules.d/51-blueman.rules 
-fi
+sudo cp system/bluetooth-policy.conf /etc/polkit-1/rules.d/51-blueman.rules 
 
 # Add special groups
 create-groups bluetooth sudo wireshark
