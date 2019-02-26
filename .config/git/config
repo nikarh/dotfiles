@@ -1,11 +1,11 @@
 # vi: ft=gitconfig
 [alias]
 	lg = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-    fixup = commit -a --amend --no-edit
+	fixup = commit -a --amend --no-edit
 	git = !exec git
 [core]
 	editor = nvim
-    autocrlf = input
+	autocrlf = input
 	trustctime = false
 	ignorecase = false
 	preloadindex = true
@@ -25,3 +25,5 @@
 	ui = true
 [gc]
 	auto = 256
+[help]
+	autoCorrect = -1

@@ -1,17 +1,20 @@
 {
+    "breadcrumbs.enabled": true,
     "editor.fontFamily": "Hack",
-    "explorer.confirmDragAndDrop": false,
-    "files.autoSave": "onFocusChange",
     "editor.renderWhitespace": "boundary",
     "editor.renderIndentGuides": true,
-    "workbench.editor.showTabs": false,
     "explorer.confirmDelete": false,
-    "files.defaultLanguage": "markdown",
-    "workbench.iconTheme": "material-icon-theme",
-    "workbench.tree.indent": 20,
-    "typescript.referencesCodeLens.enabled": true,
-    "window.zoomLevel": -1,
+    "explorer.confirmDragAndDrop": false,
     "files.associations": {
         "*.rules": "javascript"
-    }
+    },
+    "files.autoSave": "onFocusChange",
+    "files.defaultLanguage": "markdown",
+    "telemetry.enableTelemetry": false,
+    "typescript.referencesCodeLens.enabled": true,
+    "window.zoomLevel": 1,
+    "workbench.editor.showTabs": false,
+    "workbench.editor.highlightModifiedTabs": true,
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.tree.indent": 20
 }

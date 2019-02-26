@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 REBUILD_INITRD=0
+PCI_DATA=$(lspci)
+PCI_DISPLAY_CONTROLLER=$(echo "$PCI_DATA" | grep -Ei '(vga|display)')
+
+ALL_PACKAGES_TO_INSTALL=""
 
 function makepkg-safe {
     rm -rf /tmp/makepkg-safe;
@@ -14,7 +18,8 @@ function makepkg-safe {
 
 function pkg {
     local installed=$(pacman -Q | awk '{ print $1 }' | sort)
-    local requested=$(echo $@ | tr " " "\n" | sort)
+    local requested=$(echo $@ | tr " " "\n" | sort | uniq)
+    ALL_PACKAGES_TO_INSTALL="$ALL_PACKAGES_TO_INSTALL $requested"
 
     yay --noconfirm -S $(comm --output-delimiter=--- -3 \
         <(echo "$requested") \
@@ -48,21 +53,25 @@ if ! grep -q ^Color$ /etc/pacman.conf; then
     sudo sed -i '/^#Color/s/^#//' /etc/pacman.conf;
 fi
 
+# Base
+pkg "$(pacman -Sg base base-devel | awk '{ print $2 }')"
 # Network
 pkg openssh networkmanager nm-connection-editor networkmanager-openvpn \
     network-manager-applet
 # Basic tools
-pkg intel-undervolt systemd-swap systemd-boot-pacman-hook pacman-contrib mlocate \
+pkg intel-ucode intel-undervolt \
+    systemd-swap systemd-boot-pacman-hook pacman-contrib mlocate \
     bluez bluez-libs bluez-utils \
-    alsa-tools alsa-utils alsa-plugins pulseaudio-alsa \
-    pulseaudio-modules-bt-git \
+    alsa-tools alsa-utils alsa-plugins \
+    pulseaudio pulseaudio-alsa pulseaudio-modules-bt-git \
     htop neovim tmux bash-completion fzf exa fd httpie ripgrep jq bat \
     bash-git-prompt direnv diff-so-fancy docker dnscrypt-proxy \
     localtime-git terminess-powerline-font-git \
     intel-hybrid-codec-driver libva-intel-driver \
-    libmp4v2 lame flac ffmpeg x265 libmad
+    libmp4v2 lame flac ffmpeg x265 libmad \
+    zip unzip unrar
 # Basic X
-pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa xf86-video-intel \
+pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
     autorandr light compton autocutsel libinput-gestures \
@@ -81,9 +90,18 @@ pkg lxappearance-gtk3 qt5-styleplugins \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix-git
 # Development
-pkg go jdk-openjdk openjdk8-src openjdk8-doc jdk8-openjdk jetbrains-toolbox nvm code \
-    visualvm java-openjfx-src java-openjfx-doc java-openjfx \
-    terraform kubectl-bin kubectx kubernetes-helm-bin upx
+pkg git go nvm code upx \
+    jdk-openjdk openjdk-src openjdk-doc \
+    jdk8-openjdk openjdk8-src openjdk8-doc \
+    java-openjfx-src java-openjfx-doc java-openjfx \
+    visualvm jetbrains-toolbox \
+    terraform kubectl-bin kubectx kubernetes-helm-bin
+
+# Disable beep
+if ! grep -qlr 'blacklist\s*.*\s*pcspkr' /etc/modprobe.d/; then
+    echo "blacklist pcspkr" | sudo tee /etc/modprobe.d/nobeep.conf > /dev/null
+    REBUILD_INITRD=1
+fi
 
 # Blacklist nouveau, since it causes random freezes on 1060
 if ! grep -qlr 'blacklist\s*.*\s*nouveau' /etc/modprobe.d/; then
@@ -91,21 +109,9 @@ if ! grep -qlr 'blacklist\s*.*\s*nouveau' /etc/modprobe.d/; then
     REBUILD_INITRD=1
 fi
 
-# Enable Intel GPU firmware upgrade
-if ! grep -qlr 'i915.*enable_guc=2' /etc/modprobe.d/; then
-    echo "options i915 enable_guc=2" | sudo tee /etc/modprobe.d/i915.conf > /dev/null
-    REBUILD_INITRD=1
-fi
-
 # Install plymouth hook
 if ! grep -q ^HOOKS.*plymouth /etc/mkinitcpio.conf; then
     sudo sed -E -i 's/^(HOOKS=.*udev)(.*)/\1 plymouth\2/' /etc/mkinitcpio.conf
-    REBUILD_INITRD=1
-fi
-
-# Add i915 intel module for plymouth to initrd
-if ! grep -q ^MODULES.*i915 /etc/mkinitcpio.conf; then
-    sudo sed -E -i 's/^(MODULES=\()(.*)/\1i915 \2/; s/^(MODULES.*) (\).*)/\1\2/' /etc/mkinitcpio.conf
     REBUILD_INITRD=1
 fi
 
@@ -121,13 +127,34 @@ if [ $(diff /etc/plymouth/plymouthd.conf ./system/plymouth.conf | wc -c) -gt 0 ]
     REBUILD_INITRD=1
 fi
 
-# Rebuild initrd if required
-if [ $REBUILD_INITRD -eq 1 ]; then
-    sudo mkinitcpio -p linux
-fi
+if grep -Eqi '(radeon|ati|amd)' <<< "$PCI_DATA"; then
+    # Configuration for AMD gpu 
+    pkg xf86-video-ati
 
-# Enable VSYNC for intel cards in X11
-sudo cp system/xorg-intel-sna.conf /etc/X11/xorg.conf.d/20-intel.conf
+    # Add radeon module for plymouth to initrd
+    if ! grep -q ^MODULES.*i915 /etc/mkinitcpio.conf; then
+        sudo sed -E -i 's/^(MODULES=\()(.*)/\1radeon \2/; s/^(MODULES.*) (\).*)/\1\2/' /etc/mkinitcpio.conf
+        REBUILD_INITRD=1
+    fi
+else
+    # Configuration for Intel gpu
+    pkg xf86-video-intel
+    
+    # Enable Intel GPU firmware upgrade
+    if ! grep -qlr 'i915.*enable_guc=2' /etc/modprobe.d/; then
+        echo "options i915 enable_guc=2" | sudo tee /etc/modprobe.d/i915.conf > /dev/null
+        REBUILD_INITRD=1
+    fi
+
+    # Add i915 intel module for plymouth to initrd
+    if ! grep -q ^MODULES.*i915 /etc/mkinitcpio.conf; then
+        sudo sed -E -i 's/^(MODULES=\()(.*)/\1i915 \2/; s/^(MODULES.*) (\).*)/\1\2/' /etc/mkinitcpio.conf
+        REBUILD_INITRD=1
+    fi
+
+    # Enable VSYNC for intel cards in X11
+    sudo cp system/xorg-intel-sna.conf /etc/X11/xorg.conf.d/20-intel.conf
+fi
 
 # Enable bluetooth card
 if ! grep -q ^AutoEnable=true$ /etc/bluetooth/main.conf; then
@@ -175,10 +202,25 @@ sudo systemctl enable --now localtime.service
 sudo systemctl enable --now lightdm-plymouth.service
 sudo systemctl enable --now bluetooth.service
 sudo systemctl enable --now systemd-swap.service
-sudo systemctl enable --now intel-undervolt.service
+#sudo systemctl enable --now intel-undervolt.service
 
 # Create special groups
 create-groups bluetooth sudo wireshark
 
 # Add user to groups
-add-user-to-groups docker storage audio video input lp systemd-journal bluetooth sudo wireshark
+add-user-to-groups docker storage audio video input lp systemd-journal bluetooth sudo wireshark libvirt
+
+# Rebuild initrd if required
+if [ $REBUILD_INITRD -eq 1 ]; then
+    sudo mkinitcpio -p linux
+fi
+
+EXPLICITLY_INSTALLED=$(pacman -Qe | awk '{ print $1 }' | sort)
+INSTALLED_BY_SETUP=$(echo "$ALL_PACKAGES_TO_INSTALL" | tr " " "\n" | sort)
+UNEXPECTED=$(comm --output-delimiter=--- -3 \
+    <(echo "$EXPLICITLY_INSTALLED") \
+    <(echo "$INSTALLED_BY_SETUP") | grep -v ^---)
+
+if [ ! -z "$UNEXPECTED" ]; then
+    echo Unexpected packages installed: ${UNEXPECTED}
+fi

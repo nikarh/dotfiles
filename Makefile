@@ -79,6 +79,7 @@ install_autostart: init
 	$(ln) -s /usr/share/applications/org.keepassxc.KeePassXC.desktop ~/.config/autostart/
 	$(ln) -s /usr/share/applications/pasystray.desktop ~/.config/autostart/
 	$(ln) -s /usr/share/applications/libinput-gestures.desktop ~/.config/autostart/
+	$(ln) -s /usr/share/applications/nm-applet.desktop ~/.config/autostart/
 	$(ln) -s ~/.local/share/applications/firefox.desktop ~/.config/autostart/
 	$(ln) -s ~/.local/share/applications/cbatticon.desktop ~/.config/autostart/
 	$(ln) -s ~/.local/share/applications/redshift-gtk.desktop ~/.config/autostart/
@@ -92,6 +93,9 @@ install_vscode:
 	code --install-extension k--kato.intellij-idea-keybindings
 	code --install-extension pkief.material-icon-theme
 	code --install-extension fallenwood.viml
+	code --install-extension keyring.lua
+	code --install-extension ms-vscode.go
+	code --install-extension redhat.vscode-yaml
 
 install_firefox:
 	@cd $$(find ~/.mozilla/firefox/ -name '*.default') && $(mkdir) chrome && \
