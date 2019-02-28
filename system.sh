@@ -54,7 +54,7 @@ if ! grep -q ^Color$ /etc/pacman.conf; then
 fi
 
 # Base
-pkg "$(pacman -Sg base base-devel | awk '{ print $2 }')"
+pkg "$(pacman -Sg base base-devel | awk '{ print $2 }')" yay
 # Network
 pkg openssh networkmanager nm-connection-editor networkmanager-openvpn \
     network-manager-applet
@@ -69,24 +69,25 @@ pkg intel-ucode intel-undervolt \
     localtime-git terminess-powerline-font-git \
     intel-hybrid-codec-driver libva-intel-driver \
     libmp4v2 lame flac ffmpeg x265 libmad \
-    zip unzip unrar
+    zip unzip unrar exfat-utils ntfs-3g python-pyudev
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
-    autorandr light compton autocutsel libinput-gestures \
+    xorg-xdpyinfo autorandr arandr light compton autocutsel libinput-gestures \
     plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter
 # X applications
-pkg awesome lxsession-gtk3 rofi alacritty \
+pkg awesome lxsession-gtk3 rofi alacritty alacritty-terminfo \
     cbatticon pavucontrol pasystray blueman \
     gpicview-gtk3 xarchiver gsimplecal redshift \
-    firefox freshplayerplugin chromium \
+    firefox freshplayerplugin \
+    chromium chromium-widevine \
     keepassxc gnome-screenshot qbittorrent insync \
-    thunar gvfs-smb qdirstat gnome-keyring libsecret seahorse slack-desktop \
-    chromium-widevine
+    thunar thunar-volman gvfs-smb qdirstat gnome-keyring libsecret seahorse tumbler \
+    slack-desktop epdfview onlyoffice-bin
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
-    noto-fonts noto-fonts-emoji ttf-ubuntu-font-family \
+    noto-fonts noto-fonts-extra noto-fonts-emoji ttf-ubuntu-font-family \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix-git
 # Development
@@ -95,7 +96,11 @@ pkg git go nvm code upx \
     jdk8-openjdk openjdk8-src openjdk8-doc \
     java-openjfx-src java-openjfx-doc java-openjfx \
     visualvm jetbrains-toolbox \
-    terraform kubectl-bin kubectx kubernetes-helm-bin
+    terraform kubectl-bin kubectx kubernetes-helm-bin \
+    docker-compose dhex
+# Printer
+pkg cups cups-pdf cups-pk-helper system-config-printer \
+    canon-pixma-mg3000-complete konica-minolta-bizhub-c554e-series
 
 # Disable beep
 if ! grep -qlr 'blacklist\s*.*\s*pcspkr' /etc/modprobe.d/; then
