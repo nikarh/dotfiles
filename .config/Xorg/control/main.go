@@ -8,7 +8,6 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/esiqveland/notify"
 	"log"
-	"github.com/alexflint/go-filemutex"
 )
 
 func getAudioLevelIconName(volume float64) string {
@@ -43,16 +42,6 @@ func doNotify(summary, body string, icon string, id int) {
 	if err != nil {
 		log.Printf("error sending notification: %v", err.Error())
 	}
-}
-
-func waitLock(name string) func() error {
-	m, err := filemutex.New(fmt.Sprintf("/tmp/%s.lock", name))
-	if err != nil {
-		log.Fatalf("could not create lock file: %s", err)
-	}
-
-	m.Lock()
-	return m.Unlock
 }
 
 func volumeInc() {
@@ -123,15 +112,9 @@ func volumeToggle() {
 		}
 
 		if s.Muted {
-			doNotify("",
-				fmt.Sprintf("Audio device muted"),
-				getAudioLevelIconName(0),
-				1)
+			doNotify("", "Audio device muted", getAudioLevelIconName(0), 1)
 		} else {
-			doNotify("",
-				fmt.Sprintf("Audio device unmuted"),
-				getAudioLevelIconName(s.VolumeFactor * 100),
-				1)
+			doNotify("", "Audio device unmuted", getAudioLevelIconName(s.VolumeFactor * 100), 1)
 		}
 	}
 }
