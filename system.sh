@@ -132,12 +132,12 @@ if [ $(diff /etc/plymouth/plymouthd.conf ./system/plymouth.conf | wc -c) -gt 0 ]
     REBUILD_INITRD=1
 fi
 
-if grep -Eqi '(radeon|ati|amd)' <<< "$PCI_DATA"; then
+if grep -Eqi '(radeon|amd)' <<< "$PCI_DISPLAY_CONTROLLER"; then
     # Configuration for AMD gpu 
     pkg xf86-video-ati
 
     # Add radeon module for plymouth to initrd
-    if ! grep -q ^MODULES.*i915 /etc/mkinitcpio.conf; then
+    if ! grep -q ^MODULES.*radeon /etc/mkinitcpio.conf; then
         sudo sed -E -i 's/^(MODULES=\()(.*)/\1radeon \2/; s/^(MODULES.*) (\).*)/\1\2/' /etc/mkinitcpio.conf
         REBUILD_INITRD=1
     fi
@@ -210,7 +210,7 @@ sudo systemctl enable --now systemd-swap.service
 #sudo systemctl enable --now intel-undervolt.service
 
 # Create special groups
-create-groups bluetooth sudo wireshark
+create-groups bluetooth sudo wireshark libvirt
 
 # Add user to groups
 add-user-to-groups docker storage audio video input lp systemd-journal bluetooth sudo wireshark libvirt

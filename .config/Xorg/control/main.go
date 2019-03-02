@@ -14,9 +14,9 @@ func getAudioLevelIconName(volume float64) string {
 	switch {
 	case volume == 0:
 		return "audio-volume-muted"
-	case volume < 35:
+	case volume < 0.35:
 		return "audio-volume-low"
-	case volume < 70:
+	case volume < 0.70:
 		return "audio-volume-medium"
 	default:
 		return "audio-volume-high"
@@ -64,7 +64,7 @@ func volumeInc() {
 
 		doNotify("",
 			fmt.Sprintf("Voume set to %.f%%", s.VolumeFactor*100),
-			getAudioLevelIconName(s.VolumeFactor * 100),
+			getAudioLevelIconName(s.VolumeFactor),
 			1)
 	}
 
@@ -89,7 +89,7 @@ func volumeDec() {
 
 		doNotify("",
 			fmt.Sprintf("Voume set to %.f%%", s.VolumeFactor*100),
-			getAudioLevelIconName(s.VolumeFactor * 100),
+			getAudioLevelIconName(s.VolumeFactor),
 			1)
 	}
 }
@@ -114,7 +114,7 @@ func volumeToggle() {
 		if s.Muted {
 			doNotify("", "Audio device muted", getAudioLevelIconName(0), 1)
 		} else {
-			doNotify("", "Audio device unmuted", getAudioLevelIconName(s.VolumeFactor * 100), 1)
+			doNotify("", "Audio device unmuted", getAudioLevelIconName(s.VolumeFactor), 1)
 		}
 	}
 }
