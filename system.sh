@@ -200,6 +200,10 @@ sudo cp system/intel-undervolt.conf /etc/intel-undervolt.conf
 # Swap configuration
 sudo cp system/swap.conf /etc/systemd/swap.conf.d/00-swap.conf
 
+# Logind configuration
+sudo mkdir -p /etc/systemd/logind.conf.d/
+sudo cp system/logind.conf /etc/systemd/logind.conf.d/50-override.conf
+
 # Start services
 sudo systemctl enable --now NetworkManager.service
 sudo systemctl enable --now docker.service
