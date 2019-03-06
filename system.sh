@@ -84,7 +84,7 @@ pkg awesome lxsession-gtk3 rofi alacritty alacritty-terminfo \
     chromium chromium-widevine \
     keepassxc gnome-screenshot qbittorrent insync \
     thunar thunar-volman gvfs-smb qdirstat gnome-keyring libsecret seahorse tumbler \
-    slack-desktop epdfview onlyoffice-bin
+    slack-desktop epdfview
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
     noto-fonts noto-fonts-extra noto-fonts-emoji ttf-ubuntu-font-family \
@@ -169,9 +169,15 @@ fi
 # Install custom polkit rules
 sudo cp system/policy/* /etc/polkit-1/rules.d/ 
 
-# Rotate systemd logs
+# Systemd
 sudo mkdir -p /etc/systemd/journald.conf.d/
-sudo cp system/systemd-journal-size.conf /etc/systemd/journald.conf.d/00-journal-size.conf
+sudo mkdir -p /etc/systemd/logind.conf.d/
+sudo mkdir -p /etc/systemd/system.conf.d/
+sudo mkdir -p /etc/systemd/swap.conf.d/
+sudo cp system/systemd/journald.conf /etc/systemd/journald.conf.d/00-journald.conf
+sudo cp system/systemd/logind.conf /etc/systemd/logind.conf.d/00-logind.conf
+sudo cp system/systemd/system.conf /etc/systemd/system.conf.d/00-system.conf
+sudo cp system/systemd/swap.conf /etc/systemd/swap.conf.d/00-swap.conf
 
 # Lightdm
 sudo mkdir -p /usr/share/backgrounds
@@ -196,13 +202,6 @@ fi
 
 # CPU undervolt
 sudo cp system/intel-undervolt.conf /etc/intel-undervolt.conf
-
-# Swap configuration
-sudo cp system/swap.conf /etc/systemd/swap.conf.d/00-swap.conf
-
-# Logind configuration
-sudo mkdir -p /etc/systemd/logind.conf.d/
-sudo cp system/logind.conf /etc/systemd/logind.conf.d/50-override.conf
 
 # Start services
 sudo systemctl enable --now NetworkManager.service
