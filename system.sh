@@ -174,7 +174,7 @@ if test "$XORG_GPU" = "nvidia"; then
     sudo cp system/xorg/20-nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
     sudo cp system/lightdm/nvidia-display-setup.sh /etc/lightdm/nvidia-display-setup.sh
     sudo cp system/lightdm/lightdm.nvidia.conf /etc/lightdm/lightdm.conf
-else if test "$XORG_GPU" = "intel"; then
+elif test "$XORG_GPU" = "intel"; then
     unpkg nvidia
     sudo rm -f /etc/lightdm/nvidia-display-setup.sh
     sudo cp system/xorg/20-xorg-intel-sna.conf /etc/X11/xorg.conf.d/20-gpu.conf
@@ -237,6 +237,11 @@ add-user-to-groups docker storage audio video input lp systemd-journal bluetooth
 # Rebuild initrd if required
 if [ $REBUILD_INITRD -eq 1 ]; then
     sudo mkinitcpio -p linux
+fi
+
+# Install additional packages
+if [ ! -z "$ADDITIONAL_PACKAGES" ]; then
+    pkg $ADDITIONAL_PACKAGES
 fi
 
 EXPLICITLY_INSTALLED=$(pacman -Qe | awk '{ print $1 }' | sort)
