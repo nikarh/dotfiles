@@ -26,6 +26,10 @@ function pkg {
         <(echo "$installed") | grep -v ^---)
 }
 
+function unpkg {
+    yay -Rnsc  --noconfirm $@ 2> /dev/null
+}
+
 function create-groups {
     local ALL_GROUPS=$(cut -d: -f1 /etc/group)
     for group in "$@"; do
@@ -97,7 +101,7 @@ pkg git go nvm code upx \
     java-openjfx-src java-openjfx-doc java-openjfx \
     visualvm jetbrains-toolbox \
     terraform kubectl-bin kubectx kubernetes-helm-bin \
-    docker-compose dhex
+    docker-compose dhex android-udev
 # Printer
 pkg cups cups-pdf cups-pk-helper system-config-printer \
     canon-pixma-mg3000-complete konica-minolta-bizhub-c554e-series
@@ -127,10 +131,16 @@ if ! grep -q ^COMPRESSION.* /etc/mkinitcpio.conf; then
 fi
 
 # Configure plymouth
-if [ $(diff /etc/plymouth/plymouthd.conf ./system/plymouth.conf | wc -c) -gt 0 ]; then
-    sudo cp ./system/plymouth.conf /etc/plymouth/plymouthd.conf
+if [ $(diff /etc/plymouth/plymouthd.conf system/plymouth.conf | wc -c) -gt 0 ]; then
+    sudo cp system/plymouth.conf /etc/plymouth/plymouthd.conf
     REBUILD_INITRD=1
 fi
+
+# Lightdm
+sudo mkdir -p /usr/share/backgrounds
+sudo cp wallpaper.png /usr/share/backgrounds/
+sudo cp system/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/
+sudo cp system/lightdm/lightdm.conf /etc/lightdm/
 
 if grep -Eqi '(radeon|amd)' <<< "$PCI_DISPLAY_CONTROLLER"; then
     # Configuration for AMD gpu 
@@ -141,7 +151,7 @@ if grep -Eqi '(radeon|amd)' <<< "$PCI_DISPLAY_CONTROLLER"; then
         sudo sed -E -i 's/^(MODULES=\()(.*)/\1radeon \2/; s/^(MODULES.*) (\).*)/\1\2/' /etc/mkinitcpio.conf
         REBUILD_INITRD=1
     fi
-else
+else 
     # Configuration for Intel gpu
     pkg xf86-video-intel
     
@@ -156,9 +166,20 @@ else
         sudo sed -E -i 's/^(MODULES=\()(.*)/\1i915 \2/; s/^(MODULES.*) (\).*)/\1\2/' /etc/mkinitcpio.conf
         REBUILD_INITRD=1
     fi
+fi
 
-    # Enable VSYNC for intel cards in X11
-    sudo cp system/xorg-intel-sna.conf /etc/X11/xorg.conf.d/20-intel.conf
+if test "$XORG_GPU" = "nvidia"; then
+    # Only if requested
+    pkg nvidia
+    sudo cp system/xorg/20-nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
+    sudo cp system/lightdm/nvidia-display-setup.sh /etc/lightdm/nvidia-display-setup.sh
+    sudo cp system/lightdm/lightdm.nvidia.conf /etc/lightdm/lightdm.conf
+else if test "$XORG_GPU" = "intel"; then
+    unpkg nvidia
+    sudo rm -f /etc/lightdm/nvidia-display-setup.sh
+    sudo cp system/xorg/20-xorg-intel-sna.conf /etc/X11/xorg.conf.d/20-gpu.conf
+else
+    sudo rm -f /etc/X11/xorg.conf.d/20-gpu.conf
 fi
 
 # Enable bluetooth card
@@ -178,11 +199,6 @@ sudo cp system/systemd/journald.conf /etc/systemd/journald.conf.d/00-journald.co
 sudo cp system/systemd/logind.conf /etc/systemd/logind.conf.d/00-logind.conf
 sudo cp system/systemd/system.conf /etc/systemd/system.conf.d/00-system.conf
 sudo cp system/systemd/swap.conf /etc/systemd/swap.conf.d/00-swap.conf
-
-# Lightdm
-sudo mkdir -p /usr/share/backgrounds
-sudo cp wallpaper.png /usr/share/backgrounds/
-sudo cp ./system/lightdm-gtk-greeter.conf /etc/lightdm/
 
 # Unlock gnome-keyring via PAM
 if ! grep -q pam_gnome_keyring /etc/pam.d/login; then
@@ -216,7 +232,7 @@ sudo systemctl enable --now systemd-swap.service
 create-groups bluetooth sudo wireshark libvirt
 
 # Add user to groups
-add-user-to-groups docker storage audio video input lp systemd-journal bluetooth sudo wireshark libvirt
+add-user-to-groups docker storage audio video input lp systemd-journal bluetooth sudo wireshark libvirt adbusers
 
 # Rebuild initrd if required
 if [ $REBUILD_INITRD -eq 1 ]; then
