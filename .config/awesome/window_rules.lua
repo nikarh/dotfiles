@@ -43,7 +43,7 @@ return {
         properties = { tag = tags.names.term }
     },
     {
-        rule_any = { class = { "jetbrains-idea", "code-oss", "insomnia", "Insomnia", "sun-awt-X11-XDialogPeer", "sun-awt-X11-XFramePeer", "sun-awt-X11-XWindowPeer" } },
+        rule_any = { class = { "jetbrains-studio", "jetbrains-idea", "code-oss", "insomnia", "Insomnia", "sun-awt-X11-XDialogPeer", "sun-awt-X11-XFramePeer", "sun-awt-X11-XWindowPeer" } },
         properties = { tag = tags.names.dev }
     },
     {
