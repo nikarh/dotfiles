@@ -41,7 +41,9 @@ function create-groups {
 
 function add-user-to-groups {
     for group in "$@"; do
-        sudo gpasswd --add ${USER} ${group} > /dev/null
+        if ! groups ${USER} | grep -q $group; then
+            sudo gpasswd --add ${USER} ${group}
+        fi
     done
 }
 
@@ -170,12 +172,14 @@ fi
 
 if test "$XORG_GPU" = "nvidia"; then
     # Only if requested
-    pkg nvidia
+    pkg nvidia bumblebee
     sudo cp system/xorg/20-nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
     sudo cp system/lightdm/nvidia-display-setup.sh /etc/lightdm/nvidia-display-setup.sh
     sudo cp system/lightdm/lightdm.nvidia.conf /etc/lightdm/lightdm.conf
 elif test "$XORG_GPU" = "intel"; then
-    unpkg nvidia
+    unpkg nvidia bumblebee
+    sudo systemctl enable --now bubmlebeed.service
+
     sudo rm -f /etc/lightdm/nvidia-display-setup.sh
     sudo cp system/xorg/20-xorg-intel-sna.conf /etc/X11/xorg.conf.d/20-gpu.conf
 else
@@ -232,7 +236,7 @@ sudo systemctl enable --now systemd-swap.service
 create-groups bluetooth sudo wireshark libvirt
 
 # Add user to groups
-add-user-to-groups docker storage audio video input lp systemd-journal bluetooth sudo wireshark libvirt adbusers
+add-user-to-groups docker storage audio video input lp systemd-journal bluetooth sudo wireshark libvirt adbusers bumblebee
 
 # Rebuild initrd if required
 if [ $REBUILD_INITRD -eq 1 ]; then
