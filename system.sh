@@ -47,6 +47,12 @@ function add-user-to-groups {
     done
 }
 
+function enable-units {
+    for unit in "$@"; do
+        sudo systemctl enable --now $unit
+    done
+}
+
 # Install yay
 if ! pacman -Qi yay > /dev/null ; then
     sudo pacman --noconfirm -S base-devel git go
@@ -224,14 +230,14 @@ fi
 # CPU undervolt
 sudo cp system/intel-undervolt.conf /etc/intel-undervolt.conf
 
-# Start services
-sudo systemctl enable --now NetworkManager.service
-sudo systemctl enable --now docker.service
-sudo systemctl enable --now localtime.service
-sudo systemctl enable --now lightdm-plymouth.service
-sudo systemctl enable --now bluetooth.service
-sudo systemctl enable --now systemd-swap.service
-#sudo systemctl enable --now intel-undervolt.service
+# Start systemd units
+enable-units NetworkManager.service \
+             docker.service \
+             localtime.service \
+             lightdm-plymouth.service \
+             bluetooth.service \
+             systemd-swap.service \
+             $ADDITIONAL_SERVICES
 
 # Create special groups
 create-groups bluetooth sudo wireshark libvirt
