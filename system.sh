@@ -141,8 +141,7 @@ fi
 # Lightdm
 sudo mkdir -p /usr/share/backgrounds
 sudo cp wallpaper.png /usr/share/backgrounds/
-sudo cp system/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/
-sudo cp system/lightdm/lightdm.conf /etc/lightdm/
+sudo cp system/lightdm/* /etc/lightdm/
 
 if grep -Eqi '(radeon|amd)' <<< "$PCI_DISPLAY_CONTROLLER"; then
     # Configuration for AMD gpu 
@@ -153,7 +152,7 @@ if grep -Eqi '(radeon|amd)' <<< "$PCI_DISPLAY_CONTROLLER"; then
         sudo sed -E -i 's/^(MODULES=\()(.*)/\1radeon \2/; s/^(MODULES.*) (\).*)/\1\2/' /etc/mkinitcpio.conf
         REBUILD_INITRD=1
     fi
-else 
+elif grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
     # Configuration for Intel gpu
     pkg xf86-video-intel
     
@@ -168,23 +167,17 @@ else
         sudo sed -E -i 's/^(MODULES=\()(.*)/\1i915 \2/; s/^(MODULES.*) (\).*)/\1\2/' /etc/mkinitcpio.conf
         REBUILD_INITRD=1
     fi
+
+    sudo cp system/xorg/20-gpu.intel.conf /etc/X11/xorg.conf.d/20-gpu.conf
 fi
 
-if test "$XORG_GPU" = "nvidia"; then
-    # Only if requested
-    pkg nvidia bumblebee
-    sudo cp system/xorg/20-nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
-    sudo cp system/lightdm/nvidia-display-setup.sh /etc/lightdm/nvidia-display-setup.sh
-    sudo cp system/lightdm/lightdm.nvidia.conf /etc/lightdm/lightdm.conf
-elif test "$XORG_GPU" = "intel"; then
-    unpkg nvidia bumblebee
-    sudo systemctl enable --now bubmlebeed.service
-
-    sudo rm -f /etc/lightdm/nvidia-display-setup.sh
-    sudo cp system/xorg/20-xorg-intel-sna.conf /etc/X11/xorg.conf.d/20-gpu.conf
-else
-    sudo rm -f /etc/X11/xorg.conf.d/20-gpu.conf
+if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER"; then
+    pkg nvidia
+    #sudo cp system/xorg/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
 fi
+
+# Xorg settings
+sudo cp system/xorg/40-libinput.conf /etc/X11/xorg.conf.d/
 
 # Enable bluetooth card
 if ! grep -q ^AutoEnable=true$ /etc/bluetooth/main.conf; then
