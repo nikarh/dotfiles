@@ -143,6 +143,11 @@ sudo mkdir -p /usr/share/backgrounds
 sudo cp wallpaper.png /usr/share/backgrounds/
 sudo cp system/lightdm/* /etc/lightdm/
 
+# Xorg settings
+sudo mkdir -p /etc/X11/xorg.conf.avail
+sudo cp system/xorg/* /etc/X11/xorg.conf.avail/
+sudo ln -s /etc/X11/xorg.conf.avail/40-libinput.conf /etc/X11/xorg.conf.d/ 2>/dev/null
+
 if grep -Eqi '(radeon|amd)' <<< "$PCI_DISPLAY_CONTROLLER"; then
     # Configuration for AMD gpu 
     pkg xf86-video-ati
@@ -168,16 +173,19 @@ elif grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
         REBUILD_INITRD=1
     fi
 
-    sudo cp system/xorg/20-gpu.intel.conf /etc/X11/xorg.conf.d/20-gpu.conf
+    sudo ln -s /etc/X11/xorg.conf.avail/20-gpu.intel.conf /etc/X11/xorg.conf.d/20-gpu.conf 2>/dev/null
 fi
 
 if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER"; then
+    # Configuration for nvidia gpu
     pkg nvidia
-    #sudo cp system/xorg/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
+    sudo ln -s /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf 2>/dev/null
 fi
 
-# Xorg settings
-sudo cp system/xorg/40-libinput.conf /etc/X11/xorg.conf.d/
+# Install usegpu util
+if [ "$(grep -Eci '(nvidia|intel)' <<< "$PCI_DISPLAY_CONTROLLER")" -eq "2" ]; then
+    sudo cp system/usegpu/usegpu.sh /usr/local/bin/usegpu
+fi
 
 # Enable bluetooth card
 if ! grep -q ^AutoEnable=true$ /etc/bluetooth/main.conf; then
