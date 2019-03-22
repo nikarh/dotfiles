@@ -81,7 +81,8 @@ pkg intel-ucode intel-undervolt \
     localtime-git terminess-powerline-font-git \
     intel-hybrid-codec-driver libva-intel-driver \
     libmp4v2 lame flac ffmpeg x265 libmad \
-    zip unzip unrar exfat-utils ntfs-3g python-pyudev
+    zip unzip unrar exfat-utils ntfs-3g python-pyudev \
+    earlyoom
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
@@ -230,6 +231,9 @@ fi
 # CPU undervolt
 sudo cp system/intel-undervolt.conf /etc/intel-undervolt.conf
 
+# earlyoom
+sudo cp system/earlyoom.conf /etc/default/earlyoom
+
 # Start systemd units
 enable-units NetworkManager.service \
              docker.service \
@@ -237,6 +241,7 @@ enable-units NetworkManager.service \
              lightdm-plymouth.service \
              bluetooth.service \
              systemd-swap.service \
+             earlyoom.service \
              $ADDITIONAL_SERVICES
 
 # Create special groups
