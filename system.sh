@@ -183,9 +183,9 @@ elif grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
     sudo ln -s /etc/X11/xorg.conf.avail/20-gpu.intel.conf /etc/X11/xorg.conf.d/20-gpu.conf 2>/dev/null
 fi
 
-if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER"; then
+if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "nvidia"; then
     # Configuration for nvidia gpu
-    pkg nvidia
+    pkg nvidia nvidia-settings nvidia-utils
     sudo ln -s /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf 2>/dev/null
 fi
 
