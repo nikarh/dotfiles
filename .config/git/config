@@ -4,7 +4,7 @@
 	fixup = commit -a --amend --no-edit
 	git = !exec git
 	resync = "!f() { \
-		git branch -vv | grep \\:\\ gone\\] | awk '{ print $1 }' | xargs -I{} git branch -D; \
+		git branch -vv | grep \\:\\ gone\\] | awk '{ print $1 }' | xargs -I{} git branch -D {}; \
 		git fetch -ap; \
 		git pull --ff-only; \
 		git checkout master; \
