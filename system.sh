@@ -93,8 +93,8 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
 pkg awesome lxsession-gtk3 rofi alacritty alacritty-terminfo \
     cbatticon pavucontrol pasystray blueman \
     gpicview-gtk3 xarchiver gsimplecal redshift \
-    firefox freshplayerplugin \
-    chromium chromium-widevine \
+    vivaldi vivaldi-widevine vivaldi-codecs-ffmpeg-extra-bin \
+    freshplayerplugin \
     keepassxc gnome-screenshot qbittorrent insync \
     thunar thunar-volman gvfs-smb qdirstat gnome-keyring libsecret seahorse tumbler \
     slack-desktop epdfview

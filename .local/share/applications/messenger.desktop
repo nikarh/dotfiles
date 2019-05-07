@@ -5,5 +5,5 @@ Name=Facebook Messenger
 GenericName=Messenger as a chromium app
 Comment=Launch chromium with Messenger
 Categories=Laptop;
-Exec=chromium --app="https://messenger.com"
+Exec=vivaldi-stable --app="https://messenger.com"
 Terminal=false

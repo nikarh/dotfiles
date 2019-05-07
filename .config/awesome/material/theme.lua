@@ -4,10 +4,10 @@
 ----------------------------------
 
 local fonts = {
-    sans = "Noto Sans 9",
-    sans_bold = "Noto Sans Bold 9",
-    mono = "Noto Mono 9",
-    fa = "FontAwesome 12"
+    sans = "Noto Sans 14",
+    sans_bold = "Noto Sans Bold 14",
+    mono = "Noto Mono 14",
+    fa = "FontAwesome 16"
 }
 
 -- {{{ Main

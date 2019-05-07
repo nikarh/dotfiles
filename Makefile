@@ -74,13 +74,13 @@ install_xprofile: init
 	$(ln) -s ~/.config/Xorg/xprofile ~/.xprofile
 
 install_autostart: init
-	$(ln) -s $(PWD)/.local/share/applications/* ~/.local/share/applications/
+	$(ln) -s $(PWD)/.local/share/applications/*.desktop ~/.local/share/applications/
 	$(ln) -s /usr/share/applications/insync.desktop ~/.config/autostart/
 	$(ln) -s /usr/share/applications/org.keepassxc.KeePassXC.desktop ~/.config/autostart/
 	$(ln) -s /usr/share/applications/pasystray.desktop ~/.config/autostart/
 	$(ln) -s /usr/share/applications/libinput-gestures.desktop ~/.config/autostart/
 	$(ln) -s /usr/share/applications/nm-applet.desktop ~/.config/autostart/
-	$(ln) -s ~/.local/share/applications/firefox.desktop ~/.config/autostart/
+	$(ln) -s ~/.local/share/applications/vivaldi-stable.desktop ~/.config/autostart/
 	$(ln) -s ~/.local/share/applications/cbatticon.desktop ~/.config/autostart/
 	$(ln) -s ~/.local/share/applications/redshift-gtk.desktop ~/.config/autostart/
 	cp /etc/xdg/autostart/{gnome-keyring-secrets.desktop,gnome-keyring-ssh.desktop} ~/.config/autostart/

@@ -39,6 +39,14 @@ return {
         properties = { tag = tags.names.music, floating = false }
     },
     {
+        rule = { instance = "Your Library - Playlists", class = "vivaldi-stable" },
+        properties = { tag = tags.names.music }
+    },
+    {
+        rule = { instance = "Browse - Featured", class = "vivaldi-stable" },
+        properties = { tag = tags.names.music, floating = false }
+    },
+    {
         rule = { class = "st-256color", name = "Main Terminal" },
         properties = { tag = tags.names.term }
     },
@@ -60,6 +68,14 @@ return {
     },
     {
         rule = { instance = "messenger.com", class = "Chromium" },
+        properties = { tag = tags.names.chat, floating = false }
+    },
+    {
+        rule = { instance = "bilderlings-pay.slack.com", class = "vivaldi-stable" },
+        properties = { tag = tags.names.chat, floating = false }
+    },
+    {
+        rule = { instance = "messenger.com", class = "vivaldi-stable" },
         properties = { tag = tags.names.chat, floating = false }
     },
     {

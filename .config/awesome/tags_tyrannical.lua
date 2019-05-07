@@ -24,7 +24,7 @@ tyrannical.tags = {
         init = true,
         exclusive = true,
         screen = screen.count() > 1 and 2 or 1,
-        class = { "Opera", "Firefox", "Chromium" }
+        class = { "Opera", "Firefox", "Chromium", "vivaldi", "vivaldi-stable" }
     },
     {
         layout = awful.layout.suit.max,

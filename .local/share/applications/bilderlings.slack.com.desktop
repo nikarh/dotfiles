@@ -5,5 +5,5 @@ Name=Bilderlings Slack (chromium app)
 GenericName=Slack as a chromium app
 Comment=Launch chromium with Agile Stack Slack as an app
 Categories=Laptop;
-Exec=chromium --app="https://bilderlings-pay.slack.com"
+Exec=vivaldi-stable --app="https://bilderlings-pay.slack.com"
 Terminal=false
