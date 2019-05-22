@@ -6,5 +6,5 @@ Name=Spotify
 GenericName=Spotify as a chromium app
 Comment=Launch chromium with Spotify
 Categories=Laptop;
-Exec=chromium --app="https://open.spotify.com/collection/playlists"
+Exec=vivaldi-stable --app="https://open.spotify.com/collection/playlists"
 Terminal=false
