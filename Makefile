@@ -17,7 +17,8 @@ install: generate_ssh_key \
 	 install_autostart \
 	 install_awesome \
 	 install_gtk \
-	 install_vscode
+	 install_vscode \ 
+	 install_xdg
 .PHONY: install
 
 init:
@@ -105,3 +106,8 @@ install_gtk:
 	@$(mkdir) ~/.config/gtk-3.0
 	@$(rm) ~/.config/gtk-3.0/settings.ini
 	$(ln) -s $(PWD)/.config/gtk-3.0/settings.ini ~/.config/gtk-3.0
+
+install_xdg:
+	@gsettings set org.gnome.desktop.default-applications.terminal exec alacritty
+	@gsettings set org.gnome.desktop.default-applications.terminal exec-arg -e
+	@xdg-mime default Thunar.desktop inode/directory
