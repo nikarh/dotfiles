@@ -72,6 +72,7 @@ install_git: init
 install_xprofile: init
 	$(ln) -s $(PWD)/.config/Xorg ~/.config/
 	cd ~/.config/Xorg/control && go build -ldflags "-s -w" xcontrol
+	cd ~/.config/Xorg/udev-monitor && make
 	$(ln) -s ~/.config/Xorg/xprofile ~/.xprofile
 
 install_autostart: init

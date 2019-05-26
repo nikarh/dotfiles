@@ -10,6 +10,6 @@ xbindkeys -f ~/.config/Xorg/xbindkeysrc --poll-rc
 compton -i 0.95 --backend glx --glx-swap-method=buffer-age --no-fading-openclose -b
 source ~/.config/Xorg/keyboard.sh
 autocutsel -fork
-~/.config/Xorg/watch_keyboard.py &
+~/.config/Xorg/udev-monitor/udev-monitor -s usb -e ~/.config/Xorg/reset-keyboard.sh &
 
 lxsession&
