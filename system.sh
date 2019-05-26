@@ -6,14 +6,23 @@ PCI_DISPLAY_CONTROLLER=$(echo "$PCI_DATA" | grep -Ei '(vga|display)')
 
 ALL_PACKAGES_TO_INSTALL=""
 
-function makepkg-safe {
-    rm -rf /tmp/makepkg-safe;
-    git clone $1 /tmp/makepkg-safe;
-    cd /tmp/makepkg-safe;
-    #sudo chgrp nobody $(pwd)
-    #sudo chmod g+ws $(pwd)
-    #HOME=$(pwd)/.home su -p -s /bin/sh -c makepkg nobody
-    makepkg
+function aur-pkg {
+    rm -rf /tmp/aurpkg;
+    git clone "https://aur.archlinux.org/$1.git" /tmp/aurpkg;
+    cd /tmp/aurpkg;
+
+    if [[ $EUID -eq 0 ]]; then
+        sudo chgrp nobody $(pwd)
+        sudo chmod g+ws $(pwd)
+        setfacl -m u::rwx,g::rwx $(pwd)
+        setfacl -d --set u::rwx,g::rwx,o::- $(pwd)
+
+        HOME=$(pwd)/.home su -p -s /bin/sh -c "makepkg" nobody
+    else
+        makepkg
+    fi
+
+    sudo pacman --noconfirm -U /tmp/aurpkg/$1-*-x86_64.pkg.tar.xz
 }
 
 function pkg {
@@ -56,8 +65,7 @@ function enable-units {
 # Install yay
 if ! pacman -Qi yay > /dev/null ; then
     sudo pacman --noconfirm -S base-devel git go
-    makepkg-safe https://aur.archlinux.org/yay.git
-    sudo pacman --noconfirm -U /tmp/makepkg-safe/yay*.pkg.tar.xz
+    aur-pkg yay
 fi
 
 # Colorize pacman
@@ -108,7 +116,7 @@ pkg git go nvm code upx \
     jdk-openjdk openjdk-src openjdk-doc \
     jdk8-openjdk openjdk8-src openjdk8-doc \
     java-openjfx-src java-openjfx-doc java-openjfx \
-    visualvm jetbrains-toolbox \
+    visualvm jetbrains-toolbox jd-gui-bin \
     terraform kubectl-bin kubectx kubernetes-helm-bin \
     docker-compose dhex android-udev
 # Printer
@@ -259,6 +267,9 @@ fi
 if [ ! -z "$ADDITIONAL_PACKAGES" ]; then
     pkg $ADDITIONAL_PACKAGES
 fi
+
+# Upgrade all packages
+yay -Syu --noconfirm
 
 EXPLICITLY_INSTALLED=$(pacman -Qe | awk '{ print $1 }' | sort)
 INSTALLED_BY_SETUP=$(echo "$ALL_PACKAGES_TO_INSTALL" | tr " " "\n" | sort)

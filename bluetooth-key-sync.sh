@@ -12,7 +12,7 @@ for INTERFACE in $(sudo ls /var/lib/bluetooth); do
             hex \ControlSet001\Services\BTHPORT\Parameters\Keys\\$WIN_INTERFACE\\$WIN_DEVICE
             q
 END
-);
+        );
 
         KEY=$(echo $REGEDIT_OUT | sed -r 's/.*:00000.*(([A-Z0-9]{2} ){16}).*/\1/' | tr -d " ")
         echo Setting $DEVICE key = $KEY
