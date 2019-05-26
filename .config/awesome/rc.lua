@@ -16,7 +16,7 @@ require("titlebars_cfg")
 
 local runcmd = "rofi -show run -terminal alacritty -font"
 local runapp = "rofi -combi-modi window,drun -show combi -modi combi"
-local terminal = "alacritty -t Terminal -e tmux"
+local terminal = "alacritty -t Terminal -e tmux new-session -A -s main"
 local editor = "nvim"
 local editor_cmd = "alacritty -t Editor -e " .. editor
 local file_manager = "thunar"
