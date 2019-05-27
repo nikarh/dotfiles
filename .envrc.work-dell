@@ -1,0 +1,1 @@
+export ADDITIONAL_PACKAGES="parallel accountsservice libreoffice-fresh freerdp onlyoffice-bin remmina remmina-plugin-rdesktop virtualbox virtualbox-guest-utils virtualbox-host-modules-arch xf86-video-intel chromium firefox"

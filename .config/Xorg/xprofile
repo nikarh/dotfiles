@@ -8,8 +8,11 @@ export WINIT_HIDPI_FACTOR=1
 xrdb -all -load ~/.config/Xorg/Xresources
 xbindkeys -f ~/.config/Xorg/xbindkeysrc --poll-rc
 compton -i 0.95 --backend glx --glx-swap-method=buffer-age --no-fading-openclose -b
+
 source ~/.config/Xorg/keyboard.sh
-autocutsel -fork
 ~/.config/Xorg/udev-monitor/udev-monitor -s usb -e ~/.config/Xorg/reset-keyboard.sh &
+
+autocutsel -fork
+umonitor -n
 
 lxsession&

@@ -90,12 +90,13 @@ pkg intel-ucode intel-undervolt \
     intel-hybrid-codec-driver libva-intel-driver \
     libmp4v2 lame flac ffmpeg x265 libmad \
     zip unzip unrar exfat-utils ntfs-3g python-pyudev \
+    axel \
     earlyoom
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
-    xorg-xdpyinfo autorandr arandr light compton autocutsel libinput-gestures \
+    xorg-xdpyinfo umonitor-git arandr light compton autocutsel libinput-gestures \
     plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter
 # X applications
 pkg awesome lxsession-gtk3 rofi alacritty alacritty-terminfo \
@@ -110,7 +111,7 @@ pkg awesome lxsession-gtk3 rofi alacritty alacritty-terminfo \
 pkg lxappearance-gtk3 qt5-styleplugins \
     noto-fonts noto-fonts-extra noto-fonts-emoji ttf-ubuntu-font-family \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
-    arc-solid-gtk-theme flat-remix-git
+    arc-solid-gtk-theme flat-remix
 # Development
 pkg git go nvm code upx \
     jdk-openjdk openjdk-src openjdk-doc \
