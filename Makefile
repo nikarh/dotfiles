@@ -106,8 +106,8 @@ awesomewm: init
 
 gtk: init
 	@$(mkdir) ~/.config/gtk-3.0
-	@$(rm) ~/.config/gtk-3.0/settings.ini
 	# Link gtk3 config file
+	@$(rm) ~/.config/gtk-3.0/settings.ini
 	@$(ln) -s $(PWD)/.config/gtk-3.0/settings.ini ~/.config/gtk-3.0
 .PHONY: gtk
 
