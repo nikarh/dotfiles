@@ -73,8 +73,9 @@ if ! grep -q ^Color$ /etc/pacman.conf; then
     sudo sed -i '/^#Color/s/^#//' /etc/pacman.conf;
 fi
 
-# Base
+# Base (does not actually install anything, used for later diffing with actually installed packages)
 pkg "$(pacman -Sg base base-devel | awk '{ print $2 }')" yay
+
 # Network
 pkg openssh networkmanager nm-connection-editor networkmanager-openvpn \
     network-manager-applet
@@ -83,7 +84,8 @@ pkg intel-ucode intel-undervolt \
     systemd-swap systemd-boot-pacman-hook pacman-contrib mlocate \
     bluez bluez-libs bluez-utils \
     alsa-tools alsa-utils alsa-plugins \
-    pulseaudio pulseaudio-alsa pulseaudio-modules-bt-git \
+    pulseaudio pulseaudio-alsa \
+    pulseaudio-modules-bt-git libldac \
     htop neovim tmux bash-completion fzf exa fd httpie ripgrep jq bat \
     bash-git-prompt direnv diff-so-fancy docker dnscrypt-proxy \
     localtime-git terminess-powerline-font-git \
@@ -105,11 +107,14 @@ pkg awesome lxsession-gtk3 rofi alacritty alacritty-terminfo \
     vivaldi vivaldi-widevine vivaldi-codecs-ffmpeg-extra-bin \
     freshplayerplugin \
     keepassxc gnome-screenshot qbittorrent insync \
-    thunar thunar-volman gvfs-smb qdirstat gnome-keyring libsecret seahorse tumbler \
+    thunar thunar-volman tumbler gvfs-smb \
+    qdirstat \
+    gnome-keyring libsecret seahorse \
     slack-desktop epdfview
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
-    noto-fonts noto-fonts-extra noto-fonts-emoji ttf-ubuntu-font-family \
+    noto-fonts noto-fonts-extra noto-fonts-emoji \
+    ttf-ubuntu-font-family \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix
 # Development
@@ -243,6 +248,12 @@ sudo cp system/intel-undervolt.conf /etc/intel-undervolt.conf
 # earlyoom
 sudo cp system/earlyoom.conf /etc/default/earlyoom
 
+# sysctl.d
+sudo cp system/sysctl.d/* /etc/sysctl.d/
+
+# default terminal font
+sudo cp system/vconsole.conf /etc/vconsole.conf
+
 # Start systemd units
 enable-units NetworkManager.service \
              docker.service \
@@ -257,7 +268,9 @@ enable-units NetworkManager.service \
 create-groups bluetooth sudo wireshark libvirt
 
 # Add user to groups
-add-user-to-groups docker storage audio video input lp systemd-journal bluetooth sudo wireshark libvirt adbusers bumblebee
+add-user-to-groups input storage audio video \
+    docker lp systemd-journal bluetooth sudo \
+    wireshark libvirt adbusers bumblebee
 
 # Rebuild initrd if required
 if [ $REBUILD_INITRD -eq 1 ]; then
