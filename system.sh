@@ -86,6 +86,7 @@ pkg intel-ucode intel-undervolt \
     alsa-tools alsa-utils alsa-plugins \
     pulseaudio pulseaudio-alsa \
     pulseaudio-modules-bt-git libldac \
+    pamixer \
     htop neovim tmux bash-completion fzf exa fd httpie ripgrep jq bat \
     bash-git-prompt direnv diff-so-fancy docker dnscrypt-proxy \
     localtime-git terminess-powerline-font-git \
