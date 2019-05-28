@@ -103,7 +103,7 @@ theme.layout_floating = theme.path .. "layouts/floating.png"
 -- {{{ Naughty
 theme.notification_width = 550
 theme.notification_font =  "Noto Sans UI 11"
+theme.notification_icon_size =  64
 -- }}}
-
 
 return theme

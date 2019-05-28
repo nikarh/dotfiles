@@ -1,18 +1,25 @@
 local naughty = require("naughty")
+local awful = require("awful")
+local gears = require("gears")
 
-naughty.config.defaults.icon_size = 48
-naughty.config.icon_dirs = {
-    os.getenv("HOME") .. "/.icons/Flat-Remix/status/",
-    "/usr/share/icons/Flat-Remix/",
-    "/usr/share/icons/Flat-Remix/base/",
-    "/usr/share/icons/Flat-Remix/symbolic/",
-    "/usr/share/icons/Flat-Remix/apps/scalable/",
-    "/usr/share/icons/Flat-Remix/status/",
-    "/usr/share/icons/hicolor/",
-    "/usr/share/icons/",
-    "/usr/share/pixmaps/",
-}
+awful.spawn.easy_async_with_shell(
+    "cat ~/.config/gtk-3.0/settings.ini"
+        .. "| awk -F'=' '$1==\"gtk-icon-theme-name\"{print $2}'"
+        .. "| xargs -I'{}' find /usr/share/icons/{} -type d"
+        .. "| sort", 
+    function(out)
+        naughty.config.icon_dirs = gears.table.merge(
+            gears.string.split(out, "\n"),
+            {
+                "/usr/share/icons/hicolor/",
+                "/usr/share/icons/",
+                "/usr/share/pixmaps/",
+            }
+        )
+    end
+)
 
+naughty.config.defaults.icon_size = 64
 naughty.config.icon_formats = { "svgz", "svg", "png", "gif" }
 naughty.config.width = 600
 naughty.config.notify_callback = function(args) return args end
