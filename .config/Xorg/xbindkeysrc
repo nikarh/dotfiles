@@ -1,13 +1,13 @@
 # Increase volume
-"~/.config/Xorg/control/xcontrol volume inc"
+"~/.config/Xorg/volume-control.sh increase"
    XF86AudioRaiseVolume
 
 # Decrease volume
-"~/.config/Xorg/control/xcontrol volume dec"
+"~/.config/Xorg/volume-control.sh decrease"
    XF86AudioLowerVolume
 
 # Decrease volume
-"~/.config/Xorg/control/xcontrol volume toggle"
+"~/.config/Xorg/volume-control.sh toggle-mute"
    XF86AudioMute
 
 "light -S 100"
@@ -16,7 +16,7 @@
 "light -S 1"
    XF86MonBrightnessDown
 
-"~/.config/Xorg/control.sh touchpad toggle"
+"~/.config/Xorg/toggle-touchpad.sh"
    XF86TouchpadToggle
 
 "gnome-screenshot -ac"

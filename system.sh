@@ -154,7 +154,7 @@ if ! grep -q ^COMPRESSION.* /etc/mkinitcpio.conf; then
 fi
 
 # Configure plymouth
-if [ $(diff /etc/plymouth/plymouthd.conf system/plymouth.conf | wc -c) -gt 0 ]; then
+if [[ $(diff /etc/plymouth/plymouthd.conf system/plymouth.conf | wc -c) -gt 0 ]]; then
     sudo cp system/plymouth.conf /etc/plymouth/plymouthd.conf
     REBUILD_INITRD=1
 fi
@@ -170,7 +170,7 @@ sudo cp system/xorg/* /etc/X11/xorg.conf.avail/
 sudo ln -s /etc/X11/xorg.conf.avail/40-libinput.conf /etc/X11/xorg.conf.d/ 2>/dev/null
 
 if grep -Eqi '(radeon|amd)' <<< "$PCI_DISPLAY_CONTROLLER"; then
-    # Configuration for AMD gpu 
+    # Configuration for AMD gpu
     pkg xf86-video-ati
 
     # Add radeon module for plymouth to initrd
@@ -181,7 +181,7 @@ if grep -Eqi '(radeon|amd)' <<< "$PCI_DISPLAY_CONTROLLER"; then
 elif grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
     # Configuration for Intel gpu
     pkg xf86-video-intel
-    
+
     # Enable Intel GPU firmware upgrade
     if ! grep -qlr 'i915.*enable_guc=2' /etc/modprobe.d/; then
         echo "options i915 enable_guc=2" | sudo tee /etc/modprobe.d/i915.conf > /dev/null
@@ -204,7 +204,7 @@ if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "n
 fi
 
 # Install usegpu util
-if [ "$(grep -Eci '(nvidia|intel)' <<< "$PCI_DISPLAY_CONTROLLER")" -eq "2" ]; then
+if [[ "$(grep -Eci '(nvidia|intel)' <<< "$PCI_DISPLAY_CONTROLLER")" -eq "2" ]]; then
     sudo cp system/usegpu/usegpu.sh /usr/local/bin/usegpu
 fi
 
@@ -214,7 +214,7 @@ if ! grep -q ^AutoEnable=true$ /etc/bluetooth/main.conf; then
 fi
 
 # Install custom polkit rules
-sudo cp system/policy/* /etc/polkit-1/rules.d/ 
+sudo cp system/policy/* /etc/polkit-1/rules.d/
 
 # Systemd
 sudo mkdir -p /etc/systemd/journald.conf.d/
@@ -262,7 +262,7 @@ enable-units NetworkManager.service \
              bluetooth.service \
              systemd-swap.service \
              earlyoom.service \
-             $ADDITIONAL_SERVICES
+             ${ADDITIONAL_SERVICES}
 
 # Create special groups
 create-groups bluetooth sudo wireshark libvirt
@@ -273,13 +273,13 @@ add-user-to-groups input storage audio video \
     wireshark libvirt adbusers bumblebee
 
 # Rebuild initrd if required
-if [ $REBUILD_INITRD -eq 1 ]; then
+if [[ ${REBUILD_INITRD} -eq 1 ]]; then
     sudo mkinitcpio -p linux
 fi
 
 # Install additional packages
-if [ ! -z "$ADDITIONAL_PACKAGES" ]; then
-    pkg $ADDITIONAL_PACKAGES
+if [[ ! -z "$ADDITIONAL_PACKAGES" ]]; then
+    pkg ${ADDITIONAL_PACKAGES}
 fi
 
 # Upgrade all packages
@@ -291,6 +291,6 @@ UNEXPECTED=$(comm --output-delimiter=--- -3 \
     <(echo "$EXPLICITLY_INSTALLED") \
     <(echo "$INSTALLED_BY_SETUP") | grep -v ^---)
 
-if [ ! -z "$UNEXPECTED" ]; then
+if [[ ! -z "$UNEXPECTED" ]]; then
     echo Unexpected packages installed: ${UNEXPECTED}
 fi
