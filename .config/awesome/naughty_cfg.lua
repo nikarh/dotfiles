@@ -6,7 +6,7 @@ awful.spawn.easy_async_with_shell(
     "cat ~/.config/gtk-3.0/settings.ini"
         .. "| awk -F'=' '$1==\"gtk-icon-theme-name\"{print $2}'"
         .. "| xargs -I'{}' find /usr/share/icons/{} -type d"
-        .. "| sort", 
+        .. "| sort | sed -e 's/$/\\//'", 
     function(out)
         naughty.config.icon_dirs = gears.table.merge(
             gears.string.split(out, "\n"),
