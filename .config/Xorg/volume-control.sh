@@ -19,7 +19,7 @@ function notify {
         "${ACTIONS}" "${HINTS}" "int32 $EXPIRE_TIME"
 }
 
-function icon-name {
+function icon_name {
     if [[ $1 == "mute" ]]; then
         echo "audio-volume-muted";
     elif [[ $1 -eq 0 ]]; then
@@ -37,14 +37,14 @@ function raise {
     pamixer -i 7
     local volume=$(pamixer --get-volume)
     local postfix=$([[ "$(pamixer --get-mute)" -eq "true" ]] && echo " (muted)")
-    notify "Volume $volume%$postfix" $(icon-name "$volume")
+    notify "Volume $volume%$postfix" $(icon_name "$volume")
 }
 
 function lower {
     pamixer -d 7
     local volume=$(pamixer --get-volume)
     local postfix=$([[ "$(pamixer --get-mute)" -eq "true" ]] && echo " (muted)")
-    notify "Volume $volume%$postfix" $(icon-name "$volume")
+    notify "Volume $volume%$postfix" $(icon_name "$volume")
 }
 
 function mute {
@@ -53,7 +53,7 @@ function mute {
     if [[ "$(pamixer --get-mute)" == "true" ]]; then
         notify "Audio muted" audio-volume-muted
     else
-        notify "Audio unmuted" $(icon-name "$volume")
+        notify "Audio unmuted" $(icon_name "$volume")
     fi
 }
 
