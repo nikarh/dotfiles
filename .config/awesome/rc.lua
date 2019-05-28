@@ -1,3 +1,8 @@
+local _dbus = dbus; 
+dbus = nil
+local naughty = require("naughty")
+dbus = _dbus
+
 local gears = require("gears")
 local awful = require("awful")
 local wibox = require("wibox")
@@ -8,8 +13,6 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 beautiful.init("/home/nikarh/.config/awesome/material/theme.lua")
 
 require("awful.autofocus")
-
-require("naughty_cfg")
 require("errors_cfg")
 require("wallpaper_cfg")
 require("titlebars_cfg")

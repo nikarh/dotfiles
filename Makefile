@@ -16,6 +16,7 @@ all: \
 	alacritty \
 	xprofile \
 	awesomewm \
+	dunst \
 	autostart \
 	gtk \
 	application_defaults \
@@ -103,6 +104,10 @@ awesomewm: init
 		cd ~/.config/awesome/tyrannical && git pull -q; \
 	fi
 .PHONY: awesomewm
+
+dunst: init
+	@$(ln) -s $(PWD)/.config/dunst ~/.config/
+.PHONY: dunst
 
 gtk: init
 	@$(mkdir) ~/.config/gtk-3.0

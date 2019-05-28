@@ -1,6 +1,5 @@
 local awful = require("awful")
 local tyrannical = require("tyrannical")
-local naughty = require("naughty")
 
 tyrannical.settings.default_layout = awful.layout.suit.max
 tyrannical.settings.block_children_focus_stealing = false
