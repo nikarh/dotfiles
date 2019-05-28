@@ -1,13 +1,10 @@
-# Increase volume
-"~/.config/Xorg/volume-control.sh increase"
+"~/.config/Xorg/volume-control.sh raise"
    XF86AudioRaiseVolume
 
-# Decrease volume
-"~/.config/Xorg/volume-control.sh decrease"
+"~/.config/Xorg/volume-control.sh lower"
    XF86AudioLowerVolume
 
-# Decrease volume
-"~/.config/Xorg/volume-control.sh toggle-mute"
+"~/.config/Xorg/volume-control.sh mute"
    XF86AudioMute
 
 "light -S 100"
