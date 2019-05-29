@@ -23,7 +23,7 @@ return {
         properties = { tag = tags.names.music }
     },
     {
-        rule_any = { class = { "chromium", "Chromium", "Firefox" } },
+        rule_any = { class = { "chromium", "Chromium", "Firefox", "vivaldi-stable", "Vivaldi-stable" } },
         properties = { tag = tags.names.web }
     },
     {
@@ -39,11 +39,11 @@ return {
         properties = { tag = tags.names.music, floating = false }
     },
     {
-        rule = { instance = "Your Library - Playlists", class = "vivaldi-stable" },
+        rule = { instance = "Your Library - Playlists", class = "Vivaldi-stable" },
         properties = { tag = tags.names.music }
     },
     {
-        rule = { instance = "Browse - Featured", class = "vivaldi-stable" },
+        rule = { instance = "Browse - Featured", class = "Vivaldi-stable" },
         properties = { tag = tags.names.music, floating = false }
     },
     {
@@ -71,11 +71,11 @@ return {
         properties = { tag = tags.names.chat, floating = false }
     },
     {
-        rule = { instance = "bilderlings-pay.slack.com", class = "vivaldi-stable" },
+        rule = { name = ".*Bilderlings Slack.*", class = "Vivaldi-stable" },
         properties = { tag = tags.names.chat, floating = false }
     },
     {
-        rule = { instance = "messenger.com", class = "vivaldi-stable" },
+        rule = { name = ".*Messenger.*", class = "Vivaldi-stable" },
         properties = { tag = tags.names.chat, floating = false }
     },
     {
