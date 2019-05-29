@@ -151,6 +151,8 @@ vscode: init
 	@code --install-extension keyring.lua
 	@code --install-extension ms-vscode.go
 	@code --install-extension redhat.vscode-yaml
+	@code --install-extension chrislajoie.vscode-modelines
+	@code --install-extension mads-hartmann.bash-ide-vscode
 .PHONY: vscode
 
 firefox:

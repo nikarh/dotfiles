@@ -1,4 +1,4 @@
-# vi: ft=sh
+# vim: ft=sh
 
 export QT_QPA_PLATFORMTHEME=gtk2
 export XDG_CURRENT_DESKTOP=gnome
