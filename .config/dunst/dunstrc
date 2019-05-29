@@ -1,3 +1,5 @@
+# vim: ft=ini
+
 [global]
     ### Display ###
 
@@ -258,19 +260,18 @@
     context = ctrl+shift+period
 
 [urgency_low]
-    background = "#839496"
-    foreground = "#002b36"
-    frame_color = "#073642"
+    background = "#294452"
+    foreground = "#c1c1c1"
+    frame_color = "#273238"
     timeout = 10
 
 [urgency_normal]
-    background = "#002b36"
-    foreground = "#fdf6e3"
-    frame_color = "#073642"
+    background = "#273238"
+    foreground = "#c1c1c1"
     timeout = 10
 
 [urgency_critical]
-    background = "#cb4b16"
+    background = "#824125"
     foreground = "#fdf6e3"
     timeout = 0
     icon = "/usr/share/icons/Flat-Remix-Blue-Dark/panel/state-warning.svg"
