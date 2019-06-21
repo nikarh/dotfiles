@@ -36,6 +36,7 @@ awful.layout.layouts = {
 -- {{{ Wibar
 local keyboard_layout = awful.widget.keyboardlayout()
 local clock = require("widgets/clock")
+local weather = require("widgets/weather")
 local separator = require("widgets/separator")
 
 local tags = require("tags")
@@ -112,6 +113,8 @@ awful.screen.connect_for_each_screen(function(s)
             },
             separator,
             clock,
+            separator,
+            weather,
             separator,
             {
                 s.mylayoutbox,
