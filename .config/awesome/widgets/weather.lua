@@ -25,7 +25,11 @@ local function reload()
             awful.spawn.easy_async(
                 {"curl", "-fsL", "--retry", "3", "--retry-connrefused", "https://wttr.in/" .. city .. "?format=3"},
                 function(out)
-                    widget:set_markup_silently(out)
+                    if string.match(out, "°C") then
+                        widget:set_markup_silently(out)
+                    else 
+                        widget:set_markup_silently("")
+                    end
                 end
             )
         end
