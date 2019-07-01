@@ -62,6 +62,9 @@ function enable-units {
     done
 }
 
+# Do not xzip while building by makepkg
+sudo sed -i "/^PKGEXT=/s/\.xz//g" /etc/makepkg.conf
+
 # Install yay
 if ! pacman -Qi yay > /dev/null ; then
     sudo pacman --noconfirm -S base-devel git go
