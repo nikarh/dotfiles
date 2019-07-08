@@ -8,6 +8,7 @@ local awful = require("awful")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
+local dpi = require("beautiful").xresources.apply_dpi
 
 -- beautiful.init(gears.get_configuration_dir() .. "material/theme.lua")
 beautiful.init("/home/nikarh/.config/awesome/material/theme.lua")
@@ -87,7 +88,35 @@ awful.screen.connect_for_each_screen(function(s)
 
     s.mylayoutbox = awful.widget.layoutbox(s)
     s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
-    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
+    s.mytasklist = awful.widget.tasklist {
+        screen   = s,
+        filter   = awful.widget.tasklist.filter.currenttags,
+        buttons  = tasklist_buttons,
+        widget_template = {
+            {
+                {
+                    awful.widget.clienticon,
+                    margins = dpi(4),
+                    widget  = wibox.container.margin
+                },
+                {
+                    {
+                        id     = "text_role",
+                        widget = wibox.widget.textbox,
+                    },
+                    id     = "text_margin_role",
+                    left   = dpi(4),
+                    right  = dpi(4),
+                    widget = wibox.container.margin
+                },
+                fill_space = true,
+                layout     = wibox.layout.fixed.horizontal
+            },
+            id     = "background_role",
+            widget = wibox.container.background
+        }
+    }    
+    --s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)    
 
     s.mywibox = awful.wibar({ position = "top", screen = s })
     s.mywibox:setup {
