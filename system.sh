@@ -50,7 +50,7 @@ function create-groups {
 
 function add-user-to-groups {
     for group in "$@"; do
-        if ! groups ${USER} | grep -qw $group; then
+        if grep -q $group /etc/group && ! groups ${USER} | grep -qw $group; then
             sudo gpasswd --add ${USER} ${group}
         fi
     done
