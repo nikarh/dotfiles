@@ -1,9 +1,12 @@
 export ADDITIONAL_PACKAGES="\
-    parallel \
     accountsservice \
     libreoffice-fresh onlyoffice-bin \
     freerdp remmina remmina-plugin-rdesktop \
     virtualbox virtualbox-guest-utils virtualbox-host-modules-arch \
     xf86-video-intel \
     chromium firefox \
+    git-crypt \
+    google-cloud-sdk \
+    insomnia \
+    php
 "

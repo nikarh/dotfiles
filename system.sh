@@ -97,6 +97,7 @@ pkg intel-ucode intel-undervolt \
     libmp4v2 lame flac ffmpeg x265 libmad \
     zip unzip unrar exfat-utils ntfs-3g python-pyudev \
     axel \
+    parallel \
     earlyoom
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
@@ -117,7 +118,7 @@ pkg dunst awesome-git lxsession-gtk3 rofi alacritty alacritty-terminfo \
     slack-desktop epdfview
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
-    noto-fonts noto-fonts-extra noto-fonts-emoji \
+    noto-fonts noto-fonts-extra noto-fonts-emoji noto-fonts-cjk \
     ttf-ubuntu-font-family \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix
