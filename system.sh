@@ -128,7 +128,6 @@ pkg git go nvm code upx \
     jdk8-openjdk openjdk8-src openjdk8-doc \
     java-openjfx-src java-openjfx-doc java-openjfx \
     visualvm jetbrains-toolbox jd-gui-bin \
-    terraform kubectl-bin kubectx kubernetes-helm-bin \
     docker-compose dhex android-udev
 # Printer
 pkg cups cups-pdf cups-pk-helper system-config-printer \

@@ -8,5 +8,6 @@ export ADDITIONAL_PACKAGES="\
     git-crypt \
     google-cloud-sdk \
     insomnia \
+    kubectl-bin kubectx kubernetes-helm-bin \
     php
 "
