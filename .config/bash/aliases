@@ -5,6 +5,7 @@ alias l='ls -lAh'
 alias df='df -h'
 alias less='less -r'
 alias yaourt='yay'
+alias http-server='python -m http.server'
 
 if type -P exa > /dev/null; then
     alias ls='exa'
