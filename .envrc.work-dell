@@ -9,5 +9,6 @@ export ADDITIONAL_PACKAGES="\
     google-cloud-sdk \
     insomnia \
     kubectl-bin kubectx kubernetes-helm-bin \
-    php
+    php \
+    devkitpro-keyring
 "

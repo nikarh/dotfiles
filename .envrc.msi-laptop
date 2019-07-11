@@ -1,3 +1,14 @@
-export ADDITIONAL_PACKAGES="chromium inkscape deadbeef gparted lxrandr chntpw"
+export ADDITIONAL_PACKAGES="\
+    chromium \
+    inkscape \
+    deadbeef smplayer \
+    gparted \
+    lxrandr \
+    chntpw \
+    android-tools \
+    libreoffice-fresh \
+    3ds-examples 3dslink 3dstools citro2d citro3d devkitARM devkitarm-crtls \
+    devkitarm-rules devkit-env devkitpro-keyring general-tools libctru picasso tex3ds
+"
 export ADDITIONAL_SERVICES="intel-undervolt.service"
 export GPU_DRIVER="intel"

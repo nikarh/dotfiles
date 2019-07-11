@@ -95,7 +95,7 @@ pkg intel-ucode intel-undervolt \
     localtime-git terminess-powerline-font-git \
     intel-hybrid-codec-driver libva-intel-driver \
     libmp4v2 lame flac ffmpeg x265 libmad \
-    zip unzip unrar exfat-utils ntfs-3g python-pyudev \
+    zip unzip unrar p7zip exfat-utils ntfs-3g python-pyudev \
     axel \
     parallel \
     earlyoom
