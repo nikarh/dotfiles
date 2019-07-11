@@ -112,7 +112,7 @@ pkg dunst awesome-git lxsession-gtk3 rofi alacritty alacritty-terminfo \
     vivaldi vivaldi-widevine vivaldi-codecs-ffmpeg-extra-bin \
     freshplayerplugin \
     keepassxc gnome-screenshot qbittorrent insync \
-    thunar thunar-volman tumbler gvfs-smb \
+    thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
     qdirstat \
     gnome-keyring libsecret seahorse \
     slack-desktop epdfview

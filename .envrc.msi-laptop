@@ -7,8 +7,10 @@ export ADDITIONAL_PACKAGES="\
     chntpw \
     android-tools \
     libreoffice-fresh \
-    3ds-examples 3dslink 3dstools citro2d citro3d devkitARM devkitarm-crtls \
-    devkitarm-rules devkit-env devkitpro-keyring general-tools libctru picasso tex3ds
+    devkitpro-keyring \
+    3dslink 3dstools citro2d citro3d devkitARM devkitarm-crtls \
+    devkitarm-rules devkit-env general-tools libctru picasso tex3ds \
+    libretro-citra retroarch 
 "
 export ADDITIONAL_SERVICES="intel-undervolt.service"
 export GPU_DRIVER="intel"

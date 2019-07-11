@@ -10,5 +10,8 @@ export ADDITIONAL_PACKAGES="\
     insomnia \
     kubectl-bin kubectx kubernetes-helm-bin \
     php \
-    devkitpro-keyring
+    devkitpro-keyring \
+    3dslink 3dstools citro2d citro3d devkitARM devkitarm-crtls \
+    devkitarm-rules devkit-env general-tools libctru picasso tex3ds \
+    libretro-citra retroarch 
 "
