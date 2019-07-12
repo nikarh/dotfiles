@@ -145,14 +145,21 @@ vscode: init
 	@$(mkdir) ~/.config/Code\ -\ OSS/User
 	@$(ln) -s $(PWD)/.config/vscode/* ~/.config/Code\ -\ OSS/User/
 	# Install vscode Extensions
+	@code --install-extension Rubymaniac.vscode-direnv
 	@code --install-extension k--kato.intellij-idea-keybindings
 	@code --install-extension pkief.material-icon-theme
+	@code --install-extension kuscamara.electron
 	@code --install-extension fallenwood.viml
 	@code --install-extension keyring.lua
 	@code --install-extension ms-vscode.go
+	@code --install-extension ms-vscode.cpptools
 	@code --install-extension redhat.vscode-yaml
-	@code --install-extension chrislajoie.vscode-modelines
+	@code --install-extension mechatroner.rainbow-csv
+	@code --install-extension yzhang.markdown-all-in-one
 	@code --install-extension mads-hartmann.bash-ide-vscode
+	@code --install-extension bmewburn.vscode-intelephense-client
+	@code --install-extension naumovs.color-highlight
+	@code --install-extension chrislajoie.vscode-modelines
 .PHONY: vscode
 
 firefox:
