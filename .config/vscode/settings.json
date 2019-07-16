@@ -3,6 +3,7 @@
     "editor.fontFamily": "Hack",
     "editor.renderWhitespace": "boundary",
     "editor.renderIndentGuides": true,
+    "editor.scrollBeyondLastLine": false,
     "explorer.confirmDelete": false,
     "explorer.confirmDragAndDrop": false,
     "files.associations": {
@@ -16,5 +17,7 @@
     "workbench.editor.showTabs": false,
     "workbench.editor.highlightModifiedTabs": true,
     "workbench.iconTheme": "material-icon-theme",
-    "workbench.tree.indent": 20
+    "workbench.tree.indent": 20,
+    "workbench.colorTheme": "Electron",
+    "markdown.preview.breaks": true
 }
