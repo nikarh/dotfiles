@@ -14,4 +14,7 @@ export ADDITIONAL_PACKAGES="\
     3dslink 3dstools citro2d citro3d devkitARM devkitarm-crtls \
     devkitarm-rules devkit-env general-tools libctru picasso tex3ds \
     libretro-citra retroarch 
+    dotnet-host-preview dotnet-runtime-preview dotnet-sdk-preview \
+    gimp inkscape \
+    monogame-bin socat
 "
