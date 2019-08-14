@@ -128,7 +128,7 @@ pkg git go nvm code upx \
     jdk8-openjdk openjdk8-src \
     java8-openjfx java8-openjfx-src \
     visualvm jetbrains-toolbox jd-gui-bin \
-    dotnet-host-preview dotnet-runtime-preview dotnet-sdk-preview \
+    dotnet-host dotnet-runtime dotnet-sdk \
     docker-compose dhex android-udev
 # Printer
 pkg cups cups-pdf cups-pk-helper system-config-printer \
