@@ -1,6 +1,5 @@
 export ADDITIONAL_PACKAGES="\
-    chromium \
-    inkscape \
+    gimp inkscape \
     deadbeef smplayer \
     gparted \
     lxrandr \
@@ -10,7 +9,8 @@ export ADDITIONAL_PACKAGES="\
     devkitpro-keyring \
     3dslink 3dstools citro2d citro3d devkitARM devkitarm-crtls \
     devkitarm-rules devkit-env general-tools libctru picasso tex3ds \
-    libretro-citra retroarch 
+    libretro-citra retroarch \
+    tiled
 "
 export ADDITIONAL_SERVICES="intel-undervolt.service"
-export GPU_DRIVER="intel"
+export GPU_DRIVER="nvidia"

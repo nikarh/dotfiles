@@ -124,10 +124,11 @@ pkg lxappearance-gtk3 qt5-styleplugins \
     arc-solid-gtk-theme flat-remix
 # Development
 pkg git go nvm code upx \
-    jdk-openjdk openjdk-src openjdk-doc \
-    jdk8-openjdk openjdk8-src openjdk8-doc \
-    java-openjfx-src java-openjfx-doc java-openjfx \
+    jdk-openjdk openjdk-src \
+    jdk8-openjdk openjdk8-src \
+    java8-openjfx java8-openjfx-src \
     visualvm jetbrains-toolbox jd-gui-bin \
+    dotnet-host-preview dotnet-runtime-preview dotnet-sdk-preview \
     docker-compose dhex android-udev
 # Printer
 pkg cups cups-pdf cups-pk-helper system-config-printer \
