@@ -33,7 +33,7 @@ function icon_name {
 function raise {
     pamixer -i 7
     local volume=$(pamixer --get-volume)
-    local postfix=$([[ "$(pamixer --get-mute)" -eq "true" ]] && echo " (muted)")
+    local postfix=$([[ "$(pamixer --get-mute)" == "true" ]] && echo " (muted)")
 
     ICON=$(icon_name "$volume") \
     SUMMARY="Volume $volume%$postfix" \
@@ -43,7 +43,7 @@ function raise {
 function lower {
     pamixer -d 7
     local volume=$(pamixer --get-volume)
-    local postfix=$([[ "$(pamixer --get-mute)" -eq "true" ]] && echo " (muted)")
+    local postfix=$([[ "$(pamixer --get-mute)" == "true" ]] && echo " (muted)")
 
     ICON=$(icon_name "$volume") \
     SUMMARY="Volume $volume%$postfix" \
