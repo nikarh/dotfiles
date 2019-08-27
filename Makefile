@@ -164,6 +164,6 @@ vscode: init
 
 firefox:
 	# Install userChrome.css in firefox for tree style tab
-	@cd $$(find ~/.mozilla/firefox/ -name '*.default') && $(mkdir) chrome && \
-	@$(ln) -s $(PWD)/.config/firefox/userChrome.css ./chrome/userChrome.css
+	@cd $$(find ~/.mozilla/firefox/ -name '*.dev-edition-default') && $(mkdir) chrome && \
+	$(ln) -s $(PWD)/.config/firefox/userChrome.css ./chrome/userChrome.css
 .PHONY: firefox
