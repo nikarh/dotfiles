@@ -265,7 +265,6 @@ enable-units NetworkManager.service \
              localtime.service \
              lightdm-plymouth.service \
              bluetooth.service \
-             systemd-swap.service \
              earlyoom.service \
              ${ADDITIONAL_SERVICES}
 
