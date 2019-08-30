@@ -23,7 +23,7 @@ return {
         properties = { tag = tags.names.music }
     },
     {
-        rule_any = { class = { "chromium", "Chromium", "Firefox", "vivaldi-stable", "Vivaldi-stable" } },
+        rule_any = { class = { "chromium", "Chromium", "Firefox", "vivaldi-stable", "Vivaldi-stable", "firefoxdeveloperedition" } },
         properties = { tag = tags.names.web }
     },
     {
@@ -51,7 +51,13 @@ return {
         properties = { tag = tags.names.term }
     },
     {
-        rule_any = { class = { "jetbrains-studio", "jetbrains-idea", "code-oss", "insomnia", "Insomnia", "sun-awt-X11-XDialogPeer", "sun-awt-X11-XFramePeer", "sun-awt-X11-XWindowPeer" } },
+        rule_any = {
+            class = { 
+                "jetbrains-studio", "jetbrains-idea", "code-oss", "insomnia", 
+                "Insomnia", "sun-awt-X11-XDialogPeer", "sun-awt-X11-XFramePeer", "sun-awt-X11-XWindowPeer",
+                "jetbrains-rider", "code", "Code" 
+            }
+        },
         properties = { tag = tags.names.dev }
     },
     {
