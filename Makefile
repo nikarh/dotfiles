@@ -142,6 +142,8 @@ autostart: init
 .PHONY: autostart
 
 vscode: init
+	@$(mkdir) ~/.vscode-oss
+	@$(ln) -s ~/.vscode-oss ~/.vscode
 	@$(mkdir) ~/.config/Code\ -\ OSS/User
 	@$(ln) -s $(PWD)/.config/vscode/* ~/.config/Code\ -\ OSS/User/
 	@$(ln) -s ~/.config/Code\ -\ OSS ~/.config/Code
