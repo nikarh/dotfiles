@@ -109,7 +109,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
 pkg dunst awesome-git lxsession-gtk3 rofi alacritty alacritty-terminfo \
     cbatticon pavucontrol pasystray blueman \
     gpicview-gtk3 xarchiver gsimplecal redshift \
-    vivaldi vivaldi-widevine vivaldi-codecs-ffmpeg-extra-bin \
+    chromium chromium-widevine firefox-developer-edition \
     freshplayerplugin \
     keepassxc gnome-screenshot qbittorrent insync \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
@@ -123,13 +123,14 @@ pkg lxappearance-gtk3 qt5-styleplugins \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix
 # Development
-pkg git go nvm code upx \
+pkg git go nvm visual-studio-code-bin upx \
     jdk-openjdk openjdk-src \
     jdk8-openjdk openjdk8-src \
     java8-openjfx java8-openjfx-src \
     visualvm jetbrains-toolbox jd-gui-bin \
     dotnet-host dotnet-runtime dotnet-sdk \
-    docker-compose dhex android-udev
+    docker-compose dhex android-udev \
+    bash-language-server
 # Printer
 pkg cups cups-pdf cups-pk-helper system-config-printer \
     canon-pixma-mg3000-complete konica-minolta-bizhub-c554e-series

@@ -1,11 +1,12 @@
 export ADDITIONAL_PACKAGES="\
+    gimp inkscape \
     accountsservice \
-    libreoffice-fresh onlyoffice-bin \
+    libreoffice-fresh \
     freerdp remmina remmina-plugin-rdesktop \
     virtualbox virtualbox-guest-utils virtualbox-host-modules-arch \
     xf86-video-intel \
-    chromium firefox \
-    git-crypt \
+    chromium \
+    git-crypt socat \
     google-cloud-sdk \
     insomnia \
     kubectl-bin kubectx kubernetes-helm-bin \
@@ -14,6 +15,5 @@ export ADDITIONAL_PACKAGES="\
     3dslink 3dstools citro2d citro3d devkitARM devkitarm-crtls \
     devkitarm-rules devkit-env general-tools libctru picasso tex3ds \
     libretro-citra retroarch \
-    gimp inkscape \
-    monogame-bin socat
+    tiled aseprite-git \
 "

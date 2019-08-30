@@ -144,6 +144,7 @@ autostart: init
 vscode: init
 	@$(mkdir) ~/.config/Code\ -\ OSS/User
 	@$(ln) -s $(PWD)/.config/vscode/* ~/.config/Code\ -\ OSS/User/
+	@$(ln) -s ~/.config/Code\ -\ OSS ~/.config/Code
 	# Install vscode Extensions
 	@code --install-extension Rubymaniac.vscode-direnv
 	@code --install-extension k--kato.intellij-idea-keybindings
