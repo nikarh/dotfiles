@@ -132,7 +132,6 @@ autostart: init
 	@$(ln) -s /usr/share/applications/pasystray.desktop ~/.config/autostart/
 	@$(ln) -s /usr/share/applications/libinput-gestures.desktop ~/.config/autostart/
 	@$(ln) -s /usr/share/applications/nm-applet.desktop ~/.config/autostart/
-	@$(ln) -s ~/.local/share/applications/vivaldi-stable.desktop ~/.config/autostart/
 	@$(ln) -s ~/.local/share/applications/cbatticon.desktop ~/.config/autostart/
 	@$(ln) -s ~/.local/share/applications/redshift-gtk.desktop ~/.config/autostart/
 	# Autostarts gnome-keyring
@@ -168,5 +167,5 @@ vscode: init
 firefox:
 	# Install userChrome.css in firefox for tree style tab
 	@cd $$(find ~/.mozilla/firefox/ -name '*.dev-edition-default') && $(mkdir) chrome && \
-	$(ln) -s $(PWD)/.config/firefox/userChrome.css ./chrome/userChrome.css
+		$(ln) -s $(PWD)/.config/firefox/userChrome.css ./chrome/userChrome.css
 .PHONY: firefox

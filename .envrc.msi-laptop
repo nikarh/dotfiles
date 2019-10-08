@@ -13,4 +13,4 @@ export ADDITIONAL_PACKAGES="\
     tiled aseprite-git
 "
 export ADDITIONAL_SERVICES="intel-undervolt.service"
-export GPU_DRIVER="nvidia"
+export GPU_DRIVER="intel"
