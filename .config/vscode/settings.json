@@ -19,5 +19,7 @@
     "workbench.iconTheme": "material-icon-theme",
     "workbench.tree.indent": 20,
     "workbench.colorTheme": "Electron",
-    "markdown.preview.breaks": true
+    "markdown.preview.breaks": true,
+    "omnisharp.enableRoslynAnalyzers": true,
+    "C_Cpp.updateChannel": "Insiders"
 }
