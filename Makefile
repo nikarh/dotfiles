@@ -47,6 +47,12 @@ alacritty: init
 	@$(ln) -s $(PWD)/.config/alacritty ~/.config/alacritty
 .PHONY: alacritty
 
+kitty: init
+	# Link kitty config files
+	@$(rm) ~/.config/kitty
+	@$(ln) -s $(PWD)/.config/kitty ~/.config/kitty
+.PHONY: kitty
+
 bash: init
 	# Link bash config files
 	@$(ln) -s $(PWD)/.config/bash ~/.config/

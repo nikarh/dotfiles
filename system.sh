@@ -106,7 +106,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-xdpyinfo umonitor-git arandr light compton autocutsel libinput-gestures \
     plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter
 # X applications
-pkg dunst awesome-git lxsession-gtk3 rofi alacritty alacritty-terminfo \
+pkg dunst awesome-git lxsession-gtk3 rofi kitty alacritty alacritty-terminfo \
     cbatticon pavucontrol pasystray blueman \
     gpicview-gtk3 xarchiver gsimplecal redshift \
     chromium chromium-widevine firefox-developer-edition \

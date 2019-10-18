@@ -18,11 +18,11 @@ require("errors_cfg")
 require("wallpaper_cfg")
 require("titlebars_cfg")
 
-local runcmd = "rofi -show run -terminal alacritty -font"
+local runcmd = "rofi -show run -terminal kitty -font"
 local runapp = "rofi -combi-modi window,drun -show combi -modi combi"
-local terminal = "alacritty -t Terminal -e tmux new-session -A -s main"
+local terminal = "kitty -T Terminal tmux new-session -A -s main"
 local editor = "nvim"
-local editor_cmd = "alacritty -t Editor -e " .. editor
+local editor_cmd = "kitty -T Editor " .. editor
 local file_manager = "thunar"
 
 local modkey = "Mod4"

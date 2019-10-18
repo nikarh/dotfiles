@@ -4,7 +4,7 @@ return {
     {
         rule_any = {
             class = {
-                "insync.py",
+                "Insync",
                 "jetbrains-toolbox",
             },
             name = {
