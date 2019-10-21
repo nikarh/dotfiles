@@ -1,16 +1,12 @@
 export ADDITIONAL_PACKAGES="\
-    gimp inkscape \
-    deadbeef smplayer \
-    gparted \
-    lxrandr \
-    chntpw \
-    android-tools \
-    libreoffice-fresh \
     devkitpro-keyring \
     3dslink 3dstools citro2d citro3d devkitARM devkitarm-crtls \
     devkitarm-rules devkit-env general-tools libctru picasso tex3ds \
     libretro-citra retroarch \
-    tiled aseprite-git
+    tiled aseprite-git \
+    deadbeef smplayer \
+    chntpw \
+    android-tools
 "
 export ADDITIONAL_SERVICES="intel-undervolt.service"
 export GPU_DRIVER="intel"

@@ -97,8 +97,9 @@ pkg intel-ucode intel-undervolt \
     libmp4v2 lame flac ffmpeg x265 libmad \
     zip unzip unrar p7zip exfat-utils ntfs-3g python-pyudev \
     axel \
-    parallel \
-    earlyoom
+    parallel socat \
+    git-crypt \
+    earlyoom \
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
@@ -115,7 +116,9 @@ pkg dunst awesome-git lxsession-gtk3 rofi kitty alacritty alacritty-terminfo \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
     qdirstat \
     gnome-keyring libsecret seahorse \
-    slack-desktop epdfview
+    slack-desktop epdfview \
+    gimp inkscape \
+    libreoffice-fresh \
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
     noto-fonts noto-fonts-extra noto-fonts-emoji noto-fonts-cjk \
@@ -128,9 +131,11 @@ pkg git go nvm visual-studio-code-bin upx \
     jdk8-openjdk openjdk8-src \
     java8-openjfx java8-openjfx-src \
     visualvm jetbrains-toolbox jd-gui-bin \
-    dotnet-host dotnet-runtime dotnet-sdk \
+    dotnet-host dotnet-runtime dotnet-sdk mono \
     docker-compose dhex android-udev \
-    bash-language-server
+    bash-language-server \
+    kubectl kubectx kubernetes-helm-bin \
+    insomnia \
 # Printer
 pkg cups cups-pdf cups-pk-helper system-config-printer \
     canon-pixma-mg3000-complete konica-minolta-bizhub-c554e-series

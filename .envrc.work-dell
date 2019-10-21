@@ -9,7 +9,7 @@ export ADDITIONAL_PACKAGES="\
     git-crypt socat \
     google-cloud-sdk \
     insomnia \
-    kubectl-bin kubectx kubernetes-helm-bin \
+    kubectl kubectx kubernetes-helm-bin \
     php \
     devkitpro-keyring \
     3dslink 3dstools citro2d citro3d devkitARM devkitarm-crtls \
