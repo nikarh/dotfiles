@@ -15,8 +15,11 @@ END
         );
 
         KEY=$(echo $REGEDIT_OUT | sed -r 's/.*:00000.*(([A-Z0-9]{2} ){16}).*/\1/' | tr -d " ")
-        echo Setting $DEVICE key = $KEY
-
-        sudo sed -i "s/^Key=.*/Key=$KEY/g" /var/lib/bluetooth/$INTERFACE/$DEVICE/info
+        if echo $KEY | grep -q 'Nosuchvalue'; then
+            echo "Key not found for $DEVICE"
+        else
+            echo Setting $DEVICE key = $KEY
+            sudo sed -i "s/^Key=.*/Key=$KEY/g" /var/lib/bluetooth/$INTERFACE/$DEVICE/info
+        fi
     done
 done
