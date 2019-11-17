@@ -1,6 +1,0 @@
-[
-    {
-        "key": "ctrl+e",
-        "command": "workbench.action.quickOpenPreviousEditor"
-    },
-]

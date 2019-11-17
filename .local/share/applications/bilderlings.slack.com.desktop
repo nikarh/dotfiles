@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=Bilderlings Slack (chromium app)
-GenericName=Slack as a chromium app
-Comment=Launch chromium with Agile Stack Slack as an app
-Categories=Laptop;
-Exec=vivaldi-stable --app="https://bilderlings-pay.slack.com"
-Terminal=false

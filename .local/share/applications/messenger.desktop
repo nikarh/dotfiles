@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=Facebook Messenger
-GenericName=Messenger as a chromium app
-Comment=Launch chromium with Messenger
-Categories=Laptop;
-Exec=vivaldi-stable --app="https://messenger.com"
-Terminal=false

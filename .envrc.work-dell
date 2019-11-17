@@ -1,19 +1,11 @@
 export ADDITIONAL_PACKAGES="\
-    gimp inkscape \
-    accountsservice \
-    libreoffice-fresh \
-    freerdp remmina remmina-plugin-rdesktop \
-    virtualbox virtualbox-guest-utils virtualbox-host-modules-arch \
-    xf86-video-intel \
-    chromium \
-    git-crypt socat \
-    google-cloud-sdk \
-    insomnia \
-    kubectl kubectx kubernetes-helm-bin \
-    php \
     devkitpro-keyring \
     3dslink 3dstools citro2d citro3d devkitARM devkitarm-crtls \
     devkitarm-rules devkit-env general-tools libctru picasso tex3ds \
     libretro-citra retroarch \
     tiled aseprite-git \
+    accountsservice \
+    freerdp remmina remmina-plugin-rdesktop \
+    xf86-video-intel \
+    google-cloud-sdk
 "

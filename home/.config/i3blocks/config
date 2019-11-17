@@ -1,0 +1,23 @@
+[disk]
+label= 
+command=df -h / | tail -n 1 | awk '{ print $4 }'
+interval=5К
+
+[memory]
+label= 
+command=./memory.sh
+interval=5К
+
+[weather]
+command=curl --retry 3 --retry-connrefused https://wttr.in/?format=3
+interval=3600
+color=#A4C2F4
+
+# Update time every 5 seconds
+[time]
+command=date +"%a %d %b %R %:::z"
+interval=5
+
+[layout]
+command=test $(xset -q | grep -A 0 'LED' | cut -c59-67) == 00000000 && echo EN || echo RU
+interval=1
