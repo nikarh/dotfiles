@@ -4,9 +4,10 @@ export ADDITIONAL_PACKAGES="\
     devkitarm-rules devkit-env general-tools libctru picasso tex3ds \
     libretro-citra retroarch \
     tiled aseprite-git \
-    deadbeef smplayer \
+    deadbeef \
     chntpw \
-    android-tools
+    android-tools \
+    google-cloud-sdk
 "
 export ADDITIONAL_SERVICES="intel-undervolt.service"
-export GPU_DRIVER="intel"
+export GPU_DRIVER="nvidia"

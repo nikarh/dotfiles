@@ -1,5 +1,8 @@
 # vim: ft=sh
 
+export BROWSER=/usr/bin/firefox-developer-edition
+export TERMINAL="alacritty -e"
+
 export QT_QPA_PLATFORMTHEME=gtk2
 export XDG_CURRENT_DESKTOP=gnome
 export QT_AUTO_SCREEN_SCALE_FACTOR=0.99
@@ -7,12 +10,15 @@ export WINIT_HIDPI_FACTOR=1
 
 xrdb -all -load ~/.config/Xorg/Xresources
 xbindkeys -f ~/.config/Xorg/xbindkeysrc --poll-rc
-compton -i 0.95 --backend glx --use-damage --no-fading-openclose -b
+#picom -i 0.95 --backend glx --use-damage --no-fading-openclose -b
 
+# Set xrate and layouts when USB keyboard is plugged in/out, when user logs in, or unlocks session.
 source ~/.config/Xorg/reset-keyboard.sh
 ~/.config/Xorg/udev-monitor/udev-monitor -s usb -e ~/.config/Xorg/reset-keyboard.sh &
+~/.config/Xorg/dbus-monitor.sh org.freedesktop.login1.Session Unlock ~/.config/Xorg/reset-keyboard.sh &
 
 autocutsel -fork
 umonitor -n
+kbdd
 
 lxsession&

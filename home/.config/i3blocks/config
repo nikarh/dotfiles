@@ -2,16 +2,18 @@
 label= 
 command=df -h / | tail -n 1 | awk '{ print $4 }'
 interval=5К
+color=#8A9BA8
 
 [memory]
 label= 
 command=./memory.sh
 interval=5К
+color=#8A9BA8
 
 [weather]
 command=curl --retry 3 --retry-connrefused https://wttr.in/?format=3
 interval=3600
-color=#A4C2F4
+color=#8A9BA8
 
 # Update time every 5 seconds
 [time]

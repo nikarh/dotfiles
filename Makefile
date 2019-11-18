@@ -77,6 +77,7 @@ wm: init
 	# Linking wm and de related configs
 	@ln -sfT $(PWD)/home/.config/i3 ~/.config/i3
 	@ln -sfT $(PWD)/home/.config/i3blocks ~/.config/i3blocks
+	@ln -sfT $(PWD)/home/.config/i3status-rs ~/.config/i3status-rs
 	@ln -sfT $(PWD)/home/.config/dunst ~/.config/dunst
 	@ln -sfT $(PWD)/home/.config/alacritty ~/.config/alacritty
 .PHONY: wm

@@ -1,7 +1,16 @@
 # i3 config file (v4)
 set $mod Mod4
 
-font pango:hack 8
+font pango:Noto Sans 9
+
+# class                 border  backgr. text    indicator child_border
+client.focused          #202B33 #30404D #F5F8FA #0E5A8A   #202B33
+client.focused_inactive #202B33 #293742 #BFCCD6 #484e50   #202B33
+client.unfocused        #10161A #182026 #8A9BA8 #182026   #10161A
+client.urgent           #2f343a #9E2B0E #F5F8FA #9E2B0E   #9E2B0E
+client.placeholder      #182026 #182026 #F5F8FA #182026   #182026
+client.background       #F5F8FA
+
 focus_follows_mouse no
 
 # Use pactl to adjust volume in PulseAudio.
@@ -9,6 +18,8 @@ set $refresh_i3status killall -SIGUSR1 i3status
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
+
+default_floating_border pixel 1
 
 bindsym $mod+Shift+q kill
 bindsym $mod+Return exec "alacritty -t Terminal -e tmux new-session -A -s main"
@@ -92,7 +103,9 @@ assign [class="messenger.com"] $ws5
 assign [class="web.skype.com"] $ws5
 assign [class="Thunar"] $ws6
 assign [class="pcmanfm"] $ws6
-assign [class="qdirstat"] $ws6
+assign [class="QDirStat"] $ws6
+
+for_window [class="messenger.com"] move container to workspace $ws5;
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
@@ -142,9 +155,22 @@ mode "resize" {
 
 bar {
         position top
-        font pango:hack 14
-        status_command i3blocks
+        font pango:hack 16
+        status_command i3status-rs ~/.config/i3status-rs/config.toml
         strip_workspace_numbers yes
         tray_padding 1px
-        separator_symbol "  "
+        separator_symbol ""
+
+        colors {
+                background #202B33
+                statusline #F5F8FA
+                separator  #30404D
+
+                # <colorclass> <border> <background> <text>
+                focused_workspace  #30404D #30404D   #F5F8FA
+                active_workspace   #CED9E0 #CED9E0   #182026
+                inactive_workspace #202B33 #202B33   #738694
+                urgent_workspace   #2f343a #9E2B0Eaa #F5F8FA
+                binding_mode       #2f343a #A66321aa #F5F8FA
+        }
 }

@@ -1,0 +1,58 @@
+[theme]
+name = "plain"
+[theme.overrides]
+separator = ""
+idle_bg = "#202B33"
+idle_fg = "#738694"
+separator_bg = "#202B33"
+separator_fg = "#30404D"
+warning_bg = "#202B33"
+warning_fg = "#D9822B"
+critical_bg = "#202B33"
+critical_fg= "#A82A2A"
+info_bg = "#202B33"
+info_fg = "#CED9E0"
+
+[icons]
+name = "awesome"
+[icons.overrides]
+time = ""
+
+[[block]]
+block = "pacman"
+interval = 10
+
+[[block]]
+block = "docker"
+interval = 2
+format = "{running}/{total}"
+
+[[block]]
+block = "disk_space"
+path = "/"
+alias = ""
+info_type = "available"
+unit = "GB"
+interval = 20
+warning = 3.0
+alert = 1.0
+
+[[block]]
+block = "memory"
+display_type = "memory"
+format_mem = "{MAg}G"
+clickable = false
+
+[[block]]
+block = "custom"
+command = "curl --retry 3 --retry-connrefused https://wttr.in/?format=3"
+interval = 3600
+
+[[block]]
+block = "custom"
+interval = 2
+command = "date +\"%a %d %b %R %:::z\""
+
+[[block]]
+block = "keyboard_layout"
+driver = "kbddbus"

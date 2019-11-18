@@ -4,6 +4,7 @@
     "editor.renderWhitespace": "boundary",
     "editor.renderIndentGuides": true,
     "editor.scrollBeyondLastLine": false,
+    "editor.scrollbar.verticalScrollbarSize": 8,
     "explorer.confirmDelete": false,
     "explorer.confirmDragAndDrop": false,
     "files.associations": {

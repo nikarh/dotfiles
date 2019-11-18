@@ -77,6 +77,7 @@ if ! grep -q ^Color$ /etc/pacman.conf; then
 fi
 
 # Base (does not actually install anything, used for later diffing with actually installed packages)
+pkg base
 pkg "$(pacman -Sg base base-devel | awk '{ print $2 }')" yay
 
 # Network
@@ -104,10 +105,11 @@ pkg intel-ucode intel-undervolt \
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
-    xorg-xdpyinfo umonitor-git arandr light compton autocutsel libinput-gestures \
+    xorg-xdpyinfo umonitor-git arandr light picom autocutsel libinput-gestures \
     plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter
 # X applications
-pkg dunst awesome-git lxsession-gtk3 rofi alacritty alacritty-terminfo \
+pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi \
+    alacritty alacritty-terminfo \
     cbatticon pavucontrol pasystray blueman \
     gpicview-gtk3 xarchiver gsimplecal redshift \
     chromium chromium-widevine firefox-developer-edition \
