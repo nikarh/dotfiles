@@ -1,4 +1,5 @@
 # vi: ft=gitignore
+
 *.class
 *.hi
 ../.idea/.dotfiles.iml
