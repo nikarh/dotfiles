@@ -23,7 +23,7 @@ default_floating_border pixel 1
 
 bindsym $mod+Shift+q kill
 bindsym $mod+Return exec "alacritty -t Terminal -e tmux new-session -A -s main"
-bindsym $mod+d exec --no-startup-id "rofi -combi-modi window,drun -show combi -modi combi"
+bindsym $mod+c exec --no-startup-id "rofi -combi-modi window,drun -show combi -modi combi"
 bindsym $mod+x exec --no-startup-id "rofi -show run -terminal alacritty -font"
 
 # change focus
@@ -31,8 +31,6 @@ bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
-
-# alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
@@ -43,8 +41,6 @@ bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
-
-# alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
@@ -68,10 +64,13 @@ bindsym $mod+Shift+space floating toggle
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
 
-# focus the parent container
-bindsym $mod+a focus parent
-# focus the child container
-#bindsym $mod+d focus child
+bindsym $mod+a focus parentc
+bindsym $mod+d focus child
+
+bindsym $mod+Control+Left  move workspace to output left
+bindsym $mod+Control+h     move workspace to output left
+bindsym $mod+Control+Right move workspace to output right
+bindsym $mod+Control+l     move workspace to output right
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
@@ -88,7 +87,6 @@ set $ws10 "10"
 
 assign [class="firefox"] $ws2
 assign [class="firefoxdeveloperedition"] $ws2
-assign [class="Chromium"] $ws2
 assign [class="Vivaldi"] $ws2
 assign [class="deadbeef"] $ws7
 assign [class="jetbrains-studio"] $ws3
@@ -99,13 +97,15 @@ assign [class="jetbrains-rider"] $ws3
 assign [class="code"] $ws3
 assign [class="keepassxc"] $ws4
 assign [class="slack"] $ws5
-assign [class="messenger.com"] $ws5
-assign [class="web.skype.com"] $ws5
 assign [class="Thunar"] $ws6
 assign [class="pcmanfm"] $ws6
 assign [class="QDirStat"] $ws6
 
-for_window [class="messenger.com"] move container to workspace $ws5;
+assign [instance="messenger.com"] $ws5
+assign [instance="web.skype.com"] $ws5
+assign [instance=^open.spotify.com.*] $ws7
+
+assign [class="Chromium"] $ws2
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
@@ -154,6 +154,7 @@ mode "resize" {
 }
 
 bar {
+        tray_output primary
         position top
         font pango:hack 16
         status_command i3status-rs ~/.config/i3status-rs/config.toml
@@ -168,7 +169,7 @@ bar {
 
                 # <colorclass> <border> <background> <text>
                 focused_workspace  #30404D #30404D   #F5F8FA
-                active_workspace   #CED9E0 #CED9E0   #182026
+                active_workspace   #202B33 #202B33   #BFCCD6
                 inactive_workspace #202B33 #202B33   #738694
                 urgent_workspace   #2f343a #9E2B0Eaa #F5F8FA
                 binding_mode       #2f343a #A66321aa #F5F8FA

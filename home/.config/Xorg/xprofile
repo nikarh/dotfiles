@@ -10,7 +10,7 @@ export WINIT_HIDPI_FACTOR=1
 
 xrdb -all -load ~/.config/Xorg/Xresources
 xbindkeys -f ~/.config/Xorg/xbindkeysrc --poll-rc
-#picom -i 0.95 --backend glx --use-damage --no-fading-openclose -b
+picom -i 0.95 --backend glx --use-damage --no-fading-openclose -b
 
 # Set xrate and layouts when USB keyboard is plugged in/out, when user logs in, or unlocks session.
 source ~/.config/Xorg/reset-keyboard.sh
