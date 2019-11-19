@@ -157,7 +157,7 @@ bar {
         tray_output primary
         position top
         font pango:hack 16
-        status_command i3status-rs ~/.config/i3status-rs/config.toml
+        status_command i3status-rs ~/.config/i3/i3status-rs.toml
         strip_workspace_numbers yes
         tray_padding 1px
         separator_symbol ""
