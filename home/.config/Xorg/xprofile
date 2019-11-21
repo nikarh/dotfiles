@@ -18,7 +18,6 @@ source ~/.config/Xorg/reset-keyboard.sh
 ~/.config/Xorg/dbus-monitor.sh org.freedesktop.login1.Session Unlock ~/.config/Xorg/reset-keyboard.sh &
 
 autocutsel -fork
-umonitor -n
 kbdd
 
 lxsession&

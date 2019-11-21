@@ -105,7 +105,7 @@ pkg intel-ucode intel-undervolt \
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
-    xorg-xdpyinfo umonitor-git arandr light picom autocutsel libinput-gestures \
+    xorg-xdpyinfo autorandr arandr light picom autocutsel libinput-gestures \
     plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter
 # X applications
 pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi \
@@ -124,7 +124,6 @@ pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi \
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
     noto-fonts noto-fonts-extra noto-fonts-emoji noto-fonts-cjk \
-    ttf-ubuntu-font-family \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix
 # Development
@@ -274,6 +273,7 @@ enable-units NetworkManager.service \
              lightdm-plymouth.service \
              bluetooth.service \
              earlyoom.service \
+             autorandr.service \
              ${ADDITIONAL_SERVICES}
 
 # Create special groups
