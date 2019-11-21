@@ -93,6 +93,7 @@ assign [class="Vivaldi"] $ws2
 assign [class="deadbeef"] $ws7
 assign [class="jetbrains-studio"] $ws3
 assign [class="jetbrains-idea"] $ws3
+assign [class="Code"] $ws3
 assign [class="code-oss"] $ws3
 assign [class="insomnia"] $ws3
 assign [class="jetbrains-rider"] $ws3
