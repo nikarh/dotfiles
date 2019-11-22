@@ -141,17 +141,8 @@ pkg git go nvm visual-studio-code-bin upx \
 pkg cups cups-pdf cups-pk-helper system-config-printer \
     canon-pixma-mg3000-complete konica-minolta-bizhub-c554e-series
 
-# Disable beep
-if ! grep -qlr 'blacklist\s*.*\s*pcspkr' /etc/modprobe.d/; then
-    echo "blacklist pcspkr" | sudo tee /etc/modprobe.d/nobeep.conf > /dev/null
-    REBUILD_INITRD=1
-fi
-
-# Blacklist nouveau, since it causes random freezes on 1060
-if ! grep -qlr 'blacklist\s*.*\s*nouveau' /etc/modprobe.d/; then
-    echo "blacklist nouveau" | sudo tee /etc/modprobe.d/nouveau.conf > /dev/null
-    REBUILD_INITRD=1
-fi
+# Copy kernel module configs to modprobe.d
+sudo cp system/modprobe.d/* /etc/modprobe.d/
 
 # Install plymouth hook
 if ! grep -q ^HOOKS.*plymouth /etc/mkinitcpio.conf; then
@@ -194,30 +185,21 @@ elif grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
     # Configuration for Intel gpu
     pkg xf86-video-intel
 
-    # Enable Intel GPU firmware upgrade
-    if ! grep -qlr 'i915.*enable_guc=2' /etc/modprobe.d/; then
-        echo "options i915 enable_guc=2" | sudo tee /etc/modprobe.d/i915.conf > /dev/null
-        REBUILD_INITRD=1
-    fi
-
     # Add i915 intel module for plymouth to initrd
     if ! grep -q ^MODULES.*i915 /etc/mkinitcpio.conf; then
         sudo sed -E -i 's/^(MODULES=\()(.*)/\1i915 \2/; s/^(MODULES.*) (\).*)/\1\2/' /etc/mkinitcpio.conf
         REBUILD_INITRD=1
     fi
 
-    sudo ln -s /etc/X11/xorg.conf.avail/20-gpu.intel.conf /etc/X11/xorg.conf.d/20-gpu.conf 2>/dev/null
+    sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.intel.conf /etc/X11/xorg.conf.d/20-gpu.conf
+    sudo ln -sf /etc/modprobe.d/gpu.conf.intel /etc/modprobe.d/gpu.conf
 fi
 
 if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "nvidia"; then
     # Configuration for nvidia gpu
     pkg nvidia nvidia-settings nvidia-utils
-    sudo ln -s /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf 2>/dev/null
-fi
-
-# Install usegpu util
-if [[ "$(grep -Eci '(nvidia|intel)' <<< "$PCI_DISPLAY_CONTROLLER")" -eq "2" ]]; then
-    sudo cp system/usegpu/usegpu.sh /usr/local/bin/usegpu
+    sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
+    sudo ln -sf /etc/modprobe.d/gpu.conf.nvidia /etc/modprobe.d/gpu.conf
 fi
 
 # Enable bluetooth card
