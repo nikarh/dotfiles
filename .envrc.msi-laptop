@@ -1,8 +1,5 @@
 export ADDITIONAL_PACKAGES="\
     devkitpro-keyring \
-    3dslink 3dstools citro2d citro3d devkitARM devkitarm-crtls \
-    devkitarm-rules devkit-env general-tools libctru picasso tex3ds \
-    libretro-citra retroarch \
     tiled aseprite-git \
     deadbeef \
     chntpw \

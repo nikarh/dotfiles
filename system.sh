@@ -130,7 +130,6 @@ pkg lxappearance-gtk3 qt5-styleplugins \
 pkg git go nvm visual-studio-code-bin upx \
     jdk-openjdk openjdk-src \
     jdk8-openjdk openjdk8-src \
-    java8-openjfx java8-openjfx-src \
     visualvm jetbrains-toolbox jd-gui-bin \
     dotnet-host dotnet-runtime dotnet-sdk mono \
     docker-compose dhex android-udev \
