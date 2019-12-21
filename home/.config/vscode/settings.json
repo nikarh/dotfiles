@@ -1,6 +1,5 @@
 {
     "breadcrumbs.enabled": true,
-    "editor.fontFamily": "Hack",
     "editor.renderWhitespace": "boundary",
     "editor.renderIndentGuides": true,
     "editor.scrollBeyondLastLine": false,
@@ -20,5 +19,7 @@
     "workbench.editor.highlightModifiedTabs": true,
     "workbench.iconTheme": "material-icon-theme",
     "workbench.tree.indent": 20,
-    "C_Cpp.updateChannel": "Insiders"
+    "C_Cpp.updateChannel": "Insiders",
+    "editor.fontFamily": "Hack",
+    "customizeUI.font.regular": "'Noto Sans'"
 }

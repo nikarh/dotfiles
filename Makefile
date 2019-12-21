@@ -125,7 +125,6 @@ vscode: init
 		k--kato.intellij-idea-keybindings \
 		PKief.material-icon-theme \
 		fallenwood.vimL \
-		keyring.Lua \
 		ms-vscode.Go \
 		ms-vscode.cpptools \
 		redhat.vscode-yaml \

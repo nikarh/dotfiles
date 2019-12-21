@@ -98,7 +98,7 @@ assign [class="code-oss"] $ws3
 assign [class="insomnia"] $ws3
 assign [class="jetbrains-rider"] $ws3
 assign [class="code"] $ws3
-assign [class="keepassxc"] $ws4
+assign [class="KeePassXC"] $ws4
 assign [class="Slack"] $ws5
 assign [class="Thunar"] $ws6
 assign [class="pcmanfm"] $ws6
@@ -109,6 +109,8 @@ assign [instance="web.skype.com"] $ws5
 assign [instance=^open.spotify.com.*] $ws7
 
 assign [class="Chromium"] $ws2
+
+for_window [class="jetbrains-toolbox"] floating enable
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
