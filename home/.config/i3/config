@@ -176,7 +176,7 @@ bar {
                 focused_workspace  #30404D #30404D   #F5F8FA
                 active_workspace   #202B33 #202B33   #BFCCD6
                 inactive_workspace #202B33 #202B33   #738694
-                urgent_workspace   #2f343a #9E2B0Eaa #F5F8FA
+                urgent_workspace   #0A6640 #0A6640 #F5F8FA
                 binding_mode       #2f343a #A66321aa #F5F8FA
         }
 }
