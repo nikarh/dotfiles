@@ -131,7 +131,6 @@ pkg git go nvm visual-studio-code-bin upx \
     jdk-openjdk openjdk-src \
     jdk8-openjdk openjdk8-src \
     visualvm jetbrains-toolbox jd-gui-bin \
-    dotnet-host dotnet-runtime dotnet-sdk mono \
     docker-compose dhex android-udev \
     bash-language-server \
     kubectl kubectx kubernetes-helm-bin \
