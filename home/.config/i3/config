@@ -9,7 +9,7 @@ font pango:Noto Sans 9
 client.focused          #202B33 #30404D #F5F8FA #0E5A8A   #202B33
 client.focused_inactive #202B33 #293742 #BFCCD6 #484e50   #202B33
 client.unfocused        #10161A #182026 #8A9BA8 #182026   #10161A
-client.urgent           #2f343a #9E2B0E #F5F8FA #9E2B0E   #9E2B0E
+client.urgent           #2f343a #E1E8ED #394B59 #E1E8ED   #E1E8ED
 client.placeholder      #182026 #182026 #F5F8FA #182026   #182026
 client.background       #F5F8FA
 
@@ -172,11 +172,11 @@ bar {
                 statusline #F5F8FA
                 separator  #30404D
 
-                # <colorclass> <border> <background> <text>
-                focused_workspace  #30404D #30404D   #F5F8FA
-                active_workspace   #202B33 #202B33   #BFCCD6
-                inactive_workspace #202B33 #202B33   #738694
-                urgent_workspace   #0A6640 #0A6640 #F5F8FA
-                binding_mode       #2f343a #A66321aa #F5F8FA
+                # <colorclass>     <border> <background> <text>
+                focused_workspace  #30404D  #30404D      #F5F8FA
+                active_workspace   #202B33  #202B33      #BFCCD6
+                inactive_workspace #202B33  #202B33      #738694
+                urgent_workspace   #202B33  #E1E8ED      #394B59
+                binding_mode       #2f343a  #A66321aa    #F5F8FA
         }
 }
