@@ -1,4 +1,4 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 
 BUS_NAME=$1
 MEMBER=$2

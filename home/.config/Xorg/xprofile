@@ -12,10 +12,14 @@ xrdb -all -load ~/.config/Xorg/Xresources
 xbindkeys -f ~/.config/Xorg/xbindkeysrc --poll-rc
 picom -i 0.95 --backend glx --use-damage --no-fading-openclose -b
 
-# Set xrate and layouts when USB keyboard is plugged in/out, when user logs in, or unlocks session.
-source ~/.config/Xorg/reset-keyboard.sh
-~/.config/Xorg/udev-monitor/udev-monitor -s usb -e ~/.config/Xorg/reset-keyboard.sh &
-~/.config/Xorg/dbus-monitor.sh org.freedesktop.login1.Session Unlock ~/.config/Xorg/reset-keyboard.sh &
+# Init input devices
+source ~/.config/Xorg/init-input-devices.sh
+# Init input devices on USB events
+~/.config/Xorg/udev-monitor/udev-monitor \
+    -s usb -e ~/.config/Xorg/init-input-devices.sh &
+# Init input devices on session unlock
+~/.config/Xorg/dbus-monitor.sh \
+    org.freedesktop.login1.Session Unlock ~/.config/Xorg/reset-keyboard.sh &
 
 autocutsel -fork
 kbdd
