@@ -24,4 +24,6 @@ source ~/.config/Xorg/init-input-devices.sh
 autocutsel -fork
 kbdd
 
+sleep 0.4
+
 lxsession&
