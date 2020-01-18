@@ -94,7 +94,7 @@ pkg intel-ucode intel-undervolt \
     htop neovim tmux bash-completion fzf exa fd httpie ripgrep jq bat \
     bash-git-prompt direnv diff-so-fancy docker dnscrypt-proxy \
     localtime-git terminess-powerline-font-git \
-    intel-hybrid-codec-driver libva-intel-driver \
+    intel-hybrid-codec-driver \
     libmp4v2 lame flac ffmpeg x265 libmad \
     zip unzip unrar p7zip exfat-utils ntfs-3g python-pyudev \
     axel \

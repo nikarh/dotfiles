@@ -5,6 +5,7 @@ export ADDITIONAL_PACKAGES="\
     chntpw \
     android-tools \
     google-cloud-sdk \
+    libva-vdpau-driver intel-media-driver \
 "
 export ADDITIONAL_SERVICES="intel-undervolt.service"
 export GPU_DRIVER="intel"
