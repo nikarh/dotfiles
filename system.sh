@@ -129,12 +129,11 @@ pkg lxappearance-gtk3 qt5-styleplugins \
 # Development
 pkg git go nvm visual-studio-code-bin upx \
     jdk-openjdk openjdk-src \
-    jdk8-openjdk openjdk8-src \
     visualvm jetbrains-toolbox jd-gui-bin \
     docker-compose dhex android-udev \
     bash-language-server \
     kubectl kubectx kubernetes-helm-bin \
-    insomnia \
+    insomnia
 # Printer
 pkg cups cups-pdf cups-pk-helper system-config-printer \
     canon-pixma-mg3000-complete konica-minolta-bizhub-c554e-series

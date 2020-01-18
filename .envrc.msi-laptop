@@ -4,7 +4,7 @@ export ADDITIONAL_PACKAGES="\
     deadbeef \
     chntpw \
     android-tools \
-    google-cloud-sdk
+    google-cloud-sdk \
 "
 export ADDITIONAL_SERVICES="intel-undervolt.service"
 export GPU_DRIVER="intel"
