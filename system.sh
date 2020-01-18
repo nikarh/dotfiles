@@ -63,7 +63,7 @@ function enable-units {
 }
 
 # Do not xzip while building by makepkg
-sudo sed -i "/^PKGEXT=/s/\.xz//g" /etc/makepkg.conf
+sudo sed -i '/^PKGEXT=/s/\.xz//g' /etc/makepkg.conf
 
 # Install yay
 if ! pacman -Qi yay > /dev/null ; then
@@ -72,7 +72,7 @@ if ! pacman -Qi yay > /dev/null ; then
 fi
 
 # Colorize pacman
-if ! grep -q ^Color$ /etc/pacman.conf; then
+if ! grep -q '^Color$' /etc/pacman.conf; then
     sudo sed -i '/^#Color/s/^#//' /etc/pacman.conf;
 fi
 
@@ -123,7 +123,7 @@ pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi \
     libreoffice-fresh \
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
-    noto-fonts noto-fonts-extra noto-fonts-emoji noto-fonts-cjk \
+    noto-fonts noto-fonts-emoji \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix
 # Development
@@ -201,7 +201,7 @@ if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "n
 fi
 
 # Enable bluetooth card
-if ! grep -q ^AutoEnable=true$ /etc/bluetooth/main.conf; then
+if ! grep -q '^AutoEnable=true$' /etc/bluetooth/main.conf; then
     sudo sed -i 's/^#AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf;
 fi
 
