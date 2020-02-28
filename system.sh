@@ -108,8 +108,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-xdpyinfo autorandr arandr light picom autocutsel libinput-gestures \
     plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter
 # X applications
-pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi \
-    alacritty alacritty-terminfo \
+pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi alacritty \
     cbatticon pavucontrol pasystray blueman \
     gpicview-gtk3 xarchiver gsimplecal redshift \
     chromium chromium-widevine firefox-developer-edition \
@@ -135,8 +134,7 @@ pkg git go nvm visual-studio-code-bin upx \
     kubectl kubectx kubernetes-helm-bin \
     insomnia
 # Printer
-pkg cups cups-pdf cups-pk-helper system-config-printer \
-    canon-pixma-mg3000-complete konica-minolta-bizhub-c554e-series
+pkg cups cups-pdf cups-pk-helper system-config-printer
 
 # Copy kernel module configs to modprobe.d
 sudo cp system/modprobe.d/* /etc/modprobe.d/
@@ -256,12 +254,12 @@ enable-units NetworkManager.service \
              ${ADDITIONAL_SERVICES}
 
 # Create special groups
-create-groups bluetooth sudo wireshark libvirt
+create-groups bluetooth sudo wireshark libvirt printer
 
 # Add user to groups
 add-user-to-groups input storage audio video \
     docker lp systemd-journal bluetooth sudo \
-    wireshark libvirt adbusers bumblebee
+    wireshark libvirt adbusers bumblebee printer
 
 # Rebuild initrd if required
 if [[ ${REBUILD_INITRD} -eq 1 ]]; then
