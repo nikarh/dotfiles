@@ -10,7 +10,7 @@ export WINIT_HIDPI_FACTOR=1
 
 xrdb -all -load ~/.config/Xorg/Xresources
 xbindkeys -f ~/.config/Xorg/xbindkeysrc --poll-rc
-picom -i 0.95 --backend glx --use-damage --no-fading-openclose -b
+picom --backend glx --no-fading-openclose --vsync -b
 
 # Init input devices
 source ~/.config/Xorg/init-input-devices.sh
