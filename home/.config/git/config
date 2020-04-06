@@ -3,6 +3,7 @@
 	lg = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
 	fixup = commit -a --amend --no-edit
 	git = !exec git
+    p = "!git fetch -ap && git rebase"
 	resync = "!f() { \
 		git branch -vv | grep \\:\\ gone\\] | awk '{ print $1 }' | xargs -I{} git branch -D {}; \
 		git fetch -ap; \
@@ -33,3 +34,5 @@
 	auto = 256
 [help]
 	autoCorrect = -1
+[advice]
+	detachedHead = false
