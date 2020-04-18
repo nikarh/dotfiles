@@ -21,5 +21,15 @@
     "workbench.tree.indent": 20,
     "C_Cpp.updateChannel": "Insiders",
     "editor.fontFamily": "Hack",
-    "customizeUI.font.regular": "'Noto Sans'"
+    "customizeUI.font.regular": "'Noto Sans'",
+    "[cpp]": {
+        
+    },
+    "C_Cpp.clang_format_sortIncludes": true,
+    "C_Cpp.default.cppStandard": "c++14",
+    "C_Cpp.default.cStandard": "c11",
+    "C_Cpp.default.intelliSenseMode": "gcc-x64",
+    "C_Cpp.workspaceSymbols": "All",
+    "cmake.configureOnOpen": true,
+    "C_Cpp.clang_format_fallbackStyle": "LLVM"
 }
