@@ -1,11 +1,10 @@
 export ADDITIONAL_PACKAGES="\
-    devkitpro-keyring \
     tiled aseprite-git \
     deadbeef \
     chntpw \
     android-tools \
     google-cloud-sdk \
-    libva-vdpau-driver intel-media-driver \
+    terraform
 "
 export ADDITIONAL_SERVICES="intel-undervolt.service"
-export GPU_DRIVER="intel"
+export GPU_DRIVER="nvidia"

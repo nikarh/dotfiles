@@ -4,5 +4,4 @@ export ADDITIONAL_PACKAGES="\
     freerdp remmina remmina-plugin-rdesktop \
     xf86-video-intel \
     google-cloud-sdk \
-    libva-vdpau-driver intel-media-driver \
 "

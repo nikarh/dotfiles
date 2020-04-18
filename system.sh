@@ -78,7 +78,9 @@ fi
 
 # Base (does not actually install anything, used for later diffing with actually installed packages)
 pkg base
-pkg "$(pacman -Sg base base-devel | awk '{ print $2 }')" yay
+pkg "$(pactree -u base)" \
+    "$(pacman -Sg base-devel | awk '{ print $2 }')" \
+    linux linux-firmware man-db yay
 
 # Network
 pkg openssh networkmanager nm-connection-editor networkmanager-openvpn \
@@ -97,16 +99,18 @@ pkg intel-ucode intel-undervolt \
     intel-hybrid-codec-driver \
     libmp4v2 lame flac ffmpeg x265 libmad \
     zip unzip unrar p7zip exfat-utils ntfs-3g python-pyudev \
-    axel \
+    axel `# parallel download from http`\
     parallel socat \
     git-crypt \
     earlyoom \
+    man-pages
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
     xorg-xdpyinfo autorandr arandr light picom autocutsel libinput-gestures \
-    plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter
+    plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter \
+    libva-vdpau-driver intel-media-driver
 # X applications
 pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi alacritty \
     cbatticon pavucontrol pasystray blueman \
@@ -131,10 +135,12 @@ pkg git go nvm visual-studio-code-bin upx \
     visualvm jetbrains-toolbox jd-gui-bin \
     docker-compose dhex android-udev \
     bash-language-server \
-    kubectl kubectx kubernetes-helm-bin \
-    insomnia
+    kubectl kubectx \
+    insomnia \
+    ccache gdb cppcheck `# C++`
 # Printer
-pkg cups cups-pdf cups-pk-helper system-config-printer
+pkg cups cups-pdf cups-pk-helper system-config-printer \
+    epson-inkjet-printer-escpr
 
 # Copy kernel module configs to modprobe.d
 sudo cp system/modprobe.d/* /etc/modprobe.d/
@@ -191,6 +197,7 @@ elif grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
 fi
 
 if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "nvidia"; then
+
     # Configuration for nvidia gpu
     pkg nvidia nvidia-settings nvidia-utils
     sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
