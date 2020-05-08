@@ -1,10 +1,7 @@
 export ADDITIONAL_PACKAGES="\
-    tiled aseprite-git \
     deadbeef \
     chntpw \
-    android-tools \
-    google-cloud-sdk \
-    terraform
+    google-cloud-sdk
 "
 export ADDITIONAL_SERVICES="intel-undervolt.service"
 export GPU_DRIVER="nvidia"

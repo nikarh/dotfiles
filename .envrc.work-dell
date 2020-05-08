@@ -1,5 +1,4 @@
 export ADDITIONAL_PACKAGES="\
-    tiled aseprite-git \
     accountsservice \
     freerdp remmina remmina-plugin-rdesktop \
     xf86-video-intel \

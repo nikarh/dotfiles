@@ -86,24 +86,22 @@ pkg "$(pactree -u base)" \
 pkg openssh networkmanager nm-connection-editor networkmanager-openvpn \
     network-manager-applet
 # Basic tools
-pkg intel-ucode intel-undervolt \
-    systemd-swap systemd-boot-pacman-hook pacman-contrib mlocate \
+pkg man-pages \
+    intel-ucode intel-undervolt \
+    systemd-swap systemd-boot-pacman-hook pacman-contrib \
     bluez bluez-libs bluez-utils \
     alsa-tools alsa-utils alsa-plugins \
-    pulseaudio pulseaudio-alsa \
-    pulseaudio-modules-bt-git libldac \
-    pamixer \
+    jack2 pulseaudio pulseaudio-alsa pulseaudio-jack pulseaudio-modules-bt-git libldac pamixer cadence \
     htop neovim tmux bash-completion fzf exa fd httpie ripgrep jq bat \
     bash-git-prompt direnv diff-so-fancy docker dnscrypt-proxy \
     localtime-git terminess-powerline-font-git \
     intel-hybrid-codec-driver \
     libmp4v2 lame flac ffmpeg x265 libmad \
     zip unzip unrar p7zip exfat-utils ntfs-3g python-pyudev \
-    axel `# parallel download from http`\
+    axel bandwhich `# parallel download from http`\
     parallel socat \
     git-crypt \
-    earlyoom \
-    man-pages
+    earlyoom
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
@@ -115,29 +113,24 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
 pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi alacritty \
     cbatticon pavucontrol pasystray blueman \
     gpicview-gtk3 xarchiver gsimplecal redshift \
-    chromium chromium-widevine firefox-developer-edition \
-    freshplayerplugin \
-    keepassxc gnome-screenshot qbittorrent insync \
+    chromium chromium-widevine firefox-developer-edition freshplayerplugin \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
-    qdirstat \
+    qdirstat keepassxc gnome-screenshot qbittorrent insync \
     gnome-keyring libsecret seahorse \
-    slack-desktop epdfview \
-    gimp inkscape \
-    libreoffice-fresh \
+    slack-desktop epdfview libreoffice-fresh \
+    gimp inkscape aseprite-git reaper-bin \
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
     noto-fonts noto-fonts-emoji \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix
 # Development
-pkg git go nvm visual-studio-code-bin upx \
-    jdk-openjdk openjdk-src \
-    visualvm jetbrains-toolbox jd-gui-bin \
-    docker-compose dhex android-udev \
-    bash-language-server \
-    kubectl kubectx \
-    insomnia \
-    ccache gdb cppcheck `# C++`
+pkg git diffutils upx dhex sysstat gdb insomnia `# General use` \
+    visual-studio-code-bin jetbrains-toolbox `# IDE` \
+    jdk-openjdk openjdk-src visualvm jd-gui-bin `# Java`\
+    docker-compose kubectl kubectx `# DevOps` \ \
+    go nvm bash-language-server `# Langs/Platforms` \
+    ccache cppcheck clang `# C++`
 # Printer
 pkg cups cups-pdf cups-pk-helper system-config-printer \
     epson-inkjet-printer-escpr
