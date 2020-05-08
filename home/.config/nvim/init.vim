@@ -16,6 +16,7 @@ if !has('nvim')
 endif
 
 Plug 'tpope/vim-unimpaired'
+Plug 'editorconfig/editorconfig-vim'
 
 " UI
 Plug 'altercation/vim-colors-solarized'
@@ -34,7 +35,6 @@ Plug 'elzr/vim-json'
 Plug 'pangloss/vim-javascript'
 Plug 'hashivim/vim-terraform'
 Plug 'plasticboy/vim-markdown'
-"Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'direnv/direnv.vim'
 
 call plug#end()
@@ -48,7 +48,9 @@ set shiftwidth=4      " reindentation control
 set hidden            " Do not force buffer saving when switching
 set autochdir         " Change directory to the one edited file is in
 
+let g:solarized_termtrans=1
 colorscheme solarized
+set background=dark
 
 if has('gui_running')
     set background=light
@@ -58,9 +60,9 @@ if has('gui_running')
     set guioptions-=T  "remove toolbar
     set guioptions-=r  "remove right-hand scroll bar
     set guioptions-=L  "remove left-hand scroll bar
-else
-    set background=dark
 endif
+
+highlight clear SignColumn
 
 " Unmap arrows
 map <up> <nop>
