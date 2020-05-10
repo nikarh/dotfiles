@@ -24,7 +24,7 @@ floating_modifier $mod
 default_floating_border pixel 1
 
 bindsym $mod+Shift+q kill
-bindsym $mod+Return exec "alacritty -t Terminal -e tmux new-session -A -s main"
+bindsym $mod+Return exec "LANG=en alacritty -t Terminal -e tmux new-session -A -s main"
 bindsym $mod+c exec --no-startup-id "rofi -combi-modi window,drun -show combi -modi combi"
 bindsym $mod+x exec --no-startup-id "rofi -show run -terminal alacritty -font"
 
@@ -100,12 +100,12 @@ assign [class="jetbrains-rider"] $ws3
 assign [class="code"] $ws3
 assign [class="KeePassXC"] $ws4
 assign [class="Slack"] $ws5
+assign [instance="messenger.com"] $ws5
+assign [instance="web.skype.com"] $ws5
 assign [class="Thunar"] $ws6
 assign [class="pcmanfm"] $ws6
 assign [class="QDirStat"] $ws6
-
-assign [instance="messenger.com"] $ws5
-assign [instance="web.skype.com"] $ws5
+assign [class="REAPER"] $ws7
 assign [instance=^open.spotify.com.*] $ws7
 
 assign [class="Chromium"] $ws2

@@ -3,5 +3,4 @@ export ADDITIONAL_PACKAGES="\
     chntpw \
     google-cloud-sdk
 "
-export ADDITIONAL_SERVICES="intel-undervolt.service"
-export GPU_DRIVER="nvidia"
+export GPU_DRIVER="intel"

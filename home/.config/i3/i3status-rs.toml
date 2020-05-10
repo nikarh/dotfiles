@@ -45,11 +45,6 @@ clickable = false
 
 [[block]]
 block = "custom"
-command = "curl --retry 3 --retry-connrefused https://wttr.in/?format=3"
-interval = 3600
-
-[[block]]
-block = "custom"
 interval = 2
 command = "date +\"%a %d %b %R %:::z\""
 
