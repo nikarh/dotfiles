@@ -1,6 +1,15 @@
+#!/bin/bash 
+
+export GPU_DRIVER="intel"
+
 export ADDITIONAL_PACKAGES="\
     deadbeef \
     chntpw \
-    google-cloud-sdk
+    google-cloud-sdk \
+    surge-synthesizer-bin `# Best free linux VST synth` \
+    carla `# VST rack to use lv2 plugins` \
+    dexed adlplug opnplug `# FM Synths, VST` \
+    spectmorph `# Morphing Synths, VST` \
+    dragonfly-reverb zam-plugins iempluginsuite `# FX, VST` \
+    zynaddsubfx helm `# FX, VST not working` \
 "
-export GPU_DRIVER="intel"

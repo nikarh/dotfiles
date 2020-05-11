@@ -130,7 +130,8 @@ pkg git diffutils upx dhex sysstat gdb insomnia `# General use` \
     jdk-openjdk openjdk-src visualvm jd-gui-bin `# Java`\
     docker-compose kubectl kubectx `# DevOps` \ \
     go nvm bash-language-server `# Langs/Platforms` \
-    ccache cppcheck clang `# C++`
+    sdl2 glu `# Game dev` \
+    ccache cppcheck clang lld `# C++`
 # Printer
 pkg cups cups-pdf cups-pk-helper system-config-printer \
     epson-inkjet-printer-escpr
