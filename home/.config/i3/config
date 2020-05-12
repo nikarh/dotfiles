@@ -106,6 +106,8 @@ assign [class="Thunar"] $ws6
 assign [class="pcmanfm"] $ws6
 assign [class="QDirStat"] $ws6
 assign [class="REAPER"] $ws7
+assign [class="Cadence"] $ws7
+assign [class="Catia"] $ws7
 assign [instance=^open.spotify.com.*] $ws7
 
 assign [class="Chromium"] $ws2
