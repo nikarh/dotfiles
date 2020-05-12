@@ -69,6 +69,7 @@ xprofile: init
 	# Linking local Xorg configs
 	@ln -sfT $(PWD)/home/.config/Xorg ~/.config/Xorg
 	@ln -sfT ~/.config/Xorg/xprofile ~/.xprofile
+	@ln -sfT ~/.config/Xorg/xbindkeysrc ~/.xbindkeysrc
 	# Build udev monitor
 	@cd ~/.config/Xorg/udev-monitor && make
 .PHONY: xprofile

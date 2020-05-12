@@ -18,7 +18,10 @@
 
 "gnome-screenshot -ac"
    Print
-
+   
 "gnome-screenshot -ic"
    Control + Print
+
+"~/.config/Xorg/toggle-coolerboost.sh"
+   Scroll_Lock
 
