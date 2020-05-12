@@ -24,7 +24,7 @@ floating_modifier $mod
 default_floating_border pixel 1
 
 bindsym $mod+Shift+q kill
-bindsym $mod+Return exec "LANG=en alacritty -t Terminal -e tmux new-session -A -s main"
+bindsym $mod+Return exec "LANG=en alacritty -t Terminal -e systemd-run --scope --user tmux new-session -A -s main"
 bindsym $mod+c exec --no-startup-id "rofi -combi-modi window,drun -show combi -modi combi"
 bindsym $mod+x exec --no-startup-id "rofi -show run -terminal alacritty -font"
 

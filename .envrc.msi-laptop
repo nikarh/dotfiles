@@ -6,6 +6,7 @@ export ADDITIONAL_PACKAGES="\
     deadbeef \
     chntpw \
     google-cloud-sdk \
+    isw `# MSI cooler controller` \
     surge-synthesizer-bin `# Best free linux VST synth` \
     carla `# VST rack to use lv2 plugins` \
     dexed adlplug opnplug `# FM Synths, VST` \
@@ -13,3 +14,5 @@ export ADDITIONAL_PACKAGES="\
     dragonfly-reverb zam-plugins iempluginsuite `# FX, VST` \
     zynaddsubfx helm `# FX, VST not working` \
 "
+
+export ADDITIONAL_SERVICES="isw@14A3EMS1"
