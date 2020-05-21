@@ -115,7 +115,7 @@ pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi alacritty \
     gpicview-gtk3 xarchiver gsimplecal redshift \
     chromium chromium-widevine firefox-developer-edition freshplayerplugin \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
-    qdirstat keepassxc gnome-screenshot qbittorrent insync \
+    qdirstat keepassxc gnome-screenshot qbittorrent insync syncthing-gtk \
     gnome-keyring libsecret seahorse \
     slack-desktop epdfview libreoffice-fresh \
     gimp inkscape aseprite-git reaper-bin \

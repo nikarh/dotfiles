@@ -107,6 +107,9 @@ autostart: init
 	@ln -sf /usr/share/applications/nm-applet.desktop ~/.config/autostart/
 	@ln -sf  ~/.local/share/applications/cbatticon.desktop ~/.config/autostart/
 	@ln -sf  ~/.local/share/applications/redshift-gtk.desktop ~/.config/autostart/
+	@ln -sf  ~/.local/share/applications/syncthing-gtk.desktop ~/.config/autostart/
+
+	@systemctl enable --user syncthing
 
 	@cp /etc/xdg/autostart/{gnome-keyring-secrets.desktop,gnome-keyring-ssh.desktop} ~/.config/autostart/
 	@sed -i '/^OnlyShowIn.*$$/d' ~/.config/autostart/gnome-keyring-secrets.desktop
