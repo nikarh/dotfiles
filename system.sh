@@ -93,7 +93,7 @@ pkg man-pages \
     alsa-tools alsa-utils alsa-plugins \
     jack2 pulseaudio pulseaudio-alsa pulseaudio-jack pulseaudio-modules-bt-git libldac pamixer cadence \
     htop neovim tmux bash-completion fzf exa fd httpie ripgrep jq bat \
-    bash-git-prompt direnv diff-so-fancy docker dnscrypt-proxy \
+    bash-git-prompt direnv diff-so-fancy docker \
     localtime-git terminess-powerline-font-git \
     intel-hybrid-codec-driver \
     libmp4v2 lame flac ffmpeg x265 libmad \
