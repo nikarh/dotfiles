@@ -11,9 +11,7 @@ all: \
 .PHONY: all
 
 init:
-	@mkdir -p ~/.config \
-			  ~/.config/autostart \
-			  ~/.local/share/applications
+	@mkdir -p ~/.config/autostart ~/.local/share/applications
 .PHONY: init
 
 ssh_key:
@@ -84,8 +82,8 @@ wm: init
 .PHONY: wm
 
 gtk: init
-	@mkdir -p ~/.config/gtk-3.0
 	# Linking gtk3 config file
+	@mkdir -p ~/.config/gtk-3.0
 	@ln -sfT $(PWD)/home/.config/gtk-3.0/settings.ini ~/.config/gtk-3.0/settings.ini
 .PHONY: gtk
 
@@ -123,6 +121,7 @@ vscode: init
 	@ln -sfT ~/.vscode ~/.vscode-oss
 	@ln -sfT ~/.config/Code ~/.config/Code\ -\ OSS
 	@ln -sf $(PWD)/home/.config/vscode/* ~/.config/Code/User/
+
 	# Installing vscode extensions
 	@EXTENSIONS="\
 		Rubymaniac.vscode-direnv \

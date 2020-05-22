@@ -5,4 +5,10 @@ export ADDITIONAL_PACKAGES="\
     freerdp remmina remmina-plugin-rdesktop \
     xf86-video-intel \
     google-cloud-sdk \
+    surge `# Best free linux VST synth` \
+    carla `# VST rack to use lv2 plugins` \
+    dexed adlplug opnplug `# FM Synths, VST` \
+    spectmorph `# Morphing Synths, VST` \
+    dragonfly-reverb zam-plugins iempluginsuite `# FX, VST` \
+    zynaddsubfx helm `# FX, VST not working` \
 "
