@@ -22,6 +22,7 @@ source ~/.config/Xorg/init-input-devices.sh
     org.freedesktop.login1.Session Unlock ~/.config/Xorg/reset-keyboard.sh &
 
 autocutsel -fork
+autocutsel -s PRIMARY -fork
 kbdd
 
 sleep 0.4
