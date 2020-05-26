@@ -10,5 +10,5 @@ export ADDITIONAL_PACKAGES="\
     dexed adlplug opnplug `# FM Synths, VST` \
     spectmorph `# Morphing Synths, VST` \
     dragonfly-reverb zam-plugins iempluginsuite `# FX, VST` \
-    zynaddsubfx helm `# FX, VST not working` \
+    zynaddsubfx helm-synth `# FX, VST not working` \
 "

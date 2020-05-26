@@ -120,7 +120,7 @@ pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi alacritty \
     slack-desktop epdfview libreoffice-fresh \
     gimp inkscape aseprite-git reaper-bin \
 # Themes and fonts
-pkg lxappearance-gtk3 qt5-styleplugins \
+pkg lxappearance-gtk3 \
     noto-fonts noto-fonts-emoji \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix
