@@ -107,7 +107,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
     xorg-xdpyinfo autorandr arandr light picom autocutsel libinput-gestures \
-    plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter \
+    plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter light-lock \
     libva-vdpau-driver intel-media-driver
 # X applications
 pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi alacritty \
@@ -120,7 +120,7 @@ pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi alacritty \
     slack-desktop epdfview libreoffice-fresh \
     gimp inkscape aseprite-git reaper-bin \
 # Themes and fonts
-pkg lxappearance-gtk3 \
+pkg lxappearance-gtk3 qt5-styleplugins \
     noto-fonts noto-fonts-emoji \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix
