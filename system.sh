@@ -107,7 +107,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
     xorg-xdpyinfo autorandr arandr light picom autocutsel libinput-gestures \
-    plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter light-lock \
+    plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter light-locker \
     libva-vdpau-driver intel-media-driver
 # X applications
 pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi alacritty \
@@ -260,7 +260,8 @@ create-groups bluetooth sudo wireshark libvirt printer
 # Add user to groups
 add-user-to-groups input storage audio video \
     docker lp systemd-journal bluetooth sudo \
-    wireshark libvirt adbusers bumblebee printer
+    wireshark libvirt adbusers bumblebee printer \
+    uucp
 
 # Rebuild initrd if required
 if [[ ${REBUILD_INITRD} -eq 1 ]]; then
