@@ -31,5 +31,6 @@
     "C_Cpp.default.intelliSenseMode": "gcc-x64",
     "C_Cpp.workspaceSymbols": "All",
     "cmake.configureOnOpen": true,
-    "C_Cpp.clang_format_fallbackStyle": "LLVM"
+    "C_Cpp.clang_format_fallbackStyle": "LLVM",
+    "editor.mouseWheelZoom": true
 }

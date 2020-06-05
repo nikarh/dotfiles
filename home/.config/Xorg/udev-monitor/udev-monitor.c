@@ -3,7 +3,9 @@
 #include <string.h>
 #include <libudev.h>
 #include <unistd.h>
+#include <getopt.h>
 #include <ctype.h>
+#include <sys/select.h>
 
 int main(int argc, char **argv) 
 {

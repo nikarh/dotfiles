@@ -19,10 +19,9 @@ source ~/.config/Xorg/init-input-devices.sh
     -s usb -e ~/.config/Xorg/init-input-devices.sh &
 # Init input devices on session unlock
 ~/.config/Xorg/dbus-monitor.sh \
-    org.freedesktop.login1.Session Unlock ~/.config/Xorg/reset-keyboard.sh &
+    org.freedesktop.login1.Session Unlock ~/.config/Xorg/init-input-devices.sh &
 
 autocutsel -fork
-autocutsel -s PRIMARY -fork
 kbdd
 
 sleep 0.4
