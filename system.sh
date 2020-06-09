@@ -30,7 +30,7 @@ function pkg {
     local requested=$(echo $@ | tr " " "\n" | sort | uniq)
     ALL_PACKAGES_TO_INSTALL="$ALL_PACKAGES_TO_INSTALL $requested"
 
-    yay --noconfirm -S $(comm --output-delimiter=--- -3 \
+    yay --pgpfetch --noconfirm -S --needed $(comm --output-delimiter=--- -3 \
         <(echo "$requested") \
         <(echo "$installed") | grep -v ^---)
 }
@@ -275,9 +275,11 @@ fi
 
 # Upgrade all packages
 yay -Syu --noconfirm
+yay -Rnscu --noconfirm $(yay -Qtdq) 2> /dev/null
 
-EXPLICITLY_INSTALLED=$(pacman -Qe | awk '{ print $1 }' | sort)
+EXPLICITLY_INSTALLED=$(pacman -Qqe | sort)
 INSTALLED_BY_SETUP=$(echo "$ALL_PACKAGES_TO_INSTALL" | tr " " "\n" | sort)
+
 UNEXPECTED=$(comm --output-delimiter=--- -3 \
     <(echo "$EXPLICITLY_INSTALLED") \
     <(echo "$INSTALLED_BY_SETUP") | grep -v ^---)
