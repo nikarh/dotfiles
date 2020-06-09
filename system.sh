@@ -161,10 +161,8 @@ fi
 
 # Copy (almost) all configs to etc
 sudo cp -ufrTv "${PWD}/system/etc/" /etc
-
-# Wallpaper
-sudo mkdir -p /usr/share/backgrounds
-sudo cp wallpaper.png /usr/share/backgrounds/
+# Copy other stuff (wallpaper)
+sudo cp -ufrTv "${PWD}/system/usr/" /usr
 
 if grep -Eqi '(radeon|amd)' <<< "$PCI_DISPLAY_CONTROLLER"; then
     # Configuration for AMD gpu
