@@ -1,24 +1,11 @@
 #!/usr/bin/env bash
 
-function notify {
-    local APP_NAME="$0"
-    local REPLACE_ID=1
-    local ACTIONS="[]"
-    local HINTS="[]"
-    local EXPIRE_TIME=1000
-
-    gdbus call \
-        --session \
-        --dest org.freedesktop.Notifications \
-        --object-path /org/freedesktop/Notifications \
-        --method org.freedesktop.Notifications.Notify \
-        "$APP_NAME" "$REPLACE_ID" "$ICON" "$SUMMARY" "$BODY" \
-        "$ACTIONS" "$HINTS" "int32 $EXPIRE_TIME"
-}
-
 if ! command -v isw; then 
     exit
 fi
+
+cd $(readlink -f "$(dirname "$0")")
+source ./functions.sh
 
 if [ -f /tmp/.coolerboost ]; then
     sudo isw -b off

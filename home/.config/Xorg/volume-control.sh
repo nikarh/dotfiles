@@ -1,22 +1,9 @@
 #!/usr/bin/env bash
 
-function notify {
-    local APP_NAME="$0"
-    local REPLACE_ID=1
-    local ACTIONS="[]"
-    local HINTS="[]"
-    local EXPIRE_TIME=1000
+cd $(readlink -f "$(dirname "$0")")
+source ./functions.sh
 
-    gdbus call \
-        --session \
-        --dest org.freedesktop.Notifications \
-        --object-path /org/freedesktop/Notifications \
-        --method org.freedesktop.Notifications.Notify \
-        "$APP_NAME" "$REPLACE_ID" "$ICON" "$SUMMARY" "$BODY" \
-        "$ACTIONS" "$HINTS" "int32 $EXPIRE_TIME"
-}
-
-function icon_name {
+function icon-name {
     if [[ $1 == "mute" ]]; then
         echo "audio-volume-muted";
     elif [[ $1 -eq 0 ]]; then
@@ -35,7 +22,7 @@ function raise {
     local volume=$(pamixer --get-volume)
     local postfix=$([[ "$(pamixer --get-mute)" == "true" ]] && echo " (muted)")
 
-    ICON=$(icon_name "$volume") \
+    ICON=$(icon-name "$volume") \
     SUMMARY="Volume $volume%$postfix" \
         notify 
 }
@@ -45,12 +32,12 @@ function lower {
     local volume=$(pamixer --get-volume)
     local postfix=$([[ "$(pamixer --get-mute)" == "true" ]] && echo " (muted)")
 
-    ICON=$(icon_name "$volume") \
+    ICON=$(icon-name "$volume") \
     SUMMARY="Volume $volume%$postfix" \
         notify
 }
 
-function mute {
+function toggle-mute {
     pamixer -t
     local volume=$(pamixer --get-volume)
     if [[ "$(pamixer --get-mute)" == "true" ]]; then
@@ -58,7 +45,7 @@ function mute {
         SUMMARY="Audio muted" \
             notify
     else
-        ICON=$(icon_name "$volume") \
+        ICON=$(icon-name "$volume") \
         SUMMARY="Audio unmuted ($volume%)" \
             notify
     fi
@@ -70,5 +57,5 @@ case "$1" in
     lower)
         lower;;
     mute)
-        mute;;
+        toggle-mute;;
 esac

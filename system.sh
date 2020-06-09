@@ -82,14 +82,14 @@ fi
 pkg base pacman-contrib
 pkg "$(pactree -u base)" \
     "$(pacman -Sg base-devel | awk '{ print $2 }')" \
-    linux linux-firmware man-db yay
+    linux linux-firmware yay
 
 # Network
 pkg openssh networkmanager nm-connection-editor networkmanager-openvpn \
     network-manager-applet
 # Basic tools
-pkg man-pages \
-    intel-ucode \
+pkg man-db man-pages \
+    intel-ucode earlyoom \
     systemd-swap systemd-boot-pacman-hook \
     bluez bluez-libs bluez-utils \
     alsa-tools alsa-utils alsa-plugins \
@@ -100,11 +100,10 @@ pkg man-pages \
     localtime-git terminess-powerline-font-git \
     intel-hybrid-codec-driver \
     libmp4v2 lame flac ffmpeg x265 libmad \
-    zip unzip unrar p7zip exfat-utils ntfs-3g python-pyudev \
-    bandwhich \
-    parallel socat \
-    git-crypt \
-    earlyoom
+    zip unzip unrar p7zip exfat-utils ntfs-3g \
+    bandwhich socat \
+    parallel \
+    git-crypt
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \

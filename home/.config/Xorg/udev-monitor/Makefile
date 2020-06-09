@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -s -Wall
+CFLAGS = -s -Wall -O3
 
 udev-monitor:
 	$(CC) $(CFLAGS) -o udev-monitor udev-monitor.c -ludev
