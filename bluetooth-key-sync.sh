@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-WINDOWS_DISK="${WINDOWS_DISK:-/run/media/nikarh/Windows}"
+WINDOWS_DISK="${WINDOWS_DISK:-/run/media/$USER/Windows}"
 SYSTEM_CONFIG=$WINDOWS_DISK/Windows/System32/config/system
 
 for INTERFACE in $(sudo ls /var/lib/bluetooth); do

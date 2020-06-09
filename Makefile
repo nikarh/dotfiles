@@ -35,8 +35,6 @@ bash: init
 	# Pulling bash-sensible
 	@if [ ! -d ~/.config/bash-sensible ]; then \
 		git -q clone https://github.com/mrzool/bash-sensible.git ~/.config/bash-sensible; \
-		sed -i 's/^shopt -s cdable_vars/#shopt -s cdable_vars/' \
-			~/.config/bash-sensible/sensible.bash; \
 	else \
 		cd ~/.config/bash-sensible && git pull -q; \
 	fi
@@ -75,8 +73,6 @@ xprofile: init
 wm: init
 	# Linking wm and de related configs
 	@ln -sfT $(PWD)/home/.config/i3 ~/.config/i3
-	@ln -sfT $(PWD)/home/.config/i3blocks ~/.config/i3blocks
-	@ln -sfT $(PWD)/home/.config/i3status-rs ~/.config/i3status-rs
 	@ln -sfT $(PWD)/home/.config/dunst ~/.config/dunst
 	@ln -sfT $(PWD)/home/.config/alacritty ~/.config/alacritty
 .PHONY: wm

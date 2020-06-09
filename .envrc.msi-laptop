@@ -7,7 +7,7 @@ export ADDITIONAL_PACKAGES="\
     chntpw \
     google-cloud-sdk \
     isw `# MSI cooler controller` \
-    surge `# Best free linux VST synth` \
+    surge `# Best free VST synth` \
     carla `# VST rack to use lv2 plugins` \
     dexed adlplug opnplug `# FM Synths, VST` \
     spectmorph `# Morphing Synths, VST` \
@@ -15,4 +15,4 @@ export ADDITIONAL_PACKAGES="\
     zynaddsubfx helm-synth `# FX, VST not working` \
 "
 
-export ADDITIONAL_SERVICES="isw@14A3EMS1"
+export ADDITIONAL_UNITS="isw@14A3EMS1"

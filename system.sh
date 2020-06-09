@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cd $(readlink -f "$(dirname "$0")")
+
 REBUILD_INITRD=0
 PCI_DATA=$(lspci)
 PCI_DISPLAY_CONTROLLER=$(echo "$PCI_DATA" | grep -Ei '(vga|display)')
@@ -77,7 +79,7 @@ if ! grep -q '^Color$' /etc/pacman.conf; then
 fi
 
 # Base (does not actually install anything, used for later diffing with actually installed packages)
-pkg base
+pkg base pacman-contrib
 pkg "$(pactree -u base)" \
     "$(pacman -Sg base-devel | awk '{ print $2 }')" \
     linux linux-firmware man-db yay
@@ -87,18 +89,19 @@ pkg openssh networkmanager nm-connection-editor networkmanager-openvpn \
     network-manager-applet
 # Basic tools
 pkg man-pages \
-    intel-ucode intel-undervolt \
-    systemd-swap systemd-boot-pacman-hook pacman-contrib \
+    intel-ucode \
+    systemd-swap systemd-boot-pacman-hook \
     bluez bluez-libs bluez-utils \
     alsa-tools alsa-utils alsa-plugins \
-    jack2 pulseaudio pulseaudio-alsa pulseaudio-jack pulseaudio-modules-bt-git libldac pamixer cadence \
-    htop neovim tmux bash-completion fzf exa fd httpie ripgrep jq bat \
+    pulseaudio pulseaudio-alsa pulseaudio-modules-bt-git libldac pamixer \
+    jack2 cadence pulseaudio-jack \
+    htop neovim tmux bash-completion fzf exa fd ripgrep jq bat \
     bash-git-prompt direnv diff-so-fancy docker \
     localtime-git terminess-powerline-font-git \
     intel-hybrid-codec-driver \
     libmp4v2 lame flac ffmpeg x265 libmad \
     zip unzip unrar p7zip exfat-utils ntfs-3g python-pyudev \
-    axel bandwhich `# parallel download from http`\
+    bandwhich \
     parallel socat \
     git-crypt \
     earlyoom
@@ -107,7 +110,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
     xorg-xdpyinfo autorandr arandr light picom autocutsel libinput-gestures \
-    plymouth plymouth-theme-monoarch lightdm lightdm-gtk-greeter light-locker \
+    lightdm lightdm-gtk-greeter light-locker \
     libva-vdpau-driver intel-media-driver
 # X applications
 pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi alacritty \
@@ -136,12 +139,17 @@ pkg git diffutils upx dhex sysstat gdb insomnia `# General use` \
 pkg cups cups-pdf cups-pk-helper system-config-printer \
     epson-inkjet-printer-escpr
 
-# Copy kernel module configs to modprobe.d
-sudo cp system/modprobe.d/* /etc/modprobe.d/
+# Plymouth
+pkg plymouth plymouth-theme-monoarch 
 
 # Install plymouth hook
 if ! grep -q ^HOOKS.*plymouth /etc/mkinitcpio.conf; then
     sudo sed -E -i 's/^(HOOKS=.*udev)(.*)/\1 plymouth\2/' /etc/mkinitcpio.conf
+    REBUILD_INITRD=1
+fi
+
+# Rebuild initrd if plymouth config changes
+if [[ $(diff /etc/plymouth/plymouthd.conf system/etc/plymouth/plymouthd.conf | wc -c) -gt 0 ]]; then
     REBUILD_INITRD=1
 fi
 
@@ -151,21 +159,12 @@ if ! grep -q ^COMPRESSION.* /etc/mkinitcpio.conf; then
     REBUILD_INITRD=1
 fi
 
-# Configure plymouth
-if [[ $(diff /etc/plymouth/plymouthd.conf system/plymouth.conf | wc -c) -gt 0 ]]; then
-    sudo cp system/plymouth.conf /etc/plymouth/plymouthd.conf
-    REBUILD_INITRD=1
-fi
+# Copy (almost) all configs to etc
+sudo cp -ufrTv "${PWD}/system/etc/" /etc
 
-# Lightdm
+# Wallpaper
 sudo mkdir -p /usr/share/backgrounds
 sudo cp wallpaper.png /usr/share/backgrounds/
-sudo cp system/lightdm/* /etc/lightdm/
-
-# Xorg settings
-sudo mkdir -p /etc/X11/xorg.conf.avail
-sudo cp system/xorg/* /etc/X11/xorg.conf.avail/
-sudo ln -s /etc/X11/xorg.conf.avail/40-libinput.conf /etc/X11/xorg.conf.d/ 2>/dev/null
 
 if grep -Eqi '(radeon|amd)' <<< "$PCI_DISPLAY_CONTROLLER"; then
     # Configuration for AMD gpu
@@ -191,7 +190,6 @@ elif grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
 fi
 
 if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "nvidia"; then
-
     # Configuration for nvidia gpu
     pkg nvidia nvidia-settings nvidia-utils
     sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
@@ -202,19 +200,6 @@ fi
 if ! grep -q '^AutoEnable=true$' /etc/bluetooth/main.conf; then
     sudo sed -i 's/^#AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf;
 fi
-
-# Install custom polkit rules
-sudo cp system/policy/* /etc/polkit-1/rules.d/
-
-# Systemd
-sudo mkdir -p /etc/systemd/journald.conf.d/
-sudo mkdir -p /etc/systemd/logind.conf.d/
-sudo mkdir -p /etc/systemd/system.conf.d/
-sudo mkdir -p /etc/systemd/swap.conf.d/
-sudo cp system/systemd/journald.conf /etc/systemd/journald.conf.d/00-journald.conf
-sudo cp system/systemd/logind.conf /etc/systemd/logind.conf.d/00-logind.conf
-sudo cp system/systemd/system.conf /etc/systemd/system.conf.d/00-system.conf
-sudo cp system/systemd/swap.conf /etc/systemd/swap.conf.d/00-swap.conf
 
 # Unlock gnome-keyring via PAM
 if ! grep -q pam_gnome_keyring /etc/pam.d/login; then
@@ -232,18 +217,6 @@ if ! grep -q module-switch-on-connect /etc/pulse/default.pa; then
     sudo sed -i -e "\$aload-module module-switch-on-connect" /etc/pulse/default.pa
 fi
 
-# CPU undervolt
-sudo cp system/intel-undervolt.conf /etc/intel-undervolt.conf
-
-# earlyoom
-sudo cp system/earlyoom.conf /etc/default/earlyoom
-
-# sysctl.d
-sudo cp system/sysctl.d/* /etc/sysctl.d/
-
-# default terminal font
-sudo cp system/vconsole.conf /etc/vconsole.conf
-
 # Start systemd units
 enable-units NetworkManager.service \
              docker.service \
@@ -252,12 +225,12 @@ enable-units NetworkManager.service \
              bluetooth.service \
              earlyoom.service \
              autorandr.service \
-             ${ADDITIONAL_SERVICES}
+             ${ADDITIONAL_UNITS}
 
 # Create special groups
 create-groups bluetooth sudo wireshark libvirt printer
 
-# Add user to groups
+# Add current user to groups
 add-user-to-groups input storage audio video \
     docker lp systemd-journal bluetooth sudo \
     wireshark libvirt adbusers bumblebee printer \

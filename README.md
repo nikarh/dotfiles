@@ -1,19 +1,11 @@
 # What am I looking at?
 
-This repository contains:
+This repository consists of the following:
 
-- Shell script `system.sh` which allows to (kind of) idemptoently set up and update all packages and configs I need on archlinux.
-- Makefile which set's up convential dotfiles with configurations for all software I use
+- Shell script `system.sh` which allows to (kind of) idempotently set up and update all packages and configs I need on Archlinux. This script is used daily by me only on 64 bit intel CPU's with systemd-boot EFI bootloader.
+- `Makefile` which set's up convential dotfiles with configurations for all software I use. Essentially this is a bootstrap of the usual dotfiles.
+- A magical `bluetooth-key-sync.sh` shell script, which copies bluetooth connection keys from a Windows neighbour partition. This allows me to connect all of my bluetooth devices, such as a headset, only once on a dual-boot setup. The alternative solution would be changing my bluetooth MAC address on Linux (not a great solution since headsets usually can be connected to a limited number of MAC's).
 
+# What's the purpose of all this?
 
-## My bootloader flags
-
-- MSI laptop
-```bash
-i915.modeset=1  `# KMS for plymouth`
-i915.fastboot=1 `# Flicker free KMS`
-rd.udev.log-priority=3 rd.systemd.show_status=0 vt.global_cursor_default=0 loglevel=3 quiet splash `# Plymouth`
-ec_sys.write_support=1 `# Fan control`
-nmi_watchdog=0 `# Disable kernel freezes checks`
-acpi_osi=! acpi_osi="!Windows 2009" # Might actually be useless right now
-```
+I'm too lazy to try Nix, and too sick of setting up my linux manually again and again when I buy new hardware or change job.
