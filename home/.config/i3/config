@@ -88,6 +88,7 @@ set $ws9 "9"
 set $ws10 "10"
 
 assign [class="firefox"] $ws2
+assign [class="Navigator"] $ws2
 assign [class="firefoxdeveloperedition"] $ws2
 assign [class="Vivaldi"] $ws2
 assign [class="deadbeef"] $ws7
