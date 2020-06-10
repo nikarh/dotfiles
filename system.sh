@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -e
 cd $(readlink -f "$(dirname "$0")")
 
 REBUILD_INITRD=0
@@ -70,7 +71,7 @@ sudo sed -i '/^PKGEXT=/s/\.xz//g' /etc/makepkg.conf
 # Install yay
 if ! pacman -Qi yay > /dev/null ; then
     sudo pacman --noconfirm -S base-devel git go
-    aur-pkg yay
+    echo $(aur-pkg yay)
 fi
 
 # Colorize pacman
@@ -128,7 +129,7 @@ pkg lxappearance-gtk3 qt5-styleplugins \
     arc-solid-gtk-theme flat-remix
 # Development
 pkg git diffutils upx dhex sysstat gdb insomnia `# General use` \
-    visual-studio-code-bin jetbrains-toolbox `# IDE` \
+    code jetbrains-toolbox `# IDE` \
     jdk-openjdk openjdk-src visualvm jd-gui-bin `# Java`\
     docker-compose kubectl kubectx `# DevOps` \ \
     go nvm bash-language-server `# Langs/Platforms` \

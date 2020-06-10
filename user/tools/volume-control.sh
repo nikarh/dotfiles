@@ -11,9 +11,9 @@ function icon-name {
     elif [[ $1 -lt 35 ]]; then
         echo "audio-volume-low";
     elif [[ $1 -lt 70 ]]; then
-        echo "audio-volume-low";
+        echo "audio-volume-medium";
     else
-        echo "audio-volume-low";
+        echo "audio-volume-high";
     fi
 }
 

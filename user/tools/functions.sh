@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 function notify {
     local APP_NAME="$0"
     local REPLACE_ID=1
