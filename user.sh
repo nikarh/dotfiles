@@ -3,6 +3,10 @@
 set -e
 ROOT=$(readlink -f "$(dirname "$0")")
 
+function prepend() {
+    awk "{print \"$1\" \$0}"
+}
+
 function git-get {
     if [ ! -d "$2" ]; then
         echo "Cloning $1 to $2"
@@ -33,7 +37,7 @@ if [ ! -f "${HOME}/.ssh/id_rsa" ]; then
 fi
 
 echo "Linking configs..."
-cp -frsTv "${ROOT}/user/home/" ~
+cp -frsTv "${ROOT}/user/home/" ~ | prepend '  '
 
 echo "Adding stuff to autostart..."
 mkdir -p ~/.config/autostart/
@@ -57,16 +61,16 @@ sed -i '/^OnlyShowIn.*$$/d' ~/.config/autostart/gnome-keyring-{secrets,ssh}.desk
 
 systemctl enable --user syncthing
 
-echo "Download random stuff from the internet..."
+echo "Downloading random stuff from the internet..."
 git-get https://github.com/mrzool/bash-sensible.git \
-    ~/.config/bash-sensible
+    ~/.config/bash-sensible | prepend '  '
 git-get https://github.com/tmux-plugins/tpm.git \
-    ~/.config/tmux/plugins/tpm
+    ~/.config/tmux/plugins/tpm | prepend '  '
 file-get https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
-    ~/.config/nvim/autoload/plug.vim
+    ~/.config/nvim/autoload/plug.vim | prepend '  '
 
 echo "Making everything makeable..."
-find user/tools -name Makefile -execdir make \;
+find user/tools -name Makefile -execdir make "BIN=${ROOT}/user/tools/bin" \; | prepend '  '
 
 echo "Setting default gtk terminal to alacritty..."
 gsettings set org.gnome.desktop.default-applications.terminal exec alacritty

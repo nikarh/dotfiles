@@ -1,11 +1,12 @@
 CC = gcc
 CFLAGS = -s -Wall -O3
+BIN ?= $(PWD)
 
-udev-monitor:
-	$(CC) $(CFLAGS) -o udev-monitor udev-monitor.c -ludev
+$(BIN)/udev-monitor:
+	$(CC) $(CFLAGS) -o $(BIN)/$@ $@.c -ludev
 
-default: udev-monitor
+default: $(BIN)/udev-monitor
 all: default
 
 clean:
-	rm -f udev-monitor
+	rm -f $(BIN)/udev-monitor
