@@ -1,10 +1,10 @@
-"~/.config/Xorg/volume-control.sh raise"
+"volume-control.sh raise"
    XF86AudioRaiseVolume
 
-"~/.config/Xorg/volume-control.sh lower"
+"volume-control.sh lower"
    XF86AudioLowerVolume
 
-"~/.config/Xorg/volume-control.sh mute"
+"volume-control.sh mute"
    XF86AudioMute
 
 "light -S 100"
@@ -13,7 +13,7 @@
 "light -S 1"
    XF86MonBrightnessDown
 
-"~/.config/Xorg/toggle-touchpad.sh"
+"toggle-touchpad.sh"
    XF86TouchpadToggle
 
 "gnome-screenshot -ac"
@@ -22,6 +22,6 @@
 "gnome-screenshot -ic"
    Control + Print
 
-"~/.config/Xorg/toggle-coolerboost.sh"
+"toggle-coolerboost.sh"
    Scroll_Lock
 
