@@ -8,18 +8,18 @@ export XDG_CURRENT_DESKTOP=gnome
 export QT_AUTO_SCREEN_SCALE_FACTOR=0.99
 export WINIT_HIDPI_FACTOR=1
 
-export PATH=${PATH}:${HOME}/.dotfiles/user/tools:${HOME}/.dotfiles/user/tools/udev-monitor
+export PATH=${PATH}:${HOME}/.bin/
 
 xrdb -all -load ~/.config/Xorg/.Xresources
 xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
 picom --backend glx --no-fading-openclose --vsync -b
 
 # Init input devices
-source init-input-devices.sh
+source ~/.bin/init-input-devices.sh
 # Init input devices on USB events
-udev-monitor -s usb -e init-input-devices.sh &
+~/.bin/udev-monitor -s usb -e ~/.bin/init-input-devices.sh &
 # Init input devices on session unlock
-dbus-monitor.sh org.freedesktop.login1.Session Unlock init-input-devices.sh &
+~/.bin/dbus-monitor.sh org.freedesktop.login1.Session Unlock ~/.bin/init-input-devices.sh &
 
 autocutsel -fork
 kbdd

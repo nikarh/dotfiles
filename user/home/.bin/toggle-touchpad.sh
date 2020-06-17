@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd $(readlink -f "$(dirname "$0")")
+cd $(dirname "$(readlink -f "$0")")
 source ./functions.sh
 
 DEVICE_ID=$(xinput list | grep -Eoi 'TouchPad\s*id\=[0-9]{1,2}' | grep -Eo '[0-9]{1,2}')

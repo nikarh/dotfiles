@@ -1,10 +1,10 @@
-"volume-control.sh raise"
+"~/.bin/volume-control.sh raise"
    XF86AudioRaiseVolume
 
-"volume-control.sh lower"
+"~/.bin/volume-control.sh lower"
    XF86AudioLowerVolume
 
-"volume-control.sh mute"
+"~/.bin/volume-control.sh mute"
    XF86AudioMute
 
 "light -S 100"
@@ -13,7 +13,7 @@
 "light -S 1"
    XF86MonBrightnessDown
 
-"toggle-touchpad.sh"
+"~/.bin/toggle-touchpad.sh"
    XF86TouchpadToggle
 
 "gnome-screenshot -ac"
@@ -22,6 +22,6 @@
 "gnome-screenshot -ic"
    Control + Print
 
-"toggle-coolerboost.sh"
+"~/.bin/toggle-coolerboost.sh"
    Scroll_Lock
 

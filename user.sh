@@ -36,6 +36,9 @@ if [ ! -f "${HOME}/.ssh/id_rsa" ]; then
     ssh-keygen -C "${HOSTNAME}" -f "${HOME}/.ssh/id_rsa" -P "";
 fi
 
+echo "Making everything makeable..."
+find user/tools -name Makefile -execdir make "BIN=${ROOT}/user/home/.bin" \; | prepend '  '
+
 echo "Linking configs..."
 cp -frsTv "${ROOT}/user/home/" ~ | prepend '  '
 
@@ -62,15 +65,12 @@ sed -i '/^OnlyShowIn.*$$/d' ~/.config/autostart/gnome-keyring-{secrets,ssh}.desk
 systemctl enable --user syncthing
 
 echo "Downloading random stuff from the internet..."
-git-get https://github.com/mrzool/bash-sensible.git \
-    ~/.config/bash-sensible | prepend '  '
-git-get https://github.com/tmux-plugins/tpm.git \
-    ~/.config/tmux/plugins/tpm | prepend '  '
-file-get https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
-    ~/.config/nvim/autoload/plug.vim | prepend '  '
-
-echo "Making everything makeable..."
-find user/tools -name Makefile -execdir make "BIN=${ROOT}/user/tools/bin" \; | prepend '  '
+#git-get https://github.com/mrzool/bash-sensible.git \
+#    ~/.config/bash-sensible | prepend '  '
+#git-get https://github.com/tmux-plugins/tpm.git \
+#    ~/.config/tmux/plugins/tpm | prepend '  '
+#file-get https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
+#    ~/.config/nvim/autoload/plug.vim | prepend '  '
 
 echo "Setting default gtk terminal to alacritty..."
 gsettings set org.gnome.desktop.default-applications.terminal exec alacritty

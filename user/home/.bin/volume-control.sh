@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd $(readlink -f "$(dirname "$0")")
+cd $(dirname "$(readlink -f "$0")")
 source ./functions.sh
 
 function icon-name {

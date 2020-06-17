@@ -4,7 +4,7 @@ if ! command -v isw; then
     exit
 fi
 
-cd $(readlink -f "$(dirname "$0")")
+cd $(dirname "$(readlink -f "$0")")
 source ./functions.sh
 
 if [ -f /tmp/.coolerboost ]; then
