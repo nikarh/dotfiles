@@ -7,6 +7,10 @@ function prepend() {
     awk "{print \"$1\" \$0}"
 }
 
+function section() {
+    echo -e "\e[1m\e[34m$@\e[0m"
+}
+
 function git-get {
     if [ ! -d "$2" ]; then
         echo "Cloning $1 to $2"
@@ -36,13 +40,13 @@ if [ ! -f "${HOME}/.ssh/id_rsa" ]; then
     ssh-keygen -C "${HOSTNAME}" -f "${HOME}/.ssh/id_rsa" -P "";
 fi
 
-echo "Making everything makeable..."
+section "Making everything makeable..."
 find user/tools -name Makefile -execdir make "BIN=${ROOT}/user/home/.bin" \; | prepend '  '
 
-echo "Linking configs..."
+section "Linking configs..."
 cp -frsTv "${ROOT}/user/home/" ~ | prepend '  '
 
-echo "Adding stuff to autostart..."
+section "Adding stuff to autostart..."
 mkdir -p ~/.config/autostart/
 
 echo "
@@ -64,7 +68,7 @@ sed -i '/^OnlyShowIn.*$$/d' ~/.config/autostart/gnome-keyring-{secrets,ssh}.desk
 
 systemctl enable --user syncthing
 
-echo "Downloading random stuff from the internet..."
+section "Downloading random stuff from the internet..."
 git-get https://github.com/mrzool/bash-sensible.git \
     ~/.config/bash-sensible | prepend '  '
 git-get https://github.com/tmux-plugins/tpm.git \
@@ -72,14 +76,16 @@ git-get https://github.com/tmux-plugins/tpm.git \
 file-get https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
     ~/.config/nvim/autoload/plug.vim | prepend '  '
 
-echo "Setting default gtk terminal to alacritty..."
+section "Setting default gtk terminal to alacritty..."
 gsettings set org.gnome.desktop.default-applications.terminal exec alacritty
 gsettings set org.gnome.desktop.default-applications.terminal exec-arg -e
-echo "Setting xdg defaults..."
+
+section "Setting xdg defaults..."
 xdg-mime default Thunar.desktop inode/directory
 
 ln -sfT ~/.config/Code ~/.config/Code\ -\ OSS
-echo "Installing vscode extensions..."
+
+section "Installing vscode extensions..."
 install-code-extensions \
     Rubymaniac.vscode-direnv \
     k--kato.intellij-idea-keybindings \
@@ -93,9 +99,10 @@ install-code-extensions \
     mads-hartmann.bash-ide-vscode \
     bmewburn.vscode-intelephense-client \
     naumovs.color-highlight \
-    chrislajoie.vscode-modelines
+    chrislajoie.vscode-modelines \
+    | prepend '  '
 
-echo "Adding userChrome to firefox..."
+section "Adding userChrome to firefox..."
 # Firefox
 [ -d ~/.mozilla/firefox/ ] && find ~/.mozilla/firefox/ -name '*.dev-edition-default' \
     -execdir mkdir -p {}/chrome \; \
