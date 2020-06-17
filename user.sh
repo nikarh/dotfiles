@@ -65,12 +65,12 @@ sed -i '/^OnlyShowIn.*$$/d' ~/.config/autostart/gnome-keyring-{secrets,ssh}.desk
 systemctl enable --user syncthing
 
 echo "Downloading random stuff from the internet..."
-#git-get https://github.com/mrzool/bash-sensible.git \
-#    ~/.config/bash-sensible | prepend '  '
-#git-get https://github.com/tmux-plugins/tpm.git \
-#    ~/.config/tmux/plugins/tpm | prepend '  '
-#file-get https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
-#    ~/.config/nvim/autoload/plug.vim | prepend '  '
+git-get https://github.com/mrzool/bash-sensible.git \
+    ~/.config/bash-sensible | prepend '  '
+git-get https://github.com/tmux-plugins/tpm.git \
+    ~/.config/tmux/plugins/tpm | prepend '  '
+file-get https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
+    ~/.config/nvim/autoload/plug.vim | prepend '  '
 
 echo "Setting default gtk terminal to alacritty..."
 gsettings set org.gnome.desktop.default-applications.terminal exec alacritty
