@@ -66,7 +66,7 @@ bindsym $mod+Shift+space floating toggle
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
 
-bindsym $mod+a focus parentc
+bindsym $mod+a focus parent
 bindsym $mod+d focus child
 
 bindsym $mod+Control+Left  move workspace to output left
@@ -87,10 +87,10 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
+assign [class="Alacritty"] $ws1
 assign [class="firefox"] $ws2
 assign [class="Navigator"] $ws2
 assign [class="firefoxdeveloperedition"] $ws2
-assign [class="Vivaldi"] $ws2
 assign [class="deadbeef"] $ws7
 assign [class="jetbrains-studio"] $ws3
 assign [class="jetbrains-idea"] $ws3
@@ -110,7 +110,7 @@ assign [class="Syncthing GTK"] $ws6
 assign [class="REAPER"] $ws7
 assign [class="Cadence"] $ws7
 assign [class="Catia"] $ws7
-assign [instance=^open.spotify.com.*] $ws7
+assign [instance="^open.spotify.com.*"] $ws7
 
 assign [class="Chromium"] $ws2
 
