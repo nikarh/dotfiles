@@ -98,7 +98,7 @@ pkg man-db man-pages \
     jack2 cadence pulseaudio-jack \
     htop neovim tmux bash-completion fzf exa fd ripgrep jq bat \
     bash-git-prompt direnv diff-so-fancy docker \
-    localtime-git terminess-powerline-font-git \
+    localtime-git terminus-font \
     intel-hybrid-codec-driver \
     libmp4v2 lame flac ffmpeg x265 libmad \
     zip unzip unrar p7zip exfat-utils ntfs-3g \
