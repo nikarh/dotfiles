@@ -246,7 +246,7 @@ fi
 
 # Upgrade all packages
 yay -Syu --noconfirm
-yay -Rnscu --noconfirm $(yay -Qtdq) 2> /dev/null
+yay -Rnscu --noconfirm $(yay -Qtdq) 2> /dev/null || true
 
 EXPLICITLY_INSTALLED=$(pacman -Qqe | sort)
 INSTALLED_BY_SETUP=$(echo "$ALL_PACKAGES_TO_INSTALL" | tr " " "\n" | sort)
