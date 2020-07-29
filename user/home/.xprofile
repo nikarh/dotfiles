@@ -12,7 +12,8 @@ export PATH=${PATH}:${HOME}/.bin/
 
 xrdb -all -load ~/.config/Xorg/.Xresources
 xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
-picom --backend glx --no-fading-openclose --vsync -b
+picom -b --unredir-if-possible --backend xr_glx_hybrid --vsync --use-damage --glx-no-stencil \
+     --no-fading-openclose
 
 # Init input devices
 source ~/.bin/init-input-devices.sh
