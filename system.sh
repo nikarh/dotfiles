@@ -7,6 +7,17 @@ REBUILD_INITRD=0
 PCI_DATA=$(lspci)
 PCI_DISPLAY_CONTROLLER=$(echo "$PCI_DATA" | grep -Ei '(vga|display)')
 
+# Auto select GPU driver
+if [ -z $GPU_DRIVER ] || ! grep -Eqi "($(echo $GPU_DRIVER | sed s/nouveau/nvidia/))" <<< "$PCI_DISPLAY_CONTROLLER"; then
+    if grep -Eqi '(radeon|amd)' <<< "$PCI_DISPLAY_CONTROLLER"; then
+        GPU_DRIVER=radeon
+    elif grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER"; then
+        GPU_DRIVER=nouveau
+    elif grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
+        GPU_DRIVER=intel
+    fi
+fi
+
 ALL_PACKAGES_TO_INSTALL=""
 
 function aur-pkg {
@@ -63,6 +74,20 @@ function enable-units {
     for unit in "$@"; do
         sudo systemctl enable --now $unit
     done
+}
+
+function add-module-to-initrd {
+    if ! grep -q ^MODULES.*"${1}" /etc/mkinitcpio.conf; then
+        sudo sed -E -i "s/^(MODULES=\()(.*)/\1${1} \2/; s/^(MODULES.*) (\).*)/\1\2/" /etc/mkinitcpio.conf
+        REBUILD_INITRD=1
+    fi
+}
+
+function remove-module-from-initrd {
+    if grep -q ^MODULES.*"${1}" /etc/mkinitcpio.conf; then
+        sudo sed -E -i "s/^(MODULES=\()(.*)${1}(.*)/\1\2\3/; s/^(MODULES=\() (.*)/\1\2; s/^(MODULES=\(.*) \)/\1)/" /etc/mkinitcpio.conf
+        REBUILD_INITRD=1
+    fi
 }
 
 # Do not xzip while building by makepkg
@@ -165,23 +190,11 @@ sudo cp -ufrTv "${PWD}/system/etc/" /etc
 sudo cp -ufrTv "${PWD}/system/usr/" /usr
 
 if grep -Eqi '(radeon|amd)' <<< "$PCI_DISPLAY_CONTROLLER"; then
-    # Configuration for AMD gpu
     pkg xf86-video-ati
-
-    # Add radeon module for plymouth to initrd
-    if ! grep -q ^MODULES.*radeon /etc/mkinitcpio.conf; then
-        sudo sed -E -i 's/^(MODULES=\()(.*)/\1radeon \2/; s/^(MODULES.*) (\).*)/\1\2/' /etc/mkinitcpio.conf
-        REBUILD_INITRD=1
-    fi
+    add-module-to-initrd radeon
 elif grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
-    # Configuration for Intel gpu
     pkg xf86-video-intel
-
-    # Add i915 intel module for plymouth to initrd
-    if ! grep -q ^MODULES.*i915 /etc/mkinitcpio.conf; then
-        sudo sed -E -i 's/^(MODULES=\()(.*)/\1i915 \2/; s/^(MODULES.*) (\).*)/\1\2/' /etc/mkinitcpio.conf
-        REBUILD_INITRD=1
-    fi
+    add-module-to-initrd i915
 
     sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.intel.conf /etc/X11/xorg.conf.d/20-gpu.conf
     sudo ln -sf /etc/modprobe.d/gpu.conf.intel /etc/modprobe.d/gpu.conf
@@ -193,6 +206,21 @@ if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "n
     sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
     sudo ln -sf /etc/modprobe.d/gpu.conf.nvidia /etc/modprobe.d/gpu.conf
 fi
+
+if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "nouveau"; then
+    # Clean other GPU driver stuff
+    sudo rm /etc/X11/xorg.conf.d/20-gpu.conf
+    sudo rm -f /etc/modprobe.d/block_nouveau.conf
+
+    add-module-to-initrd nouveau
+else 
+    remove-module-from-initrd nouveau
+    ln -s /etc/modprobe.d/block_nouveau.conf.avail /etc/modprobe.d/block_nouveau.conf
+fi
+
+# Initrd cleanup
+if [ "$GPU_DRIVER" != "radeon" ]; then remove-module-from-initrd radeon; fi
+if ! grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then remove-module-from-initrd i915; fi
 
 # Enable bluetooth card
 if ! grep -q '^AutoEnable=true$' /etc/bluetooth/main.conf; then

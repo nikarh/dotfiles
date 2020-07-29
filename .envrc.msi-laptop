@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-export GPU_DRIVER="intel"
+export GPU_DRIVER="nouveau"
 
 export ADDITIONAL_PACKAGES="\
     deadbeef \
