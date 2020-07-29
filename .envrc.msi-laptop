@@ -3,7 +3,7 @@
 export GPU_DRIVER="nouveau"
 
 export ADDITIONAL_PACKAGES="\
-    intel-undervol \
+    intel-undervolt \
     deadbeef \
     chntpw \
     google-cloud-sdk \
