@@ -1,1 +1,3 @@
 SUBSYSTEM=="pci", ATTR{power/control}="auto"
+SUBSYSTEM=="block", ATTR{power/control}="auto"
+SUBSYSTEM=="ata_port", KERNEL=="ata*", ATTR{power/control}="auto"
