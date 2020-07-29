@@ -15,4 +15,7 @@ export ADDITIONAL_PACKAGES="\
     zynaddsubfx helm-synth `# FX, VST not working` \
 "
 
-export ADDITIONAL_UNITS="isw@14A3EMS1"
+export ADDITIONAL_UNITS="
+    isw@14A3EMS1 \
+    disable-turbo-boost \
+"
