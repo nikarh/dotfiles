@@ -3,6 +3,7 @@
 export GPU_DRIVER="nouveau"
 
 export ADDITIONAL_PACKAGES="\
+    intel-undervol \
     deadbeef \
     chntpw \
     google-cloud-sdk \
@@ -18,4 +19,5 @@ export ADDITIONAL_PACKAGES="\
 export ADDITIONAL_UNITS="
     isw@14A3EMS1 \
     disable-turbo-boost \
+    intel-undervolt \
 "
