@@ -7,10 +7,10 @@
 "~/.bin/volume-control.sh mute"
    XF86AudioMute
 
-"light -S 100"
+"light -A 49"
    XF86MonBrightnessUp
 
-"light -S 1"
+"light -U 49"
    XF86MonBrightnessDown
 
 "~/.bin/toggle-touchpad.sh"
