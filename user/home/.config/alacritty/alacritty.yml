@@ -56,7 +56,7 @@ colors:
     cyan:    '#93a1a1' # base1
     white:   '#fdf6e3' # base3
 
-visual_bell:
+bell:
   color: '0xfdf6e3'
 
 mouse_bindings:

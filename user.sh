@@ -53,7 +53,6 @@ echo "
     insync
     pasystray
     nm-applet
-    org.keepassxc.KeePassXC
     libinput-gestures
 " | xargs -I{} ln -sf /usr/share/applications/{}.desktop ~/.config/autostart/
 

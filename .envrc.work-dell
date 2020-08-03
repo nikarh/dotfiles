@@ -12,3 +12,7 @@ export ADDITIONAL_PACKAGES="\
     dragonfly-reverb zam-plugins iempluginsuite `# FX, VST` \
     zynaddsubfx helm-synth `# FX, VST not working` \
 "
+
+export ADDITIONAL_UNITS="
+    docker.service \
+"
