@@ -139,7 +139,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     libva-vdpau-driver intel-media-driver
 # X applications
 pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi rofi-calc alacritty \
-    batify pavucontrol pasystray blueman \
+    cbatticon pavucontrol pasystray blueman \
     gpicview-gtk3 xarchiver gsimplecal redshift \
     chromium chromium-widevine firefox-developer-edition freshplayerplugin \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
