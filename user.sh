@@ -57,7 +57,6 @@ echo "
 " | xargs -I{} ln -sf /usr/share/applications/{}.desktop ~/.config/autostart/
 
 echo "
-    cbatticon
     redshift-gtk
     syncthing-gtk
 " | xargs -I{} ln -sf ~/.local/share/applications/{}.desktop ~/.config/autostart/

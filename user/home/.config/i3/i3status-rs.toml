@@ -15,6 +15,7 @@ info_fg = "#CED9E0"
 
 [icons]
 name = "awesome"
+
 [icons.overrides]
 time = ""
 
@@ -47,6 +48,11 @@ clickable = false
 block = "custom"
 interval = 2
 command = "date +\"%a %d %b %R %:::z\""
+
+[[block]]
+block = "custom"
+interval = 5
+command = "~/.bin/battery-indicator.sh"
 
 [[block]]
 block = "keyboard_layout"
