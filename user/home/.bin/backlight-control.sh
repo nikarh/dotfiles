@@ -11,8 +11,8 @@ for P in $PERCENTAGES; do VALUES="$VALUES $(echo ${P} \* ${MAX} / 100 | bc)"; do
 VALUES="$VALUES $MAX"
 
 function raise {
-    for V in $VALUES; do
-        if [ $V -gt $CUR ]; then
+    for V in "$VALUES"; do
+        if [ "$V" -gt "$CUR" ]; then
             brightnessctl s $V
             exit;
         fi
@@ -23,9 +23,8 @@ function raise {
 
 function lower {
     local REV_VALUES="$(echo $VALUES | tr ' ' '\n' | tac | tr '\n' ' ')"
-    for V in $REV_VALUES; do
-        echo $V
-        if [ $V -lt $CUR ]; then
+    for V in "$REV_VALUES"; do
+        if [ "$V" -lt "$CUR" ]; then
             brightnessctl s $V
             exit;
         fi
