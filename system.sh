@@ -134,7 +134,8 @@ pkg man-db man-pages \
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
-    xorg-xdpyinfo autorandr arandr brightnessctl picom autocutsel libinput-gestures \
+    xorg-xdpyinfo autorandr arandr brightnessctl picom autocutsel \
+    gebaar-libinput-fork xdotool \
     lightdm lightdm-gtk-greeter light-locker \
     libva-vdpau-driver intel-media-driver
 # X applications
@@ -147,6 +148,7 @@ pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi rofi-calc alacr
     gnome-keyring libsecret seahorse \
     slack-desktop epdfview libreoffice-fresh \
     gimp inkscape aseprite-git reaper-bin \
+    gparted
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
     noto-fonts noto-fonts-emoji \

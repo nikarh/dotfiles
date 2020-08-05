@@ -23,6 +23,8 @@ source ~/.bin/init-input-devices.sh
 # Init input devices on session unlock
 ~/.bin/dbus-monitor.sh org.freedesktop.login1.Session Unlock ~/.bin/init-input-devices.sh &
 
+gebaard -b
+
 autocutsel -fork
 kbdd
 
