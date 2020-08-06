@@ -255,13 +255,13 @@ enable-units NetworkManager.service \
              ${ADDITIONAL_UNITS}
 
 # Create special groups
-create-groups bluetooth sudo wireshark libvirt printer
+create-groups bluetooth sudo wireshark libvirt printer plugdev
 
 # Add current user to groups
 add-user-to-groups input storage audio video \
     docker lp systemd-journal bluetooth sudo \
     wireshark libvirt adbusers bumblebee printer \
-    uucp
+    uucp plugdev
 
 # Rebuild initrd if required
 if [[ ${REBUILD_INITRD} -eq 1 ]]; then
