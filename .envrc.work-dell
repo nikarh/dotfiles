@@ -11,6 +11,7 @@ export ADDITIONAL_PACKAGES="\
     spectmorph `# Morphing Synths, VST` \
     dragonfly-reverb zam-plugins iempluginsuite `# FX, VST` \
     zynaddsubfx helm-synth `# FX, VST not working` \
+    forticlientsslvpn networkmanager-fortisslvpn zenity \
 "
 
 export ADDITIONAL_UNITS="
