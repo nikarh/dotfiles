@@ -217,7 +217,7 @@ if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "n
     add-module-to-initrd nouveau
 else 
     remove-module-from-initrd nouveau
-    ln -s /etc/modprobe.d/block_nouveau.conf.avail /etc/modprobe.d/block_nouveau.conf
+    sudo ln -sf /etc/modprobe.d/block_nouveau.conf.avail /etc/modprobe.d/block_nouveau.conf
 fi
 
 # Initrd cleanup
