@@ -127,8 +127,8 @@ pkg man-db man-pages \
     intel-hybrid-codec-driver \
     libmp4v2 lame flac ffmpeg x265 libmad \
     zip unzip unrar p7zip exfat-utils ntfs-3g \
-    bandwhich socat \
-    parallel \
+    bandwhich socat usbutils parallel \
+    android-tools \
     git-crypt
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
@@ -136,7 +136,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
     xorg-xdpyinfo autorandr arandr brightnessctl picom autocutsel \
     gebaar-libinput-fork xdotool \
-    lightdm lightdm-gtk-greeter light-locker \
+    lightdm lightdm-gtk-greeter light-locker feh \
     libva-vdpau-driver intel-media-driver
 # X applications
 pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi rofi-calc alacritty \
@@ -161,7 +161,7 @@ pkg git diffutils upx dhex sysstat gdb insomnia `# General use` \
     docker-compose kubectl kubectx `# DevOps` \ \
     go nvm bash-language-server `# Langs/Platforms` \
     sdl2 glu `# Game dev` \
-    ccache cppcheck clang lld `# C++`
+    cmake ccache cppcheck clang lld `# C++`
 # Printer
 pkg cups cups-pdf cups-pk-helper system-config-printer \
     epson-inkjet-printer-escpr

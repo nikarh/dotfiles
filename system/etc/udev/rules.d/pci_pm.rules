@@ -1,4 +1,9 @@
+SUBSYSTEM=="pci", ATTR{vendor}=="0x8086", ATTR{device}=="0xa12f", ATTR{power/control}="on", GOTO="powersave_end"
+SUBSYSTEM=="pci", ATTR{vendor}=="0x8086", ATTR{device}=="0xa13a", ATTR{power/control}="on", GOTO="powersave_end"
+
 SUBSYSTEM=="pci", ATTR{power/control}="auto"
 SUBSYSTEM=="block", ATTR{power/control}="auto"
 SUBSYSTEM=="scsi", ATTR{power/control}="auto"
 SUBSYSTEM=="ata_port", KERNEL=="ata*", ATTR{power/control}="auto"
+
+LABEL="powersave_end"
