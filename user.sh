@@ -98,6 +98,7 @@ install-code-extensions \
     bmewburn.vscode-intelephense-client \
     naumovs.color-highlight \
     chrislajoie.vscode-modelines \
+    brandonjmatthews.one-dark-dark-plus \
     | prepend '  '
 
 section "Adding userChrome to firefox..."
