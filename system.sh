@@ -122,7 +122,7 @@ pkg man-db man-pages \
     pulseaudio pulseaudio-alsa pulseaudio-modules-bt-git libldac pamixer \
     jack2 cadence pulseaudio-jack \
     htop neovim tmux bash-completion fzf exa fd ripgrep jq bat \
-    bash-git-prompt direnv diff-so-fancy docker \
+    bash-git-prompt direnv docker \
     localtime-git terminus-font \
     intel-hybrid-codec-driver \
     libmp4v2 lame flac ffmpeg x265 libmad \
@@ -155,7 +155,7 @@ pkg lxappearance-gtk3 qt5-styleplugins \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix
 # Development
-pkg git diffutils upx dhex sysstat gdb insomnia `# General use` \
+pkg git diffutils git-delta-bin upx dhex sysstat gdb insomnia `# General use` \
     code jetbrains-toolbox `# IDE` \
     jdk-openjdk openjdk-src visualvm jd-gui-bin `# Java`\
     docker-compose kubectl kubectx `# DevOps` \ \
