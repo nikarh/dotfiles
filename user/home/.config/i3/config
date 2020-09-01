@@ -104,6 +104,7 @@ assign [class="jetbrains-rider"] $ws3
 assign [class="code"] $ws3
 assign [class="KeePassXC"] $ws4
 assign [class="Slack"] $ws5
+assign [class="TelegramDesktop"] $ws5
 assign [instance="messenger.com"] $ws5
 assign [instance="web.skype.com"] $ws5
 assign [class="Thunar"] $ws6

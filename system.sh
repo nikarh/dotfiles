@@ -146,7 +146,7 @@ pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi rofi-calc alacr
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
     qdirstat keepassxc gnome-screenshot qbittorrent insync syncthing-gtk \
     gnome-keyring libsecret seahorse \
-    slack-desktop epdfview libreoffice-fresh \
+    telegram-desktop slack-desktop epdfview libreoffice-fresh \
     gimp inkscape aseprite-git reaper-bin \
     gparted
 # Themes and fonts
