@@ -33,7 +33,5 @@
     "cmake.configureOnOpen": true,
     "C_Cpp.clang_format_fallbackStyle": "LLVM",
     "editor.mouseWheelZoom": true,
-    "workbench.colorTheme": "OneDark Dark+",
-    "workbench.preferredLightColorTheme": "OneDark Dark+",
-    "workbench.preferredDarkColorTheme": "OneDark Dark+"
+    "workbench.colorTheme": "One Dark Pro"
 }
