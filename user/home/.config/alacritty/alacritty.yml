@@ -23,7 +23,6 @@ font:
     style: Italic
   size: 14.0
 
-
 colors:
   # Default colors
   primary:
@@ -70,5 +69,5 @@ mouse:
     modifiers: Control
 
 selection:
-  save_to_clipboard: true
+  save_to_clipboard: false
 
