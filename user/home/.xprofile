@@ -13,7 +13,7 @@ export PATH=${PATH}:${HOME}/.bin/
 xrdb -all -load ~/.config/Xorg/.Xresources
 xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
 
-picom -b --no-fading-openclose --vsync
+picom -b
 
 # Init input devices
 source ~/.bin/init-input-devices.sh
