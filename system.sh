@@ -147,7 +147,7 @@ pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi rofi-calc alacr
     qdirstat keepassxc gnome-screenshot qbittorrent insync syncthing-gtk \
     gnome-keyring libsecret seahorse \
     telegram-desktop slack-desktop epdfview libreoffice-fresh \
-    gimp inkscape aseprite-git reaper-bin \
+    krita inkscape aseprite-git reaper-bin \
     gparted
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
