@@ -214,10 +214,12 @@ if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "n
     sudo rm /etc/X11/xorg.conf.d/20-gpu.conf
     sudo rm -f /etc/modprobe.d/block_nouveau.conf
 
+    sudo ln -sf /etc/modprobe.d/nouveau.conf.avail /etc/modprobe.d/nouveau.conf
     add-module-to-initrd nouveau
 else 
     remove-module-from-initrd nouveau
     sudo ln -sf /etc/modprobe.d/block_nouveau.conf.avail /etc/modprobe.d/block_nouveau.conf
+    sudo rm -f /etc/modprobe.d/nouveau.conf
 fi
 
 # Initrd cleanup
