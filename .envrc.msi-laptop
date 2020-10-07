@@ -7,6 +7,7 @@ export ADDITIONAL_PACKAGES="\
     deadbeef \
     chntpw \
     google-cloud-sdk \
+    mkvtoolnix-gui powertop \
     isw `# MSI cooler controller` \
     surge `# Best free VST synth` \
     carla `# VST rack to use lv2 plugins` \
@@ -18,6 +19,6 @@ export ADDITIONAL_PACKAGES="\
 
 export ADDITIONAL_UNITS="
     isw@14A3EMS1 \
-    disable-turbo-boost \
+    `#disable-turbo-boost` \
     intel-undervolt \
 "
