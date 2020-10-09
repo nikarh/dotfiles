@@ -35,6 +35,12 @@ function install-code-extensions {
     done
 }
 
+function ln-all {
+    for FILE in "$@"; do
+        ln -sf "$FROM/$FILE.desktop" $TO
+    done
+}
+
 if [ ! -f "${HOME}/.ssh/id_rsa" ]; then
     echo "Generating ssh key..."
     ssh-keygen -C "${HOSTNAME}" -f "${HOME}/.ssh/id_rsa" -P "";
@@ -49,17 +55,15 @@ cp -frsTv "${ROOT}/user/home/" ~ | prepend '  '
 section "Adding stuff to autostart..."
 mkdir -p ~/.config/autostart/
 
-echo "
-    insync
-    pasystray
+TO=~/.config/autostart/ FROM=/usr/share/applications/{}.desktop ln-all \
+    insync \
+    pasystray \
     nm-applet
-" | xargs -I{} ln -sf /usr/share/applications/{}.desktop ~/.config/autostart/
 
-echo "
-    cbatticon
-    redshift-gtk
+TO=~/.config/autostart/ FROM=~/.local/share/applications/{}.desktop ln-all \
+    cbatticon \
+    redshift-gtk \
     syncthing-gtk
-" | xargs -I{} ln -sf ~/.local/share/applications/{}.desktop ~/.config/autostart/
 
 cp /etc/xdg/autostart/gnome-keyring-{secrets,ssh}.desktop ~/.config/autostart/
 sed -i '/^OnlyShowIn.*$$/d' ~/.config/autostart/gnome-keyring-{secrets,ssh}.desktop
@@ -79,7 +83,7 @@ gsettings set org.gnome.desktop.default-applications.terminal exec alacritty
 gsettings set org.gnome.desktop.default-applications.terminal exec-arg -e
 
 section "Setting xdg defaults..."
-xdg-mime default Thunar.desktop inode/directory
+xdg-mime default thunar.desktop inode/directory
 
 ln -sfT ~/.config/Code ~/.config/Code\ -\ OSS
 
