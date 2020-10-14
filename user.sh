@@ -55,12 +55,12 @@ cp -frsTv "${ROOT}/user/home/" ~ | prepend '  '
 section "Adding stuff to autostart..."
 mkdir -p ~/.config/autostart/
 
-TO=~/.config/autostart/ FROM=/usr/share/applications/{}.desktop ln-all \
+TO=~/.config/autostart/ FROM=/usr/share/applications/ ln-all \
     insync \
     pasystray \
     nm-applet
 
-TO=~/.config/autostart/ FROM=~/.local/share/applications/{}.desktop ln-all \
+TO=~/.config/autostart/ FROM=~/.local/share/applications/ ln-all \
     cbatticon \
     redshift-gtk \
     syncthing-gtk
