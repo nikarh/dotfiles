@@ -145,7 +145,7 @@ pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi rofi-calc alacr
     chromium chromium-widevine firefox-developer-edition freshplayerplugin \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
     qdirstat keepassxc gnome-screenshot qbittorrent insync syncthing-gtk \
-    gnome-keyring libsecret seahorse \
+    libsecret seahorse \
     telegram-desktop slack-desktop epdfview libreoffice-fresh \
     krita inkscape aseprite-git reaper-bin \
     gparted
@@ -231,14 +231,8 @@ if ! grep -q '^AutoEnable=true$' /etc/bluetooth/main.conf; then
     sudo sed -i 's/^#AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf;
 fi
 
-# Unlock gnome-keyring via PAM
-if ! grep -q pam_gnome_keyring /etc/pam.d/login; then
-    sudo sed -i -e "\$a-auth       optional     pam_gnome_keyring.so" /etc/pam.d/login
-    sudo sed -i -e "\$a-session    optional     pam_gnome_keyring.so auto_start" /etc/pam.d/login
-fi
-if ! grep -q pam_gnome_keyring /etc/pam.d/passwd; then
-    sudo sed -i -e "\$a-password   optional     pam_gnome_keyring.so" /etc/pam.d/passwd
-fi
+# Remove gnome keyring
+sudo sed -i '/pam_gnome_keyring/d' /etc/pam.d/{login,passwd}
 
 # Pulseaudio bluetooth
 if ! grep -q module-switch-on-connect /etc/pulse/default.pa; then
