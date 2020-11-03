@@ -85,7 +85,7 @@ function add-module-to-initrd {
 
 function remove-module-from-initrd {
     if grep -q ^MODULES.*"${1}" /etc/mkinitcpio.conf; then
-        sudo sed -E -i "s/^(MODULES=\()(.*)${1}(.*)/\1\2\3/; s/^(MODULES=\() (.*)/\1\2; s/^(MODULES=\(.*) \)/\1)/" /etc/mkinitcpio.conf
+        sudo sed -E -i "s/^(MODULES=\()(.*)${1}(.*)/\1\2\3/; s/^(MODULES=\() (.*)/\1\2/; s/^(MODULES=\(.*) \)/\1)/" /etc/mkinitcpio.conf
         REBUILD_INITRD=1
     fi
 }

@@ -3,6 +3,7 @@
 export GPU_DRIVER="nouveau"
 
 export ADDITIONAL_PACKAGES="\
+    zoom-system-qt \
     intel-undervolt \
     deadbeef \
     chntpw \
