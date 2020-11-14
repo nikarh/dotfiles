@@ -33,5 +33,9 @@
     "cmake.configureOnOpen": true,
     "C_Cpp.clang_format_fallbackStyle": "LLVM",
     "editor.mouseWheelZoom": true,
-    "workbench.colorTheme": "One Dark Pro"
+    "workbench.colorTheme": "One Dark Pro",
+    "liveshare.allowGuestDebugControl": true,
+    "liveshare.allowGuestTaskControl": true,
+    "liveshare.featureSet": "insiders",
+    "liveshare.languages.allowGuestCommandControl": true
 }
