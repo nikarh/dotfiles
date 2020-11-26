@@ -3,7 +3,8 @@
 export GPU_DRIVER="nouveau"
 
 export ADDITIONAL_PACKAGES="\
-    zoom-system-qt \
+    teamviewer zoom`#-system-qt` \
+    postgresql-libs rustup \
     intel-undervolt \
     deadbeef \
     chntpw \
@@ -16,6 +17,7 @@ export ADDITIONAL_PACKAGES="\
     spectmorph `# Morphing Synths, VST` \
     dragonfly-reverb zam-plugins iempluginsuite `# FX, VST` \
     zynaddsubfx helm-synth `# FX, VST not working` \
+    vmpk \
 "
 
 export ADDITIONAL_UNITS="

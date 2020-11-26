@@ -25,6 +25,10 @@
     "[cpp]": {
         
     },
+    "[rust]": {
+        "editor.defaultFormatter": "rust-lang.rust",
+        "editor.formatOnSave": true
+    },
     "C_Cpp.clang_format_sortIncludes": true,
     "C_Cpp.default.cppStandard": "c++14",
     "C_Cpp.default.cStandard": "c11",
@@ -37,5 +41,10 @@
     "liveshare.allowGuestDebugControl": true,
     "liveshare.allowGuestTaskControl": true,
     "liveshare.featureSet": "insiders",
-    "liveshare.languages.allowGuestCommandControl": true
+    "liveshare.languages.allowGuestCommandControl": true,
+    "rust-client.channel": null,
+    "rust-client.trace.server": "verbose",
+    "rust.all_features": true,
+    "rust-analyzer.cargo.allFeatures": true,
+    "rust-analyzer.linkedProjects": null
 }
