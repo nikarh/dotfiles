@@ -65,9 +65,6 @@ TO=~/.config/autostart/ FROM=~/.local/share/applications/ ln-all \
     redshift-gtk \
     syncthing-gtk
 
-cp /etc/xdg/autostart/gnome-keyring-{secrets,ssh}.desktop ~/.config/autostart/
-sed -i '/^OnlyShowIn.*$$/d' ~/.config/autostart/gnome-keyring-{secrets,ssh}.desktop
-
 systemctl enable --user syncthing
 
 section "Downloading random stuff from the internet..."

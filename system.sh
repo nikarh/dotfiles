@@ -119,7 +119,7 @@ pkg man-db man-pages \
     systemd-swap systemd-boot-pacman-hook \
     bluez bluez-libs bluez-utils \
     alsa-tools alsa-utils alsa-plugins \
-    pulseaudio pulseaudio-alsa pulseaudio-modules-bt-git libldac pamixer \
+    pulseaudio pulseaudio-alsa pulseaudio-modules-bt libldac pamixer \
     jack2 cadence pulseaudio-jack \
     htop neovim tmux bash-completion fzf exa fd ripgrep jq bat \
     bash-git-prompt direnv docker \
@@ -136,7 +136,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
     xorg-xdpyinfo autorandr arandr brightnessctl picom autocutsel \
     gebaar-libinput-fork xdotool \
-    lightdm lightdm-gtk-greeter light-locker feh \
+    lightdm lightdm-gtk-greeter `#light-locker` feh \
     libva-vdpau-driver intel-media-driver
 # X applications
 pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi rofi-calc alacritty \
