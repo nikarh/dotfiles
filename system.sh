@@ -6,6 +6,7 @@ cd $(readlink -f "$(dirname "$0")")
 REBUILD_INITRD=0
 PCI_DATA=$(lspci)
 PCI_DISPLAY_CONTROLLER=$(echo "$PCI_DATA" | grep -Ei '(vga|display)')
+CPU_MODEL=$(grep model\ name /proc/cpuinfo | head -n 1)
 
 # Auto select GPU driver
 if [ -z $GPU_DRIVER ] || ! grep -Eqi "($(echo $GPU_DRIVER | sed s/nouveau/nvidia/))" <<< "$PCI_DISPLAY_CONTROLLER"; then
@@ -115,7 +116,7 @@ pkg openssh networkmanager nm-connection-editor networkmanager-openvpn \
     network-manager-applet
 # Basic tools
 pkg man-db man-pages \
-    intel-ucode earlyoom \
+    earlyoom \
     systemd-swap systemd-boot-pacman-hook \
     bluez bluez-libs bluez-utils \
     alsa-tools alsa-utils alsa-plugins \
@@ -124,7 +125,6 @@ pkg man-db man-pages \
     htop neovim tmux bash-completion fzf exa fd ripgrep jq bat \
     bash-git-prompt direnv docker \
     localtime-git terminus-font \
-    intel-hybrid-codec-driver \
     libmp4v2 lame flac ffmpeg x265 libmad \
     zip unzip unrar p7zip exfat-utils ntfs-3g \
     bandwhich socat usbutils parallel \
@@ -137,7 +137,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-xdpyinfo autorandr arandr brightnessctl picom autocutsel \
     gebaar-libinput-fork xdotool \
     lightdm lightdm-gtk-greeter i3lock-fancy-rapid-git `#light-locker` feh \
-    libva-vdpau-driver intel-media-driver
+    libva-vdpau-driver 
 # X applications
 pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi rofi-calc alacritty \
     cbatticon pavucontrol pasystray blueman \
@@ -165,9 +165,15 @@ pkg git diffutils git-delta-bin upx dhex sysstat gdb insomnia `# General use` \
 # Printer
 pkg cups cups-pdf cups-pk-helper system-config-printer \
     epson-inkjet-printer-escpr
-
 # Plymouth
 pkg plymouth plymouth-theme-monoarch 
+
+# CPU specific
+if  grep -qi amd <<< "$CPU_MODEL"; then
+    pkg amd-ucode
+else
+    pkg intel-ucode intel-hybrid-codec-driver intel-media-driver
+fi
 
 # Install plymouth hook
 if ! grep -q ^HOOKS.*plymouth /etc/mkinitcpio.conf; then
@@ -205,13 +211,17 @@ fi
 if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "nvidia"; then
     # Configuration for nvidia gpu
     pkg nvidia nvidia-settings nvidia-utils
-    sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
+    sudo rm -f /etc/X11/xorg.conf.d/20-gpu.conf
     sudo ln -sf /etc/modprobe.d/gpu.conf.nvidia /etc/modprobe.d/gpu.conf
+
+    if grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
+        sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
+    fi
 fi
 
 if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "nouveau"; then
     # Clean other GPU driver stuff
-    sudo rm /etc/X11/xorg.conf.d/20-gpu.conf
+    sudo rm -f /etc/X11/xorg.conf.d/20-gpu.conf
     sudo rm -f /etc/modprobe.d/block_nouveau.conf
 
     sudo ln -sf /etc/modprobe.d/nouveau.conf.avail /etc/modprobe.d/nouveau.conf
@@ -248,6 +258,7 @@ enable-units NetworkManager.service \
              bluetooth.service \
              earlyoom.service \
              autorandr.service \
+             docker.service
              ${ADDITIONAL_UNITS}
 
 # Create special groups

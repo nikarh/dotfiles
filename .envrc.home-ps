@@ -1,15 +1,19 @@
 #!/bin/bash 
 
+export GPU_DRIVER="nvidia"
+
 export ADDITIONAL_PACKAGES="\
-    accountsservice \
-    freerdp remmina remmina-plugin-rdesktop \
-    xf86-video-intel \
+    teamviewer zoom`#-system-qt` \
+    postgresql-libs rustup \
+    deadbeef \
+    chntpw \
     google-cloud-sdk \
+    mkvtoolnix-gui powertop \
     surge `# Best free VST synth` \
     carla `# VST rack to use lv2 plugins` \
     dexed adlplug opnplug `# FM Synths, VST` \
     spectmorph `# Morphing Synths, VST` \
     dragonfly-reverb zam-plugins iempluginsuite `# FX, VST` \
     zynaddsubfx helm-synth `# FX, VST not working` \
-    forticlientsslvpn networkmanager-fortisslvpn zenity \
+    vmpk \
 "
