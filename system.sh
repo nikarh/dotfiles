@@ -209,14 +209,16 @@ elif grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
 fi
 
 if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "nvidia"; then
+    DEVICE_ID=$(lspci | grep -i VGA.*NVIDIA | awk '{print $1}')
+    cat /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf \
+        | sed -e "s/\$NVIDIA_BUS_ID/$DEVICE_ID/" \
+        | sudo tee /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf > /dev/null
+
     # Configuration for nvidia gpu
     pkg nvidia nvidia-settings nvidia-utils
     sudo rm -f /etc/X11/xorg.conf.d/20-gpu.conf
     sudo ln -sf /etc/modprobe.d/gpu.conf.nvidia /etc/modprobe.d/gpu.conf
-
-    if grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
-        sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
-    fi
+    sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
 fi
 
 if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "nouveau"; then
