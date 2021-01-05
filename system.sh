@@ -260,7 +260,7 @@ enable-units NetworkManager.service \
              bluetooth.service \
              earlyoom.service \
              autorandr.service \
-             docker.service
+             docker.service \
              ${ADDITIONAL_UNITS}
 
 # Create special groups
