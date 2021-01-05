@@ -209,7 +209,7 @@ elif grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
 fi
 
 if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "nvidia"; then
-    DEVICE_ID=$(lspci | grep -i VGA.*NVIDIA | awk '{print $1}')
+    DEVICE_ID=$(lspci | grep -i VGA.*NVIDIA | awk '{print $1}' | sed -r 's/^(0*([0-9]+)[:.]0*([0-9]+)[:.]0*([0-9]+)).*/\2:\3:\4/')
     cat /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf \
         | sed -e "s/\$NVIDIA_BUS_ID/$DEVICE_ID/" \
         | sudo tee /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf > /dev/null
