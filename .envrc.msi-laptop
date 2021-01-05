@@ -3,6 +3,7 @@
 export GPU_DRIVER="nouveau"
 
 export ADDITIONAL_PACKAGES="\
+    cbatticon \
     teamviewer zoom`#-system-qt` \
     postgresql-libs rustup \
     intel-undervolt \

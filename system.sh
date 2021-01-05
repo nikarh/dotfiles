@@ -109,7 +109,7 @@ fi
 pkg base pacman-contrib
 pkg "$(pactree -u base)" \
     "$(pacman -Sg base-devel | awk '{ print $2 }')" \
-    linux linux-firmware yay
+    linux linux-firmware perl yay
 
 # Network
 pkg openssh networkmanager nm-connection-editor networkmanager-openvpn \
@@ -140,7 +140,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     libva-vdpau-driver 
 # X applications
 pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi rofi-calc alacritty \
-    cbatticon pavucontrol pasystray blueman \
+    pavucontrol pasystray blueman \
     gpicview-gtk3 xarchiver gsimplecal redshift \
     chromium chromium-widevine firefox-developer-edition freshplayerplugin \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \

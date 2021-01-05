@@ -1,6 +1,7 @@
 #!/bin/bash 
 
 export ADDITIONAL_PACKAGES="\
+    cbatticon \
     accountsservice \
     freerdp remmina remmina-plugin-rdesktop \
     xf86-video-intel \

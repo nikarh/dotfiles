@@ -37,7 +37,9 @@ function install-code-extensions {
 
 function ln-all {
     for FILE in "$@"; do
-        ln -sf "$FROM/$FILE.desktop" $TO
+        if [[ -f "$FROM/$FILE.desktop" ]]; then
+            ln -sf "$FROM/$FILE.desktop" $TO
+        fi
     done
 }
 
