@@ -92,7 +92,7 @@ install-code-extensions \
     k--kato.intellij-idea-keybindings \
     PKief.material-icon-theme \
     fallenwood.vimL \
-    golang.Go \
+    golang.go \
     ms-vscode.cpptools \
     redhat.vscode-yaml \
     mechatroner.rainbow-csv \
