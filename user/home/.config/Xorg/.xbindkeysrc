@@ -16,10 +16,10 @@
 "~/.bin/toggle-touchpad.sh"
    XF86TouchpadToggle
 
-"gnome-screenshot -ac"
+"flameshot gui"
    Print
    
-"gnome-screenshot -ic"
+"flameshot screen"
    Control + Print
 
 "~/.bin/toggle-coolerboost.sh"
