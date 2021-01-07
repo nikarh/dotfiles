@@ -8,15 +8,21 @@ PCI_DATA=$(lspci)
 PCI_DISPLAY_CONTROLLER=$(echo "$PCI_DATA" | grep -Ei '(vga|display)')
 CPU_MODEL=$(grep model\ name /proc/cpuinfo | head -n 1)
 
-# Auto select GPU driver
-if [ -z $GPU_DRIVER ] || ! grep -Eqi "($(echo $GPU_DRIVER | sed s/nouveau/nvidia/))" <<< "$PCI_DISPLAY_CONTROLLER"; then
+if [ -z "$GPU_DRIVER" ]; then
     if grep -Eqi '(radeon|amd)' <<< "$PCI_DISPLAY_CONTROLLER"; then
         GPU_DRIVER=radeon
     elif grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER"; then
         GPU_DRIVER=nouveau
     elif grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
-        GPU_DRIVER=intel
+        GPU_DRIVER=i915
     fi
+    echo \$GPU_DRIVER env variable is empty, guessed driver as $GPU_DRIVER
+fi
+
+if ! grep -Eqi "($(echo $GPU_DRIVER | sed s/nouveau/nvidia/ | sed s/i915/intel/ | sed 's/ /|/'))" <<< "$PCI_DISPLAY_CONTROLLER"; then
+    echo $GPU_DRIVER | sed s/nouveau/nvidia/ | sed s/i915/intel/ | sed 's/ /|/'
+    echo -e \$GPU_DRIVER is set as \"$GPU_DRIVER\", but no such hardware detected\\n\\n$PCI_DISPLAY_CONTROLLER
+    exit 1
 fi
 
 ALL_PACKAGES_TO_INSTALL=""
@@ -71,7 +77,7 @@ function add-user-to-groups {
     done
 }
 
-function enable-units {
+function enable-units-now {
     for unit in "$@"; do
         sudo systemctl enable --now $unit
     done
@@ -197,31 +203,37 @@ sudo cp -ufrTv "${PWD}/system/etc/" /etc
 # Copy other stuff (wallpaper)
 sudo cp -ufrTv "${PWD}/system/usr/" /usr
 
-if grep -Eqi '(radeon|amd)' <<< "$PCI_DISPLAY_CONTROLLER"; then
-    pkg xf86-video-ati
-    add-module-to-initrd radeon
-elif grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then
+if grep -q "i915" <<< "$GPU_DRIVER"; then
     pkg xf86-video-intel
     add-module-to-initrd i915
 
     sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.intel.conf /etc/X11/xorg.conf.d/20-gpu.conf
     sudo ln -sf /etc/modprobe.d/gpu.conf.intel /etc/modprobe.d/gpu.conf
+else
+    remove-module-from-initrd i915
 fi
 
-if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "nvidia"; then
+if grep -q "amd" <<< "$GPU_DRIVER"; then
+    pkg xf86-video-ati
+    add-module-to-initrd radeon
+else
+    remove-module-from-initrd radeon
+fi
+
+if grep -q "nvidia" <<< "$GPU_DRIVER"; then
+    pkg nvidia nvidia-settings nvidia-utils
+
     DEVICE_ID=$(lspci | grep -i VGA.*NVIDIA | awk '{print $1}' | sed -r 's/^(0*([0-9]+)[:.]0*([0-9]+)[:.]0*([0-9]+)).*/\2:\3:\4/')
     cat /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf \
         | sed -e "s/\$NVIDIA_BUS_ID/$DEVICE_ID/" \
         | sudo tee /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf > /dev/null
 
-    # Configuration for nvidia gpu
-    pkg nvidia nvidia-settings nvidia-utils
     sudo rm -f /etc/X11/xorg.conf.d/20-gpu.conf
     sudo ln -sf /etc/modprobe.d/gpu.conf.nvidia /etc/modprobe.d/gpu.conf
     sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
 fi
 
-if grep -Eqi '(nvidia)' <<< "$PCI_DISPLAY_CONTROLLER" && test "$GPU_DRIVER" = "nouveau"; then
+if grep -q "nouveau" <<< "$GPU_DRIVER"; then
     # Clean other GPU driver stuff
     sudo rm -f /etc/X11/xorg.conf.d/20-gpu.conf
     sudo rm -f /etc/modprobe.d/block_nouveau.conf
@@ -234,17 +246,10 @@ else
     sudo rm -f /etc/modprobe.d/nouveau.conf
 fi
 
-# Initrd cleanup
-if [ "$GPU_DRIVER" != "radeon" ]; then remove-module-from-initrd radeon; fi
-if ! grep -Eqi '(intel)' <<< "$PCI_DISPLAY_CONTROLLER"; then remove-module-from-initrd i915; fi
-
 # Enable bluetooth card
 if ! grep -q '^AutoEnable=true$' /etc/bluetooth/main.conf; then
     sudo sed -i 's/^#AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf;
 fi
-
-# Remove gnome keyring
-sudo sed -i '/pam_gnome_keyring/d' /etc/pam.d/{login,passwd}
 
 # Pulseaudio bluetooth
 if ! grep -q module-switch-on-connect /etc/pulse/default.pa; then
@@ -254,14 +259,15 @@ if ! grep -q module-switch-on-connect /etc/pulse/default.pa; then
 fi
 
 # Start systemd units
-enable-units NetworkManager.service \
-             localtime.service \
-             lightdm-plymouth.service \
-             bluetooth.service \
-             earlyoom.service \
-             autorandr.service \
-             docker.service \
-             ${ADDITIONAL_UNITS}
+sudo systemctl enable locker@nikarh.service
+enable-units-now NetworkManager.service \
+                 localtime.service \
+                 lightdm-plymouth.service \
+                 bluetooth.service \
+                 earlyoom.service \
+                 autorandr.service \
+                 docker.service \
+                 ${ADDITIONAL_UNITS}
 
 # Create special groups
 create-groups bluetooth sudo wireshark libvirt printer plugdev

@@ -1,5 +1,7 @@
 #!/bin/bash 
 
+export GPU_DRIVER="amd"
+
 export ADDITIONAL_PACKAGES="\
     cbatticon \
     accountsservice \

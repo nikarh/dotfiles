@@ -116,7 +116,7 @@ assign [class="REAPER"] $ws7
 assign [class="Cadence"] $ws7
 assign [class="Catia"] $ws7
 assign [instance="^open.spotify.com.*"] $ws7
-
+assign [instance="zoom"] $ws8
 assign [class="Chromium"] $ws2
 
 for_window [class="jetbrains-toolbox"] floating enable

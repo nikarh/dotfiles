@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-export GPU_DRIVER="nouveau"
+export GPU_DRIVER="i915 nouveau"
 
 export ADDITIONAL_PACKAGES="\
     cbatticon \
@@ -23,6 +23,6 @@ export ADDITIONAL_PACKAGES="\
 
 export ADDITIONAL_UNITS="
     isw@14A3EMS1 \
-    `#disable-turbo-boost` \
+    disable-turbo-boost \
     intel-undervolt \
 "
