@@ -121,8 +121,7 @@ pkg "$(pactree -u base)" \
 pkg openssh networkmanager nm-connection-editor networkmanager-openvpn \
     network-manager-applet
 # Basic tools
-pkg man-db man-pages \
-    earlyoom \
+pkg man-db man-pages earlyoom \
     systemd-swap systemd-boot-pacman-hook \
     bluez bluez-libs bluez-utils \
     alsa-tools alsa-utils alsa-plugins \
@@ -135,7 +134,7 @@ pkg man-db man-pages \
     zip unzip unrar p7zip exfat-utils ntfs-3g \
     bandwhich socat usbutils parallel \
     android-tools \
-    git-crypt
+    git-crypt git-lfs
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \

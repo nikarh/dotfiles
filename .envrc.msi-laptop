@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-export GPU_DRIVER="i915 nouveau"
+export GPU_DRIVER="i915"
 
 export ADDITIONAL_PACKAGES="\
     cbatticon \
