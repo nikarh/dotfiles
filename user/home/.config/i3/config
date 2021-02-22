@@ -90,7 +90,6 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
-assign [class="Alacritty"] $ws1
 assign [class="firefox"] $ws2
 assign [class="Navigator"] $ws2
 assign [class="firefoxdeveloperedition"] $ws2
