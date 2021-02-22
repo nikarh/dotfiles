@@ -80,6 +80,8 @@ file-get https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
 section "Setting default gtk terminal to alacritty..."
 gsettings set org.gnome.desktop.default-applications.terminal exec alacritty
 gsettings set org.gnome.desktop.default-applications.terminal exec-arg -e
+# glib hardcodes terminals https://github.com/GNOME/glib/blob/master/gio/gdesktopappinfo.c#L2581
+ln -s /usr/bin/alacritty ~/.bin/xterm
 
 section "Setting xdg defaults..."
 xdg-mime default thunar.desktop inode/directory
