@@ -127,7 +127,7 @@ pkg man-db man-pages earlyoom \
     alsa-tools alsa-utils alsa-plugins \
     pulseaudio pulseaudio-alsa pulseaudio-modules-bt libldac pamixer \
     jack2 cadence pulseaudio-jack \
-    htop neovim tmux bash-completion fzf exa fd ripgrep jq bat \
+    grc htop neovim tmux bash-completion fzf exa fd ripgrep jq bat \
     bash-git-prompt direnv docker \
     localtime-git terminus-font \
     libmp4v2 lame flac ffmpeg x265 libmad \

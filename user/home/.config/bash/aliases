@@ -11,3 +11,9 @@ if type -P exa > /dev/null; then
     alias l='exa -la'
     alias e='exa -la'
 fi
+
+if type -P grc > /dev/null; then
+    alias mount='grc mount'
+    alias du='grc du'
+    alias df='grc df -h'
+fi
