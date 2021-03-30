@@ -63,6 +63,7 @@ TO=~/.config/autostart/ FROM=/usr/share/applications/ ln-all \
     nm-applet
 
 TO=~/.config/autostart/ FROM=~/.local/share/applications/ ln-all \
+    alacritty \
     cbatticon \
     redshift-gtk \
     syncthing-gtk
@@ -81,7 +82,7 @@ section "Setting default gtk terminal to alacritty..."
 gsettings set org.gnome.desktop.default-applications.terminal exec alacritty
 gsettings set org.gnome.desktop.default-applications.terminal exec-arg -e
 # glib hardcodes terminals https://github.com/GNOME/glib/blob/master/gio/gdesktopappinfo.c#L2581
-ln -s /usr/bin/alacritty ~/.bin/xterm
+ln -sf /usr/bin/alacritty ~/.bin/xterm
 
 section "Setting xdg defaults..."
 xdg-mime default thunar.desktop inode/directory
@@ -108,6 +109,6 @@ install-code-extensions \
 
 section "Adding userChrome to firefox..."
 # Firefox
-[ -d ~/.mozilla/firefox/ ] && find ~/.mozilla/firefox/ -name '*.dev-edition-default' \
+[ -d ~/.mozilla/firefox/ ] && find ~/.mozilla/firefox -maxdepth 1 -type d \( -name '*dev-edition-default' -o -name '*default-release' \) \
     -execdir mkdir -p {}/chrome \; \
     -execdir ln -sf ${ROOT}/user/firefox/userChrome.css {}/chrome/userChrome.css \;

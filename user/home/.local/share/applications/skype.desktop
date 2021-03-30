@@ -5,6 +5,5 @@ Icon=Skype
 Name=Skype
 GenericName=Skype as a chromium app
 Comment=Launch chromium with Skype
-Categories=Laptop;
 Exec=chromium --app="https://web.skype.com/"
 Terminal=false

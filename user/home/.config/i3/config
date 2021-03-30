@@ -26,7 +26,7 @@ floating_modifier $mod
 default_floating_border pixel 1
 
 bindsym $mod+Shift+q kill
-bindsym $mod+Return exec "LANG=en alacritty -t Terminal -e systemd-run --scope --user tmux new-session -A -s main"
+bindsym $mod+Return exec "LANG=en alacritty -t Terminal"
 bindsym $mod+c exec --no-startup-id "rofi -combi-modi window,drun -show combi -modi combi"
 bindsym $mod+x exec --no-startup-id "rofi -show run -terminal alacritty -font"
 bindsym $mod+g exec --no-startup-id "rofi -show calc -modi calc -no-show-match -no-sort"
@@ -90,6 +90,7 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
+assign [instance="Main Terminal"] $ws2
 assign [class="firefox"] $ws2
 assign [class="Navigator"] $ws2
 assign [class="firefoxdeveloperedition"] $ws2

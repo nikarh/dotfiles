@@ -147,7 +147,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
 pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi rofi-calc alacritty \
     pavucontrol pasystray blueman \
     gpicview-gtk3 xarchiver gsimplecal redshift \
-    chromium chromium-widevine firefox-developer-edition freshplayerplugin \
+    chromium chromium-widevine firefox freshplayerplugin \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
     qdirstat keepassxc flameshot qbittorrent insync syncthing-gtk \
     libsecret seahorse \

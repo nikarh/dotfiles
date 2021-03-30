@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=alacritty
+GenericName=Terminal
+Comment=Launch main terminal
+Exec=alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main
+Terminal=false
