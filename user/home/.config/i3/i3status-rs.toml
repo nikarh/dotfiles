@@ -40,7 +40,7 @@ alert = 1.0
 [[block]]
 block = "memory"
 display_type = "memory"
-format_mem = "{MAg}G"
+format_mem = "{mem_free}"
 clickable = false
 
 [[block]]
