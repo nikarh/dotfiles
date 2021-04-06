@@ -14,7 +14,6 @@
     "files.defaultLanguage": "markdown",
     "telemetry.enableTelemetry": false,
     "typescript.referencesCodeLens.enabled": true,
-    "window.zoomLevel": 1.25,
     "workbench.editor.showTabs": false,
     "workbench.editor.highlightModifiedTabs": true,
     "workbench.iconTheme": "material-icon-theme",

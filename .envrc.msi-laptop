@@ -8,7 +8,7 @@ export ADDITIONAL_PACKAGES="\
     postgresql-libs rustup \
     intel-undervolt \
     deadbeef \
-    chntpw \
+    chntpw `# Read windows regedit files` \
     google-cloud-sdk \
     mkvtoolnix-gui powertop \
     isw `# MSI cooler controller` \
@@ -18,7 +18,10 @@ export ADDITIONAL_PACKAGES="\
     spectmorph `# Morphing Synths, VST` \
     dragonfly-reverb zam-plugins iempluginsuite `# FX, VST` \
     zynaddsubfx helm-synth `# FX, VST not working` \
-    vmpk \
+    vmpk `# virtual midi keyboard` \
+    psvita-sdk sdl2_gfx sdl2_image \
+    moonlight-qt \
+    ib-tws
 "
 
 export ADDITIONAL_UNITS="

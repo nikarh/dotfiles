@@ -166,7 +166,9 @@ pkg git diffutils git-delta-bin upx dhex sysstat gdb insomnia `# General use` \
     docker-compose kubectl kubectx `# DevOps` \ \
     go nvm bash-language-server `# Langs/Platforms` \
     sdl2 glu `# Game dev` \
-    cmake ccache cppcheck clang lld `# C++`
+    cmake ccache cppcheck clang lld `# C++` \
+    svgcleaner
+
 # Printer
 pkg cups cups-pdf cups-pk-helper system-config-printer \
     epson-inkjet-printer-escpr
