@@ -128,7 +128,7 @@ pkg man-db man-pages earlyoom \
     pulseaudio pulseaudio-alsa pulseaudio-modules-bt libldac pamixer \
     jack2 cadence pulseaudio-jack \
     grc htop neovim tmux bash-completion fzf exa fd ripgrep jq bat \
-    direnv docker \
+    starship direnv docker \
     localtime-git terminus-font \
     libmp4v2 lame flac ffmpeg x265 libmad \
     zip unzip unrar p7zip exfat-utils ntfs-3g \
