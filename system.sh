@@ -128,7 +128,7 @@ pkg man-db man-pages earlyoom \
     pulseaudio pulseaudio-alsa pulseaudio-modules-bt libldac pamixer \
     jack2 cadence pulseaudio-jack \
     grc htop neovim tmux bash-completion fzf exa fd ripgrep jq bat \
-    bash-git-prompt direnv docker \
+    direnv docker \
     localtime-git terminus-font \
     libmp4v2 lame flac ffmpeg x265 libmad \
     zip unzip unrar p7zip exfat-utils ntfs-3g \
@@ -144,7 +144,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     lightdm lightdm-gtk-greeter i3lock-fancy-rapid-git `#light-locker` feh \
     libva-vdpau-driver 
 # X applications
-pkg kbdd-git dunst i3-gaps i3status-rust-git lxsession-gtk3 rofi rofi-calc alacritty \
+pkg kbdd-git dunst i3-gaps i3status-rust lxsession-gtk3 rofi rofi-calc alacritty \
     pavucontrol pasystray blueman \
     gpicview-gtk3 xarchiver gsimplecal redshift \
     chromium chromium-widevine firefox freshplayerplugin \

@@ -11,9 +11,7 @@ trysource ~/.config/bash/aliases
 trysource ~/.config/bash-sensible/sensible.bash
 shopt -u cdable_vars
 
-GIT_PROMPT_THEME="Single_line_NoExitState"
-trysource /usr/lib/bash-git-prompt/gitprompt.sh
-trysource ~/.bash-git-prompt/gitprompt.sh
+eval "$(starship init bash)"
 
 trysource /usr/share/bash-completion/bash_completion
 

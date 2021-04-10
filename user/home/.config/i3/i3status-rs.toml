@@ -32,6 +32,7 @@ block = "disk_space"
 path = "/"
 alias = ""
 info_type = "available"
+format = "{alias} {available}G"
 unit = "GB"
 interval = 20
 warning = 3.0
@@ -40,7 +41,7 @@ alert = 1.0
 [[block]]
 block = "memory"
 display_type = "memory"
-format_mem = "{mem_free}"
+format_mem = "{MAg}G"
 clickable = false
 
 [[block]]
