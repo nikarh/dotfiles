@@ -87,9 +87,9 @@ style = "purple"
 style = ""
 format = '(\[$ahead_behind$staged$conflicted$modified$deleted$renamed$untracked$stashed\] )'
 
-ahead = "⇡${count} "
-diverged = "⇡${ahead_count}⇣${behind_count} "
-behind = "⇣${count} "
+ahead = "(⇡${count})"
+diverged = "(⇡${ahead_count}⇣${behind_count})"
+behind = "(⇣${count})"
 conflicted = "[☨$count](bright-red)"
 untracked = "[…$count](cyan)"
 stashed = "[🖫 $count](blue)"
