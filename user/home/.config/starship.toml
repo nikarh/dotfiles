@@ -111,6 +111,9 @@ disabled = false
 format = '[$time]($style) '
 style = ""
 
+[package]
+disabled = true
+
 [java]
 disabled = true
 
