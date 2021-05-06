@@ -141,12 +141,12 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
     xorg-xdpyinfo autorandr arandr brightnessctl picom autocutsel \
     gebaar-libinput-fork xdotool \
-    lightdm lightdm-gtk-greeter i3lock-fancy-rapid-git `#light-locker` feh \
+    lightdm lightdm-gtk-greeter i3lock-fancy-rapid-git \
     libva-vdpau-driver 
 # X applications
 pkg kbdd-git dunst i3-gaps i3status-rust lxsession-gtk3 rofi rofi-calc alacritty \
     pavucontrol pasystray blueman \
-    gpicview-gtk3 xarchiver gsimplecal redshift \
+    gpicview xarchiver gsimplecal redshift \
     chromium chromium-widevine firefox freshplayerplugin \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
     qdirstat keepassxc flameshot qbittorrent insync syncthing-gtk \
