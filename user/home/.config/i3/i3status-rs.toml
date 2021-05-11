@@ -20,19 +20,21 @@ time = ""
 
 [[block]]
 block = "pacman"
+format = "{pacman:1}/{aur:1}"
 interval = 10
+aur_command = "yay -Qua"
 
 [[block]]
 block = "docker"
 interval = 2
-format = "{running}/{total}"
+format = "{running:1}/{total:1}"
 
 [[block]]
 block = "disk_space"
 path = "/"
 alias = ""
 info_type = "available"
-format = "{alias} {available}G"
+format = "{alias} {available:3}"
 unit = "GB"
 interval = 20
 warning = 3.0
@@ -41,7 +43,7 @@ alert = 1.0
 [[block]]
 block = "memory"
 display_type = "memory"
-format_mem = "{MAg}G"
+format_mem = "{mem_avail:4;G}"
 clickable = false
 
 [[block]]
