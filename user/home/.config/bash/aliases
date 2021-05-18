@@ -6,6 +6,11 @@ alias df='df -h'
 alias less='less -r'
 alias http-server='python -m http.server'
 
+alias tetris='docker run --rm -it nikarh/gotromino'
+
+alias dicker='docker'
+alias got='git'
+
 if type -P exa > /dev/null; then
     alias ls='exa'
     alias l='exa -la'

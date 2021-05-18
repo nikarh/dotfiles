@@ -21,7 +21,7 @@ time = ""
 [[block]]
 block = "pacman"
 format = "{pacman:1}/{aur:1}"
-interval = 10
+interval = 600
 aur_command = "yay -Qua"
 
 [[block]]

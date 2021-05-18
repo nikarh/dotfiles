@@ -132,7 +132,7 @@ pkg man-db man-pages earlyoom \
     localtime-git terminus-font \
     libmp4v2 lame flac ffmpeg x265 libmad \
     zip unzip unrar p7zip exfat-utils ntfs-3g \
-    bandwhich socat usbutils parallel \
+    bandwhich socat usbutils parallel rsync \
     android-tools \
     git-crypt git-lfs
 # Basic X
@@ -156,7 +156,7 @@ pkg kbdd-git dunst i3-gaps i3status-rust lxsession-gtk3 rofi rofi-calc alacritty
     gparted
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
-    noto-fonts noto-fonts-emoji \
+    noto-fonts noto-fonts-emoji ttf-nerd-fonts-symbols-mono \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix
 # Development
