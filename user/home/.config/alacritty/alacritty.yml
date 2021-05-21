@@ -65,9 +65,17 @@ mouse_bindings:
 
 mouse:
   hide_when_typing: true
-  url:
-    modifiers: Control
 
 selection:
   save_to_clipboard: false
+
+hints:
+  enabled:
+  - regex: "(magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)\
+            [^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+    command: xdg-open
+    post_processing: true
+    mouse:
+      enabled: true
+      mods: Control
 

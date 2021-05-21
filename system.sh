@@ -268,6 +268,7 @@ enable-units-now NetworkManager.service \
                  earlyoom.service \
                  autorandr.service \
                  docker.service \
+                 cups.service \
                  ${ADDITIONAL_UNITS}
 
 # Create special groups
