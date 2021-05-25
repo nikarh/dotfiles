@@ -26,7 +26,6 @@ SELECTED=$(
         | grep -e 'index:' -e 'name:' -e 'device.description = ' \
         | paste - - - \
         | sed -r 's/^\s+((\*)\s+)?/\2/g' \
-        | sed -r '/^\s*$/d' \
         | awk '{
             name=$7; for(i=8;i<=NF;i++) {name=name" "$i}; 
             if ($1 == "*index:") printf "'$SELECTED_COLOR'";
