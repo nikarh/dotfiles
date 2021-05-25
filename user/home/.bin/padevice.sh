@@ -8,16 +8,15 @@ LIST_CMD=list-sinks
 SELECT_CMD=set-default-sink
 
 case $1 in
-  sink)
+  sink|o|out|output|"")
     ;;
-  source)
+  source|i|in|input)
     LIST_CMD=list-sources
     SELECT_CMD=set-default-source
     ;;
-  "")
-    ;;
   *)
-    echo Invalid argument, provide either source or sink
+    echo 'Invalid argument, provide either (source|i|in|input) or (sink|o|out|output)'
+    exit 1
     ;;
 esac
 
