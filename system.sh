@@ -28,6 +28,7 @@ fi
 ALL_PACKAGES_TO_INSTALL=""
 
 function aur-pkg {
+    echo "YAY"
     rm -rf /tmp/aurpkg;
     git clone "https://aur.archlinux.org/$1.git" /tmp/aurpkg;
     cd /tmp/aurpkg;
@@ -43,17 +44,24 @@ function aur-pkg {
         makepkg
     fi
 
-    sudo pacman --noconfirm -U /tmp/aurpkg/$1-*-x86_64.pkg.tar.xz
+    echo INSTALL?
+    ls /tmp/aurpkg/$1-*-x86_64.pkg.tar
+    sudo pacman --noconfirm -U /tmp/aurpkg/$1-*-x86_64.pkg.tar
 }
 
 function pkg {
     local installed=$(pacman -Q | awk '{ print $1 }' | sort)
     local requested=$(echo $@ | tr " " "\n" | sort | uniq)
-    ALL_PACKAGES_TO_INSTALL="$ALL_PACKAGES_TO_INSTALL $requested"
-
-    yay --pgpfetch --noconfirm -S --needed $(comm --output-delimiter=--- -3 \
+    local to_install=$(comm --output-delimiter=--- -3 \
         <(echo "$requested") \
         <(echo "$installed") | grep -v ^---)
+    local COMMAND="${COMMAND:-yay --pgfetch}"
+
+    ALL_PACKAGES_TO_INSTALL="$ALL_PACKAGES_TO_INSTALL $requested"
+
+    if [ ! -z "$to_install" ]; then
+        $COMMAND --noconfirm -S --needed $to_install
+    fi
 }
 
 function unpkg {
@@ -101,8 +109,8 @@ function remove-module-from-initrd {
 sudo sed -i '/^PKGEXT=/s/\.xz//g' /etc/makepkg.conf
 
 # Install yay
-if ! pacman -Qi yay > /dev/null ; then
-    sudo pacman --noconfirm -S base-devel git go
+if ! pacman -Qi yay > /dev/null 2>&1; then
+    COMMAND="sudo pacman" pkg "$(pacman -Sg base-devel | awk '{ print $2 }')" git go
     echo $(aur-pkg yay)
 fi
 
