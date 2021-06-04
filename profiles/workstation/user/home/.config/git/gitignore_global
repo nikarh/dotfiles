@@ -1,0 +1,19 @@
+# vi: ft=gitignore
+
+*.class
+*.hi
+../.idea/.dotfiles.iml
+*.ipr
+*.iws
+*.o
+*.out
+*.swo
+*.swp
+*.tmproj
+*~
+.DS_Store
+.idea/
+Icon
+node-modules/
+Thumbs.db
+npm-debug.log

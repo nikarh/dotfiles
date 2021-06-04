@@ -46,5 +46,8 @@
     "rust.all_features": true,
     "rust-analyzer.cargo.allFeatures": true,
     "rust-analyzer.linkedProjects": null,
-    "redhat.telemetry.enabled": false
+    "redhat.telemetry.enabled": false,
+    "shellcheck.customArgs": [
+        "-x"
+    ]
 }

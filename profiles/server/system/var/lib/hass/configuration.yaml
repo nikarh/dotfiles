@@ -1,0 +1,39 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+logger:
+  default: info
+
+homeassistant:
+  name: Home
+  latitude: 56.929638943157094
+  longitude: 24.1632990850169
+  elevation: 0
+  unit_system: metric
+  time_zone: "Europe/Riga"
+  external_url: "https://hass.home.arhipov.net"
+  legacy_templates: false
+http:
+  server_host: 0.0.0.0
+  server_port: 8123
+  login_attempts_threshold: 20
+  ip_ban_enabled: true
+  use_x_forwarded_for: true
+  trusted_proxies:
+  - 172.17.0.0/16
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+
+vacuum:
+  - platform: xiaomi_miio
+    host: 192.168.1.22
+    token: !secret roborock_token
+sensor:
+  - platform: qbittorrent
+    url: "https://torrents.files.home.arhipov.net"
+    username: shared
+    password: shared

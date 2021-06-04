@@ -1,5 +1,7 @@
-#!/bin/bash 
+#!/bin/bash -e
+# shellcheck disable=SC2155
 
+export PROFILE="workstation"
 export GPU_DRIVER="nvidia"
 
 export ADDITIONAL_PACKAGES="\

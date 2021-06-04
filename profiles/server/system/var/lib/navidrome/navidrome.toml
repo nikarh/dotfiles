@@ -1,0 +1,4 @@
+LogLevel = "INFO"
+MusicFolder = "/var/data/nikarh/Music"
+SessionTimeout = "96h"
+ScanInterval = "12h"

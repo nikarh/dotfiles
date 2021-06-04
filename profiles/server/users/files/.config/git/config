@@ -1,0 +1,49 @@
+# vi: ft=gitconfig
+[alias]
+    wip = for-each-ref --sort='authordate:iso8601' --format=' %(color:green)%(authordate:relative)%09%(color:white)%(refname:short)' refs/heads
+	lg = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+    fixup = commit -a --amend --date=now --no-edit
+	git = !exec git
+    p = "!git fetch -ap && git rebase"
+[core]
+	editor = nvim
+	autocrlf = input
+	trustctime = false
+	ignorecase = false
+	preloadindex = true
+	fscache = true
+	excludesfile = ~/.config/git/gitignore_global
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	features = side-by-side line-numbers decorations
+	whitespace-error-style = 22 reverse
+[delta "decorations"]
+	commit-decoration-style = bold yellow box ul
+	file-style = bold yellow ul
+	file-decoration-style = none
+[i18n]
+	filesEncoding = utf-8
+[user]
+	name = Nikolay Arhipov
+	email = nikolajs.arhipovs@gmail.com
+[pull]
+    rebase = true
+[rebase]
+	autoStash = true
+[color]
+	ui = true
+[gc]
+	auto = 256
+[help]
+	autoCorrect = -1
+[advice]
+	detachedHead = false
+[fetch]
+	prune = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

@@ -1,0 +1,40 @@
+night:
+  alias: Night
+  sequence:
+  - device_id: 749a4be7c51f0faf5172542fcdc60761
+    domain: cover
+    entity_id: cover.office_blind
+    type: set_position
+    position: 0
+  - device_id: ac794bc2129ed23c069d801fc3f4a8cf
+    domain: cover
+    entity_id: cover.living_room_blind
+    type: set_position
+    position: 0
+  - device_id: d693bc9748e34d9e32c5c5d6befd8bc1
+    domain: cover
+    entity_id: cover.bedroom_blind
+    type: set_position
+    position: 0
+  mode: single
+  icon: mdi:weather-night
+day:
+  alias: Day
+  sequence:
+  - device_id: 749a4be7c51f0faf5172542fcdc60761
+    domain: cover
+    entity_id: cover.office_blind
+    type: set_position
+    position: 100
+  - device_id: ac794bc2129ed23c069d801fc3f4a8cf
+    domain: cover
+    entity_id: cover.living_room_blind
+    type: set_position
+    position: 100
+  - device_id: d693bc9748e34d9e32c5c5d6befd8bc1
+    domain: cover
+    entity_id: cover.bedroom_blind
+    type: set_position
+    position: 100
+  mode: single
+  icon: mdi:weather-sunny

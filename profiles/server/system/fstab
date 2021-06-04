@@ -1,0 +1,11 @@
+# BEGIN Bind mounts
+
+LABEL=data /var/data auto rw,defaults,nofail,x-systemd.device-timeout=10 0 0
+
+/var/data/tmp /srv/ftp/tmp none defaults,bind,nofail 0 0
+/var/data/tmp /srv/ftp/nikarh/tmp none defaults,bind,nofail 0 0
+/var/data/tmp /srv/ftp/alyonovik/tmp none defaults,bind,nofail 0 0
+/var/data/nikarh /srv/ftp/nikarh/data none defaults,bind,nofail 0 0
+/var/data/alyonovik /srv/ftp/alyonovik/data none defaults,bind,nofail 0 0
+
+# END Bind mounts
