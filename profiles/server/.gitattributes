@@ -2,5 +2,5 @@ system/**/hass/.storage/** filter=git-crypt diff=git-crypt
 system/**/hass/secrets.yaml filter=git-crypt diff=git-crypt
 system/smbusers filter=git-crypt diff=git-crypt
 system/etc/sftp/** filter=git-crypt diff=git-crypt
-users/torrents/** filter=git-crypt diff=git-crypt
+**/qBittorrent.conf filter=git-crypt diff=git-crypt
 users/nikarh/** filter=git-crypt diff=git-crypt

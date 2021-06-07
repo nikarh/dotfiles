@@ -34,6 +34,6 @@ vacuum:
     token: !secret roborock_token
 sensor:
   - platform: qbittorrent
-    url: "https://torrents.files.home.arhipov.net"
+    url: "http://qbittorrent:8080"
     username: shared
     password: shared
