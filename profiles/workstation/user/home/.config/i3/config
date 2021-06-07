@@ -91,8 +91,8 @@ set $ws9 "9"
 set $ws10 "10"
 
 assign [instance="Main Terminal"] $ws2
-assign [class="firefox"] $ws2
 assign [class="Navigator"] $ws2
+assign [class="firefox"] $ws2
 assign [class="firefoxdeveloperedition"] $ws2
 assign [class="deadbeef"] $ws7
 assign [class="jetbrains-studio"] $ws3
@@ -115,6 +115,10 @@ assign [class="Syncthing GTK"] $ws6
 assign [class="REAPER"] $ws7
 assign [class="Cadence"] $ws7
 assign [class="Catia"] $ws7
+assign [class="blueman-manager"] $ws7
+assign [class="Blueman-manager"] $ws7
+assign [class="pavucontrol"] $ws7
+assign [class="Pavucontrol"] $ws7
 assign [instance="^open.spotify.com.*"] $ws7
 assign [instance="zoom"] $ws8
 assign [class="Chromium"] $ws2
