@@ -64,6 +64,6 @@ install-code-extensions \
 
 section "Adding userChrome to firefox..."
 # Firefox
-[ -d ~/.mozilla/firefox/ ] && find ~/.mozilla/firefox -maxdepth 1 -type d \( -name '*dev-edition-default' -o -name '*default-release' \) \
+[ -d ~/.mozilla/firefox/ ] && find ~/.mozilla/firefox -maxdepth 1 -type d \( -name '*dev-edition-default*' -o -name '*default-release*' \) \
     -execdir mkdir -p {}/chrome \; \
     -execdir ln -sf "$ROOT/user/firefox/userChrome.css" {}/chrome/userChrome.css \;
