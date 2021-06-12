@@ -4,3 +4,4 @@
 - 25002 - Filebrowser
 - 25003 - Navidrome
 - 25004 - Qbittorrent
+- 25006 - netdata

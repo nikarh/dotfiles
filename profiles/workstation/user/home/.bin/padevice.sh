@@ -28,9 +28,9 @@ SELECTED=$(
         | sed -r 's/^\s+((\*)\s+)?/\2/g' \
         | awk '{
             name=$7; for(i=8;i<=NF;i++) {name=name" "$i}; 
-            if ($1 == "*index:") printf "'$SELECTED_COLOR'";
-            printf $2 ": " substr(name, 2, length(name)-2) " " "'$FAINT_COLOR'"$4"'$ENDCOLOR'" ;
-            if ($1 == "*index:") printf "'$ENDCOLOR'";
+            if ($1 == "*index:") printf "'"$SELECTED_COLOR"'";
+            printf $2 ": " substr(name, 2, length(name)-2) " " "'"$FAINT_COLOR"'"$4"'"$ENDCOLOR"'" ;
+            if ($1 == "*index:") printf "'"$ENDCOLOR"'";
             print ""
         }' \
         | fzf --ansi
@@ -40,5 +40,5 @@ if [ -z "$SELECTED" ]; then
     exit 1
 fi
 
-SELECTED_ID=$(echo $SELECTED | awk -F':' '{ print $1 }')
+SELECTED_ID=$(echo "$SELECTED" | awk -F':' '{ print $1 }')
 pacmd $SELECT_CMD "$SELECTED_ID"

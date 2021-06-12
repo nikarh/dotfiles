@@ -9,7 +9,9 @@ pkg mdadm hdparm \
     docker fuse-overlayfs docker-compose \
     dhclient samba nginx certbot certbot-nginx \
     syncthing \
-    cockpit cockpit-pcp \
+    netdata
+
+sudo systemctl mask mdmonitor
 
 add-user-to-groups docker
 
@@ -58,7 +60,8 @@ sudo systemctl enable --now docker
 enable-units \
     dhclient@eno1 systemd-timesyncd sshd \
     smb nmb \
-    nginx cockpit.socket \
+    nginx \
+    netdata \
     syncthing@nikarh
 
 sudo docker-compose --project-directory="$ROOT" up -d
