@@ -8,8 +8,9 @@ pkg mdadm hdparm \
     haveged \
     docker fuse-overlayfs docker-compose \
     dhclient samba nginx certbot certbot-nginx \
-    syncthing \
-    cockpit cockpit-pcp \
+    netdata
+
+sudo systemctl mask mdmonitor
 
 add-user-to-groups docker
 
@@ -46,7 +47,7 @@ fi
 # Create users for smb
 sudo groupadd -r -g 65533 shield 2> /dev/null || true;
 sudo useradd -M -u 65533 -g 65533 -s /usr/bin/nologin shield 2> /dev/null || true;
-sudo useradd -mU -s /usr/bin/nologin {nikarh,alyonovik} 2> /dev/null || true;
+sudo useradd -MU -s /usr/bin/nologin {nikarh,alyonovik} 2> /dev/null || true;
 
 # Add smb users
 while read -r line || [ -n "$line" ]; do
@@ -56,9 +57,8 @@ done < "$ROOT/system/smbusers"
 
 sudo systemctl enable --now docker
 enable-units \
-    dhclient@eno1 systemd-timesyncd sshd \
-    smb nmb \
-    nginx cockpit.socket \
-    syncthing@nikarh
+    dhclient@eno1 systemd-timesyncd sshd smb nmb \
+    nginx \
+    netdata
 
 sudo docker-compose --project-directory="$ROOT" up -d
