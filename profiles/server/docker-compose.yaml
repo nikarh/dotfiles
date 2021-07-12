@@ -13,6 +13,7 @@ services:
       - /etc/sftp/users.conf:/etc/sftp/users.conf:ro
       - /var/data/shares/tmp:/home/tmp
       - /var/data/shares/nikarh:/home/nikarh/data
+      - /var/data/shares/nikarh/TKM:/home/trendkillmethod/TKM
       - /var/data/shares/tmp:/home/nikarh/tmp
       - /var/data/shares/alyonovik:/home/alyonovik/data
       - /var/data/shares/tmp:/home/alyonovik/tmp
