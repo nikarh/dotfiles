@@ -33,8 +33,8 @@ sudo chmod 600 /etc/sftp/ssh*
 
 # Append bind mounts
 sudo mkdir -p /var/data
-if ! grep -q '^# BEGIN Bind mounts$' /etc/pacman.conf; then
-    sudo sed -i '/# BEGIN Bind mounts/,/# END Bind mounts/d' /etc/fstab
+if ! grep -q '^# BEGIN mounts$' /etc/pacman.conf; then
+    sudo sed -i '/# BEGIN mounts/,/# END mounts/d' /etc/fstab
     # shellcheck disable=SC2002
     cat "$ROOT/system/fstab" | sudo tee -a /etc/fstab > /dev/null
 fi
