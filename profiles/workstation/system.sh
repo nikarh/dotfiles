@@ -54,7 +54,7 @@ pkg lxappearance-gtk3 qt5-styleplugins \
 
 # Development
 pkg git diffutils git-delta-bin upx dhex sysstat gdb insomnia `# General use` \
-    code jetbrains-toolbox `# IDE` \
+    code code-marketplace jetbrains-toolbox `# IDE` \
     jdk-openjdk openjdk-src visualvm jd-gui-bin `# Java`\
     docker-compose kubectl kubectx `# DevOps` \ \
     go nvm bash-language-server `# Langs/Platforms` \
