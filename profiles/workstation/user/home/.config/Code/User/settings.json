@@ -25,7 +25,7 @@
         
     },
     "[rust]": {
-        "editor.defaultFormatter": "rust-lang.rust",
+        "editor.defaultFormatter": "matklad.rust-analyzer",
         "editor.formatOnSave": true
     },
     "C_Cpp.clang_format_sortIncludes": true,
@@ -49,5 +49,6 @@
     "redhat.telemetry.enabled": false,
     "shellcheck.customArgs": [
         "-x"
-    ]
+    ],
+    "security.workspace.trust.untrustedFiles": "open"
 }

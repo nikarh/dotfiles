@@ -3,9 +3,10 @@
 
 export PROFILE="workstation"
 export GPU_DRIVER="nvidia"
+export XORG_GPU="empty"
 
 export ADDITIONAL_PACKAGES="\
-    teamviewer zoom`#-system-qt` \
+    zoom-system-qt \
     postgresql-libs rustup \
     deadbeef \
     chntpw \

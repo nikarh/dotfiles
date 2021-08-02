@@ -1,3 +1,4 @@
 # BEGIN mounts
 LABEL=data /var/data auto rw,defaults,nofail,x-systemd.device-timeout=10 0 0
+/home/files/data /var/data/shares/tmp/fast none defaults,bind,nofail 0 0
 # END mounts

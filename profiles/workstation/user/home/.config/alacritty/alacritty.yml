@@ -9,8 +9,9 @@ window:
   dynamic_padding: true
 
 scrolling:
-  history: 0
+  history: 10000
   multiplier: 3
+  faux_multiplier: 3
 
 font:
   normal:

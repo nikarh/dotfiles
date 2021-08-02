@@ -26,7 +26,10 @@ sudo chown -R http:http /srv/http
 # Copy all configs to etc
 sudo cp -ufrTv "$ROOT/system/etc/" /etc
 sudo cp -ufrTv "$ROOT/system/srv/" /srv
-sudo cp -ufrTv "$ROOT/system/var/" /var
+
+if [[ "$COPY_VAR" == "true" ]]; then
+    sudo cp -ufrTv "$ROOT/system/var/" /var
+fi
 
 sudo chown -R files:files /var/lib/{qbittorrent,filebrowser,navidrome}
 sudo chmod 600 /etc/sftp/ssh*

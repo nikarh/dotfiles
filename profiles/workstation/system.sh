@@ -23,7 +23,8 @@ pkg earlyoom \
     libmp4v2 lame flac ffmpeg x265 libmad \
     exfat-utils ntfs-3g \
     usbutils android-tools \
-    git-lfs
+    git-lfs \
+    croc
 
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
@@ -53,7 +54,7 @@ pkg lxappearance-gtk3 qt5-styleplugins \
     arc-solid-gtk-theme flat-remix
 
 # Development
-pkg git diffutils git-delta-bin upx dhex sysstat gdb insomnia `# General use` \
+pkg git diffutils git-delta upx dhex sysstat gdb `# General use` \
     code code-marketplace jetbrains-toolbox `# IDE` \
     jdk-openjdk openjdk-src visualvm jd-gui-bin `# Java`\
     docker-compose kubectl kubectx `# DevOps` \ \

@@ -106,6 +106,13 @@ function get-gpu-drivers {
     echo $GPU_DRIVER
 }
 
+function install-xorg-conf {
+        if [ -z "$XORG_GPU" ]; then
+            XORG_GPU="$1"
+        fi
+        sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.$XORG_GPU.conf /etc/X11/xorg.conf.d/20-gpu.conf
+}
+
 function install-gpu-drivers {
     local GPU_DRIVER="$*"
 
@@ -113,8 +120,8 @@ function install-gpu-drivers {
         pkg xf86-video-intel
         add-module-to-initrd i915
 
-        sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.intel.conf /etc/X11/xorg.conf.d/20-gpu.conf
         sudo ln -sf /etc/modprobe.d/gpu.conf.intel /etc/modprobe.d/gpu.conf
+        install-xorg-conf intel
     else
         remove-module-from-initrd i915
     fi
@@ -136,16 +143,15 @@ function install-gpu-drivers {
 
         sudo rm -f /etc/X11/xorg.conf.d/20-gpu.conf
         sudo ln -sf /etc/modprobe.d/gpu.conf.nvidia /etc/modprobe.d/gpu.conf
-        sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf /etc/X11/xorg.conf.d/20-gpu.conf
+        install-xorg-conf nvidia
     fi
 
     if grep -q "nouveau" <<< "$GPU_DRIVER"; then
-        # Clean other GPU driver stuff
-        sudo rm -f /etc/X11/xorg.conf.d/20-gpu.conf
         sudo rm -f /etc/modprobe.d/block_nouveau.conf
 
-        sudo ln -sf /etc/modprobe.d/nouveau.conf.avail /etc/modprobe.d/nouveau.conf
         add-module-to-initrd nouveau
+        sudo ln -sf /etc/modprobe.d/nouveau.conf.avail /etc/modprobe.d/nouveau.conf
+        install-xorg-conf empty
     else 
         remove-module-from-initrd nouveau
         sudo ln -sf /etc/modprobe.d/block_nouveau.conf.avail /etc/modprobe.d/block_nouveau.conf

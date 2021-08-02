@@ -47,19 +47,22 @@ ln -sfT ~/.config/Code ~/.config/Code\ -\ OSS
 section "Installing vscode extensions..."
 install-code-extensions \
     Rubymaniac.vscode-direnv \
-    k--kato.intellij-idea-keybindings \
-    PKief.material-icon-theme \
+    PKief.material-icon-theme zhuangtongfa.material-theme \
+    k--kato.intellij-idea-keybindings 2gua.rainbow-brackets \
+    ms-vscode.cpptools ms-vscode.cmake-tools \
+    matklad.rust-analyzer tamasfe.even-better-toml vadimcn.vscode-lldb \
+    mtxr.sqltools mtxr.sqltools-driver-pg \
+    fwcd.kotlin \
+    redhat.vscode-yaml \
     fallenwood.vimL \
     golang.go \
-    ms-vscode.cpptools \
-    redhat.vscode-yaml \
     mechatroner.rainbow-csv \
     yzhang.markdown-all-in-one \
     mads-hartmann.bash-ide-vscode \
     bmewburn.vscode-intelephense-client \
     naumovs.color-highlight \
     chrislajoie.vscode-modelines \
-    zhuangtongfa.material-theme \
+    usernamehw.errorlens \
     | prepend '  '
 
 section "Adding userChrome to firefox..."
