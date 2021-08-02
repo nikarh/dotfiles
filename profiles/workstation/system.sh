@@ -54,7 +54,7 @@ pkg lxappearance-gtk3 qt5-styleplugins \
     arc-solid-gtk-theme flat-remix
 
 # Development
-pkg git diffutils git-delta upx dhex sysstat gdb `# General use` \
+pkg diffutils upx dhex sysstat gdb `# General use` \
     code code-marketplace jetbrains-toolbox `# IDE` \
     jdk-openjdk openjdk-src visualvm jd-gui-bin `# Java`\
     docker-compose kubectl kubectx `# DevOps` \ \

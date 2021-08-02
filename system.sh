@@ -35,7 +35,8 @@ pkg "$(pactree -u base)" \
     systemd-boot-pacman-hook openssh systemd-swap \
     bash-completion man-db man-pages terminus-font starship direnv \
     zip unzip p7zip unrar \
-    socat parallel rsync bandwhich htop grc fzf exa fd ripgrep jq bat neovim
+    socat parallel rsync bandwhich htop grc fzf exa fd ripgrep jq bat neovim \
+    git git-delta
 
 # CPU specific
 CPU_MODEL=$(grep model\ name /proc/cpuinfo | head -n 1)
