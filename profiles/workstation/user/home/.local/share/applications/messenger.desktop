@@ -4,5 +4,5 @@ Type=Application
 Name=Facebook Messenger
 GenericName=Messenger as a chromium app
 Comment=Launch chromium with Messenger
-Exec=chromium --app="https://messenger.com"
+Exec=chromium --profile-directory=Default --app="https://messenger.com"
 Terminal=false

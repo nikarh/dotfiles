@@ -21,9 +21,7 @@
     "C_Cpp.updateChannel": "Insiders",
     "editor.fontFamily": "Hack",
     "customizeUI.font.regular": "'Noto Sans'",
-    "[cpp]": {
-        
-    },
+    "[cpp]": {},
     "[rust]": {
         "editor.defaultFormatter": "matklad.rust-analyzer",
         "editor.formatOnSave": true
@@ -45,10 +43,41 @@
     "rust-client.trace.server": "verbose",
     "rust.all_features": true,
     "rust-analyzer.cargo.allFeatures": true,
-    "rust-analyzer.linkedProjects": null,
+    "rust-analyzer.linkedProjects": [],
     "redhat.telemetry.enabled": false,
     "shellcheck.customArgs": [
         "-x"
     ],
-    "security.workspace.trust.untrustedFiles": "open"
+    "security.workspace.trust.untrustedFiles": "open",
+    "kotlin.compiler.jvm.target": "16",
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
+    "go.formatTool": "goimports",
+    "workbench.startupEditor": "none",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-1.8",
+            "path": "/usr/lib/java-8-openjdk",
+        },
+        {
+            "name": "JavaSE-16",
+            "path": "/usr/lib/java-16-openjdk",
+            "default": true
+        },
+    ],
+    "gradle.debug": true,
+    "gradle.javaDebug": {
+        "tasks": [
+            "run",
+            "runBoot",
+            "test",
+            "intTest",
+            "integration"
+        ]
+    },
+    "java.eclipse.downloadSources": true
 }

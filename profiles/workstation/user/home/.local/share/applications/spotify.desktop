@@ -5,5 +5,5 @@ Icon=Spotify
 Name=Spotify
 GenericName=Spotify as a chromium app
 Comment=Launch chromium with Spotify
-Exec=chromium --app="https://open.spotify.com/collection/playlists"
+Exec=chromium --profile-directory=Default --app="https://open.spotify.com/collection/playlists"
 Terminal=false

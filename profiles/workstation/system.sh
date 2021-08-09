@@ -97,10 +97,13 @@ if ! grep -q module-switch-on-connect /etc/pulse/default.pa; then
     sudo sed -i -e "\$aload-module module-switch-on-connect" /etc/pulse/default.pa
 fi
 
-# Copy all configs to etc
-sudo cp -ufrTv "$ROOT/system/etc/" /etc
-# Copy other stuff (wallpaper)
-sudo cp -ufrTv "$ROOT/system/usr/" /usr
+# Copy all configs to root
+sudo cp -ufrTv "$ROOT/system/" /
+
+# Copy machine-specific configs to root
+if [ -d "$ROOT/system.$SUB_PROFILE/" ]; then
+    sudo cp -ufrTv "$ROOT/system.$SUB_PROFILE/" /
+fi
 
 # Start systemd units
 enable-units \
