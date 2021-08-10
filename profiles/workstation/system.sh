@@ -24,6 +24,7 @@ pkg earlyoom \
     exfat-utils ntfs-3g \
     usbutils android-tools \
     git-lfs \
+    wget \
     croc
 
 # Basic X
@@ -60,7 +61,7 @@ pkg diffutils upx dhex sysstat gdb `# General use` \
     docker-compose kubectl kubectx `# DevOps` \ \
     go nvm bash-language-server `# Langs/Platforms` \
     sdl2 glu `# Game dev` \
-    cmake ccache cppcheck clang lld `# C++` \
+    cmake ccache cppcheck clang lld lldb `# C++` \
     svgcleaner
 
 # Printer and scanner
