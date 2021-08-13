@@ -7,7 +7,8 @@ sudo timedatectl set-ntp true
 pkg mdadm hdparm \
     haveged \
     docker fuse-overlayfs docker-compose \
-    dhclient samba nginx certbot certbot-nginx \
+    dhclient samba nginx \
+    certbot certbot-nginx certbot-systemd \
     netdata
 
 sudo systemctl mask mdmonitor
