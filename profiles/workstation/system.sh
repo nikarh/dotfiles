@@ -16,8 +16,7 @@ pkg networkmanager nm-connection-editor networkmanager-openvpn network-manager-a
 pkg earlyoom \
     bluez bluez-libs bluez-utils \
     alsa-tools alsa-utils alsa-plugins \
-    pulseaudio pulseaudio-alsa pulseaudio-modules-bt libldac pamixer \
-    jack2 cadence pulseaudio-jack \
+    pipewire pipewire-jack pipewire-pulse libldac pamixer cadence \
     tmux docker \
     localtime-git \
     libmp4v2 lame flac ffmpeg x265 libmad \
@@ -92,7 +91,7 @@ fi
 
 # Prefer newly connected devices in PulseAudio
 # Pulseaudio bluetooth
-if ! grep -q module-switch-on-connect /etc/pulse/default.pa; then
+if ! grep -q module-switch-on-connect /etc/pulse/default.pa 2>/dev/null; then
     echo | sudo tee -a /etc/pulse/default.pa > /dev/null
     sudo sed -i -e "\$a# automatically switch to newly-connected devices" /etc/pulse/default.pa
     sudo sed -i -e "\$aload-module module-switch-on-connect" /etc/pulse/default.pa
