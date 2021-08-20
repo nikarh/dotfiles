@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2155
 
-cd $(dirname "$(readlink -f "$0")")
+cd "$(dirname "$(readlink -f "$0")")" || exit
 source ./functions.sh
 
 function icon-name {
