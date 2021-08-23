@@ -2,7 +2,7 @@
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 
 section "Making everything makeable..."
-find $(ROOT)/user/tools -name Makefile -execdir make "BIN=$ROOT/user/home/.bin" \; | prepend '  '
+find "$ROOT/user/tools" -name Makefile -execdir make "BIN=$ROOT/user/home/.bin" \; | prepend '  '
 
 section "Linking configs..."
 cp -frsTv "$ROOT/user/home/" ~ | prepend '  '
