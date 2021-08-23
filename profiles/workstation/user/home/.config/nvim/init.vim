@@ -92,11 +92,8 @@ set hlsearch   " when there is a previous search pattern, highlight all its matc
 
 " sync clipboard
 set clipboard=unnamed,unnamedplus
-if has('unix') && !has('mac')
-    " Do not clear clipboard when exiting vim
-    if !empty($DISPLAY)
-        autocmd VimLeave * call system("xsel -ib", getreg('+'))
-    endif
+if has('unix') && !has('mac') && !empty($DISPLAY) && !empty(getreg('+'))
+    autocmd VimLeave * call system("xsel -ib", getreg('+'))
 endif
 
 " Enable mouse
