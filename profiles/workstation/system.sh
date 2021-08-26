@@ -16,7 +16,7 @@ pkg networkmanager nm-connection-editor networkmanager-openvpn network-manager-a
 pkg earlyoom \
     bluez bluez-libs bluez-utils \
     alsa-tools alsa-utils alsa-plugins \
-    pipewire pipewire-jack pipewire-pulse libldac pamixer cadence \
+    pipewire pipewire-jack pipewire-pulse libldac pamixer \
     tmux docker \
     localtime-git \
     libmp4v2 lame flac ffmpeg x265 libmad \
