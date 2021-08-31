@@ -19,7 +19,7 @@
     "workbench.iconTheme": "material-icon-theme",
     "workbench.tree.indent": 20,
     "C_Cpp.updateChannel": "Insiders",
-    "editor.fontFamily": "Hack",
+    "editor.fontFamily": "monospace,fontawesome",
     "customizeUI.font.regular": "'Noto Sans'",
     "[cpp]": {},
     "[rust]": {
@@ -79,5 +79,7 @@
             "integration"
         ]
     },
-    "java.eclipse.downloadSources": true
+    "java.eclipse.downloadSources": true,
+    "terminal.integrated.fontFamily": "monospace,fontawesome",
+    "editor.find.addExtraSpaceOnTop": false
 }

@@ -1,0 +1,78 @@
+
+{
+    "height": 35,
+    "modules-left": ["sway/workspaces"],
+    "modules-center": [],
+    "modules-right": [
+        "pulseaudio",
+        "disk", 
+        "memory",
+        "battery",
+        "clock",
+        "keyboard-state", 
+        "sway/language",
+        "tray"
+    ],
+    // Modules configuration
+    "sway/workspaces": {
+        "all-outputs": true,
+        "format": "{name}"
+    },
+    "keyboard-state": {
+        "numlock": false,
+        "capslock": true,
+        "format": "{icon}",
+        "format-icons": {
+            "locked": "",
+            "unlocked": ""
+        }
+    },
+    "tray": {
+        "icon-size": 24,
+        "spacing": 0
+    },
+    "clock": {
+        "tooltip-format": "<big>{:%Y %B}</big>\n\n<tt>{calendar}</tt>",
+        "format": "{:%a %d %b %R %z}"
+    },
+    "disk": {
+        "format": "🖴 {free}",
+        "on-click": "thunar",
+        "on-click-right": "qdirstat"
+    },
+    "memory": {
+        "format": " {avail:0.1f} GB"
+    },
+    "battery": {
+        "interval": 2,
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 20
+        },
+        "format": "{capacity}% {icon}",
+        "format-charging": "{capacity}% ",
+        "format-plugged": "{capacity}% ",
+        "format-alt": "{time} {icon}",
+        "format-icons": ["", "", "", "", ""]
+    },
+    "pulseaudio": {
+        // "scroll-step": 1, // %, can be a float
+        "format": "{volume}% {icon} {format_source}",
+        "format-bluetooth": "{volume}% {icon} {format_source}",
+        "format-bluetooth-muted": " {icon} {format_source}",
+        "format-muted": " {format_source}",
+        "format-source": "{volume}% ",
+        "format-source-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol"
+    }
+}
