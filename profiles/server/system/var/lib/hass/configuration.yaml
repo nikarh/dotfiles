@@ -35,3 +35,14 @@ climate:
   - platform: panasonic_ac
     username: !secret panasonic_user
     password: !secret panasonic_password
+
+mqtt:
+  broker: home.arhipov.net
+  port: 8883
+  protocol: 3.1.1
+  tls_version: '1.2' 
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: true
+  discovery_prefix: homeassistant
+  certificate: /etc/ssl/certs/ca-certificates.crt
