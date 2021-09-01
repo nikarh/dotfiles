@@ -27,6 +27,17 @@ services:
     volumes:
       - /var/lib/hass:/config
       - /etc/localtime:/etc/localtime:ro
+  mqtt:
+    image: eclipse-mosquitto 
+    container_name: mqtt
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:8883:8883'
+    user: '1000:1000'
+    volumes:
+      - /var/lib/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - /var/lib/mosquitto/data:/mosquitto/data
+      - /etc/letsencrypt/live/home.arhipov.net-0001:/mosquitto/tls:ro
   filebrowser:
     image: filebrowser/filebrowser
     container_name: filebrowser
