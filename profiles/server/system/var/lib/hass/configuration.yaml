@@ -30,3 +30,8 @@ sensor:
     url: "http://qbittorrent:8080"
     username: shared
     password: shared
+
+climate:
+  - platform: panasonic_ac
+    username: !secret panasonic_user
+    password: !secret panasonic_password
