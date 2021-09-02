@@ -46,3 +46,6 @@ mqtt:
   discovery: true
   discovery_prefix: homeassistant
   certificate: /etc/ssl/certs/ca-certificates.crt
+
+frontend:
+  themes: !include_dir_merge_named themes
