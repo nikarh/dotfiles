@@ -1,7 +1,7 @@
-# vi: ft=sh
+#!/bin/bash
 
 trysource() {
-    if [ -f "$1" ]; then source $1; fi
+    if [ -f "$1" ]; then source "$1"; fi
 }
 
 # If not running interactively, don't do anything

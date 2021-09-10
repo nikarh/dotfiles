@@ -1,6 +1,6 @@
 {
     "breadcrumbs.enabled": true,
-    "editor.renderWhitespace": "boundary",
+    "editor.renderWhitespace": "all",
     "editor.renderIndentGuides": true,
     "editor.scrollBeyondLastLine": false,
     "editor.scrollbar.verticalScrollbarSize": 8,
@@ -39,7 +39,7 @@
     "liveshare.allowGuestTaskControl": true,
     "liveshare.featureSet": "insiders",
     "liveshare.languages.allowGuestCommandControl": true,
-    "rust-client.channel": null,
+    "rust-client.channel": "stable",
     "rust-client.trace.server": "verbose",
     "rust.all_features": true,
     "rust-analyzer.cargo.allFeatures": true,

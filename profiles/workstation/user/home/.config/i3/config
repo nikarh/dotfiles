@@ -1,4 +1,12 @@
-# -*- mode: i3 -*-
+exec dunst
+exec flameshot
+exec nm-applet
+exec syncthing-gtk
+exec insync
+exec alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main
+exec redshift-gtk -t 6500:2400
+
+exec --no-startup-id "feh --bg-scale /usr/share/backgrounds/wallpaper.png"
 
 # i3 config file (v4)
 set $mod Mod4
@@ -15,7 +23,6 @@ client.background       #F5F8FA
 
 focus_follows_mouse no
 
-exec --no-startup-id "feh --bg-scale /usr/share/backgrounds/wallpaper.png"
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status

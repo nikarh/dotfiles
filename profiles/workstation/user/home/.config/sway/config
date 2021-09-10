@@ -1,10 +1,3 @@
-# -*- mode: i3 -*-
-
-# https://github.com/swaywm/sway/wiki#gtk-applications-take-20-seconds-to-start
-exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
-exec hash dbus-update-activation-environment 2>/dev/null && \
-     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway
-
 input * {
     xkb_layout "lv,ru"
     xkb_options "grp:alt_shift_toggle,grp_led:scroll"
@@ -20,15 +13,23 @@ input "ImPS/2 Logitech Wheel Mouse" pointer_accel 0.5
 input type:keyboard repeat_delay 200
 input type:keyboard repeat_rate 60
 
-exec waybar
-exec dunst
-exec swayidle -w before-sleep 'swaylock'
-exec dex -a
-exec wl-paste -t text --watch clipman store
-exec flameshot
-exec gammastep-indicator -t 6500:2400
+# https://github.com/swaywm/sway/wiki#gtk-applications-take-20-seconds-to-start
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
+exec hash dbus-update-activation-environment 2>/dev/null && \
+     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway
 
-# exec --no-startup-id "feh --bg-scale /usr/share/backgrounds/wallpaper.png"
+exec waybar
+exec swayidle -w before-sleep 'swaylock'
+exec wl-paste -t text --watch clipman store
+exec dunst
+exec flameshot
+exec nm-applet --indicator
+exec syncthing-gtk
+exec insync
+exec alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main
+exec gammastep-indicator -t 6500:2400
+exec dex -a
+
 output "*" bg "/usr/share/backgrounds/wallpaper.png" fit
 
 bindsym XF86AudioRaiseVolume exec ~/.bin/volume-control.sh raise
@@ -68,11 +69,12 @@ default_floating_border pixel 1
 
 bindsym $mod+Shift+q kill
 bindsym $mod+Return exec "LANG=en alacritty -t Terminal"
-bindsym $mod+c exec --no-startup-id "rofi -combi-modi window,drun -show combi -modi combi"
-bindsym $mod+x exec --no-startup-id "rofi -show run -terminal alacritty -font"
-bindsym $mod+g exec --no-startup-id "rofi -show calc -modi calc -no-show-match -no-sort"
-bindsym $mod+Insert exec --no-startup-id "clipman pick --tool=rofi"
-bindsym $mod+Delete exec --no-startup-id "clipman clear"
+bindsym $mod+c exec --no-startup-id "killall rofi; rofi -combi-modi window,drun -show combi -modi combi"
+bindsym $mod+x exec --no-startup-id "killall rofi; rofi -show run -terminal alacritty -font"
+bindsym $mod+g exec --no-startup-id "killall rofi; rofi -show calc -modi calc -no-show-match -no-sort"
+bindsym $mod+Insert exec --no-startup-id "killall rofi; clipman pick -t rofi"
+bindsym $mod+Delete exec --no-startup-id "killall rofi; clipman clear -t rofi"
+bindsym $mod+Shift+Delete exec --no-startup-id "clipman clear --all"
 
 # change focus
 bindsym $mod+h focus left
@@ -153,10 +155,14 @@ assign [app_id="telegramdesktop"] $ws5
 assign [instance="messenger.com"] $ws5
 assign [instance="web.skype.com"] $ws5
 assign [class="Thunar"] $ws6
+assign [app_id="thunar"] $ws6
 assign [class="pcmanfm"] $ws6
 assign [class="QDirStat"] $ws6
+assign [app_id="qdirstat"] $ws6
 assign [class="qBittorrent"] $ws6
 assign [class="Syncthing GTK"] $ws6
+assign [app_id="rclone-browser"] $ws6
+assign [instance="sidequest"] $ws6
 assign [class="REAPER"] $ws7
 assign [class="Cadence"] $ws7
 assign [class="Catia"] $ws7
