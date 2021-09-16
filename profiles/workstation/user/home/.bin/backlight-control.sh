@@ -35,8 +35,8 @@ function lower {
 }
 
 case "$1" in
-    raise)
+    raise|up|u|r|+)
         raise;;
-    lower)
+    lower|down|l|d|-)
         lower;;
 esac

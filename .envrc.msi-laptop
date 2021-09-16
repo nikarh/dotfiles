@@ -2,12 +2,15 @@
 # shellcheck disable=SC2155
 
 export PROFILE="workstation"
-export SUB_PROFILE="msi-laptop"
 export GPU_DRIVER="i915 nouveau"
+
+export PACKAGE_GROUPS="\
+    xorg wayland \
+"
 
 export ADDITIONAL_PACKAGES="\
     cbatticon \
-    teamviewer zoom`#-system-qt` \
+    teamviewer zoom-system-qt \
     postgresql-libs rustup \
     intel-undervolt \
     chntpw `# Read windows regedit files` \
@@ -25,10 +28,8 @@ export ADDITIONAL_PACKAGES="\
     moonlight-qt \
     ib-tws \
     ecryptfs-utils \
-    tuxguitar v4l2loopback-dkms \
-    obs-studio \
-    linux-lts linux-lts-headers \
-    jdk11-openjdk jdk8-openjdk stern-bin
+    tuxguitar \
+    jdk11-openjdk jdk8-openjdk stern-bin \
 "
 
 export ADDITIONAL_UNITS="

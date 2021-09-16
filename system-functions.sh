@@ -1,5 +1,6 @@
 #!/bin/bash -e
 # shellcheck disable=SC2155
+# shellcheck disable=SC2002
 
 ALL_PACKAGES_TO_INSTALL=""
 
@@ -107,10 +108,10 @@ function get-gpu-drivers {
 }
 
 function install-xorg-conf {
-        if [ -z "$XORG_GPU" ]; then
-            XORG_GPU="$1"
-        fi
-        sudo ln -sf /etc/X11/xorg.conf.avail/20-gpu.$XORG_GPU.conf /etc/X11/xorg.conf.d/20-gpu.conf
+    if [ -z "$XORG_GPU" ]; then
+        XORG_GPU="$1"
+    fi
+    sudo ln -sf "/etc/X11/xorg.conf.avail/20-gpu.$XORG_GPU.conf" /etc/X11/xorg.conf.d/20-gpu.conf
 }
 
 function install-gpu-drivers {

@@ -7,21 +7,8 @@ find "$ROOT/user/tools" -name Makefile -execdir make "BIN=$ROOT/user/home/.bin" 
 section "Linking configs..."
 cp -frsTv "$ROOT/user/home/" ~ | prepend '  '
 
-section "Adding stuff to autostart..."
-mkdir -p ~/.config/autostart/
-
-TO=~/.config/autostart/ FROM=/usr/share/applications/ ln-all \
-    insync \
-    pasystray \
-    nm-applet
-
-TO=~/.config/autostart/ FROM=~/.local/share/applications/ ln-all \
-    alacritty \
-    cbatticon \
-    redshift-gtk \
-    syncthing-gtk
-
 systemctl enable --user syncthing
+
 # Unfortunately, sleep hooks are not working with user-level services
 sudo systemctl enable "locker@$USER.service"
 
@@ -33,9 +20,12 @@ git-get https://github.com/tmux-plugins/tpm.git \
 file-get https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
     ~/.config/nvim/autoload/plug.vim | prepend '  '
 
+vim +PlugClean! +PlugUpdate +qa
+
 section "Setting default gtk terminal to alacritty..."
 gsettings set org.gnome.desktop.default-applications.terminal exec alacritty
 gsettings set org.gnome.desktop.default-applications.terminal exec-arg -e
+gsettings set org.gnome.desktop.interface font-name "Noto Sans 12"
 # glib hardcodes terminals https://github.com/GNOME/glib/blob/master/gio/gdesktopappinfo.c#L2581
 ln -sf /usr/bin/alacritty ~/.bin/xterm
 

@@ -1,7 +1,7 @@
-#/bin/bash
+#!/usr/bin/env bash
 
 DEVICES=$(adb devices -l | sed '0,/^List of devices attached$/d' | head -n -1)
-DEVICE_COUNT=$(echo -e "$DEVICES" | wc -l)
+DEVICE_COUNT=$(echo -ne "$DEVICES" | grep -c -v ^$)
 SELECTED_DEVICE=$1
 FINDER=${FINDER:=fzf}
 
@@ -11,7 +11,7 @@ if [[ $DEVICE_COUNT -eq 0 ]]; then
 fi
 
 if [[ $DEVICE_COUNT -eq 1 ]] && [ -z "$SELECTED_DEVICE" ]; then
-    SELECTED_DEVICE=$(echo $DEVICES | awk '{print $1}')
+    SELECTED_DEVICE=$(echo "$DEVICES" | awk '{print $1}')
 fi
 
 if [[ -z "$SELECTED_DEVICE" ]]; then
@@ -24,5 +24,5 @@ if [[ -z "$SELECTED_DEVICE" ]]; then
     exit 0
 fi
 
-scrcpy -s $SELECTED_DEVICE # --crop 1280:720:100:200
+scrcpy -s "$SELECTED_DEVICE" # --crop 1280:720:100:200
 

@@ -1,4 +1,5 @@
 #!/bin/bash -e
+
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 
 ADDITIONAL_PACKAGES=${ADDITIONAL_PACKAGES:-}
@@ -16,12 +17,12 @@ pkg networkmanager nm-connection-editor networkmanager-openvpn network-manager-a
 pkg earlyoom \
     bluez bluez-libs bluez-utils \
     alsa-tools alsa-utils alsa-plugins \
-    pipewire pipewire-jack pipewire-pulse libldac pamixer \
+    pipewire pipewire-jack pipewire-pulse pipewire-jack-dropin libldac pamixer \
     tmux docker \
     localtime-git \
     libmp4v2 lame flac ffmpeg x265 libmad \
     exfat-utils ntfs-3g \
-    usbutils android-tools \
+    usbutils android-tools scrcpy \
     git-lfs \
     wget \
     croc
@@ -32,14 +33,14 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
     xorg-xdpyinfo autorandr arandr brightnessctl picom autocutsel \
     gebaar-libinput-fork xdotool \
-    lightdm lightdm-gtk-greeter i3lock-fancy-rapid-git \
+    lightdm lightdm-gtk-greeter \
     libva-vdpau-driver
 
 # X applications
-pkg kbdd-git dunst i3-gaps i3status-rust lxsession-gtk3 rofi rofi-calc alacritty \
-    pavucontrol pasystray blueman \
-    gpicview xarchiver gsimplecal redshift \
-    chromium chromium-widevine firefox freshplayerplugin \
+pkg dunst rofi rofi-calc rofi-dmenu alacritty \
+    pavucontrol blueman \
+    gpicview xarchiver gsimplecal \
+    chromium chromium-widevine firefox freshplayerplugin torbrowser-launcher \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
     qdirstat keepassxc flameshot qbittorrent insync syncthing-gtk \
     libsecret seahorse \
@@ -72,6 +73,11 @@ pkg plymouth plymouth-theme-monoarch
 
 # shellcheck disable=SC2086
 pkg $ADDITIONAL_PACKAGES
+
+for group in $PACKAGE_GROUPS; do
+    # shellcheck disable=SC2046
+    pkg $(cat "$ROOT/packages/$group")
+done
 
 # Install plymouth hook
 if ! grep -q '^HOOKS.*plymouth' /etc/mkinitcpio.conf; then
@@ -116,6 +122,8 @@ enable-units \
     autorandr.service \
     docker.service \
     cups.service
+
+sudo systemctl enable geoclue.service
 
 # shellcheck disable=SC2086
 enable-units $ADDITIONAL_UNITS

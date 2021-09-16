@@ -2,16 +2,18 @@
 # shellcheck disable=SC2155
 
 export PROFILE="workstation"
-export SUB_PROFILE="home-pc"
-
 export GPU_DRIVER="nvidia"
 export XORG_GPU="empty"
+
+export PACKAGE_GROUPS="\
+    xorg \
+"
 
 export ADDITIONAL_PACKAGES="\
     zoom-system-qt \
     postgresql-libs rustup \
     deadbeef \
-    chntpw \
+    chntpw `# Read windows regedit files` \
     google-cloud-sdk \
     mkvtoolnix-gui powertop \
     surge `# Best free VST synth` \

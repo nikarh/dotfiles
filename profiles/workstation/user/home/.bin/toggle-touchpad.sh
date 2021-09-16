@@ -4,6 +4,8 @@ cd "$(dirname "$(readlink -f "$0")")" || exit
 source ./functions.sh
 
 ENABLED=0
+WAYLAND=false
+
 if loginctl show-session 2 -p Type | grep -q wayland 2> /dev/null; then
     WAYLAND=true
     ENABLED=$(swaymsg -t get_inputs | jq -r -c '[.[] | select(.type == "touchpad").libinput.send_events][0]' | grep -cw enabled)

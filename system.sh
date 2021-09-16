@@ -1,4 +1,6 @@
 #!/bin/bash -e
+#shellcheck disable=SC2155
+
 cd "$(dirname "${BASH_SOURCE[0]}")"
 source ./system-functions.sh
 
@@ -8,6 +10,7 @@ if [[ -z "$PROFILE" ]] || [[ ! -d "profiles/$PROFILE" ]]; then
     exit 1
 fi
 
+export SUB_PROFILE="$(readlink -f .envrc | sed -r 's/.*\.envrc\.//')"
 export REBUILD_INITRD=0
 export ALL_PACKAGES_TO_INSTALL=""
 

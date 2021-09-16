@@ -81,5 +81,6 @@
     },
     "java.eclipse.downloadSources": true,
     "terminal.integrated.fontFamily": "monospace,fontawesome",
-    "editor.find.addExtraSpaceOnTop": false
+    "editor.find.addExtraSpaceOnTop": false,
+    "editor.selectionClipboard": false
 }

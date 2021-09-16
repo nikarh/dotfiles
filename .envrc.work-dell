@@ -4,6 +4,10 @@
 export PROFILE="workstation"
 export GPU_DRIVER="amd"
 
+export PACKAGE_GROUPS="\
+    xorg \
+"
+
 export ADDITIONAL_PACKAGES="\
     cbatticon \
     accountsservice \

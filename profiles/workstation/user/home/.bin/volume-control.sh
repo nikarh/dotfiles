@@ -53,10 +53,10 @@ function toggle-mute {
 }
 
 case "$1" in
-    raise)
+    raise|up|r|u|+)
         raise;;
-    lower)
+    lower|down|l|d|-)
         lower;;
-    mute)
+    mute|toggle)
         toggle-mute;;
 esac
