@@ -123,8 +123,6 @@ enable-units \
     docker.service \
     cups.service
 
-sudo systemctl enable geoclue.service
-
 # shellcheck disable=SC2086
 enable-units $ADDITIONAL_UNITS
 

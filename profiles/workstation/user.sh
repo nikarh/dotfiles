@@ -20,7 +20,7 @@ git-get https://github.com/tmux-plugins/tpm.git \
 file-get https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
     ~/.config/nvim/autoload/plug.vim | prepend '  '
 
-vim +PlugClean! +PlugUpdate +qa
+nvim +PlugClean! +PlugUpdate +qa
 
 section "Setting default gtk terminal to alacritty..."
 gsettings set org.gnome.desktop.default-applications.terminal exec alacritty
