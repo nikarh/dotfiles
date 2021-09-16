@@ -1,3 +1,19 @@
+exec lxsession
+
+exec autocutsel -fork
+exec kbdd
+exec xrdb -all -load ~/.config/Xorg/.Xresources
+exec xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
+exec gebaard -b
+exec picom -b
+
+# Init input devices
+exec ~/.bin/init-input-devices.sh
+# Init input devices on USB events
+exec ~/.bin/udev-monitor -s usb -e ~/.bin/init-input-devices.sh
+# Init input devices on session unlock
+exec ~/.bin/dbus-monitor.sh org.freedesktop.login1.Session Unlock ~/.bin/init-input-devices.sh
+
 exec dunst
 exec flameshot
 exec nm-applet

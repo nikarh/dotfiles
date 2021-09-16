@@ -1,39 +1,13 @@
-#!/bin/bash
+#!/bin/sh
 
-export EDITOR="nvim"
-export VISUAL="nvim"
+# shellcheck source=./.profile
+. ~/.profile
 
-export TERMINAL="alacritty -e"
-export BROWSER=/usr/bin/firefox
-export PATH=$PATH:$HOME/.bin/
+# Flags only for xorg
+if loginctl show-session 2 -p Type | grep -qv wayland 2> /dev/null; then
+    export XDG_CURRENT_DESKTOP=gnome
+    export QT_AUTO_SCREEN_SCALE_FACTOR=0.99
+    export WINIT_HIDPI_FACTOR=1
+fi
 
-export QT_QPA_PLATFORMTHEME=gtk2
-export _JAVA_AWT_WM_NONREPARENTING=1
 
-# export BROWSER=/usr/bin/firefox-developer-edition
-# export TERMINAL="alacritty -e"
-
-# export QT_QPA_PLATFORMTHEME=gtk2
-# export XDG_CURRENT_DESKTOP=gnome
-# export QT_AUTO_SCREEN_SCALE_FACTOR=0.99
-# export WINIT_HIDPI_FACTOR=1
-
-# export PATH=${PATH}:${HOME}/.bin/
-
-# xrdb -all -load ~/.config/Xorg/.Xresources
-# xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
-
-# # Init input devices
-# ~/.bin/init-input-devices.sh
-# # Init input devices on USB events
-# ~/.bin/udev-monitor -s usb -e ~/.bin/init-input-devices.sh &
-# # Init input devices on session unlock
-# ~/.bin/dbus-monitor.sh org.freedesktop.login1.Session Unlock ~/.bin/init-input-devices.sh &
-
-# gebaard -b
-# autocutsel -fork
-# kbdd
-
-# sleep 0.1
-
-# lxsession&
