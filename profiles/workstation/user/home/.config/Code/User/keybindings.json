@@ -1,6 +1,51 @@
 [
     {
+        "key": "ctrl+shift+c",
+        "command": "copyFilePath",
+        "when": "!editorFocus && !terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+c",
+        "command": "-copyFilePath",
+        "when": "!editorFocus"
+    },
+    {
         "key": "ctrl+e",
         "command": "workbench.action.quickOpenPreviousEditor"
-    }
+    },
+    {
+        "key": "ctrl+enter",
+        "command": "sqltools.executeCurrentQuery",
+        "when": "editorTextFocus"
+    },
+
+    {
+        "key": "alt+1",
+        "command": "-workbench.action.focusFirstEditorGroup"
+    },
+    {
+        "key": "alt+1",
+        "command": "-workbench.action.toggleSidebarVisibility",
+        "when": "!editorFocus"
+    },
+    {
+        "key": "alt+1",
+        "command": "workbench.view.explorer",
+        "when": "!explorerViewletVisible"
+    },
+    {
+        "key": "alt+1",
+        "command": "-workbench.view.explorer",
+        "when": "editorFocus && viewContainer.workbench.view.explorer.enabled"
+    },
+    {
+        "key": "alt+1",
+        "command": "workbench.action.toggleSidebarVisibility",
+        "when": "explorerViewletVisible && explorerViewletFocus"
+    },
+    {
+        "key": "alt+1",
+        "command": "workbench.explorer.fileView.focus",
+        "when": "explorerViewletVisible && !explorerViewletFocus"
+    },
 ]

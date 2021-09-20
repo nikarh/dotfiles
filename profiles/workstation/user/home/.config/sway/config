@@ -26,7 +26,7 @@ exec dunst
 exec flameshot
 exec nm-applet --indicator
 exec syncthing-gtk
-exec insync
+exec XDG_CURRENT_DESKTOP=Unity insync start
 exec alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main
 exec gammastep-indicator -t 6500:2400
 exec dex -a
@@ -163,6 +163,7 @@ assign [app_id="qdirstat"] $ws6
 assign [class="qBittorrent"] $ws6
 assign [class="Syncthing GTK"] $ws6
 assign [app_id="rclone-browser"] $ws6
+assign [app_id="insync"] $ws6
 assign [instance="sidequest"] $ws6
 assign [class="REAPER"] $ws7
 assign [class="Cadence"] $ws7

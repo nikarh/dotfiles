@@ -105,6 +105,7 @@ let maplocalleader="\\"
 
 " Enable and disable search highlighting
 nnoremap <leader>q :set hlsearch!<CR>
+nnoremap <silent> <Esc> :nohls<CR>
 
 " Clear trailing whitespace
 nnoremap <leader>W :%s/\s\+$//<CR><C-o>

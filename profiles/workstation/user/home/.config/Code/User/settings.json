@@ -1,9 +1,14 @@
 {
+    "redhat.telemetry.enabled": false,
     "breadcrumbs.enabled": true,
+    "terminal.integrated.fontFamily": "monospace,fontawesome",
+    "editor.fontFamily": "monospace,fontawesome",
     "editor.renderWhitespace": "all",
     "editor.renderIndentGuides": true,
     "editor.scrollBeyondLastLine": false,
     "editor.scrollbar.verticalScrollbarSize": 8,
+    "editor.find.addExtraSpaceOnTop": false,
+    "editor.selectionClipboard": false,
     "explorer.confirmDelete": false,
     "explorer.confirmDragAndDrop": false,
     "files.associations": {
@@ -16,35 +21,26 @@
     "typescript.referencesCodeLens.enabled": true,
     "workbench.editor.showTabs": false,
     "workbench.editor.highlightModifiedTabs": true,
-    "workbench.iconTheme": "material-icon-theme",
     "workbench.tree.indent": 20,
-    "C_Cpp.updateChannel": "Insiders",
-    "editor.fontFamily": "monospace,fontawesome",
-    "customizeUI.font.regular": "'Noto Sans'",
-    "[cpp]": {},
     "[rust]": {
         "editor.defaultFormatter": "matklad.rust-analyzer",
-        "editor.formatOnSave": true
+        "editor.formatOnSave": true,
     },
+    "C_Cpp.updateChannel": "Insiders",
     "C_Cpp.clang_format_sortIncludes": true,
     "C_Cpp.default.cppStandard": "c++14",
     "C_Cpp.default.cStandard": "c11",
     "C_Cpp.default.intelliSenseMode": "gcc-x64",
     "C_Cpp.workspaceSymbols": "All",
-    "cmake.configureOnOpen": true,
     "C_Cpp.clang_format_fallbackStyle": "LLVM",
+    "cmake.configureOnOpen": true,
     "editor.mouseWheelZoom": true,
     "workbench.colorTheme": "One Dark Pro",
-    "liveshare.allowGuestDebugControl": true,
-    "liveshare.allowGuestTaskControl": true,
-    "liveshare.featureSet": "insiders",
-    "liveshare.languages.allowGuestCommandControl": true,
     "rust-client.channel": "stable",
     "rust-client.trace.server": "verbose",
     "rust.all_features": true,
     "rust-analyzer.cargo.allFeatures": true,
     "rust-analyzer.linkedProjects": [],
-    "redhat.telemetry.enabled": false,
     "shellcheck.customArgs": [
         "-x"
     ],
@@ -61,11 +57,15 @@
     "java.configuration.runtimes": [
         {
             "name": "JavaSE-1.8",
-            "path": "/usr/lib/java-8-openjdk",
+            "path": "/usr/lib/jvm/java-8-openjdk",
+        },
+        {
+            "name": "JavaSE-11",
+            "path": "/usr/lib/jvm/java-11-openjdk",
         },
         {
             "name": "JavaSE-16",
-            "path": "/usr/lib/java-16-openjdk",
+            "path": "/usr/lib/jvm/java-16-openjdk",
             "default": true
         },
     ],
@@ -80,7 +80,31 @@
         ]
     },
     "java.eclipse.downloadSources": true,
-    "terminal.integrated.fontFamily": "monospace,fontawesome",
-    "editor.find.addExtraSpaceOnTop": false,
-    "editor.selectionClipboard": false
+    "kotlin.trace.server": "verbose",
+    "vs-kubernetes": {
+        "disable-linters": [
+            "resource-limits"
+        ],
+        "vs-kubernetes.namespace": "",
+        "vs-kubernetes.kubectl-path": "",
+        "vs-kubernetes.helm-path": "",
+        "vs-kubernetes.minikube-path": "",
+        "vs-kubernetes.kubectlVersioning": "user-provided",
+        "vs-kubernetes.outputFormat": "yaml",
+        "vs-kubernetes.kubeconfig": "",
+        "vs-kubernetes.knownKubeconfigs": [],
+        "vs-kubernetes.autoCleanupOnDebugTerminate": false,
+        "vs-kubernetes.nodejs-autodetect-remote-root": true,
+        "vs-kubernetes.nodejs-remote-root": "",
+        "vs-kubernetes.nodejs-debug-port": 9229,
+        "vs-kubernetes.local-tunnel-debug-provider": "",
+        "checkForMinikubeUpgrade": true,
+        "imageBuildTool": "Docker"
+    },
+    "sqltools.format": {
+        "reservedWordCase": "lower",
+        "linesBetweenQueries": 2,
+    },
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue"
 }

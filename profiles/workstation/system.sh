@@ -39,7 +39,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
 # X applications
 pkg dunst rofi rofi-calc rofi-dmenu alacritty \
     pavucontrol blueman \
-    gpicview xarchiver gsimplecal \
+    eog xarchiver gsimplecal \
     chromium chromium-widevine firefox freshplayerplugin torbrowser-launcher \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
     qdirstat keepassxc flameshot qbittorrent insync syncthing-gtk \

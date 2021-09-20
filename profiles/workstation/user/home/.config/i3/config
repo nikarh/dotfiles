@@ -18,7 +18,7 @@ exec dunst
 exec flameshot
 exec nm-applet
 exec syncthing-gtk
-exec insync
+exec insync start
 exec alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main
 exec redshift-gtk -t 6500:2400
 
