@@ -56,7 +56,7 @@ vacuum_clean_segments_message:
   sequence:
   - service: mqtt.publish
     data:
-      topic: valetudo/robot/MapSegmentationCapability/clean/set
+      topic: valetudo/roborock/MapSegmentationCapability/clean/set
       payload_template: '{"segment_ids": {{segments}}}'
   mode: single
 
