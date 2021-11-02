@@ -37,17 +37,19 @@ services:
     command: >
       sh -c "
         cp /mosquitto/tls/privkey-root.pem /mosquitto/tls/privkey.pem;
+        cp /mosquitto/tls/cert-root.pem /mosquitto/tls/cert.pem;
+        chown 1883:1883 /mosquitto/tls/*.pem;
         chmod 444 /mosquitto/tls/privkey.pem;
         cp /mosquitto/config/users.conf.unencrypted /mosquitto/config/users.conf
         /usr/bin/mosquitto_passwd -U /mosquitto/config/users.conf;
-
+   
         /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf;
       "
     volumes:
       - /var/lib/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - /var/lib/mosquitto/users.conf:/mosquitto/config/users.conf.unencrypted:ro
       - /var/lib/mosquitto/data:/mosquitto/data
-      - /etc/letsencrypt/live/home.arhipov.net-0001/fullchain.pem:/mosquitto/tls/cert.pem:ro
+      - /etc/letsencrypt/live/home.arhipov.net-0001/fullchain.pem:/mosquitto/tls/cert-root.pem:ro
       - /etc/letsencrypt/live/home.arhipov.net-0001/privkey.pem:/mosquitto/tls/privkey-root.pem:ro
   filebrowser:
     image: filebrowser/filebrowser
