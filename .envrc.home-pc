@@ -12,7 +12,7 @@ export PACKAGE_GROUPS="\
 export ADDITIONAL_PACKAGES="\
     zoom-system-qt \
     postgresql-libs rustup \
-    deadbeef \
+    audacious \
     chntpw `# Read windows regedit files` \
     google-cloud-sdk \
     mkvtoolnix-gui powertop \

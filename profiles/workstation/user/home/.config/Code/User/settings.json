@@ -18,6 +18,7 @@
     "files.autoSave": "onFocusChange",
     "files.defaultLanguage": "markdown",
     "telemetry.enableTelemetry": false,
+    "telemetry.telemetryLevel": "off",
     "typescript.referencesCodeLens.enabled": true,
     "workbench.editor.showTabs": false,
     "workbench.editor.highlightModifiedTabs": true,
@@ -106,5 +107,8 @@
         "linesBetweenQueries": 2,
     },
     "editor.suggestSelection": "first",
-    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue"
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "rust-analyzer.debug.engineSettings": {
+    
+    }
 }
