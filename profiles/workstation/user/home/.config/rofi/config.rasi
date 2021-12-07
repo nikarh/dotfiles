@@ -1,4 +1,6 @@
 /* vim:ft=css */
+@theme "~/.config/rofi/theme.rasi"
+
 configuration {
     font: "Hack\ 15";
     show-icons: true;
@@ -38,5 +40,4 @@ configuration {
     /*	window-format: "{w}    {i}{c}   {t}";*/
     /*	click-to-exit: true;*/
     /*	show-match: true;*/
-    theme: "~/.config/rofi/theme.rasi";
     }    

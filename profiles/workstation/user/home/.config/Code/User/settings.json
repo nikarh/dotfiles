@@ -56,6 +56,7 @@
     "go.formatTool": "goimports",
     "workbench.startupEditor": "none",
     "java.configuration.runtimes": [
+
         {
             "name": "JavaSE-1.8",
             "path": "/usr/lib/jvm/java-8-openjdk",
@@ -65,8 +66,8 @@
             "path": "/usr/lib/jvm/java-11-openjdk",
         },
         {
-            "name": "JavaSE-16",
-            "path": "/usr/lib/jvm/java-16-openjdk",
+            "name": "JavaSE-17",
+            "path": "/usr/lib/jvm/java-17-openjdk",
             "default": true
         },
     ],
@@ -110,5 +111,6 @@
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "rust-analyzer.debug.engineSettings": {
     
-    }
+    },
+    "haxe.enableCodeLens": true,
 }
