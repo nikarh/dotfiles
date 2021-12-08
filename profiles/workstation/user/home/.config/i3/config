@@ -1,5 +1,16 @@
 exec lxsession
 
+set $ws1 "1:  "
+set $ws2 "2:  "
+set $ws3 "3:  "
+set $ws4 "4:  "
+set $ws5 "5:  "
+set $ws6 "6:  "
+set $ws7 "7:  "
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
 exec autocutsel -fork
 exec kbdd
 exec xrdb -all -load ~/.config/Xorg/.Xresources
@@ -13,15 +24,16 @@ exec ~/.bin/init-input-devices.sh
 exec ~/.bin/udev-monitor -s usb -e ~/.bin/init-input-devices.sh
 # Init input devices on session unlock
 exec ~/.bin/dbus-monitor.sh org.freedesktop.login1.Session Unlock ~/.bin/init-input-devices.sh
+# Listen to xkb changes
+exec ~/.bin/xkb-switch-dbus.sh
 
 exec dunst
 exec flameshot
 exec nm-applet
 exec syncthing-gtk
 exec insync start
-exec alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main
 exec redshift-gtk -t 6500:2400
-
+exec --no-startup-id i3-msg 'workspace '$ws1'; exec /usr/bin/alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main'
 exec --no-startup-id "feh --bg-scale /usr/share/backgrounds/wallpaper.png"
 
 # i3 config file (v4)
@@ -101,22 +113,10 @@ bindsym $mod+Control+h     move workspace to output left
 bindsym $mod+Control+Right move workspace to output right
 bindsym $mod+Control+l     move workspace to output right
 
-# Define names for default workspaces for which we configure key bindings later on.
-# We use variables to avoid repeating the names in multiple places.
-set $ws1 "1:  "
-set $ws2 "2:  "
-set $ws3 "3:  "
-set $ws4 "4:  "
-set $ws5 "5:  "
-set $ws6 "6:  "
-set $ws7 "7:  "
-set $ws8 "8"
-set $ws9 "9"
-set $ws10 "10"
-
-assign [instance="Main Terminal"] $ws2
+assign [instance="Main Terminal"] $ws1
 assign [class="Navigator"] $ws2
 assign [class="firefox"] $ws2
+assign [instance="Mozilla Firefox"] $ws2
 assign [class="firefoxdeveloperedition"] $ws2
 assign [class="audacious"] $ws7
 assign [class="jetbrains-studio"] $ws3
