@@ -203,6 +203,7 @@ bar {
         strip_workspace_numbers yes
         tray_padding 1px
         separator_symbol ""
+        workspace_min_width 60
 
         colors {
                 background #202B33
