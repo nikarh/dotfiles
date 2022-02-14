@@ -42,7 +42,7 @@ pkg dunst rofi rofi-calc rofi-dmenu alacritty \
     eog xarchiver gsimplecal \
     chromium chromium-widevine firefox freshplayerplugin torbrowser-launcher \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
-    qdirstat keepassxc flameshot qbittorrent insync syncthing-gtk \
+    qdirstat keepassxc flameshot qbittorrent insync syncthing-gtk-python3 \
     libsecret seahorse \
     telegram-desktop slack-desktop epdfview libreoffice-fresh \
     krita inkscape aseprite-git reaper-bin \
