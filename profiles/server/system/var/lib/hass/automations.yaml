@@ -1,1 +1,23 @@
-[]
+- id: '1645430699628'
+  alias: Morning
+  description: ''
+  trigger:
+  - platform: time_pattern
+    hours: '9'
+    minutes: '00'
+    seconds: '00'
+  condition:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  action:
+  - device_id: d693bc9748e34d9e32c5c5d6befd8bc1
+    domain: cover
+    entity_id: cover.bedroom_blind
+    type: set_position
+    position: 100
+  mode: single
