@@ -12,16 +12,15 @@ export PACKAGE_GROUPS="\
 export ADDITIONAL_PACKAGES="\
     zoom-system-qt \
     postgresql-libs rustup \
-    audacious \
     chntpw `# Read windows regedit files` \
     google-cloud-sdk \
     mkvtoolnix-gui powertop \
+    easyeffects `# pipewire effects` \
+    ftgl hashlink haxe llvm `# game dev` \
+    jdk8-openjdk openjdk8-doc openjdk8-src `# java8` \
     surge `# Best free VST synth` \
-    carla `# VST rack to use lv2 plugins` \
-    dexed adlplug opnplug `# FM Synths, VST` \
-    spectmorph `# Morphing Synths, VST` \
-    dragonfly-reverb zam-plugins iempluginsuite `# FX, VST` \
-    zynaddsubfx helm-synth `# FX, VST not working` \
-    vmpk \
-    linux-headers dkms it87-dkms-git `# fan control` \
+    dexed adlplug opnplug spectmorph vmpk`# FM Synths, VST` \
+    linux-headers dkms it87-dkms-git`# fan control` \
+    rclone-browser sidequest-bin `# oculus quest` \
+    sunshine-git `# nvidia gamestream` \
 "

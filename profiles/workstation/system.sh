@@ -25,7 +25,8 @@ pkg earlyoom \
     usbutils android-tools scrcpy \
     git-lfs \
     wget \
-    croc
+    croc \
+    ranger ueberzug
 
 # Basic X
 pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
@@ -42,31 +43,32 @@ pkg dunst rofi rofi-calc rofi-dmenu alacritty \
     eog xarchiver gsimplecal \
     chromium chromium-widevine firefox freshplayerplugin torbrowser-launcher \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
-    qdirstat keepassxc flameshot qbittorrent insync syncthing-gtk-python3 \
+    qdirstat keepassxc flameshot qbittorrent insync syncthing syncthing-gtk-python3 \
     libsecret seahorse \
     telegram-desktop slack-desktop epdfview libreoffice-fresh \
-    krita inkscape aseprite-git reaper-bin \
+    gpicview krita inkscape aseprite-git \
+    audacious vlc reaper-bin \
     gparted
 
 # Themes and fonts
 pkg lxappearance-gtk3 qt5-styleplugins \
-    noto-fonts noto-fonts-emoji ttf-nerd-fonts-symbols-mono \
+    noto-fonts noto-fonts-emoji ttf-nerd-fonts-symbols-mono ttf-ms-win10-auto \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix
 
 # Development
-pkg diffutils upx dhex sysstat gdb `# General use` \
+pkg diffutils upx dhex sysstat gdb svgcleaner`# General use` \
     code code-marketplace jetbrains-toolbox `# IDE` \
     jdk-openjdk openjdk-src visualvm jd-gui-bin `# Java`\
     docker-compose kubectl kubectx `# DevOps` \ \
     go nvm bash-language-server `# Langs/Platforms` \
     sdl2 glu `# Game dev` \
-    cmake ccache cppcheck clang lld lldb `# C++` \
-    svgcleaner
+    cmake ccache cppcheck clang lld lldb `# C++`
 
 # Printer and scanner
 pkg cups cups-pdf cups-pk-helper system-config-printer \
-    epson-inkjet-printer-escpr sane-airscan
+    epson-inkjet-printer-escpr sane-airscan \
+    simple-scan
 
 # Plymouth
 pkg plymouth plymouth-theme-monoarch 
