@@ -1,8 +1,8 @@
 {
     "redhat.telemetry.enabled": false,
     "breadcrumbs.enabled": true,
-    "terminal.integrated.fontFamily": "monospace,fontawesome",
-    "editor.fontFamily": "monospace,fontawesome",
+    "terminal.integrated.fontFamily": "hack,fontawesome",
+    "editor.fontFamily": "hack,fontawesome",
     "editor.renderWhitespace": "all",
     "editor.renderIndentGuides": true,
     "editor.scrollBeyondLastLine": false,
@@ -113,4 +113,5 @@
     
     },
     "haxe.enableCodeLens": true,
+    "terminal.external.linuxExec": "alacritty",
 }

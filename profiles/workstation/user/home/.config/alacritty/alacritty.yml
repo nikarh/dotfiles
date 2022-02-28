@@ -80,3 +80,7 @@ hints:
       enabled: true
       mods: Control
 
+key_bindings:
+  - { key: Paste, action: Paste }
+  - { key: V, mods: Control|Shift, mode: ~Vi, action: Paste }
+  - { key: Insert, mods: Shift, action: Paste }
