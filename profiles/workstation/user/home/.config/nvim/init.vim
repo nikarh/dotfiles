@@ -135,3 +135,7 @@ let g:ale_sign_error = 'X'
 let g:ale_sign_warning = '!'
 highlight ALEWarningSign ctermfg='brown' cterm=bold
 highlight ALEErrorSign ctermfg='red' cterm=bold
+
+" Fix default mode and mouse
+set t_u7=
+nnoremap <esc>^[ <esc>^[
