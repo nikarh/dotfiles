@@ -1,36 +1,15 @@
 version: '3.5'
 
 services:
-  sftpd:
-    image: atmoz/sftp
-    container_name: sftpd
-    restart: unless-stopped
-    ports:
-      - '2222:22'
-    volumes:
-      - /etc/sftp/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
-      - /etc/sftp/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key:ro
-      - /etc/sftp/users.conf:/etc/sftp/users.conf:ro
-      - /var/data/shares/tmp:/home/tmp/tmp
-      - /home/files/data:/home/tmp/ssd
-      - /var/data/shares/nikarh:/home/nikarh/data
-      - /var/data/shares/nikarh/TKM:/home/trendkillmethod/TKM
-      - /var/data/shares/tmp:/home/nikarh/tmp
-      - /var/data/shares/alyonovik:/home/alyonovik/data
-      - /var/data/shares/tmp:/home/alyonovik/tmp
-  hass:
-    image: homeassistant/home-assistant:stable
-    container_name: hass
-    restart: unless-stopped
-    ports:
-      - '127.0.0.1:25001:8080'
-    volumes:
-      - /var/lib/hass:/config
-      - /etc/localtime:/etc/localtime:ro
   mqtt:
     image: eclipse-mosquitto 
     container_name: mqtt
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
     ports:
       - '8883:8883'
       - '1883:1883'
@@ -51,70 +30,283 @@ services:
       - /var/lib/mosquitto/data:/mosquitto/data
       - /etc/letsencrypt/live/home.arhipov.net-0001/fullchain.pem:/mosquitto/tls/cert-root.pem:ro
       - /etc/letsencrypt/live/home.arhipov.net-0001/privkey.pem:/mosquitto/tls/privkey-root.pem:ro
+  sftpd:
+    image: atmoz/sftp
+    container_name: sftpd
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    ports:
+      - '2222:22'
+    volumes:
+      - /etc/sftp/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
+      - /etc/sftp/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key:ro
+      - /etc/sftp/users.conf:/etc/sftp/users.conf:ro
+      - /var/data/shares/tmp:/home/tmp/tmp
+      - /home/files/data:/home/tmp/ssd
+      - /var/data/shares/nikarh:/home/nikarh/data
+      - /var/data/shares/nikarh/TKM:/home/trendkillmethod/TKM
+      - /var/data/shares/tmp:/home/nikarh/tmp
+  traefik:
+    image: traefik:2.6
+    container_name: traefik
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/lib/traefik:/etc/traefik
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/letsencrypt/live/home.arhipov.net-0001/fullchain.pem:/certs/fullchain.pem:ro
+      - /etc/letsencrypt/live/home.arhipov.net-0001/privkey.pem:/certs/privkey.pem:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.api.rule=Host(`traefik.home.arhipov.net`)'
+      - 'traefik.http.routers.api.entrypoints=https'
+      - 'traefik.http.routers.api.service=api@internal'
+      - 'traefik.http.routers.api.tls=true'
+      - 'traefik.http.routers.api.tls.certresolver=letsencrypt'
+      - 'traefik.http.routers.api.middlewares=authelia@docker'
+    command:
+      - '--api'
+      - '--api.dashboard=true'
+      - '--providers.docker=true'
+      - '--providers.docker.exposedByDefault=false'
+      - '--providers.file.directory=/etc/traefik/configuration/'
+      - '--providers.file.watch=true'
+      - '--entrypoints.http=true'
+      - '--entrypoints.http.address=:80'
+      - '--entrypoints.http.http.redirections.entrypoint.to=https'
+      - '--entrypoints.http.http.redirections.entrypoint.scheme=https'
+      - '--entrypoints.https=true'
+      - '--entrypoints.https.address=:443'
+      - '--certificatesResolvers.letsencrypt.acme.email=nikolajs.arhipovs@gmail.com'
+      - '--certificatesResolvers.letsencrypt.acme.storage=/etc/traefik/acme.json'
+      - '--certificatesResolvers.letsencrypt.acme.httpChallenge.entryPoint=http'
+      - '--accesslog=true'
+      - '--accesslog.fields.defaultMode=keep'
+      #- '--accesslog.fields.headers.defaultMode=keep'
+      - '--log=true'
+      - '--log.level=DEBUG'
+  authelia:
+    image: authelia/authelia
+    container_name: authelia
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    user: 1000:1000
+    environment:
+      PUID: 1000
+      PGID: 1000
+      AUTHELIA_JWT_SECRET_FILE: /config/secrets/jwt_secret
+      AUTHELIA_SESSION_SECRET_FILE: /config/secrets/session_secret
+      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /config/secrets/storage_encryption_key
+    volumes:
+      - /var/lib/authelia:/config
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.authelia.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.authelia.rule=Host(`authelia.home.arhipov.net`)'
+      - 'traefik.http.routers.authelia.entrypoints=https'
+      - 'traefik.http.routers.authelia.tls=true'
+      - 'traefik.http.middlewares.authelia.forwardauth.address=http://authelia:8080/api/verify?rd=https://authelia.home.arhipov.net'
+      - 'traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true'
+      - 'traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email'
+    healthcheck:
+      start_period: 0s
+      interval: 5s
+  homer:
+    image: b4bz/homer
+    container_name: homer
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    environment:
+      UID: 1000
+      GID: 1000
+    volumes:
+      - /var/lib/homer:/www/assets
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.homer.rule=Host(`home.arhipov.net`)'
+      - 'traefik.http.routers.homer.entrypoints=https'
+      - 'traefik.http.routers.homer.tls=true'
+  hass:
+    image: homeassistant/home-assistant:stable
+    container_name: hass
+    restart: unless-stopped
+    volumes:
+      - /var/lib/hass:/config
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.hass.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.hass.rule=Host(`hass.home.arhipov.net`)'
+      - 'traefik.http.routers.hass.entrypoints=https'
+      - 'traefik.http.routers.hass.tls=true'
   filebrowser:
     image: filebrowser/filebrowser
     container_name: filebrowser
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
     user: '1000:1000'
+    volumes:
+      - /var/data/shares/nikarh:/srv/nikarh/data
+      - /var/data/shares/anastasiia:/srv/anastasiia/data
+      - /var/data/shares/tmp:/srv/nikarh/tmp
+      - /var/data/shares/tmp:/srv/anastasiia/tmp
+      - /var/lib/filebrowser:/data
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.files.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.files.rule=Host(`files.home.arhipov.net`)'
+      - 'traefik.http.routers.files.entrypoints=https'
+      - 'traefik.http.routers.files.tls=true'
+      - 'traefik.http.routers.files.middlewares=authelia@docker'
+      #- 'traefik.http.routers.files.tls.certresolver=letsencrypt'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
     command: 
       - "--cache-dir=/data/cache"
       - "-d=/data/filebrowser.db"
       - "-c=/data/filebrowser.json"
       - "-p=8080"
-    ports:
-      - '127.0.0.1:25002:8080'
-    volumes:
-      - /var/data/shares/nikarh:/srv/nikarh/data
-      - /var/data/shares/tmp:/srv/nikarh/tmp
-      - /var/data/shares/alyonovik:/srv/alyonovik/data
-      - /var/data/shares/tmp:/srv/alyonovik/tmp
-      - /var/lib/filebrowser:/data
   navidrome:
     image: deluan/navidrome:latest
     container_name: navidrome
-    user: 1000:1000
     restart: unless-stopped
-    ports:
-      - "127.0.0.1:25003:4533"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    user: 1000:1000
     volumes:
       - "/var/lib/navidrome:/data"
       - "/var/data/shares/nikarh/Music:/music:ro"
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.music.loadbalancer.server.port=4533'
+      - 'traefik.http.routers.music.rule=Host(`music.files.home.arhipov.net`)'
+      - 'traefik.http.routers.music.entrypoints=https'
+      - 'traefik.http.routers.music.tls=true'
   qbittorrent:
     image: maltyxx/qbittorrent:latest
     container_name: qbittorrent
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    ports:
+      - 6881:6881/tcp
+      - 6881:6881/udp
     environment:
       - TZ=Europe/Riga
       - QBITTORRENT_UID=1000
       - QBITTORRENT_GID=1000
-    ports:
-      - 127.0.0.1:25004:8080
-      - 6881:6881/tcp
-      - 6881:6881/udp
     volumes:
       - /var/lib/qbittorrent/config:/qbittorrent/config
       - /var/lib/qbittorrent/data/:/qbittorrent/data
       - /var/data/shares/tmp:/downloads
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.torrents.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.torrents.rule=Host(`torrents.files.home.arhipov.net`)'
+      - 'traefik.http.routers.torrents.entrypoints=https'
+      - 'traefik.http.routers.torrents.tls=true'
+      - 'traefik.http.routers.torrents.middlewares=authelia@docker'
+      #- 'traefik.http.routers.torrents.tls.certresolver=letsencrypt'
   syncthing:
     image: syncthing/syncthing
     container_name: syncthing
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
     user: '1000:1000'
+    ports:
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
     environment:
       - TZ=Europe/Riga
     volumes:
       - /var/lib/syncthing/nikarh:/var/syncthing/config
       - /var/data/shares/nikarh:/var/data/shares/nikarh
-    ports:
-      - 127.0.0.1:25005:8384
-      - 22000:22000/tcp
-      - 22000:22000/udp
-      - 21027:21027/udp
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.syncthing.loadbalancer.server.port=8384'
+      - 'traefik.http.routers.syncthing.rule=Host(`syncthing.files.home.arhipov.net`)'
+      - 'traefik.http.routers.syncthing.entrypoints=https'
+      - 'traefik.http.routers.syncthing.tls=true'
+      - 'traefik.http.routers.syncthing.middlewares=authelia@docker'
+      #- 'traefik.http.routers.syncthing.tls.certresolver=letsencrypt'
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    restart: unless-stopped
+    hostname: netdata
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    environment:
+      - DISABLE_TELEMETRY=1
+      - DOCKER_USR=1000
+      - DOCKER_GRP=1000
+    volumes:
+      - /var/lib/netdata/config:/etc/netdata
+      - /var/lib/netdata/lib:/var/lib/netdata
+      - /var/lib/netdata/cache:/var/cache/netdata
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.netdata.loadbalancer.server.port=19999'
+      - 'traefik.http.routers.netdata.rule=Host(`netdata.files.home.arhipov.net`)'
+      - 'traefik.http.routers.netdata.entrypoints=https'
+      - 'traefik.http.routers.netdata.tls=true'
+      - 'traefik.http.routers.netdata.middlewares=authelia@docker'
 
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
     environment:
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_POLL_INTERVAL: 7200 # Checks for updates every two hours

@@ -1,0 +1,15 @@
+http:
+  routers:
+    roborock:
+      rule: "Host(`roborock.home.arhipov.net`)"
+      service: roborock
+      entrypoints:
+        - https
+      tls: true
+      middlewares:
+        - authelia@docker
+  services:
+    roborock:
+      loadBalancer:
+        servers:
+          - url: "http://roborock.lan"

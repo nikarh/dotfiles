@@ -1,6 +1,5 @@
 version: '3.5'
-
-  services:
+services:
     # Example Docker Compose config file for PhotoPrism (Linux / AMD64)
     #
     # Documentation : https://docs.photoprism.org/getting-started/docker-compose/
@@ -65,15 +64,15 @@ version: '3.5'
           - /var/data/shares/nikarh/Pictures:/photoprism/originals:ro
           - /var/photoprism/import:/photoprism/import
           - /var/photoprism/storage:/photoprism/storage
-      mariadb:
-        image: mariadb:10.5
-        container_name: mariadb
-        restart: unless-stopped
-        command: mysqld --transaction-isolation=READ-COMMITTED --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=50
-        volumes: 
-          - "/var/photoprism/database:/var/lib/mysql"
-        environment:
-          MYSQL_ROOT_PASSWORD: please_change
-          MYSQL_DATABASE: photoprism
-          MYSQL_USER: photoprism
-          MYSQL_PASSWORD: insecure
+    mariadb:
+      image: mariadb:10.5
+      container_name: mariadb
+      restart: unless-stopped
+      command: mysqld --transaction-isolation=READ-COMMITTED --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=50
+      volumes: 
+        - "/var/photoprism/database:/var/lib/mysql"
+      environment:
+        MYSQL_ROOT_PASSWORD: please_change
+        MYSQL_DATABASE: photoprism
+        MYSQL_USER: photoprism
+        MYSQL_PASSWORD: insecure

@@ -11,6 +11,12 @@ homeassistant:
   external_url: "https://hass.home.arhipov.net"
   legacy_templates: false
   customize: !include customize.yaml
+
+  auth_providers:
+    - type: command_line
+      command: /config/auth.sh
+      meta: true
+
 http:
   server_host: 0.0.0.0
   server_port: 8080
@@ -19,6 +25,7 @@ http:
   use_x_forwarded_for: true
   trusted_proxies:
   - 172.17.0.0/16
+  - 172.19.0.0/16
 
 group: !include groups.yaml
 automation: !include automations.yaml

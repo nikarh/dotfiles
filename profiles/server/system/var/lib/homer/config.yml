@@ -40,11 +40,8 @@ message:
   style: "is-dark"
   content: "SFTP is accessible at <a href=\"sftp://files.home.arhipov.net:2222\">files.home.arhipov.net:2222</a>"
 
-# Services
-# First level array represent a group.
-# Leave only a "items" key if not using group (group name, icon & tagstyle are optional, section separation will not be displayed).
 services:
-  - name: Internal
+  - name: Network
     items:
       - name: Router
         subtitle: WAN->Ethernet router
@@ -53,30 +50,25 @@ services:
         icon: "fas fa-network-wired"
       - name: WiFi Switch
         subtitle: Netgear router used as a Wireless AP in bridge
-        url: https://switch.home.arhipov.net
+        url: https://wifi.home.arhipov.net
         target: "_blank"
         icon: "fas fa-wifi"
+      - name: "Traefik"
+        icon: "fas fa-traffic-light"
+        subtitle: "Traefik dashboard"
+        url: "https://traefik.home.arhipov.net"
+        target: "_blank"
       - name: "Netdata"
         icon: "fas fa-chart-bar"
         subtitle: "Monitoring"
         url: "https://netdata.files.home.arhipov.net"
         target: "_blank"
-      - name: "Syncthing"
-        icon: "fas fa-sync"
-        subtitle: "P2P file sharing"
-        url: "https://syncthing.files.home.arhipov.net"
-        target: "_blank"
+  - name: Files
+    items:
       - name: "Torrents"
         icon: "fas fa-download"
         subtitle: "Torrent downloader web client"
         url: "https://torrents.files.home.arhipov.net"
-        target: "_blank"
-  - name: Public
-    items:
-      - name: "Home Assistant"
-        icon: "fas fa-home"
-        subtitle: "Smart home automation"
-        url: "https://hass.home.arhipov.net"
         target: "_blank"
       - name: "File browser"
         icon: "fas fa-folder-open"
@@ -87,4 +79,21 @@ services:
         icon: "fas fa-headphones"
         subtitle: "Navidrome music streamer"
         url: "https://music.files.home.arhipov.net"
+        target: "_blank"
+      - name: "Syncthing"
+        icon: "fas fa-sync"
+        subtitle: "P2P file sharing"
+        url: "https://syncthing.files.home.arhipov.net"
+        target: "_blank"
+  - name: Services
+    items:
+      - name: "Home Assistant"
+        icon: "fas fa-home"
+        subtitle: "Smart home automation"
+        url: "https://hass.home.arhipov.net"
+        target: "_blank"
+      - name: "Roborock"
+        icon: "fas fa-broom"
+        subtitle: "Vacuum cleaner"
+        url: "https://roborock.home.arhipov.net"
         target: "_blank"

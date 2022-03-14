@@ -5,3 +5,6 @@ system/var/lib/hass/secrets.yaml filter=git-crypt diff=git-crypt
 system/var/lib/filebrowser/** filter=git-crypt diff=git-crypt
 system/var/lib/qbittorrent/**/qBittorrent.conf filter=git-crypt diff=git-crypt
 system/var/lib/mosquitto/users.conf filter=git-crypt diff=git-crypt
+system/var/lib/authelia/secrets/** filter=git-crypt diff=git-crypt
+system/var/lib/glauth/** filter=git-crypt diff=git-crypt
+
