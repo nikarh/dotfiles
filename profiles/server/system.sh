@@ -21,8 +21,6 @@ if [[ "$COPY_VAR" == "true" ]]; then
     sudo cp -ufrTv "$ROOT/system/var/" /var
 fi
 
-sudo mkdir -p /var/lib/{traefik}
-
 sudo chown -R files:files /var/lib/{qbittorrent,filebrowser,navidrome,traefik,netdata,authelia,homer}
 sudo chmod 600 /etc/sftp/ssh*
 

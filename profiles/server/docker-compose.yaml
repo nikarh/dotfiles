@@ -1,8 +1,30 @@
 version: '3.5'
 
 services:
+  egs:
+    image: charlocharlie/epicgames-freegames
+    container_name: egs
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    mem_limit: 1g
+    volumes:
+      - /var/lib/epicgames-freegames/entrypoint.sh:/usr/local/bin/docker-entrypoint.sh:rw
+      - /var/lib/epicgames-freegames:/usr/app/config:rw
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.netdata.loadbalancer.server.port=3000'
+      - 'traefik.http.routers.netdata.rule=Host(`egs-bot.home.arhipov.net`)'
+      - 'traefik.http.routers.netdata.entrypoints=https'
+      - 'traefik.http.routers.netdata.tls=true'
+      - 'traefik.http.routers.netdata.middlewares=authelia@docker'
   mqtt:
-    image: eclipse-mosquitto 
+    image: eclipse-mosquitto
     container_name: mqtt
     restart: unless-stopped
     logging:
@@ -31,7 +53,7 @@ services:
       - /etc/letsencrypt/live/home.arhipov.net-0001/fullchain.pem:/mosquitto/tls/cert-root.pem:ro
       - /etc/letsencrypt/live/home.arhipov.net-0001/privkey.pem:/mosquitto/tls/privkey-root.pem:ro
   sftpd:
-    image: atmoz/sftp
+    image: atmoz/sftp:alpine
     container_name: sftpd
     restart: unless-stopped
     logging:
