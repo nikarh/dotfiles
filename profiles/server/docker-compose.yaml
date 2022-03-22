@@ -18,11 +18,11 @@ services:
       - /etc/localtime:/etc/localtime:ro
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.services.netdata.loadbalancer.server.port=3000'
-      - 'traefik.http.routers.netdata.rule=Host(`egs-bot.home.arhipov.net`)'
-      - 'traefik.http.routers.netdata.entrypoints=https'
-      - 'traefik.http.routers.netdata.tls=true'
-      - 'traefik.http.routers.netdata.middlewares=authelia@docker'
+      - 'traefik.http.services.egs-bot.loadbalancer.server.port=3000'
+      - 'traefik.http.routers.egs-bot.rule=Host(`egs-bot.home.arhipov.net`)'
+      - 'traefik.http.routers.egs-bot.entrypoints=https'
+      - 'traefik.http.routers.egs-bot.tls=true'
+      - 'traefik.http.routers.egs-bot.middlewares=authelia@docker'
   mqtt:
     image: eclipse-mosquitto
     container_name: mqtt
