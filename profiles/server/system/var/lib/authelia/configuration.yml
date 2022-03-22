@@ -23,6 +23,17 @@ access_control:
   default_policy: deny
   rules:
     # Bypass
+    - domain:
+        - "files.home.arhipov.net"
+      resources:
+        - "^/api/public/(share|dl)/*"
+        - "^/share/*"
+        - "^/static/js/*"
+        - "^/static/css/*"
+        - "^/static/img/*"
+        - "^/static/themes/*"
+        - "^/static/fonts/*"
+      policy: bypass
     - domain: traefik.home.arhipov.net
       policy: bypass
       networks:
