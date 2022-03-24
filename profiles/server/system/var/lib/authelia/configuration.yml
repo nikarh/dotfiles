@@ -28,11 +28,7 @@ access_control:
       resources:
         - "^/api/public/(share|dl)/*"
         - "^/share/*"
-        - "^/static/js/*"
-        - "^/static/css/*"
-        - "^/static/img/*"
-        - "^/static/themes/*"
-        - "^/static/fonts/*"
+        - "^/static/(js|css|img|themes|fonts)/*"
       policy: bypass
     - domain: traefik.home.arhipov.net
       policy: bypass
