@@ -1,6 +1,0 @@
-LogLevel = "INFO"
-MusicFolder = "/music"
-SessionTimeout = "96h"
-ScanInterval = "12h"
-TranscodingCacheSize = "5GB"
-ImageCacheSize = "1GB"

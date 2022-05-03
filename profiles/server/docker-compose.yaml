@@ -1,28 +1,6 @@
 version: '3.5'
 
 services:
-  egs:
-    image: charlocharlie/epicgames-freegames
-    container_name: egs
-    restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "5"
-    mem_limit: 1g
-    volumes:
-      - /var/lib/epicgames-freegames/entrypoint.sh:/usr/local/bin/docker-entrypoint.sh:rw
-      - /var/lib/epicgames-freegames:/usr/app/config:rw
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.egs-bot.loadbalancer.server.port=3000'
-      - 'traefik.http.routers.egs-bot.rule=Host(`egs-bot.home.arhipov.net`)'
-      - 'traefik.http.routers.egs-bot.entrypoints=https'
-      - 'traefik.http.routers.egs-bot.tls=true'
-      - 'traefik.http.routers.egs-bot.middlewares=authelia@docker'
   mqtt:
     image: eclipse-mosquitto
     container_name: mqtt
@@ -146,8 +124,7 @@ services:
       - 'traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true'
       - 'traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email'
     healthcheck:
-      start_period: 0s
-      interval: 5s
+      disable: true
   homer:
     image: b4bz/homer
     container_name: homer
@@ -205,31 +182,12 @@ services:
       - 'traefik.http.routers.files.middlewares=authelia@docker'
       #- 'traefik.http.routers.files.tls.certresolver=letsencrypt'
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      disable: true
     command: 
       - "--cache-dir=/data/cache"
       - "-d=/data/filebrowser.db"
       - "-c=/data/filebrowser.json"
       - "-p=8080"
-  navidrome:
-    image: deluan/navidrome:latest
-    container_name: navidrome
-    restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "5"
-    user: 1000:1000
-    volumes:
-      - "/var/lib/navidrome:/data"
-      - "/var/data/shares/nikarh/Music:/music:ro"
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.music.loadbalancer.server.port=4533'
-      - 'traefik.http.routers.music.rule=Host(`music.files.home.arhipov.net`)'
-      - 'traefik.http.routers.music.entrypoints=https'
-      - 'traefik.http.routers.music.tls=true'
   qbittorrent:
     image: maltyxx/qbittorrent:latest
     container_name: qbittorrent
@@ -244,12 +202,11 @@ services:
       - 6881:6881/udp
     environment:
       - TZ=Europe/Riga
-      - QBITTORRENT_UID=1000
-      - QBITTORRENT_GID=1000
     volumes:
-      - /var/lib/qbittorrent/config:/qbittorrent/config
-      - /var/lib/qbittorrent/data/:/qbittorrent/data
+      - /var/lib/qbittorrent/config:/config
       - /var/data/shares/tmp:/downloads
+    healthcheck:
+      disable: true
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.torrents.loadbalancer.server.port=8080'
@@ -319,7 +276,38 @@ services:
       - 'traefik.http.routers.netdata.entrypoints=https'
       - 'traefik.http.routers.netdata.tls=true'
       - 'traefik.http.routers.netdata.middlewares=authelia@docker'
-
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    user: 1000:1000
+    group_add:
+      - "107" #render
+      - "44"  #video
+    ports:
+      - 1900:1900/udp # autodiscovery
+      - 7359:7359/udp # autodiscovery
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+      - /dev/dri/card0:/dev/dri/card0
+    environment:
+      - JELLYFIN_PublishedServerUrl=https://media.files.home.arhipov.net
+    volumes:
+      - /var/lib/jellyfin/config:/config:rw
+      - /var/lib/jellyfin/cache:/cache:rw
+      - /var/data/shares/tmp:/media:ro
+      - /var/data/shares/nikarh/Music:/music
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.jellyfin.loadbalancer.server.port=8096'
+      - 'traefik.http.routers.jellyfin.rule=Host(`media.files.home.arhipov.net`)'
+      - 'traefik.http.routers.jellyfin.entrypoints=https'
+      - 'traefik.http.routers.jellyfin.tls=true'
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
