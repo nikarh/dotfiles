@@ -35,13 +35,6 @@ template: !include templates.yaml
 frontend:
   themes: !include_dir_merge_named themes
 
-sensor:
-  - platform: qbittorrent
-    # Docker container
-    url: "http://qbittorrent:8080"
-    username: shared
-    password: shared
-
 climate:
   - platform: panasonic_ac
     username: !secret panasonic_user
@@ -77,3 +70,6 @@ input_boolean:
   vacuum_storage:
     name: Storage
     icon: mdi:package-variant-closed
+  
+shell_command:
+  renew_lg_token: curl 'https://developer.lge.com/secure/ResetDevModeSession.dev?sessionToken={{ token }}'

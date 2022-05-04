@@ -3,9 +3,9 @@
   description: ''
   trigger:
   - platform: time_pattern
-    hours: '9'
-    minutes: '00'
     seconds: '00'
+    hours: '8'
+    minutes: '30'
   condition:
   - condition: time
     weekday:
@@ -20,4 +20,38 @@
     entity_id: cover.bedroom_blind
     type: set_position
     position: 100
+  mode: single
+- id: '1651653946293'
+  alias: Night
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: 0
+  - platform: time
+    at: '22:00:00'
+  condition: []
+  action:
+  - device_id: d693bc9748e34d9e32c5c5d6befd8bc1
+    domain: cover
+    entity_id: cover.bedroom_blind
+    type: set_position
+    position: 0
+  - device_id: ac794bc2129ed23c069d801fc3f4a8cf
+    domain: cover
+    entity_id: cover.living_room_blind
+    type: set_position
+    position: 0
+  mode: single
+- id: '1651654310853'
+  alias: LG refresh dev session
+  description: ''
+  trigger:
+  - platform: time
+    at: '16:00:00'
+  condition: []
+  action:
+  - service: shell_command.renew_lg_token
+    data:
+      token: !secret lg_token
   mode: single

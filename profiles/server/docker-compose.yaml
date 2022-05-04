@@ -278,6 +278,7 @@ services:
       - 'traefik.http.routers.netdata.middlewares=authelia@docker'
   jellyfin:
     image: jellyfin/jellyfin:10.8.0-beta2
+    # image: jellyfin/jellyfin
     container_name: jellyfin
     restart: unless-stopped
     logging:
@@ -287,14 +288,13 @@ services:
         max-file: "5"
     user: 1000:1000
     group_add:
-      - "989" #render
-      - "985"  #video
+      - "989" # render
+      - "985" # video
     ports:
       - 1900:1900/udp # autodiscovery
       - 7359:7359/udp # autodiscovery
     devices:
-      - /dev/dri/renderD128:/dev/dri/renderD128
-      - /dev/dri/card0:/dev/dri/card0
+      - /dev/dri:/dev/dri
     environment:
       - JELLYFIN_PublishedServerUrl=https://media.files.home.arhipov.net
     volumes:
