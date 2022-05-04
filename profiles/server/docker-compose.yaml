@@ -277,7 +277,7 @@ services:
       - 'traefik.http.routers.netdata.tls=true'
       - 'traefik.http.routers.netdata.middlewares=authelia@docker'
   jellyfin:
-    image: jellyfin/jellyfin
+    image: jellyfin/jellyfin:10.8.0-beta2
     container_name: jellyfin
     restart: unless-stopped
     logging:
