@@ -51,6 +51,10 @@ access_control:
       policy: one_factor
       subject:
         - "group:files"
+    - domain: media.files.home.arhipov.net
+      policy: one_factor
+      subject:
+        - "group:media"
     # Administrative
     - domain: netdata.files.home.arhipov.net
       policy: one_factor
@@ -66,6 +70,10 @@ access_control:
       subject:
         - "group:residents"
     - domain: torrents.files.home.arhipov.net
+      policy: one_factor
+      subject:
+        - "group:residents"
+    - domain: hass.home.arhipov.net
       policy: one_factor
       subject:
         - "group:residents"
