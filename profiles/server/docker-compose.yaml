@@ -41,20 +41,17 @@ services:
         max-file: "5"
     ports:
       - '2222:22'
+    entrypoint: /run.sh
     volumes:
       # Configs
       - /var/lib/sftpd/secrets/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
       - /var/lib/sftpd/secrets/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key:ro
-      - /var/lib/sftpd/secrets/users.conf:/etc/sftp/users.conf:ro
-      - /var/lib/sftpd/init.sh:/etc/sftp.d/init.sh:ro
+      - /var/lib/sftpd/run.sh:/run.sh:ro
       - /var/lib/sftpd/authelia.sh:/authelia.sh:ro
       - /var/lib/sftpd/base-auth:/etc/pam.d/base-auth:ro
       - /var/lib/sftpd/sshd_config:/etc/ssh/sshd_config:ro
       # Data
-      - /var/data/shares/nikarh:/home/nikarh/data
-      - /var/data/shares/tmp:/home/nikarh/tmp
-      - /var/data/shares/anastasiia:/home/anastasiia/data
-      - /var/data/shares/tmp:/home/anastasiia/tmp
+      - /var/data/home:/home
   traefik:
     image: traefik:2.6
     container_name: traefik
@@ -173,12 +170,8 @@ services:
       options:
         max-size: "200k"
         max-file: "5"
-    user: '1000:1000'
     volumes:
-      - /var/data/shares/nikarh:/srv/nikarh/data
-      - /var/data/shares/anastasiia:/srv/anastasiia/data
-      - /var/data/shares/tmp:/srv/nikarh/tmp
-      - /var/data/shares/tmp:/srv/anastasiia/tmp
+      - /var/data/home:/srv
       - /var/lib/filebrowser:/data
     labels:
       - 'traefik.enable=true'
@@ -313,6 +306,7 @@ services:
       - /var/lib/jellyfin/cache:/cache:rw
       - /var/data/shares/tmp:/media:ro
       - /var/data/shares/nikarh/Music:/music
+      - /var/data/shares/nikarh/Videos:/nikarh/videos
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.jellyfin.loadbalancer.server.port=8096'

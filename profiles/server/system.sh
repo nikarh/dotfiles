@@ -25,12 +25,16 @@ sudo chown -R files:files /var/lib/{qbittorrent,filebrowser,traefik,netdata,auth
 sudo chmod 600 /var/lib/sftpd/secrets/ssh*
 
 # Append bind mounts
-sudo mkdir -p /var/data
-if ! grep -q '^# BEGIN mounts$' /etc/pacman.conf; then
-    sudo sed -i '/# BEGIN mounts/,/# END mounts/d' /etc/fstab
-    # shellcheck disable=SC2002
-    cat "$ROOT/system/fstab" | sudo tee -a /etc/fstab > /dev/null
-fi
+sudo mkdir -p /var/data/{shares,home}
+mkdir -p /var/data/shares/tmp/ssd
+sudo mkdir -p /var/data/home/{nikarh,anastasiia}/{data,shared}
+sudo chown files:files /var/data/{shares,home}/*
+sudo chmod 700 /var/data/home/{nikarh,anastasiia}
+
+sudo sed -i '/# BEGIN mounts/,/# END mounts/d' /etc/fstab
+cat "$ROOT/system/fstab" | sudo tee -a /etc/fstab > /dev/null
+sudo systemctl daemon-reload
+sudo mount -a
 
 # Create users for smb
 sudo groupadd -r -g 65533 shield 2> /dev/null || true;

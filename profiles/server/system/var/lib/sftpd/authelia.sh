@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-set -x
 
 AUTHELIA_URL=http://authelia:8080
 FORWARDED_HOST=https://files.home.arhipov.net
