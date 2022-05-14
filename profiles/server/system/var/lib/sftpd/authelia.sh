@@ -1,11 +1,12 @@
 #!/bin/bash
 set -e
+set -x
 
 AUTHELIA_URL=http://authelia:8080
-FORWARDED_HOST=https://hass.home.arhipov.net
+FORWARDED_HOST=https://files.home.arhipov.net
 
-username="$(echo -n "$username" | jq -aRs .)"
-password="$(echo -n "$password" | jq -aRs .)"
+username="$(echo -n "$PAM_USER" | jq -aRs .)"
+password="$(echo -n "$(cat -)" | jq -aRs .)"
 
 response="$(curl -si -w "\n%{size_header},%{size_download}" \
     "$AUTHELIA_URL/api/firstfactor" \
@@ -25,6 +26,7 @@ body="${response:${headerSize}:${bodySize}}"
 cookie="$(grep -i ^set-cookie <<< "$headers" | cut -c 13-)"
 
 if [[ "$(echo $body | jq -r .status)" != "OK" ]]; then
+    echo "Auth verify failed"
     exit 1
 fi
 
@@ -34,12 +36,5 @@ curl -sf \
     -H 'X-Original-Url: '$FORWARDED_HOST'' -H 'X-Forwarded-Method: GET' \
     "$AUTHELIA_URL/api/verify"
 
-# Get display name
-response="$(curl -sf \
-    -b "$cookie" \
-    "$AUTHELIA_URL/api/user/info"
-)"
-display_name="$(echo "$response" | jq -r .data.display_name)"
-
-echo name = $display_name
+echo "Auth verify ok"
 exit 0

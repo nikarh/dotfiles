@@ -42,14 +42,19 @@ services:
     ports:
       - '2222:22'
     volumes:
-      - /etc/sftp/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
-      - /etc/sftp/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key:ro
-      - /etc/sftp/users.conf:/etc/sftp/users.conf:ro
-      - /var/data/shares/tmp:/home/tmp/tmp
-      - /home/files/data:/home/tmp/ssd
+      # Configs
+      - /var/lib/sftpd/secrets/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
+      - /var/lib/sftpd/secrets/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key:ro
+      - /var/lib/sftpd/secrets/users.conf:/etc/sftp/users.conf:ro
+      - /var/lib/sftpd/init.sh:/etc/sftp.d/init.sh:ro
+      - /var/lib/sftpd/authelia.sh:/authelia.sh:ro
+      - /var/lib/sftpd/base-auth:/etc/pam.d/base-auth:ro
+      - /var/lib/sftpd/sshd_config:/etc/ssh/sshd_config:ro
+      # Data
       - /var/data/shares/nikarh:/home/nikarh/data
-      - /var/data/shares/nikarh/TKM:/home/trendkillmethod/TKM
       - /var/data/shares/tmp:/home/nikarh/tmp
+      - /var/data/shares/anastasiia:/home/anastasiia/data
+      - /var/data/shares/tmp:/home/anastasiia/tmp
   traefik:
     image: traefik:2.6
     container_name: traefik
@@ -144,6 +149,8 @@ services:
       - 'traefik.http.routers.homer.rule=Host(`home.arhipov.net`)'
       - 'traefik.http.routers.homer.entrypoints=https'
       - 'traefik.http.routers.homer.tls=true'
+    healthcheck:
+      disable: true
   hass:
     image: homeassistant/home-assistant:stable
     container_name: hass
@@ -242,6 +249,8 @@ services:
       - 'traefik.http.routers.syncthing.tls=true'
       - 'traefik.http.routers.syncthing.middlewares=authelia@docker'
       #- 'traefik.http.routers.syncthing.tls.certresolver=letsencrypt'
+    healthcheck:
+      disable: true
   netdata:
     image: netdata/netdata
     container_name: netdata
@@ -276,6 +285,8 @@ services:
       - 'traefik.http.routers.netdata.entrypoints=https'
       - 'traefik.http.routers.netdata.tls=true'
       - 'traefik.http.routers.netdata.middlewares=authelia@docker'
+    healthcheck:
+      disable: true
   jellyfin:
     image: jellyfin/jellyfin:10.8.0-beta2
     # image: jellyfin/jellyfin

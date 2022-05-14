@@ -1,9 +1,8 @@
 system/smbusers filter=git-crypt diff=git-crypt
-system/etc/sftp/** filter=git-crypt diff=git-crypt
+system/var/lib/sftpd/secrets/** filter=git-crypt diff=git-crypt
 system/var/lib/hass/.storage/** filter=git-crypt diff=git-crypt
 system/var/lib/hass/secrets.yaml filter=git-crypt diff=git-crypt
 system/var/lib/filebrowser/** filter=git-crypt diff=git-crypt
 system/var/lib/qbittorrent/**/qBittorrent.conf filter=git-crypt diff=git-crypt
 system/var/lib/mosquitto/users.conf filter=git-crypt diff=git-crypt
 system/var/lib/authelia/secrets/** filter=git-crypt diff=git-crypt
-system/var/lib/epicgames-freegames/config.json5 filter=git-crypt diff=git-crypt

@@ -22,7 +22,7 @@ if [[ "$COPY_VAR" == "true" ]]; then
 fi
 
 sudo chown -R files:files /var/lib/{qbittorrent,filebrowser,traefik,netdata,authelia,homer,jellyfin}
-sudo chmod 600 /etc/sftp/ssh*
+sudo chmod 600 /var/lib/sftpd/secrets/ssh*
 
 # Append bind mounts
 sudo mkdir -p /var/data
