@@ -4,7 +4,6 @@
     "terminal.integrated.fontFamily": "hack,fontawesome",
     "editor.fontFamily": "hack,fontawesome",
     "editor.renderWhitespace": "all",
-    "editor.renderIndentGuides": true,
     "editor.scrollBeyondLastLine": false,
     "editor.scrollbar.verticalScrollbarSize": 8,
     "editor.find.addExtraSpaceOnTop": false,
@@ -114,4 +113,5 @@
     },
     "haxe.enableCodeLens": true,
     "terminal.external.linuxExec": "alacritty",
+    "editor.guides.indentation": true,
 }

@@ -2,6 +2,7 @@
 LABEL=data /var/data auto rw,defaults,nofail,x-systemd.device-timeout=10 0 0
 /home/files/data /var/data/shares/tmp/ssd                   none defaults,bind,nofail 0 0
 
+/var/data/shares/tmp /var/data/home/shield/shared           none defaults,rbind,nofail 0 0
 /var/data/shares/nikarh /var/data/home/nikarh/data          none defaults,rbind,nofail 0 0
 /var/data/shares/tmp /var/data/home/nikarh/shared           none defaults,rbind,nofail 0 0
 /var/data/shares/anastasiia /var/data/home/anastasiia/data  none defaults,rbind,nofail 0 0

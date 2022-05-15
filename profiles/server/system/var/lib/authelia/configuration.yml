@@ -55,6 +55,10 @@ access_control:
       policy: one_factor
       subject:
         - "group:media"
+    - domain: samba.files.home.arhipov.net
+      policy: one_factor
+      subject:
+        - "group:samba"
     # Administrative
     - domain: netdata.files.home.arhipov.net
       policy: one_factor

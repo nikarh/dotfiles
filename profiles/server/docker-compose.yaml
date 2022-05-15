@@ -30,6 +30,29 @@ services:
       - /var/lib/mosquitto/data:/mosquitto/data
       - /etc/letsencrypt/live/home.arhipov.net-0001/fullchain.pem:/mosquitto/tls/cert-root.pem:ro
       - /etc/letsencrypt/live/home.arhipov.net-0001/privkey.pem:/mosquitto/tls/privkey-root.pem:ro
+  samba:
+    build: docker/samba
+    container_name: samba
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    network_mode: "host"
+    ports:
+      - 137:137/udp # nmbd
+      - 138:138/udp # nmbd
+      - 139:139 # smb over netbios
+      - 445:445 # smb over tcp
+    entrypoint: /run.sh
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      # Configs
+      - /var/lib/samba/run.sh:/run.sh:ro
+      - /var/lib/samba/smb.conf:/etc/samba/smb-base.conf
+      # Data
+      - /var/data/home:/home
   sftpd:
     image: atmoz/sftp:alpine
     container_name: sftpd
