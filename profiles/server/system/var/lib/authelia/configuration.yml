@@ -86,6 +86,10 @@ access_control:
       policy: one_factor
       subject:
         - "user:nikarh"
+    - domain: photos.files.home.arhipov.net
+      policy: one_factor
+      subject:
+        - "user:nikarh"
 
 session:
   name: authelia_session

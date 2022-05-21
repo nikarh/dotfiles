@@ -1,15 +1,25 @@
 version: '3.5'
 
 services:
-  mqtt:
-    image: eclipse-mosquitto
-    container_name: mqtt
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
     restart: unless-stopped
-    logging:
+    logging: &logging
       driver: "json-file"
       options:
         max-size: "200k"
         max-file: "5"
+    environment:
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_POLL_INTERVAL: 7200 # Checks for updates every two hours
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: mqtt
+    restart: unless-stopped
+    logging: *logging
     ports:
       - '8883:8883'
       - '1883:1883'
@@ -34,12 +44,7 @@ services:
     build: docker/samba
     container_name: samba
     restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "5"
-    network_mode: "host"
+    logging: *logging
     ports:
       - 137:137/udp # nmbd
       - 138:138/udp # nmbd
@@ -57,11 +62,7 @@ services:
     image: atmoz/sftp:alpine
     container_name: sftpd
     restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "5"
+    logging: *logging
     ports:
       - '2222:22'
     entrypoint: /run.sh
@@ -79,19 +80,15 @@ services:
     image: traefik:2.6
     container_name: traefik
     restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "5"
+    logging: *logging
     ports:
       - 80:80
       - 443:443
     volumes:
       - /var/lib/traefik:/etc/traefik
       - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/letsencrypt/live/home.arhipov.net-0001/fullchain.pem:/certs/fullchain.pem:ro
-      - /etc/letsencrypt/live/home.arhipov.net-0001/privkey.pem:/certs/privkey.pem:ro
+      - /etc/letsencrypt/live/authelia.home.arhipov.net/fullchain.pem:/certs/fullchain.pem:ro
+      - /etc/letsencrypt/live/authelia.home.arhipov.net/privkey.pem:/certs/privkey.pem:ro
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.api.rule=Host(`traefik.home.arhipov.net`)'
@@ -113,23 +110,15 @@ services:
       - '--entrypoints.http.http.redirections.entrypoint.scheme=https'
       - '--entrypoints.https=true'
       - '--entrypoints.https.address=:443'
-      - '--certificatesResolvers.letsencrypt.acme.email=nikolajs.arhipovs@gmail.com'
-      - '--certificatesResolvers.letsencrypt.acme.storage=/etc/traefik/acme.json'
-      - '--certificatesResolvers.letsencrypt.acme.httpChallenge.entryPoint=http'
       - '--accesslog=true'
       - '--accesslog.fields.defaultMode=keep'
-      #- '--accesslog.fields.headers.defaultMode=keep'
       - '--log=true'
       - '--log.level=DEBUG'
   authelia:
     image: authelia/authelia
     container_name: authelia
     restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "5"
+    logging: *logging
     user: 1000:1000
     environment:
       PUID: 1000
@@ -145,6 +134,7 @@ services:
       - 'traefik.http.routers.authelia.rule=Host(`authelia.home.arhipov.net`)'
       - 'traefik.http.routers.authelia.entrypoints=https'
       - 'traefik.http.routers.authelia.tls=true'
+      - 'traefik.http.routers.authelia.tls.certresolver=letsencrypt'
       - 'traefik.http.middlewares.authelia.forwardauth.address=http://authelia:8080/api/verify?rd=https://authelia.home.arhipov.net'
       - 'traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true'
       - 'traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email'
@@ -154,11 +144,7 @@ services:
     image: b4bz/homer
     container_name: homer
     restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "5"
+    logging: *logging
     environment:
       UID: 1000
       GID: 1000
@@ -169,12 +155,14 @@ services:
       - 'traefik.http.routers.homer.rule=Host(`home.arhipov.net`)'
       - 'traefik.http.routers.homer.entrypoints=https'
       - 'traefik.http.routers.homer.tls=true'
+      - 'traefik.http.routers.homer.tls.certresolver=letsencrypt'
     healthcheck:
       disable: true
   hass:
     image: homeassistant/home-assistant:stable
     container_name: hass
     restart: unless-stopped
+    logging: *logging
     volumes:
       - /var/lib/hass:/config
       - /etc/localtime:/etc/localtime:ro
@@ -184,6 +172,7 @@ services:
       - 'traefik.http.routers.hass.rule=Host(`hass.home.arhipov.net`)'
       - 'traefik.http.routers.hass.entrypoints=https'
       - 'traefik.http.routers.hass.tls=true'
+      - 'traefik.http.routers.hass.tls.certresolver=letsencrypt'
   filebrowser:
     image: filebrowser/filebrowser
     container_name: filebrowser
@@ -202,8 +191,8 @@ services:
       - 'traefik.http.routers.files.rule=Host(`files.home.arhipov.net`)'
       - 'traefik.http.routers.files.entrypoints=https'
       - 'traefik.http.routers.files.tls=true'
+      - 'traefik.http.routers.files.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.files.middlewares=authelia@docker'
-      #- 'traefik.http.routers.files.tls.certresolver=letsencrypt'
     healthcheck:
       disable: true
     command: 
@@ -215,11 +204,7 @@ services:
     image: maltyxx/qbittorrent:latest
     container_name: qbittorrent
     restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "5"
+    logging: *logging
     ports:
       - 6881:6881/tcp
       - 6881:6881/udp
@@ -236,17 +221,13 @@ services:
       - 'traefik.http.routers.torrents.rule=Host(`torrents.files.home.arhipov.net`)'
       - 'traefik.http.routers.torrents.entrypoints=https'
       - 'traefik.http.routers.torrents.tls=true'
+      - 'traefik.http.routers.torrents.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.torrents.middlewares=authelia@docker'
-      #- 'traefik.http.routers.torrents.tls.certresolver=letsencrypt'
   syncthing:
     image: syncthing/syncthing
     container_name: syncthing
     restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "5"
+    logging: *logging
     user: '1000:1000'
     ports:
       - 22000:22000/tcp
@@ -263,20 +244,16 @@ services:
       - 'traefik.http.routers.syncthing.rule=Host(`syncthing.files.home.arhipov.net`)'
       - 'traefik.http.routers.syncthing.entrypoints=https'
       - 'traefik.http.routers.syncthing.tls=true'
+      - 'traefik.http.routers.syncthing.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.syncthing.middlewares=authelia@docker'
-      #- 'traefik.http.routers.syncthing.tls.certresolver=letsencrypt'
     healthcheck:
       disable: true
   netdata:
     image: netdata/netdata
     container_name: netdata
     restart: unless-stopped
+    logging: *logging
     hostname: netdata
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "5"
     cap_add:
       - SYS_PTRACE
     security_opt:
@@ -300,6 +277,7 @@ services:
       - 'traefik.http.routers.netdata.rule=Host(`netdata.files.home.arhipov.net`)'
       - 'traefik.http.routers.netdata.entrypoints=https'
       - 'traefik.http.routers.netdata.tls=true'
+      - 'traefik.http.routers.netdata.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.netdata.middlewares=authelia@docker'
     healthcheck:
       disable: true
@@ -308,11 +286,7 @@ services:
     # image: jellyfin/jellyfin
     container_name: jellyfin
     restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "5"
+    logging: *logging
     user: 1000:1000
     group_add:
       - "989" # render
@@ -336,19 +310,42 @@ services:
       - 'traefik.http.routers.jellyfin.rule=Host(`media.files.home.arhipov.net`)'
       - 'traefik.http.routers.jellyfin.entrypoints=https'
       - 'traefik.http.routers.jellyfin.tls=true'
+      - 'traefik.http.routers.jellyfin.tls.certresolver=letsencrypt'
     healthcheck:
       disable: true
-  watchtower:
-    image: containrrr/watchtower
-    container_name: watchtower
+  photoprism:
+    image: photoprism/photoprism:latest
+    container_name: photoprism
     restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "5"
+    logging: *logging
     environment:
-      WATCHTOWER_CLEANUP: "true"
-      WATCHTOWER_POLL_INTERVAL: 7200 # Checks for updates every two hours
+      PHOTOPRISM_ORIGINALS_LIMIT: 1000               # File size limit for originals in MB (increase for high-res video)
+      PHOTOPRISM_HTTP_COMPRESSION: "gzip"            # Improves transfer speed and bandwidth utilization (none or gzip)
+      PHOTOPRISM_DEBUG: "false"                      # Run in debug mode (shows additional log messages)
+      PHOTOPRISM_PUBLIC: "true"                      # No authentication required (disables password protection)
+      PHOTOPRISM_READONLY: "true"                    # Don't modify originals directory (reduced functionality)
+      PHOTOPRISM_EXPERIMENTAL: "true"                # Enables experimental featuress
+      PHOTOPRISM_UPLOAD_NSFW: "true"                 # Allow uploads that MAY be offensive
+      PHOTOPRISM_DATABASE_DRIVER: "sqlite"           # SQLite is an embedded database that doesn't require a servers
+      PHOTOPRISM_DATABASE_DSN: "/photoprism/database/db.sqlite"
+      PHOTOPRISM_SITE_URL: "https://photos.files.home.arhipov.net/"  # Public PhotoPrism URL
+      PHOTOPRISM_SITE_TITLE: "Photos"
+      PHOTOPRISM_SITE_CAPTION: "My photos"
+      PHOTOPRISM_SITE_DESCRIPTION: ""
+      PHOTOPRISM_SITE_AUTHOR: ""
+    user: "1000:1000"
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - /var/data/shares/nikarh/Pictures:/photoprism/originals:ro
+      - /var/lib/photoprism/import:/photoprism/import
+      - /var/lib/photoprism/storage:/photoprism/storage
+      - /var/lib/photoprism/database:/photoprism/database
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.photoprism.loadbalancer.server.port=2342'
+      - 'traefik.http.routers.photoprism.rule=Host(`photos.files.home.arhipov.net`)'
+      - 'traefik.http.routers.photoprism.entrypoints=https'
+      - 'traefik.http.routers.photoprism.tls=true'
+      - 'traefik.http.routers.photoprism.tls.certresolver=letsencrypt'
+      - 'traefik.http.routers.photoprism.middlewares=authelia@docker'
+    healthcheck:
+      disable: true

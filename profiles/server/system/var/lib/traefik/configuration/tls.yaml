@@ -1,3 +1,13 @@
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: nikolajs.arhipovs@gmail.com
+      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      storage: /etc/traefik/acme.json
+      entryPoint: https
+      acmeLogging: true
+      tlsChallenge: true
+
 tls:
   stores:
     default:

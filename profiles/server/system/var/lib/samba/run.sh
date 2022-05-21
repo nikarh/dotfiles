@@ -34,4 +34,4 @@ echo "  path = /home/shield/shared" >> /etc/samba/smb.conf
 echo "  writeable = no" >> /etc/samba/smb.conf
 echo "  write list = $(echo $users | sed s/shield//)" >> /etc/samba/smb.conf
 
-runsvdir -P /etc/runit
+smbd -i --no-process-group

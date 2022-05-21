@@ -13,7 +13,6 @@ export ADDITIONAL_PACKAGES="\
     zoom-system-qt \
     postgresql-libs rustup \
     chntpw `# Read windows regedit files` \
-    google-cloud-sdk \
     mkvtoolnix-gui powertop \
     easyeffects `# pipewire effects` \
     ftgl hashlink haxe llvm `# game dev` \
