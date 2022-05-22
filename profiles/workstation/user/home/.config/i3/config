@@ -16,7 +16,6 @@ exec kbdd
 exec xrdb -all -load ~/.config/Xorg/.Xresources
 exec xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
 exec gebaard -b
-exec picom -b
 
 # Init input devices
 exec ~/.bin/init-input-devices.sh
