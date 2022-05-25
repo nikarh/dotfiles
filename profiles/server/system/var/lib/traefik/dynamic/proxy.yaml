@@ -1,17 +1,10 @@
 http:
-  #certResolver: "letsencrypt"
-  #domains:
-  #  main: "home.arhipov.net"
-  #  sans: "*.home.arhipov.net"
   routers:
     roborock:
       rule: "Host(`roborock.home.arhipov.net`)"
       service: roborock
       entrypoints:
         - https
-      tls: true
-      #tls: 
-      #  certResolver: letsencrypt
       middlewares:
         - authelia@docker
   services:

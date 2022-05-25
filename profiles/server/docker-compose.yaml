@@ -32,7 +32,6 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     secrets:
       - CF_TOKEN
-
   mqtt:
     image: eclipse-mosquitto
     container_name: mqtt
@@ -105,32 +104,17 @@ services:
     volumes:
       - /var/lib/traefik:/etc/traefik
       - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/letsencrypt/live/authelia.home.arhipov.net/fullchain.pem:/certs/fullchain.pem:ro
-      - /etc/letsencrypt/live/authelia.home.arhipov.net/privkey.pem:/certs/privkey.pem:ro
+    secrets:
+      - "CF_TOKEN"
+    environment:
+      - "CF_DNS_API_TOKEN_FILE=/run/secrets/CF_TOKEN"
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.api.rule=Host(`traefik.home.arhipov.net`)'
       - 'traefik.http.routers.api.entrypoints=https'
       - 'traefik.http.routers.api.service=api@internal'
-      - 'traefik.http.routers.api.tls=true'
-      #- 'traefik.http.routers.api.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.api.middlewares=authelia@docker'
-    command:
-      - '--api'
-      - '--api.dashboard=true'
-      - '--providers.docker=true'
-      - '--providers.docker.exposedByDefault=false'
-      - '--providers.file.directory=/etc/traefik/configuration/'
-      - '--providers.file.watch=true'
-      - '--entrypoints.http=true'
-      - '--entrypoints.http.address=:80'
-      - '--entrypoints.http.http.redirections.entrypoint.to=https'
-      - '--entrypoints.http.http.redirections.entrypoint.scheme=https'
-      - '--entrypoints.https=true'
-      - '--entrypoints.https.address=:443'
-      - '--accesslog=true'
-      - '--log=true'
-      - '--log.level=DEBUG'
+     
   authelia:
     image: authelia/authelia
     container_name: authelia
@@ -152,8 +136,6 @@ services:
       - 'traefik.http.services.authelia.loadbalancer.server.port=8080'
       - 'traefik.http.routers.authelia.rule=Host(`authelia.home.arhipov.net`)'
       - 'traefik.http.routers.authelia.entrypoints=https'
-      - 'traefik.http.routers.authelia.tls=true'
-      #- 'traefik.http.routers.authelia.tls.certresolver=letsencrypt'
       - 'traefik.http.middlewares.authelia.forwardauth.address=http://authelia:8080/api/verify?rd=https://authelia.home.arhipov.net'
       - 'traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true'
       - 'traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email'
@@ -173,8 +155,6 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.routers.homer.rule=Host(`home.arhipov.net`)'
       - 'traefik.http.routers.homer.entrypoints=https'
-      - 'traefik.http.routers.homer.tls=true'
-      #- 'traefik.http.routers.homer.tls.certresolver=letsencrypt'
   hass:
     image: homeassistant/home-assistant:stable
     container_name: hass
@@ -188,8 +168,6 @@ services:
       - 'traefik.http.services.hass.loadbalancer.server.port=8080'
       - 'traefik.http.routers.hass.rule=Host(`hass.home.arhipov.net`)'
       - 'traefik.http.routers.hass.entrypoints=https'
-      - 'traefik.http.routers.hass.tls=true'
-      #- 'traefik.http.routers.hass.tls.certresolver=letsencrypt'
   filebrowser:
     image: filebrowser/filebrowser
     container_name: filebrowser
@@ -205,8 +183,6 @@ services:
       - 'traefik.http.services.files.loadbalancer.server.port=8080'
       - 'traefik.http.routers.files.rule=Host(`files.home.arhipov.net`)'
       - 'traefik.http.routers.files.entrypoints=https'
-      - 'traefik.http.routers.files.tls=true'
-      #- 'traefik.http.routers.files.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.files.middlewares=authelia@docker'
     command: 
       - "--cache-dir=/data/cache"
@@ -233,8 +209,6 @@ services:
       - 'traefik.http.services.torrents.loadbalancer.server.port=8080'
       - 'traefik.http.routers.torrents.rule=Host(`torrents.files.home.arhipov.net`) || Host(`torrents.home.arhipov.net`)'
       - 'traefik.http.routers.torrents.entrypoints=https'
-      - 'traefik.http.routers.torrents.tls=true'
-      #- 'traefik.http.routers.torrents.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.torrents.middlewares=authelia@docker'
   syncthing:
     image: syncthing/syncthing
@@ -258,8 +232,6 @@ services:
       - 'traefik.http.services.syncthing.loadbalancer.server.port=8384'
       - 'traefik.http.routers.syncthing.rule=Host(`syncthing.files.home.arhipov.net`) || Host(`syncthing.home.arhipov.net`)'
       - 'traefik.http.routers.syncthing.entrypoints=https'
-      - 'traefik.http.routers.syncthing.tls=true'
-      #- 'traefik.http.routers.syncthing.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.syncthing.middlewares=authelia@docker'
   netdata:
     image: netdata/netdata
@@ -291,11 +263,9 @@ services:
       - 'traefik.http.services.netdata.loadbalancer.server.port=19999'
       - 'traefik.http.routers.netdata.rule=Host(`netdata.files.home.arhipov.net`)'
       - 'traefik.http.routers.netdata.entrypoints=https'
-      - 'traefik.http.routers.netdata.tls=true'
-      #- 'traefik.http.routers.netdata.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.netdata.middlewares=authelia@docker'
   jellyfin:
-    image: jellyfin/jellyfin:10.8.0-beta2
+    image: jellyfin/jellyfin:10.8.0-beta3
     # image: jellyfin/jellyfin
     container_name: jellyfin
     restart: unless-stopped
@@ -324,8 +294,6 @@ services:
       - 'traefik.http.services.jellyfin.loadbalancer.server.port=8096'
       - 'traefik.http.routers.jellyfin.rule=Host(`media.files.home.arhipov.net`) || Host(`media.home.arhipov.net`)'
       - 'traefik.http.routers.jellyfin.entrypoints=https'
-      - 'traefik.http.routers.jellyfin.tls=true'
-      #- 'traefik.http.routers.jellyfin.tls.certresolver=letsencrypt'
   photoprism:
     image: photoprism/photoprism:latest
     container_name: photoprism
@@ -360,6 +328,4 @@ services:
       - 'traefik.http.services.photoprism.loadbalancer.server.port=2342'
       - 'traefik.http.routers.photoprism.rule=Host(`photos.files.home.arhipov.net`) || Host(`photos.home.arhipov.net`)'
       - 'traefik.http.routers.photoprism.entrypoints=https'
-      - 'traefik.http.routers.photoprism.tls=true'
-      #- 'traefik.http.routers.photoprism.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.photoprism.middlewares=authelia@docker'

@@ -1,0 +1,36 @@
+api:
+  dashboard: true
+providers:
+  docker:
+    watch: true
+    exposedByDefault: false
+  file:
+    directory: /etc/traefik/dynamic/
+    watch: true
+accessLog: {}
+log:
+  level: DEBUG
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: nikolajs.arhipovs@gmail.com
+      caServer: https://acme-v02.api.letsencrypt.org/directory
+      storage: /etc/traefik/acme.json
+      dnsChallenge:
+        provider: cloudflare
+entryPoints:
+  http:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: https
+          scheme: https
+  https:
+    address: ":443"
+    http:
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: "home.arhipov.net"
+            sans: ["*.home.arhipov.net", "*.files.home.arhipov.net"]
