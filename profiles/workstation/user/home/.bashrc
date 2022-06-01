@@ -28,3 +28,4 @@ FZF_TMUX=1
 trysource /usr/share/fzf/completion.bash
 trysource /usr/share/fzf/key-bindings.bash
 trysource ~/.fzf.bash
+

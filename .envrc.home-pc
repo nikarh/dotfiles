@@ -2,7 +2,7 @@
 # shellcheck disable=SC2155
 
 export PROFILE="workstation"
-export GPU_DRIVER="nvidia-open"
+export GPU_DRIVER="nvidia"
 export XORG_GPU="empty"
 
 export PACKAGE_GROUPS="\

@@ -23,7 +23,7 @@
     "workbench.editor.highlightModifiedTabs": true,
     "workbench.tree.indent": 20,
     "[rust]": {
-        "editor.defaultFormatter": "matklad.rust-analyzer",
+        "editor.defaultFormatter": "rust-lang.rust-analyzer",
         "editor.formatOnSave": true,
     },
     "C_Cpp.updateChannel": "Insiders",
@@ -114,4 +114,5 @@
     "haxe.enableCodeLens": true,
     "terminal.external.linuxExec": "alacritty",
     "editor.guides.indentation": true,
+    "typescript.updateImportsOnFileMove.enabled": "always",
 }
