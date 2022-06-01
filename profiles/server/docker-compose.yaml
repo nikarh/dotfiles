@@ -160,7 +160,11 @@ services:
     container_name: hass
     restart: unless-stopped
     logging: *logging
+    devices:
+      # Zigbee coordinator
+      - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:
+      - /dev/serial:/dev/serial
       - /var/lib/hass:/config
       - /etc/localtime:/etc/localtime:ro
     labels:
