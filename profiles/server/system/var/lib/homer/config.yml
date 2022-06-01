@@ -85,6 +85,29 @@ services:
         subtitle: "P2P file sharing"
         url: "https://syncthing.files.home.arhipov.net"
         target: "_blank"
+  - name: Media
+    items:
+      - name: "Radarr"
+        icon: "fas fa-satellite-dish"
+        subtitle: "Movie fetcher"
+        url: "https://radarr.files.home.arhipov.net"
+        target: "_blank"
+      - name: "Sonarr"
+        icon: "fas fa-satellite-dish"
+        subtitle: "Shows fetcher"
+        url: "https://sonarr.files.home.arhipov.net"
+        target: "_blank"
+      - name: "Bazarr"
+        icon: "fas fa-closed-captioning"
+        subtitle: "Sutitle downloader"
+        url: "https://bazarr.files.home.arhipov.net"
+        target: "_blank"
+      - name: "Jackett"
+        icon: "fas fa-bars-progress"
+        subtitle: "Torrent API aggregator"
+        url: "https://jackett.files.home.arhipov.net"
+        target: "_blank"
+
   - name: Services
     items:
       - name: "Home Assistant"

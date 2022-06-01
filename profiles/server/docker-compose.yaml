@@ -207,9 +207,80 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.torrents.loadbalancer.server.port=8080'
-      - 'traefik.http.routers.torrents.rule=Host(`torrents.files.home.arhipov.net`) || Host(`torrents.home.arhipov.net`)'
+      - 'traefik.http.routers.torrents.rule=Host(`torrents.files.home.arhipov.net`)'
       - 'traefik.http.routers.torrents.entrypoints=https'
       - 'traefik.http.routers.torrents.middlewares=authelia@docker'
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    restart: unless-stopped
+    logging: *logging
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /var/lib/jackett/config:/config
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.jackett.loadbalancer.server.port=9117'
+      - 'traefik.http.routers.jackett.rule=Host(`jackett.files.home.arhipov.net`)'
+      - 'traefik.http.routers.jackett.entrypoints=https'
+      - 'traefik.http.routers.jackett.middlewares=authelia@docker'
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    logging: *logging
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /var/lib/radarr/config:/config
+      - /var/data/shares/tmp:/downloads
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.radarr.loadbalancer.server.port=7878'
+      - 'traefik.http.routers.radarr.rule=Host(`radarr.files.home.arhipov.net`)'
+      - 'traefik.http.routers.radarr.entrypoints=https'
+      - 'traefik.http.routers.radarr.middlewares=authelia@docker'
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    logging: *logging
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /var/lib/sonarr/config:/config
+      - /var/data/shares/tmp:/downloads
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.sonarr.loadbalancer.server.port=8989'
+      - 'traefik.http.routers.sonarr.rule=Host(`sonarr.files.home.arhipov.net`)'
+      - 'traefik.http.routers.sonarr.entrypoints=https'
+      - 'traefik.http.routers.sonarr.middlewares=authelia@docker'
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    restart: unless-stopped
+    logging: *logging
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /var/lib/bazarr/config:/config
+      - /var/data/shares/tmp:/downloads
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.bazarr.loadbalancer.server.port=6767'
+      - 'traefik.http.routers.bazarr.rule=Host(`bazarr.files.home.arhipov.net`)'
+      - 'traefik.http.routers.bazarr.entrypoints=https'
+      - 'traefik.http.routers.bazarr.middlewares=authelia@docker'
   syncthing:
     image: syncthing/syncthing
     container_name: syncthing
@@ -230,7 +301,7 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.syncthing.loadbalancer.server.port=8384'
-      - 'traefik.http.routers.syncthing.rule=Host(`syncthing.files.home.arhipov.net`) || Host(`syncthing.home.arhipov.net`)'
+      - 'traefik.http.routers.syncthing.rule=Host(`syncthing.files.home.arhipov.net`)'
       - 'traefik.http.routers.syncthing.entrypoints=https'
       - 'traefik.http.routers.syncthing.middlewares=authelia@docker'
   netdata:
@@ -292,7 +363,7 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.jellyfin.loadbalancer.server.port=8096'
-      - 'traefik.http.routers.jellyfin.rule=Host(`media.files.home.arhipov.net`) || Host(`media.home.arhipov.net`)'
+      - 'traefik.http.routers.jellyfin.rule=Host(`media.files.home.arhipov.net`)'
       - 'traefik.http.routers.jellyfin.entrypoints=https'
   photoprism:
     image: photoprism/photoprism:latest
@@ -326,6 +397,6 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.photoprism.loadbalancer.server.port=2342'
-      - 'traefik.http.routers.photoprism.rule=Host(`photos.files.home.arhipov.net`) || Host(`photos.home.arhipov.net`)'
+      - 'traefik.http.routers.photoprism.rule=Host(`photos.files.home.arhipov.net`)'
       - 'traefik.http.routers.photoprism.entrypoints=https'
       - 'traefik.http.routers.photoprism.middlewares=authelia@docker'

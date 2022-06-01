@@ -30,27 +30,15 @@ access_control:
         - "^/share/*"
         - "^/static/(js|css|img|themes|fonts)/*"
       policy: bypass
-    - domain: traefik.home.arhipov.net
+    - domain_regex: '^(traefik|roborock)\.home\.arhipov\.net$'
       policy: bypass
       networks:
         - internal
-    - domain: roborock.home.arhipov.net
-      policy: bypass
-      networks:
-        - internal
-    - domain: torrents.files.home.arhipov.net
-      policy: bypass
-      networks:
-        - internal
-    - domain: netdata.files.home.arhipov.net
+    - domain_regex: '^(torrents|netdata|jackett|radarr|bazarr|sonarr)\.files\.home\.arhipov\.net$'
       policy: bypass
       networks:
         - internal
     # Specific configuration
-    - domain: files.home.arhipov.net
-      policy: one_factor
-      subject:
-        - "group:files"
     - domain: media.files.home.arhipov.net
       policy: one_factor
       subject:
@@ -60,33 +48,21 @@ access_control:
       subject:
         - "group:samba"
     # Administrative
-    - domain: netdata.files.home.arhipov.net
-      policy: one_factor
-      subject:
-        - "group:admins"
-    - domain: traefik.home.arhipov.net
+    - domain_regex: '^(traefik|netdata\.files)\.home\.arhipov\.net$'
       policy: one_factor
       subject:
         - "group:admins"
     # Residential
-    - domain: roborock.home.arhipov.net
+    - domain_regex: '^(hass|roborock|files)\.home\.arhipov\.net$'
       policy: one_factor
       subject:
         - "group:residents"
-    - domain: torrents.files.home.arhipov.net
-      policy: one_factor
-      subject:
-        - "group:residents"
-    - domain: hass.home.arhipov.net
+    - domain_regex: '^(torrents|jackett|radarr|bazarr|sonarr)\.files\.home\.arhipov\.net$'
       policy: one_factor
       subject:
         - "group:residents"
     # Personal
-    - domain: syncthing.files.home.arhipov.net
-      policy: one_factor
-      subject:
-        - "user:nikarh"
-    - domain: photos.files.home.arhipov.net
+    - domain_regex: '^(syncthing|photos)\.files\.home\.arhipov.net$'
       policy: one_factor
       subject:
         - "user:nikarh"
