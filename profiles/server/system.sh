@@ -4,9 +4,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 sudo timedatectl set-timezone Europe/Riga
 sudo timedatectl set-ntp true
 
-pkg mdadm hdparm haveged \
-    docker fuse-overlayfs docker-compose dhclient \
-    certbot certbot-systemd
+pkg mdadm hdparm docker fuse-overlayfs docker-compose dhclient
 
 sudo systemctl mask mdmonitor
 
