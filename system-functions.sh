@@ -135,7 +135,7 @@ function install-gpu-drivers {
     fi
 
     if grep -q "nvidia" <<< "$GPU_DRIVER"; then
-        pkg nvidia-open nvidia-settings nvidia-utils
+        pkg nvidia nvidia-settings nvidia-utils
 
         DEVICE_ID=$(lspci | grep -i 'VGA.*NVIDIA' | awk '{print $1}' | sed -r 's/^(0*([0-9]+)[:.]0*([0-9]+)[:.]0*([0-9]+)).*/\2:\3:\4/')
         cat /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf \

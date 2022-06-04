@@ -20,7 +20,7 @@ git-get https://github.com/tmux-plugins/tpm.git \
 file-get https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
     ~/.config/nvim/autoload/plug.vim | prepend '  '
 
-nvim +PlugClean! +PlugUpdate +qa
+nvim +PlugClean! +PlugUpdate +qa > /dev/null 2>&1
 
 section "Setting default gtk terminal to alacritty..."
 gsettings set org.gnome.desktop.default-applications.terminal exec alacritty
@@ -40,7 +40,7 @@ install-code-extensions \
     PKief.material-icon-theme zhuangtongfa.material-theme \
     k--kato.intellij-idea-keybindings 2gua.rainbow-brackets \
     ms-vscode.cpptools ms-vscode.cmake-tools \
-    matklad.rust-analyzer tamasfe.even-better-toml vadimcn.vscode-lldb \
+    rust-lang.rust-analyzer tamasfe.even-better-toml vadimcn.vscode-lldb \
     mtxr.sqltools mtxr.sqltools-driver-pg \
     fwcd.kotlin \
     redhat.vscode-yaml \

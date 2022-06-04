@@ -28,13 +28,12 @@ if ! grep -q '^Color$' /etc/pacman.conf; then
     sudo sed -i '/^#Color/s/^#//' /etc/pacman.conf;
 fi
 
-# Base (does not actually install anything, used for later diffing with actually installed packages)
+# Base
 pkg base pacman-contrib
 
 # Always install these tools
-pkg "$(pactree -u base)" \
-    "$(pacman -Sgq base-devel)" \
-    linux linux-firmware yay git git-crypt go \
+pkg $(pacman -Sgq base-devel) \
+    pacman linux linux-firmware yay git git-crypt go \
     systemd-boot-pacman-hook openssh systemd-swap \
     bash-completion man-db man-pages terminus-font starship direnv \
     zip unzip p7zip unrar \
@@ -72,7 +71,7 @@ fi
 yay -Syu --noconfirm
 yay -Rnscu --noconfirm "$(yay -Qtdq)" 2> /dev/null || true
 
-EXPLICITLY_INSTALLED=$(pacman -Qqe | sort)
+EXPLICITLY_INSTALLED=$(pacman -Qqet | sort)
 INSTALLED_BY_SETUP=$(echo "$ALL_PACKAGES_TO_INSTALL" | tr " " "\n" | sort)
 UNEXPECTED=$(comm --output-delimiter=--- -3 \
     <(echo "$EXPLICITLY_INSTALLED") \

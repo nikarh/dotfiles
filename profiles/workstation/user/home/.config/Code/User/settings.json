@@ -115,4 +115,5 @@
     "terminal.external.linuxExec": "alacritty",
     "editor.guides.indentation": true,
     "typescript.updateImportsOnFileMove.enabled": "always",
+    "java.jdt.ls.java.home": "/usr/lib/jvm/java-18-openjdk",
 }

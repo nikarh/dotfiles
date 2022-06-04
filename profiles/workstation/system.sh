@@ -8,24 +8,21 @@ GPU_DRIVER=${GPU_DRIVER:-}
 
 install-gpu-drivers "$(get-gpu-drivers "$GPU_DRIVER")"
 
-pkg perl
-
 # Network
 pkg networkmanager nm-connection-editor networkmanager-openvpn network-manager-applet
 
 # Basic tools
-pkg earlyoom \
+pkg earlyoom lsof \
     bluez bluez-libs bluez-utils \
     alsa-tools alsa-utils alsa-plugins \
     pipewire pipewire-jack pipewire-pulse pipewire-jack-dropin libldac pamixer \
-    tmux docker \
+    tmux \
     localtime-git \
     libmp4v2 lame flac ffmpeg x265 libmad \
     exfat-utils ntfs-3g \
     usbutils android-tools scrcpy \
     git-lfs \
-    wget \
-    croc \
+    wget curl croc \
     ranger ueberzug
 
 # Basic X
@@ -51,16 +48,18 @@ pkg dunst rofi rofi-calc rofi-dmenu alacritty \
     gparted
 
 # Themes and fonts
-pkg lxappearance-gtk3 qt5-styleplugins \
+pkg lxappearance-gtk3 qt5-styleplugins qt6gtk2 \
     noto-fonts noto-fonts-emoji ttf-nerd-fonts-symbols-mono ttf-ms-win10-auto \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix
 
+# Containers
+pkg docker docker-compose kubectl kubectx
+
 # Development
-pkg diffutils upx dhex sysstat gdb svgcleaner`# General use` \
-    code code-marketplace jetbrains-toolbox `# IDE` \
-    jdk-openjdk openjdk-src visualvm jd-gui-bin `# Java`\
-    docker-compose kubectl kubectx `# DevOps` \ \
+pkg diffutils upx dhex sysstat gdb svgcleaner `# General use` \
+    code code-marketplace `# IDE` \
+    jdk-openjdk openjdk-src `# Java` \
     go nvm bash-language-server `# Langs/Platforms` \
     sdl2 glu `# Game dev` \
     cmake ccache cppcheck clang lld lldb `# C++`

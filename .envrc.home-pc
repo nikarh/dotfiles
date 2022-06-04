@@ -10,16 +10,15 @@ export PACKAGE_GROUPS="\
 "
 
 export ADDITIONAL_PACKAGES="\
+    stressapptest memtest86-efi `# RAM tests` \
     zoom-system-qt \
     postgresql-libs rustup \
     chntpw `# Read windows regedit files` \
-    mkvtoolnix-gui powertop \
     easyeffects `# pipewire effects` \
     ftgl hashlink haxe llvm `# game dev` \
-    jdk8-openjdk openjdk8-doc openjdk8-src `# java8` \
     surge `# Best free VST synth` \
-    dexed adlplug opnplug spectmorph vmpk`# FM Synths, VST` \
-    linux-headers dkms it87-dkms-git`# fan control` \
+    dexed adlplug opnplug spectmorph vmpk `# FM Synths, VST` \
+    linux-headers dkms it87-dkms-git `# fan control` \
     rclone-browser sidequest-bin `# oculus quest` \
     sunshine-git `# nvidia gamestream` \
 "
