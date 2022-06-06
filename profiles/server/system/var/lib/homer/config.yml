@@ -41,7 +41,7 @@ message:
   content: "SFTP is accessible at <a href=\"sftp://files.home.arhipov.net:2222\">files.home.arhipov.net:2222</a>"
 
 services:
-  - name: Network
+  - name: Home
     items:
       - name: Router
         subtitle: WAN->Ethernet router
@@ -63,17 +63,22 @@ services:
         subtitle: "Monitoring"
         url: "https://netdata.files.home.arhipov.net"
         target: "_blank"
-  - name: Files
+      - name: "Roborock"
+        icon: "fas fa-broom"
+        subtitle: "Vacuum cleaner"
+        url: "https://roborock.home.arhipov.net"
+        target: "_blank"
+  - name: Files & Services
     items:
+      - name: "Home Assistant"
+        icon: "fas fa-home"
+        subtitle: "Smart home automation"
+        url: "https://hass.home.arhipov.net"
+        target: "_blank"
       - name: "Jellyfin"
         icon: "fas fa-film"
         subtitle: "Media server"
         url: "https://media.files.home.arhipov.net"
-        target: "_blank"
-      - name: "Torrents"
-        icon: "fas fa-download"
-        subtitle: "Torrent daemon and web client"
-        url: "https://torrents.files.home.arhipov.net"
         target: "_blank"
       - name: "File browser"
         icon: "fas fa-folder-open"
@@ -85,8 +90,18 @@ services:
         subtitle: "P2P file sharing"
         url: "https://syncthing.files.home.arhipov.net"
         target: "_blank"
+      - name: "Photoprism"
+        icon: "fas fa-camera-retro"
+        subtitle: "Photos collection"
+        url: "https://photos.files.home.arhipov.net"
+        target: "_blank"
   - name: Media
     items:
+      - name: "Jellyseerr"
+        icon: "fas fa-clapperboard"
+        subtitle: "Watch request list"
+        url: "https://jellyseerr.files.home.arhipov.net"
+        target: "_blank"
       - name: "Radarr"
         icon: "fas fa-satellite-dish"
         subtitle: "Movie fetcher"
@@ -99,24 +114,16 @@ services:
         target: "_blank"
       - name: "Bazarr"
         icon: "fas fa-closed-captioning"
-        subtitle: "Sutitle downloader"
+        subtitle: "Subtitle fetcher"
         url: "https://bazarr.files.home.arhipov.net"
         target: "_blank"
       - name: "Jackett"
         icon: "fas fa-bars-progress"
-        subtitle: "Torrent API aggregator"
+        subtitle: "Indexer"
         url: "https://jackett.files.home.arhipov.net"
         target: "_blank"
-
-  - name: Services
-    items:
-      - name: "Home Assistant"
-        icon: "fas fa-home"
-        subtitle: "Smart home automation"
-        url: "https://hass.home.arhipov.net"
-        target: "_blank"
-      - name: "Roborock"
-        icon: "fas fa-broom"
-        subtitle: "Vacuum cleaner"
-        url: "https://roborock.home.arhipov.net"
+      - name: "Torrents"
+        icon: "fas fa-download"
+        subtitle: "Torrent daemon and web client"
+        url: "https://torrents.files.home.arhipov.net"
         target: "_blank"

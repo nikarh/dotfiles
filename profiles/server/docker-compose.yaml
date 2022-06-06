@@ -219,10 +219,10 @@ services:
     container_name: jackett
     restart: unless-stopped
     logging: *logging
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
+    environment: &arr_env
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Riga
     volumes:
       - /var/lib/jackett/config:/config
     labels:
@@ -236,10 +236,7 @@ services:
     container_name: radarr
     restart: unless-stopped
     logging: *logging
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
+    environment: *arr_env
     volumes:
       - /var/lib/radarr/config:/config
       - /var/data/shares/tmp:/downloads
@@ -254,10 +251,7 @@ services:
     container_name: sonarr
     restart: unless-stopped
     logging: *logging
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
+    environment: *arr_env
     volumes:
       - /var/lib/sonarr/config:/config
       - /var/data/shares/tmp:/downloads
@@ -272,10 +266,7 @@ services:
     container_name: bazarr
     restart: unless-stopped
     logging: *logging
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
+    environment: *arr_env
     volumes:
       - /var/lib/bazarr/config:/config
       - /var/data/shares/tmp:/downloads
@@ -285,6 +276,20 @@ services:
       - 'traefik.http.routers.bazarr.rule=Host(`bazarr.files.home.arhipov.net`)'
       - 'traefik.http.routers.bazarr.entrypoints=https'
       - 'traefik.http.routers.bazarr.middlewares=authelia@docker'
+  jellyseerr:
+    image: fallenbagel/jellyseerr:develop
+    container_name: jellyseerr
+    restart: unless-stopped
+    logging: *logging
+    environment: *arr_env
+    volumes:
+      - /var/data/jellyseerr:/app/config
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.jellyseerr.loadbalancer.server.port=5055'
+      - 'traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.files.home.arhipov.net`)'
+      - 'traefik.http.routers.jellyseerr.entrypoints=https'
+      - 'traefik.http.routers.jellyseerr.middlewares=authelia@docker'
   syncthing:
     image: syncthing/syncthing
     container_name: syncthing

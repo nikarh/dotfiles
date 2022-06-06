@@ -34,7 +34,7 @@ access_control:
       policy: bypass
       networks:
         - internal
-    - domain_regex: '^(torrents|netdata|jackett|radarr|bazarr|sonarr)\.files\.home\.arhipov\.net$'
+    - domain_regex: '^(torrents|netdata|jackett|radarr|bazarr|sonarr|jellyseerr)\.files\.home\.arhipov\.net$'
       policy: bypass
       networks:
         - internal
@@ -57,7 +57,7 @@ access_control:
       policy: one_factor
       subject:
         - "group:residents"
-    - domain_regex: '^(torrents|jackett|radarr|bazarr|sonarr)\.files\.home\.arhipov\.net$'
+    - domain_regex: '^(torrents|jackett|radarr|bazarr|sonarr|jellyseerr)\.files\.home\.arhipov\.net$'
       policy: one_factor
       subject:
         - "group:residents"
