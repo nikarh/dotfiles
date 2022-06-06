@@ -87,14 +87,14 @@ services:
       # Configs
       - /var/lib/sftpd/secrets/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
       - /var/lib/sftpd/secrets/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key:ro
+      - /var/lib/sftpd/sshd_config:/etc/ssh/sshd_config:ro
       - /var/lib/sftpd/run.sh:/run.sh:ro
       - /var/lib/sftpd/authelia.sh:/authelia.sh:ro
       - /var/lib/sftpd/base-auth:/etc/pam.d/base-auth:ro
-      - /var/lib/sftpd/sshd_config:/etc/ssh/sshd_config:ro
       # Data
       - /var/data/home:/home
   traefik:
-    image: traefik:2.6
+    image: traefik:2.7
     container_name: traefik
     restart: unless-stopped
     logging: *logging
@@ -114,7 +114,6 @@ services:
       - 'traefik.http.routers.api.entrypoints=https'
       - 'traefik.http.routers.api.service=api@internal'
       - 'traefik.http.routers.api.middlewares=authelia@docker'
-     
   authelia:
     image: authelia/authelia
     container_name: authelia
@@ -124,8 +123,6 @@ services:
       disable: true
     user: 1000:1000
     environment:
-      PUID: 1000
-      PGID: 1000
       AUTHELIA_JWT_SECRET_FILE: /config/secrets/jwt_secret
       AUTHELIA_SESSION_SECRET_FILE: /config/secrets/session_secret
       AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /config/secrets/storage_encryption_key
@@ -146,9 +143,7 @@ services:
     logging: *logging
     healthcheck:
       disable: true
-    environment:
-      UID: 1000
-      GID: 1000
+    user: '1000:1000'
     volumes:
       - /var/lib/homer:/www/assets
     labels:
@@ -200,11 +195,10 @@ services:
     logging: *logging
     healthcheck:
       disable: true
+    user: 1000:1000
     ports:
       - 6881:6881/tcp
       - 6881:6881/udp
-    environment:
-      TZ: Europe/Riga
     volumes:
       - /var/lib/qbittorrent/config:/config
       - /var/data/shares/tmp:/downloads
@@ -281,7 +275,9 @@ services:
     container_name: jellyseerr
     restart: unless-stopped
     logging: *logging
-    environment: *arr_env
+    user: 1000:1000
+    environment:
+      TZ: Europe/Riga
     volumes:
       - /var/data/jellyseerr:/app/config
     labels:
@@ -313,37 +309,6 @@ services:
       - 'traefik.http.routers.syncthing.rule=Host(`syncthing.files.home.arhipov.net`)'
       - 'traefik.http.routers.syncthing.entrypoints=https'
       - 'traefik.http.routers.syncthing.middlewares=authelia@docker'
-  netdata:
-    image: netdata/netdata
-    container_name: netdata
-    hostname: netdata
-    restart: unless-stopped
-    logging: *logging
-    healthcheck:
-      disable: true
-    cap_add:
-      - SYS_PTRACE
-    security_opt:
-      - apparmor:unconfined
-    environment:
-      DISABLE_TELEMETRY: 1
-      DOCKER_USR: 1000
-      DOCKER_GRP: 1000
-    volumes:
-      - /var/lib/netdata/config:/etc/netdata
-      - /var/lib/netdata/lib:/var/lib/netdata
-      - /var/lib/netdata/cache:/var/cache/netdata
-      - /etc/passwd:/host/etc/passwd:ro
-      - /etc/group:/host/etc/group:ro
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /etc/os-release:/host/etc/os-release:ro
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.netdata.loadbalancer.server.port=19999'
-      - 'traefik.http.routers.netdata.rule=Host(`netdata.files.home.arhipov.net`)'
-      - 'traefik.http.routers.netdata.entrypoints=https'
-      - 'traefik.http.routers.netdata.middlewares=authelia@docker'
   jellyfin:
     image: jellyfin/jellyfin:10.8.0-beta3
     # image: jellyfin/jellyfin
@@ -381,6 +346,7 @@ services:
     logging: *logging
     healthcheck:
       disable: true
+    user: "1000:1000"
     environment:
       PHOTOPRISM_ORIGINALS_LIMIT: 1000               # File size limit for originals in MB (increase for high-res video)
       PHOTOPRISM_HTTP_COMPRESSION: "gzip"            # Improves transfer speed and bandwidth utilization (none or gzip)
@@ -397,7 +363,6 @@ services:
       PHOTOPRISM_SITE_CAPTION: "My photos"
       PHOTOPRISM_SITE_DESCRIPTION: ""
       PHOTOPRISM_SITE_AUTHOR: ""
-    user: "1000:1000"
     volumes:
       - /var/data/shares/nikarh/Pictures:/photoprism/originals:ro
       - /var/lib/photoprism/import:/photoprism/import
@@ -409,3 +374,34 @@ services:
       - 'traefik.http.routers.photoprism.rule=Host(`photos.files.home.arhipov.net`)'
       - 'traefik.http.routers.photoprism.entrypoints=https'
       - 'traefik.http.routers.photoprism.middlewares=authelia@docker'
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: netdata
+    restart: unless-stopped
+    logging: *logging
+    healthcheck:
+      disable: true
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    environment:
+      DISABLE_TELEMETRY: 1
+      DOCKER_USR: 1000
+      DOCKER_GRP: 1000
+    volumes:
+      - /var/lib/netdata/config:/etc/netdata
+      - /var/lib/netdata/lib:/var/lib/netdata
+      - /var/lib/netdata/cache:/var/cache/netdata
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.netdata.loadbalancer.server.port=19999'
+      - 'traefik.http.routers.netdata.rule=Host(`netdata.files.home.arhipov.net`)'
+      - 'traefik.http.routers.netdata.entrypoints=https'
+      - 'traefik.http.routers.netdata.middlewares=authelia@docker'

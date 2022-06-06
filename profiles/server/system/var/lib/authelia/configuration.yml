@@ -23,18 +23,21 @@ access_control:
   default_policy: deny
   rules:
     # Bypass
-    - domain:
-        - "files.home.arhipov.net"
+    - domain: "files.home.arhipov.net"
+      policy: bypass
       resources:
         - "^/api/public/(share|dl)/*"
         - "^/share/*"
         - "^/static/(js|css|img|themes|fonts)/*"
+    - domain_regex: '^(sonarr|radarr|bazarr)\.files\.home\.arhipov\.net$'
       policy: bypass
+      resources:
+        - "^/api/*"
     - domain_regex: '^(traefik|roborock)\.home\.arhipov\.net$'
       policy: bypass
       networks:
         - internal
-    - domain_regex: '^(torrents|netdata|jackett|radarr|bazarr|sonarr|jellyseerr)\.files\.home\.arhipov\.net$'
+    - domain_regex: '^(torrents|netdata|jackett|sonarr|radarr|bazarr|jellyseerr)\.files\.home\.arhipov\.net$'
       policy: bypass
       networks:
         - internal
@@ -57,7 +60,7 @@ access_control:
       policy: one_factor
       subject:
         - "group:residents"
-    - domain_regex: '^(torrents|jackett|radarr|bazarr|sonarr|jellyseerr)\.files\.home\.arhipov\.net$'
+    - domain_regex: '^(torrents|jackett|sonarr|radarr|bazarr|jellyseerr)\.files\.home\.arhipov\.net$'
       policy: one_factor
       subject:
         - "group:residents"
