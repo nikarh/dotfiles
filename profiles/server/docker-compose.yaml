@@ -288,7 +288,9 @@ services:
       - 'traefik.http.services.jellyseerr.loadbalancer.server.port=5055'
       - 'traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.files.home.arhipov.net`)'
       - 'traefik.http.routers.jellyseerr.entrypoints=https'
-      - 'traefik.http.routers.jellyseerr.middlewares=authelia@docker'
+      - 'traefik.http.routers.jellyseerr.middlewares=authelia@docker,jellyheaders'
+      - 'traefik.http.middlewares.jellyheaders.headers.customrequestheaders.X-API-Key=MTY1NDcyMzQ0NDI4MDExYmE5MDA4LWE4NTQtNGQ1Mi1hN2FjLWVjZTA3OWRjMDkzZik='
+      - 'traefik.http.middlewares.jellyheaders.headers.customrequestheaders.X-API-User=4'
   syncthing:
     image: syncthing/syncthing
     container_name: syncthing
