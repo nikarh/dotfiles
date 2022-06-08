@@ -155,6 +155,9 @@ services:
     container_name: hass
     restart: unless-stopped
     logging: *logging
+    ports:
+      # Apple HomeKit
+      - 21064:21064
     devices:
       # Zigbee coordinator
       - /dev/ttyUSB0:/dev/ttyUSB0
@@ -279,7 +282,7 @@ services:
     environment:
       TZ: Europe/Riga
     volumes:
-      - /var/data/jellyseerr:/app/config
+      - /var/lib/jellyseerr:/app/config
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.jellyseerr.loadbalancer.server.port=5055'
