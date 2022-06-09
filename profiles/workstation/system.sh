@@ -37,13 +37,13 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
 # X applications
 pkg dunst rofi rofi-calc rofi-dmenu alacritty \
     pavucontrol blueman \
-    eog xarchiver gsimplecal \
+    eom xarchiver gsimplecal \
     chromium chromium-widevine firefox freshplayerplugin torbrowser-launcher \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
     qdirstat keepassxc flameshot qbittorrent insync syncthing syncthing-gtk-python3 \
     libsecret seahorse \
-    telegram-desktop slack-desktop epdfview libreoffice-fresh \
-    gpicview krita inkscape aseprite-git \
+    telegram-desktop slack-desktop epdfview onlyoffice-bin \
+    krita inkscape aseprite-git \
     audacious vlc reaper-bin \
     gparted
 
