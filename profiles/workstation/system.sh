@@ -15,7 +15,7 @@ pkg networkmanager nm-connection-editor networkmanager-openvpn network-manager-a
 pkg earlyoom lsof \
     bluez bluez-libs bluez-utils \
     alsa-tools alsa-utils alsa-plugins \
-    pipewire pipewire-jack pipewire-pulse pipewire-jack-dropin libldac pamixer \
+    pipewire pipewire-jack pipewire-pulse libldac pamixer \
     tmux \
     localtime-git \
     libmp4v2 lame flac ffmpeg x265 libmad \
@@ -136,4 +136,4 @@ add-user-to-groups \
     input storage audio video \
     docker lp systemd-journal bluetooth sudo \
     wireshark libvirt adbusers bumblebee printer \
-    uucp plugdev
+    uucp plugdev realtime

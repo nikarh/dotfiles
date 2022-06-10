@@ -9,16 +9,18 @@ export PACKAGE_GROUPS="\
     xorg \
 "
 
+export ADDITIONAL_UNITS="fancontrol"
+
 export ADDITIONAL_PACKAGES="\
+    lm_sensors \
     stressapptest memtest86-efi `# RAM tests` \
-    zoom-system-qt \
     postgresql-libs rustup \
     chntpw `# Read windows regedit files` \
     easyeffects `# pipewire effects` \
     ftgl hashlink haxe llvm `# game dev` \
     surge `# Best free VST synth` \
-    dexed adlplug opnplug spectmorph vmpk `# FM Synths, VST` \
+    adlplug opnplug spectmorph vmpk `# FM Synths, VST` \
     linux-headers dkms it87-dkms-git `# fan control` \
-    rclone-browser sidequest-bin `# oculus quest` \
-    sunshine-git `# nvidia gamestream` \
+    rclone-browser `# oculus quest` \
+    sunshine `# nvidia gamestream` \
 "

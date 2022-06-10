@@ -1,0 +1,13 @@
+# This file was created by Fancontrol-GUI
+INTERVAL=10
+DEVPATH=hwmon2=devices/platform/it87.2624 hwmon3=devices/pci0000:00/0000:00:18.3
+DEVNAME=hwmon2=it8688 hwmon3=k10temp
+FCTEMPS=hwmon2/pwm1=hwmon3/temp1_input hwmon2/pwm3=hwmon3/temp1_input hwmon2/pwm4=hwmon3/temp1_input hwmon2/pwm5=hwmon3/temp1_input
+FCFANS=hwmon2/pwm1=hwmon2/fan1_input hwmon2/pwm3=hwmon2/fan3_input hwmon2/pwm4=hwmon2/fan4_input hwmon2/pwm5=hwmon2/fan5_input
+MINTEMP=hwmon2/pwm1=30 hwmon2/pwm3=52 hwmon2/pwm4=48 hwmon2/pwm5=30
+MAXTEMP=hwmon2/pwm1=87 hwmon2/pwm3=90 hwmon2/pwm4=86 hwmon2/pwm5=72
+MINSTART=hwmon2/pwm1=0 hwmon2/pwm3=255 hwmon2/pwm4=255 hwmon2/pwm5=255
+MINSTOP=hwmon2/pwm1=50 hwmon2/pwm3=0 hwmon2/pwm4=0 hwmon2/pwm5=25
+MINPWM=hwmon2/pwm1=50 hwmon2/pwm3=0 hwmon2/pwm4=0 hwmon2/pwm5=0
+MAXPWM=hwmon2/pwm1=129 hwmon2/pwm3=56 hwmon2/pwm4=1 hwmon2/pwm5=122
+AVERAGE=hwmon2/pwm1=1 hwmon2/pwm3=1 hwmon2/pwm4=2 hwmon2/pwm5=1
