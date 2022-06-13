@@ -1,6 +1,6 @@
 FROM alpine
 
-RUN apk add --no-cache samba samba-common-tools runit shadow curl jq
+RUN apk add --no-cache samba samba-common-tools tzdata runit shadow curl jq
 
 RUN mkdir -p /etc/runit/smbd && \
     mkdir -p /etc/runit/nmbd && \

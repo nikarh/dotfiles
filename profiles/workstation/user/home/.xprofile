@@ -1,8 +1,6 @@
 #!/bin/sh
 
-# shellcheck source=./.profile
-. ~/.profile
-
+. ~/.profileq
 . ~/.bin/init-input-devices.sh
 
 # Flags only for xorg

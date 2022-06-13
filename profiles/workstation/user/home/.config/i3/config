@@ -26,6 +26,7 @@ exec ~/.bin/dbus-monitor.sh org.freedesktop.login1.Session Unlock ~/.bin/init-in
 # Listen to xkb changes
 exec ~/.bin/xkb-switch-dbus.sh
 
+exec picom
 exec dunst
 exec flameshot
 exec nm-applet
@@ -34,7 +35,6 @@ exec insync start
 exec redshift-gtk -t 6500:2400
 exec --no-startup-id i3-msg 'workspace '$ws1'; exec /usr/bin/alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main'
 exec --no-startup-id "feh --bg-scale /usr/share/backgrounds/wallpaper.png"
-exec  ~/.bin/init-input-devices.sh
 
 # i3 config file (v4)
 set $mod Mod4
