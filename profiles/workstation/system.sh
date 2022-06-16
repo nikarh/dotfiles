@@ -12,10 +12,10 @@ install-gpu-drivers "$(get-gpu-drivers "$GPU_DRIVER")"
 pkg networkmanager nm-connection-editor networkmanager-openvpn network-manager-applet
 
 # Basic tools
-pkg earlyoom lsof \
+pkg earlyoom lsof traceroute \
     bluez bluez-libs bluez-utils \
     alsa-tools alsa-utils alsa-plugins \
-    pipewire pipewire-jack pipewire-pulse libldac pamixer \
+    pipewire wireplumber pipewire-jack pipewire-pulse libldac pamixer \
     tmux \
     localtime-git \
     libmp4v2 lame flac ffmpeg x265 libmad \

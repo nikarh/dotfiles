@@ -62,6 +62,7 @@ services:
     container_name: samba
     restart: unless-stopped
     logging: *logging
+    network_mode: host
     ports:
       - 137:137/udp # nmbd
       - 138:138/udp # nmbd
@@ -315,8 +316,7 @@ services:
       - 'traefik.http.routers.syncthing.entrypoints=https'
       - 'traefik.http.routers.syncthing.middlewares=authelia@docker'
   jellyfin:
-    image: jellyfin/jellyfin:10.8.0-beta3
-    # image: jellyfin/jellyfin
+    image: jellyfin/jellyfin
     container_name: jellyfin
     restart: unless-stopped
     logging: *logging
