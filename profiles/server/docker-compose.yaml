@@ -178,6 +178,7 @@ services:
     logging: *logging
     healthcheck:
       disable: true
+    user: 1000:1000
     volumes:
       - /var/data/home:/srv
       - /var/lib/filebrowser:/data
@@ -299,7 +300,7 @@ services:
     logging: *logging
     healthcheck:
       disable: true
-    user: '1000:1000'
+    user: 1000:1000
     ports:
       - 22000:22000/tcp
       - 22000:22000/udp
@@ -351,7 +352,7 @@ services:
     logging: *logging
     healthcheck:
       disable: true
-    user: "1000:1000"
+    user: 1000:1000
     environment:
       PHOTOPRISM_ORIGINALS_LIMIT: 1000               # File size limit for originals in MB (increase for high-res video)
       PHOTOPRISM_HTTP_COMPRESSION: "gzip"            # Improves transfer speed and bandwidth utilization (none or gzip)
