@@ -7,10 +7,14 @@ pkg terminus-font \
     bash-completion starship git-delta grc fzf \
     exa fd ripgrep bat \
     socat bandwhich traceroute \
-    parallel lsof usbutils rsync htop jq croc \
+    parallel lsof usbutils rsync htop iotop \
+    wget jq croc \
     rdfind \
-    ranger ueberzug \
-    wget
+    ranger
+
+if [ -n "$ARGS_gui" ]; then 
+    pkg ueberzug
+fi
 
 # Copy all configs to root
 sudo cp -ufrTv "$ROOT/root/" /

@@ -62,7 +62,6 @@ services:
     container_name: samba
     restart: unless-stopped
     logging: *logging
-    network_mode: host
     ports:
       - 137:137/udp # nmbd
       - 138:138/udp # nmbd

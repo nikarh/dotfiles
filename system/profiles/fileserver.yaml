@@ -2,5 +2,8 @@ modules:
   - name: common/base
     hostname: files
     timezone: Europe/Riga
+  - name: common/bootloader
+  - name: common/ucode
   - name: common/docker
+  - name: common/console
   - name: server

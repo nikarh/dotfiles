@@ -1,6 +1,8 @@
 #!/bin/bash -e
 
-pkg mdadm hdparm fuse-overlayfs dhclient
+pkg intel-hybrid-codec-driver intel-media-driver \
+    mdadm hdparm fuse-overlayfs dhclient \
+    ffmpeg mkvtoolnix-cli perl-rename
 
 sudo systemctl mask mdmonitor
 
@@ -31,7 +33,7 @@ sudo mount -a
 
 # Start services
 sudo systemctl enable dhclient@eno1
-sudo systemctl enablesshd
+sudo systemctl enable sshd
 
 sudo docker-compose --project-directory="$ROOT" build
 sudo docker-compose --project-directory="$ROOT" up -d

@@ -7,8 +7,10 @@ modules:
       deny = 15
       unlock_time = 60
   - name: common/bootloader
+    memtest: true
   - name: common/ucode
   - name: common/console
+    gui: true
   - name: common/docker
   - name: common/gpu-drivers
     drivers: nvidia
