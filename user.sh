@@ -3,9 +3,9 @@
 cd "$(dirname "${BASH_SOURCE[0]}")"
 source ./user-functions.sh
 
-if [[ -z "$PROFILE" ]] || [[ ! -d "profiles/$PROFILE" ]]; then
+if [[ -z "$USER_PROFILE" ]] || [[ ! -d "user/$USER_PROFILE" ]]; then
     # shellcheck disable=SC2046
-    echo Invalid \$PROFILE, use one of the following: $(ls profiles)
+    echo Invalid \$USER_PROFILE, use one of the following: $(ls user)
     exit 1
 fi
 
@@ -16,4 +16,4 @@ if [ ! -f "$HOME/.ssh/id_rsa" ]; then
 fi
 
 # shellcheck disable=SC1090
-source "./profiles/$PROFILE/user.sh"
+source "./user/$USER_PROFILE/user.sh"

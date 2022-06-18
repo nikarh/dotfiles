@@ -1,0 +1,6 @@
+modules:
+  - name: common/base
+    hostname: files
+    timezone: Europe/Riga
+  - name: common/docker
+  - name: server

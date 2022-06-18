@@ -1,66 +1,94 @@
 #!/bin/bash -e
-#shellcheck disable=SC2155
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
-source ./system-functions.sh
 
-if [[ -z "$PROFILE" ]] || [[ ! -d "profiles/$PROFILE" ]]; then
-    # shellcheck disable=SC2046
-    echo Invalid \$PROFILE, use one of the following: $(ls profiles)
-    exit 1
-fi
-
-export SUB_PROFILE="$(readlink -f .envrc | sed -r 's/.*\.envrc\.//')"
 export REBUILD_INITRD=0
 export ALL_PACKAGES_TO_INSTALL=""
 
-# Sacrifice disk for time, do not xzip when building by makepkg
-sudo sed -i '/^PKGEXT=/s/\.xz//g' /etc/makepkg.conf
-
-# Install yay
-if ! pacman -Qi yay > /dev/null 2>&1; then
-    COMMAND="sudo pacman" pkg base base-devel git go
-    aur-pkg yay
-fi
-
-# Colorize pacman
-if ! grep -q '^Color$' /etc/pacman.conf; then
-    sudo sed -i '/^#Color/s/^#//' /etc/pacman.conf;
-fi
-
-# Base
-pkg base pacman-contrib
-
-# Always install these tools
-pkg $(pacman -Sgq base-devel) \
-    pacman linux linux-firmware yay git git-crypt go \
-    systemd-boot-pacman-hook openssh systemd-swap \
-    bash-completion man-db man-pages terminus-font starship direnv \
-    zip unzip p7zip unrar \
-    socat parallel rsync bandwhich htop grc fzf exa fd ripgrep jq bat neovim \
-    git git-delta
-
-# CPU specific
-CPU_MODEL=$(grep model\ name /proc/cpuinfo | head -n 1)
-if grep -qi amd <<< "$CPU_MODEL"; then
-    pkg amd-ucode
-elif grep -qi intel <<< "$CPU_MODEL"; then
-    pkg intel-ucode intel-hybrid-codec-driver intel-media-driver
-fi
-
-# Enable lz4 initrd compression for faster boot
-if ! grep -q '^COMPRESSION.*' /etc/mkinitcpio.conf; then
-    if grep -q '^#COMPRESSION.*' /etc/mkinitcpio.conf; then
-        sudo sed -i '/^#COMPRESSION="lz4"/s/^#//' /etc/mkinitcpio.conf;
-    else
-        echo 'COMPRESSION="lz4"' | sudo tee -a /etc/mkinitcpio.conf > /dev/null
+function require-arg {
+    local varname="ARGS_$1"
+    if [ -z "${!varname}" ]; then
+        echo $1 is required
+        exit 1
     fi
+}
 
-    REBUILD_INITRD=1
+function pkg {
+    local installed=$(pacman -Q | awk '{ print $1 }' | sort)
+    local requested=$(echo "$@" | tr " " "\n" | sort | uniq)
+    local to_install=$(comm --output-delimiter=--- -3 \
+        <(echo "$requested") \
+        <(echo "$installed") | grep -v ^---)
+    local COMMAND="${COMMAND:-yay --pgpfetch}"
+
+    export ALL_PACKAGES_TO_INSTALL="$ALL_PACKAGES_TO_INSTALL $requested"
+
+    if [ -n "$to_install" ]; then
+        # shellcheck disable=SC2086
+        $COMMAND --noconfirm -S --needed $to_install
+    fi
+}
+
+function unpkg {
+    local COMMAND="${COMMAND:-yay}"
+    $COMMAND -Rnsc --noconfirm "$@" 2> /dev/null
+}
+
+function create-groups {
+    local ALL_GROUPS=$(cut -d: -f1 /etc/group)
+    for group in "$@"; do
+        if ! echo "$ALL_GROUPS" | grep -qw "$group"; then
+            sudo groupadd "$group"
+        fi
+    done
+}
+
+function add-user-to-groups {
+    for group in "$@"; do
+        if grep -q "$group" /etc/group && ! groups "$USER" | grep -qw "$group"; then
+            sudo gpasswd --add "$USER" "$group"
+        fi
+    done
+}
+
+function add-module-to-initrd {
+    if ! grep -q "^MODULES.*${1}" /etc/mkinitcpio.conf; then
+        sudo sed -E -i "s/^(MODULES=\()(.*)/\1${1} \2/; s/^(MODULES.*) (\).*)/\1\2/" /etc/mkinitcpio.conf
+        export REBUILD_INITRD=1
+    fi
+}
+
+function remove-module-from-initrd {
+    if grep -q "^MODULES.*${1}" /etc/mkinitcpio.conf; then
+        sudo sed -E -i "s/^(MODULES=\()(.*)${1}(.*)/\1\2\3/; s/^(MODULES=\() (.*)/\1\2/; s/^(MODULES=\(.*) \)/\1)/" /etc/mkinitcpio.conf
+        export REBUILD_INITRD=1
+    fi
+}
+
+PROFILE="system/profiles/$PROFILE.yaml"
+
+if [[ -z "$PROFILE" ]] || [[ ! -f "$PROFILE" ]]; then
+    # shellcheck disable=SC2046
+    echo Invalid profile, use one of the following:
+    ls profiles | tr ' ' '\n' | sed -r 's/^(.*).yaml/  \1/'
+    exit 1
 fi
 
-# shellcheck disable=SC1090
-source "./profiles/$PROFILE/system.sh"
+COMMAND="sudo pacman" pkg go-yq
+
+# Install modules
+while read line ; do
+    INDEX=$(echo $line | awk '{print $2}')
+    NAME=$(cat "$PROFILE" | yq ".modules[$INDEX].name")
+    ARGS=$(cat "$PROFILE" | yq -o p ".modules[$INDEX]" | sed -r 's/([^ ]+) = (.*)/ARGS_\1="\2"/')
+    export ROOT="$(pwd)/system/modules/$NAME"
+
+    eval "$ARGS" > /dev/null
+    echo Installing module $NAME
+    source "$ROOT/install.sh"
+    
+    eval "$(echo "$ARGS" | sed -r 's/^([^=]+)=.*/unset \1/')" > /dev/null
+done <<< "$(cat "$PROFILE" | yq '.modules | keys')"
 
 # Rebuild initrd if required
 if [[ "$REBUILD_INITRD" -eq 1 ]]; then
@@ -68,10 +96,11 @@ if [[ "$REBUILD_INITRD" -eq 1 ]]; then
 fi
 
 # Upgrade all packages
+echo
 yay -Syu --noconfirm
 yay -Rnscu --noconfirm "$(yay -Qtdq)" 2> /dev/null || true
 
-EXPLICITLY_INSTALLED=$(pacman -Qqet | sort)
+EXPLICITLY_INSTALLED=$(pacman -Qqett | sort)
 INSTALLED_BY_SETUP=$(echo "$ALL_PACKAGES_TO_INSTALL" | tr " " "\n" | sort)
 UNEXPECTED=$(comm --output-delimiter=--- -3 \
     <(echo "$EXPLICITLY_INSTALLED") \

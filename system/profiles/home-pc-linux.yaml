@@ -1,0 +1,30 @@
+modules:
+  - name: common/base
+    hostname: home-pc-linux
+    timezone: Europe/Riga
+  - name: common/faillock
+    conf: |
+      deny = 15
+      unlock_time = 60
+  - name: common/bootloader
+  - name: common/ucode
+  - name: common/console
+  - name: common/docker
+  - name: common/gpu-drivers
+    drivers: nvidia
+  - name: common/plymouth
+  - name: common/xorg
+  - name: common/networkmanager
+    gui: true
+  - name: common/audio
+    gui: true
+  - name: common/windows
+  - name: common/audio-production
+  - name: common/bluetooth
+    gui: true
+  - name: common/printer
+    gui: true
+  - name: common/development
+  - name: home-pc-linux/android
+  - name: home-pc-linux/fancontrol
+  - name: home-pc-linux/fix-b550m-sleep

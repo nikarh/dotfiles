@@ -1,0 +1,7 @@
+root/var/lib/sftpd/secrets/** filter=git-crypt diff=git-crypt
+root/var/lib/hass/.storage/** filter=git-crypt diff=git-crypt
+root/var/lib/hass/secrets.yaml filter=git-crypt diff=git-crypt
+root/var/lib/filebrowser/** filter=git-crypt diff=git-crypt
+root/var/lib/mosquitto/users.conf filter=git-crypt diff=git-crypt
+root/var/lib/authelia/secrets/** filter=git-crypt diff=git-crypt
+secrets/** filter=git-crypt diff=git-crypt
