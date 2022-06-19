@@ -14,4 +14,4 @@ if [[ $(diff /etc/plymouth/plymouthd.conf "$ROOT/root/etc/plymouth/plymouthd.con
 fi
 
 # Copy all configs to root
-sudo cp -ufrTv "$ROOT/root/" /
+sudo cp -frTv "$ROOT/root/" /
