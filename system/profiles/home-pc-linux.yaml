@@ -16,6 +16,7 @@ modules:
     drivers: nvidia
   - name: common/plymouth
   - name: common/xorg
+    pipewire: true
   - name: common/networkmanager
     gui: true
   - name: common/audio

@@ -36,6 +36,11 @@ if ! grep -q '^Color$' /etc/pacman.conf; then
     sudo sed -i '/^#Color/s/^#//' /etc/pacman.conf;
 fi
 
+# Enable multilib for wine
+if ! grep -q '^[multilib]$' /etc/pacman.conf; then
+    sudo sed -i 'N;s/^#\[multilib\]\n#/\[multilib\]\n/' /etc/pacman.conf
+fi
+
 # Base
 pkg base pacman-contrib
 

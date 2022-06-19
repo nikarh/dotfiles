@@ -9,6 +9,10 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     lightdm lightdm-gtk-greeter \
     libva-vdpau-driver
 
+if [ -n "$ARGS_pipewire" ]; then
+    pkg pipewire-jack
+fi
+
 pkg i3-gaps i3status-rust i3lock-fancy-rapid-git redshift \
     xkb-switch lxsession-gtk3 picom \
     dunst rofi rofi-calc rofi-dmenu 
