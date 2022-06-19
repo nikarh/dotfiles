@@ -16,7 +16,7 @@ pkg i3-gaps i3status-rust i3lock-fancy-rapid-git redshift \
 # GUI applications
 pkg alacritty \
     eom xarchiver gsimplecal \
-    chromium chromium-widevine firefox freshplayerplugin torbrowser-launcher \
+    chromium chromium-widevine firefox torbrowser-launcher \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
     qdirstat keepassxc flameshot qbittorrent insync syncthing syncthing-gtk-python3 \
     libsecret seahorse \
