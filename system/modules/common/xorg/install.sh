@@ -33,7 +33,7 @@ pkg alacritty \
 pkg sunshine
 
 # Themes and fonts
-pkg lxappearance-gtk3 qt5-styleplugins qt6gtk2 \
+pkg lxappearance-gtk3 qt5ct qt6ct kvantum-theme-arc  \
     noto-fonts noto-fonts-emoji ttf-nerd-fonts-symbols-mono ttf-ms-win10-auto \
     ttf-dejavu ttf-hack ttf-font-awesome-4 \
     arc-solid-gtk-theme flat-remix
