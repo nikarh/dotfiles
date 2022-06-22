@@ -1,2 +1,2 @@
-home/.bin/*
-!home/.bin/*.sh
+home/.local/bin/*
+!home/.local/bin/*.sh

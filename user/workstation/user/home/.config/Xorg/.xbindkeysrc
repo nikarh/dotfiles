@@ -1,19 +1,19 @@
-"~/.bin/volume-control.sh raise"
+"~/.local/bin/volume-control.sh raise"
    XF86AudioRaiseVolume
 
-"~/.bin/volume-control.sh lower"
+"~/.local/bin/volume-control.sh lower"
    XF86AudioLowerVolume
 
-"~/.bin/volume-control.sh mute"
+"~/.local/bin/volume-control.sh mute"
    XF86AudioMute
 
-"~/.bin/backlight-control.sh raise"
+"~/.local/bin/backlight-control.sh raise"
    XF86MonBrightnessUp
 
-"~/.bin/backlight-control.sh lower"
+"~/.local/bin/backlight-control.sh lower"
    XF86MonBrightnessDown
 
-"~/.bin/toggle-touchpad.sh"
+"~/.local/bin/toggle-touchpad.sh"
    XF86TouchpadToggle
 
 "flameshot gui"
@@ -22,6 +22,6 @@
 "flameshot screen"
    Control + Print
 
-"~/.bin/toggle-coolerboost.sh"
+"~/.local/bin/toggle-coolerboost.sh"
    Scroll_Lock
 

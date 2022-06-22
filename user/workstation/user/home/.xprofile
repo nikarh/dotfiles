@@ -1,7 +1,7 @@
 #!/bin/sh
 
 . ~/.profile
-. ~/.bin/init-input-devices.sh
+. ~/.local/bin/init-input-devices.sh
 
 # Flags only for xorg
 if loginctl show-session 2 -p Type | grep -qv wayland 2> /dev/null; then

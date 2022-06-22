@@ -2,7 +2,7 @@
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 
 section "Making everything makeable..."
-find "$ROOT/user/tools" -name Makefile -execdir make "BIN=$ROOT/user/home/.bin" \; | prepend '  '
+find "$ROOT/user/tools" -name Makefile -execdir make "BIN=$ROOT/user/home/.local/bin" \; | prepend '  '
 
 section "Linking configs..."
 cp -frsTv "$ROOT/user/home/" ~ | prepend '  '
@@ -27,7 +27,7 @@ gsettings set org.gnome.desktop.default-applications.terminal exec alacritty
 gsettings set org.gnome.desktop.default-applications.terminal exec-arg -e
 gsettings set org.gnome.desktop.interface font-name "Noto Sans 12"
 # glib hardcodes terminals https://github.com/GNOME/glib/blob/master/gio/gdesktopappinfo.c#L2581
-ln -sf /usr/bin/alacritty ~/.bin/xterm
+ln -sf /usr/bin/alacritty ~/.local/bin/xterm
 
 section "Setting xdg defaults..."
 xdg-mime default thunar.desktop inode/directory

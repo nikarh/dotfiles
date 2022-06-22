@@ -33,15 +33,15 @@ exec dex -a
 
 output "*" bg "/usr/share/backgrounds/wallpaper.png" fit
 
-bindsym XF86AudioRaiseVolume exec ~/.bin/volume-control.sh raise
-bindsym XF86AudioLowerVolume exec ~/.bin/volume-control.sh lower
-bindsym XF86AudioMute exec ~/.bin/volume-control.sh mute
-bindsym XF86MonBrightnessUp exec ~/.bin/backlight-control.sh raise
-bindsym XF86MonBrightnessDown exec ~/.bin/backlight-control.sh lower
-bindsym XF86TouchpadToggle exec ~/.bin/toggle-touchpad.sh
+bindsym XF86AudioRaiseVolume exec ~/.local/bin/volume-control.sh raise
+bindsym XF86AudioLowerVolume exec ~/.local/bin/volume-control.sh lower
+bindsym XF86AudioMute exec ~/.local/bin/volume-control.sh mute
+bindsym XF86MonBrightnessUp exec ~/.local/bin/backlight-control.sh raise
+bindsym XF86MonBrightnessDown exec ~/.local/bin/backlight-control.sh lower
+bindsym XF86TouchpadToggle exec ~/.local/bin/toggle-touchpad.sh
 bindsym Print exec flameshot gui
 bindsym Control+Print exec flameshot screen
-bindsym Scroll_Lock exec ~/.bin/toggle-coolerboost.sh
+bindsym Scroll_Lock exec ~/.local/bin/toggle-coolerboost.sh
 
 # i3 config file (v4)
 set $mod Mod4
