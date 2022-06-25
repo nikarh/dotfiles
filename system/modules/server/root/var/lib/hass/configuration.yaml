@@ -10,7 +10,6 @@ homeassistant:
   time_zone: "Europe/Riga"
   external_url: "https://hass.home.arhipov.net"
   legacy_templates: false
-  customize: !include customize.yaml
 
   auth_providers:
     - type: command_line
@@ -27,17 +26,13 @@ http:
   - 172.17.0.0/16
   - 172.19.0.0/16
 
-group: !include groups.yaml
 automation: !include automations.yaml
+automation secret: !include secret_automations.yaml
+
 script: !include scripts.yaml
 scene: !include scenes.yaml
 frontend:
   themes: !include_dir_merge_named themes
-
-climate:
-  - platform: panasonic_ac
-    username: !secret panasonic_user
-    password: !secret panasonic_password
 
 mqtt:
   broker: home.arhipov.net
@@ -49,26 +44,6 @@ mqtt:
   discovery: true
   discovery_prefix: homeassistant
   certificate: /etc/ssl/certs/ca-certificates.crt
-
-input_boolean:
-  vacuum_bathroom:
-    name: Bathroom
-    icon: mdi:shower
-  vacuum_office:
-    name: Office
-    icon: mdi:desktop-classic
-  vacuum_livingroom:
-    name: Livingroom
-    icon: mdi:sofa
-  vacuum_hallway:
-    name: Hallway
-    icon: mdi:foot-print
-  vacuum_bedroom:
-    name: Bedroom
-    icon: mdi:bed-empty
-  vacuum_storage:
-    name: Storage
-    icon: mdi:package-variant-closed
   
 shell_command:
   renew_lg_token: curl 'https://developer.lge.com/secure/ResetDevModeSession.dev?sessionToken={{ token }}'

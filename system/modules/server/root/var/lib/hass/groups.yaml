@@ -1,9 +1,0 @@
-vacuum_rooms:
-  name: Vacuum Rooms
-  entities:
-    - input_boolean.vacuum_bathroom
-    - input_boolean.vacuum_office
-    - input_boolean.vacuum_livingroom
-    - input_boolean.vacuum_hallway
-    - input_boolean.vacuum_bedroom
-    - input_boolean.vacuum_storage

@@ -43,15 +43,3 @@
     type: set_position
     position: 0
   mode: single
-- id: '1651654310853'
-  alias: LG refresh dev session
-  description: ''
-  trigger:
-  - platform: time
-    at: '16:00:00'
-  condition: []
-  action:
-  - service: shell_command.renew_lg_token
-    data:
-      token: !secret lg_token
-  mode: single
