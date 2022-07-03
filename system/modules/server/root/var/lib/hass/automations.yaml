@@ -4,8 +4,8 @@
   trigger:
   - platform: time_pattern
     seconds: '00'
-    hours: '8'
-    minutes: '30'
+    hours: '9'
+    minutes: '00'
   condition:
   - condition: time
     weekday:
@@ -14,12 +14,26 @@
     - wed
     - thu
     - fri
+    - sat
+    - sun
+    before: 00:00:00
+    after: 00:00:00
   action:
   - device_id: d693bc9748e34d9e32c5c5d6befd8bc1
     domain: cover
     entity_id: cover.bedroom_blind
     type: set_position
     position: 100
+  - device_id: ac794bc2129ed23c069d801fc3f4a8cf
+    domain: cover
+    entity_id: cover.living_room_blind
+    type: set_position
+    position: 100
+  - device_id: 704034f8457078ef825dfdc17087585b
+    domain: climate
+    entity_id: climate.bedroom_ac
+    type: set_hvac_mode
+    hvac_mode: 'off'
   mode: single
 - id: '1651653946293'
   alias: Night
@@ -42,4 +56,9 @@
     entity_id: cover.living_room_blind
     type: set_position
     position: 0
+  - device_id: 9d4c06a09cdbd8e5ece7db3ace86ef0b
+    domain: climate
+    entity_id: climate.office_ac
+    type: set_hvac_mode
+    hvac_mode: 'off'
   mode: single
