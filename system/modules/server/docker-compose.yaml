@@ -32,6 +32,24 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     secrets:
       - CF_TOKEN
+  init-mqtt-certs:
+    image: alpine
+    command: >
+      sh -c "
+        apk add --no-cache openssl;
+        cd /certs;
+
+        if [ ! -e ca.key ]; then
+          openssl genrsa -out ca.key 2048;
+          openssl req -new -x509 -days 18250 -key ca.key -out ca.crt -config ca.cnf;
+        fi;
+
+        openssl genrsa -out server.key 2048;
+        openssl req -new -out server.csr -key server.key -config server.cnf;
+        openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 360;
+      "
+    volumes:
+      - /var/lib/mosquitto/certs:/certs
   mqtt:
     image: eclipse-mosquitto
     container_name: mqtt
@@ -42,10 +60,11 @@ services:
       - '1883:1883'
     command: >
       sh -c "
-        cp /mosquitto/tls/privkey-root.pem /mosquitto/tls/privkey.pem;
-        cp /mosquitto/tls/cert-root.pem /mosquitto/tls/cert.pem;
-        chown 1883:1883 /mosquitto/tls/*.pem;
+        mkdir -p /mosquitto/tls/
+        cp /mosquitto/tls-orig/* /mosquitto/tls/;
+        chown 1883:1883 /mosquitto/tls/*;
         chmod 444 /mosquitto/tls/privkey.pem;
+
         cp /mosquitto/config/users.conf.unencrypted /mosquitto/config/users.conf
         /usr/bin/mosquitto_passwd -U /mosquitto/config/users.conf;
    
@@ -55,8 +74,12 @@ services:
       - /var/lib/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - /var/lib/mosquitto/users.conf:/mosquitto/config/users.conf.unencrypted:ro
       - /var/lib/mosquitto/data:/mosquitto/data
-      - /etc/letsencrypt/live/home.arhipov.net-0001/fullchain.pem:/mosquitto/tls/cert-root.pem:ro
-      - /etc/letsencrypt/live/home.arhipov.net-0001/privkey.pem:/mosquitto/tls/privkey-root.pem:ro
+      - /var/lib/mosquitto/certs/server.key:/mosquitto/tls-orig/server.key
+      - /var/lib/mosquitto/certs/server.crt:/mosquitto/tls-orig/server.crt
+      - /var/lib/mosquitto/certs/ca.crt:/mosquitto/tls-orig/ca.crt
+    depends_on:
+      init-mqtt-certs:
+        condition: service_completed_successfully
   samba:
     build: docker/samba
     container_name: samba
@@ -162,6 +185,7 @@ services:
       # Zigbee coordinator
       - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:
+      - /var/lib/mosquitto/certs/ca.crt:/etc/ssl/certs/mqtt.crt
       - /dev/serial:/dev/serial
       - /var/lib/hass:/config
       - /etc/localtime:/etc/localtime:ro
@@ -170,6 +194,9 @@ services:
       - 'traefik.http.services.hass.loadbalancer.server.port=8080'
       - 'traefik.http.routers.hass.rule=Host(`hass.home.arhipov.net`)'
       - 'traefik.http.routers.hass.entrypoints=https'
+    depends_on:
+      init-mqtt-certs:
+        condition: service_completed_successfully
   filebrowser:
     image: filebrowser/filebrowser
     container_name: filebrowser

@@ -1,0 +1,8 @@
+[req]
+default_bit = 2048
+distinguished_name = mqtt-ca
+prompt = no
+
+[mqtt-ca]
+countryName             = LV
+organizationName        = mqtt-ca

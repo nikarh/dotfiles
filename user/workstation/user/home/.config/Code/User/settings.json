@@ -107,6 +107,7 @@
     
     },
     "haxe.enableCodeLens": true,
+    "terminal.integrated.gpuAcceleration": "off",
     "terminal.external.linuxExec": "alacritty",
     "editor.guides.indentation": true,
     "typescript.updateImportsOnFileMove.enabled": "always",
