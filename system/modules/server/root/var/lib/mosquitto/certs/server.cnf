@@ -1,9 +1,17 @@
 [req]
+prompt = no
 default_bit = 2048
 distinguished_name = mqtt-server
-prompt = no
+req_extensions = v3_req
 
 [mqtt-server]
 countryName             = LV
 organizationName        = mqtt-server
 commonName              = home.arhipov.net
+
+[v3_req]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = mqtt
+DNS.2 = home.arhipov.net

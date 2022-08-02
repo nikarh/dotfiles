@@ -33,7 +33,7 @@ access_control:
       policy: bypass
       resources:
         - "^/api/*"
-    - domain_regex: '^(traefik|roborock)\.home\.arhipov\.net$'
+    - domain_regex: '^(traefik|roborock|zigbee2mqtt)\.home\.arhipov\.net$'
       policy: bypass
       networks:
         - internal
@@ -56,7 +56,7 @@ access_control:
       subject:
         - "group:admins"
     # Residential
-    - domain_regex: '^(hass|roborock|files)\.home\.arhipov\.net$'
+    - domain_regex: '^(hass|roborock|files|zigbee2mqtt)\.home\.arhipov\.net$'
       policy: one_factor
       subject:
         - "group:residents"

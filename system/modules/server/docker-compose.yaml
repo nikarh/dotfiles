@@ -46,7 +46,7 @@ services:
 
         openssl genrsa -out server.key 2048;
         openssl req -new -out server.csr -key server.key -config server.cnf;
-        openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 360;
+        openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -extensions v3_req -extfile server.cnf -days 360;
       "
     volumes:
       - /var/lib/mosquitto/certs:/certs
@@ -173,6 +173,27 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.routers.homer.rule=Host(`home.arhipov.net`)'
       - 'traefik.http.routers.homer.entrypoints=https'
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt
+    container_name: zigbee2mqtt
+    restart: unless-stopped
+    logging: *logging
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    volumes:
+      - /var/lib/mosquitto/certs/ca.crt:/etc/ssl/certs/mqtt.crt
+      - /var/lib/zigbee2mqtt:/app/data
+      - /dev/serial:/dev/serial
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.zigbee2mqtt.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.home.arhipov.net`)'
+      - 'traefik.http.routers.zigbee2mqtt.entrypoints=https'
+      - 'traefik.http.routers.files.middlewares=authelia@docker'
+    depends_on:
+      mqtt:
+        condition: service_started
   hass:
     image: homeassistant/home-assistant:stable
     container_name: hass
@@ -181,12 +202,8 @@ services:
     ports:
       # Apple HomeKit
       - 21064:21064
-    devices:
-      # Zigbee coordinator
-      - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:
       - /var/lib/mosquitto/certs/ca.crt:/etc/ssl/certs/mqtt.crt
-      - /dev/serial:/dev/serial
       - /var/lib/hass:/config
       - /etc/localtime:/etc/localtime:ro
     labels:
