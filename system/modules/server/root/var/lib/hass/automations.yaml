@@ -62,3 +62,20 @@
     type: set_hvac_mode
     hvac_mode: 'off'
   mode: single
+- id: '1659476830339'
+  alias: Bathroom light switch
+  description: ''
+  use_blueprint:
+    path: TS0041-Switch.yaml
+    input:
+      ts0041_switch: sensor.bathroom_internal_light_switch_action
+      button_single_press:
+      - type: toggle
+        device_id: 4186b37bceff2c32df76340e469f7e88
+        entity_id: switch.bathroom_light_switch_left
+        domain: switch
+      button_double_press:
+      - type: toggle
+        device_id: 4186b37bceff2c32df76340e469f7e88
+        entity_id: switch.bathroom_light_switch_right
+        domain: switch
