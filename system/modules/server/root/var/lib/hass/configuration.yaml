@@ -47,3 +47,16 @@ mqtt:
   
 shell_command:
   renew_lg_token: curl 'https://developer.lge.com/secure/ResetDevModeSession.dev?sessionToken={{ token }}'
+
+google_assistant:
+  project_id: home-assistant-51b12
+  service_account: !include service_account.json
+  report_state: false
+  exposed_domains:
+    - switch
+    - light
+    - climate
+    - vacuum
+    - button
+    - humidifier
+    - cover
