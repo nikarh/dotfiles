@@ -29,9 +29,6 @@ pkg alacritty \
     audacious vlc sonixd-appimage \
     gparted
 
-# Moonlight server
-pkg sunshine
-
 # Themes and fonts
 pkg lxappearance-gtk3 qt5ct qt6ct kvantum-theme-arc  \
     noto-fonts noto-fonts-emoji ttf-nerd-fonts-symbols-mono ttf-ms-win10-auto \
