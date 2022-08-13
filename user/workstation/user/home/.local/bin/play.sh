@@ -6,31 +6,80 @@ function expand {
     cat - | sed -r "s:~:/home/$USER:g"
 }
 
-GAME="$1"
-YAML="games.yaml"
+CONFIG_DIR="$HOME/.config/run-games"
+YAML="$CONFIG_DIR/games.yaml"
 
-WINE=$(cat "$YAML" | yq .runtime | expand)
-PREFIXES=$(cat "$YAML" | yq .prefixes | expand)
+function sync-to-sunshine {
+    local BANNERS="$CONFIG_DIR/banners"
+    mkdir -p "$HOME/.config/sunshine"
+    mkdir -p $BANNERS
 
-eval "$(cat "$YAML" | yq -o p '.env' | sed -r 's/([^ ]+) = (.*)/export \1="\2"/')" > /dev/null
+    local CONFIG='{"env": {"PATH": "$(PATH):$(HOME)\/.local\/bin"}, "apps": []}'
+    local SGDB_TOKEN="$(cat $CONFIG_DIR/steamgriddb_key)"
 
-DXVK="$(cat "$YAML" | yq ".games[\"$GAME\"].dxvk")"
-PREFIX="$(cat "$YAML" | yq ".games[\"$GAME\"].prefix")"
-GAME_DIR="$(cat "$YAML" | yq ".games[\"$GAME\"].dir")"
-GAME_EXE="$(cat "$YAML" | yq ".games[\"$GAME\"].exe")"
+    while read line; do
+        local game="$(echo $line | awk '{print $2}')"
+        local game_id="$(cat "$YAML" | yq ".games[\"$game\"].steamgriddb_id")"
+        local game_data="$(jq --null-input \
+            --arg name "$(cat "$YAML" | yq ".games[\"$game\"].name")" \
+            --arg cmd "$(realpath "$0") $game" \
+            --arg image "$BANNERS/$game_id" \
+            '[{"name": $name, "output": "", "cmd": $cmd, "image-path": $image}]')"
 
+        
+        if [ ! -f "$BANNERS/$game_id" ]; then
+            local BANNER_URL=$(curl -H "Authorization: Bearer $SGDB_TOKEN" \
+                "https://www.steamgriddb.com/api/v2/grids/game/$game_id" \
+                | jq -r '.data[0].url')
+            curl "$BANNER_URL" -o "$BANNERS/$game_id"
+        fi
 
-eval "$(cat "$YAML" | yq -o p ".games[\"$GAME\"].env" | sed -r 's/([^ ]+) = (.*)/export \1="\2"/')" > /dev/null
+        CONFIG="$(echo "$CONFIG" | jq ".apps += $game_data")"
+    done <<< "$(cat "$YAML" | yq '.games | keys')"
 
-cd "$GAME_DIR"
+    echo $CONFIG | jq >| "$HOME/.config/sunshine/apps_linux.json"
+}
 
-echo "cd \"$GAME_DIR\""
-echo "export WINE=\"$WINE\""
-echo "export WINEPREFIX=\"$PREFIXES/$PREFIX\""
-echo '$WINE '\""$GAME_EXE"\"
+function run-game {
+    local GAME="$1"
 
-if [[ "$DXVK" == "true" ]]; then
-    echo WINEPREFIX="$PREFIXES/$PREFIX" setup_dxvk install
-fi
+    if [ -z "$GAME" ]; then
+        echo Provide game key as an argument:
+        echo "$(cat "$YAML" | yq '.games | keys')"
+        exit 1;
+    fi
 
-WINEPREFIX="$PREFIXES/$PREFIX" "$WINE" "$GAME_EXE"
+    if [[ "$(cat "$YAML" | yq ".games[\"$GAME\"]")" == "null" ]]; then
+        echo Invalid game "$GAME", provide valid game key as an argument:
+        echo "$(cat "$YAML" | yq '.games | keys')"
+        exit 1;
+    fi
+
+    local WINE=$(cat "$YAML" | yq .runtime | expand)
+    local PREFIXES=$(cat "$YAML" | yq .prefixes | expand)
+
+    eval "$(cat "$YAML" | yq -o p '.env' | sed -r 's/([^ ]+) = (.*)/export \1="\2"/')" > /dev/null
+
+    local DXVK="$(cat "$YAML" | yq ".games[\"$GAME\"].dxvk")"
+    local PREFIX="$(cat "$YAML" | yq ".games[\"$GAME\"].prefix")"
+    local GAME_DIR="$(cat "$YAML" | yq ".games[\"$GAME\"].dir")"
+    local GAME_EXE="$(cat "$YAML" | yq ".games[\"$GAME\"].exe")"
+
+    eval "$(cat "$YAML" | yq -o p ".games[\"$GAME\"].env" | sed -r 's/([^ ]+) = (.*)/export \1="\2"/')" > /dev/null
+
+    cd "$GAME_DIR"
+
+    echo "cd \"$GAME_DIR\""
+    echo "export WINE=\"$WINE\""
+    echo "export WINEPREFIX=\"$PREFIXES/$PREFIX\""
+    echo '$WINE '\""$GAME_EXE"\"
+
+    if [[ "$DXVK" == "true" ]]; then
+        echo WINEPREFIX="$PREFIXES/$PREFIX" setup_dxvk install
+    fi
+
+    WINEPREFIX="$PREFIXES/$PREFIX" "$WINE" "$GAME_EXE"
+}
+
+sync-to-sunshine
+run-game "$1"

@@ -16,6 +16,7 @@ exec kbdd
 exec xrdb -all -load ~/.config/Xorg/.Xresources
 exec xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
 exec gebaard -b
+exec joystickwake
 
 # Init input devices
 exec ~/.local/bin/init-input-devices.sh
