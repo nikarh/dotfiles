@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -x
+
 cd "$(dirname "$(readlink -f "$0")")" || exit
 
 function expand {
@@ -23,15 +25,15 @@ function sync-to-sunshine {
         local game_data="$(jq --null-input \
             --arg name "$(cat "$YAML" | yq ".games[\"$game\"].name")" \
             --arg cmd "$(realpath "$0") $game" \
-            --arg image "$BANNERS/$game_id" \
+            --arg image "$BANNERS/$game_id.png" \
             '[{"name": $name, "output": "", "cmd": $cmd, "image-path": $image}]')"
 
         
-        if [ ! -f "$BANNERS/$game_id" ]; then
+        if [ ! -f "$BANNERS/$game_id.png" ]; then
             local BANNER_URL=$(curl -H "Authorization: Bearer $SGDB_TOKEN" \
                 "https://www.steamgriddb.com/api/v2/grids/game/$game_id" \
                 | jq -r '.data[0].url')
-            curl "$BANNER_URL" -o "$BANNERS/$game_id"
+            curl "$BANNER_URL" -o "$BANNERS/$game_id.png"
         fi
 
         CONFIG="$(echo "$CONFIG" | jq ".apps += $game_data")"
@@ -70,15 +72,30 @@ function run-game {
     cd "$GAME_DIR"
 
     echo "cd \"$GAME_DIR\""
-    echo "export WINE=\"$WINE\""
+    echo "export PATH=\"$WINE:\$PATH\""
     echo "export WINEPREFIX=\"$PREFIXES/$PREFIX\""
     echo '$WINE '\""$GAME_EXE"\"
 
-    if [[ "$DXVK" == "true" ]]; then
-        echo WINEPREFIX="$PREFIXES/$PREFIX" setup_dxvk install
+    export PATH="$WINE:$PATH"
+    export WINEPREFIX="$PREFIXES/$PREFIX"
+
+    # Init prefix
+    if [ ! -d "$WINEPREFIX" ]; then
+        WINEDLLOVERRIDES=winemenubuilder.exe=d \
+            wine __INITPREFIX > /dev/null 2>&1 || true
     fi
 
-    WINEPREFIX="$PREFIXES/$PREFIX" "$WINE" "$GAME_EXE"
+    # Replace symlinks to $HOME with directories
+    find "$WINEPREFIX/drive_c/users/$USER" -type l \
+        -exec unlink {} \; \
+        -exec mkdir {} \;
+
+    if [[ "$DXVK" == "true" ]]; then
+        setup_dxvk install
+    fi
+
+    wine "$GAME_EXE"
+    wineserver -k
 }
 
 sync-to-sunshine

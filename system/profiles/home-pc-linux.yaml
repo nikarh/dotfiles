@@ -17,7 +17,8 @@ modules:
   - name: common/plymouth
   - name: common/xorg
     pipewire: true
-  - name: common/sunshine
+  - name: common/gaming
+    streaming: true
   - name: common/networkmanager
     gui: true
   - name: common/audio

@@ -20,6 +20,7 @@ git-get https://github.com/tmux-plugins/tpm.git \
 file-get https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
     ~/.config/nvim/autoload/plug.vim | prepend '  '
 
+section "Updating vim plugins..."
 nvim +PlugClean! +PlugUpdate +qa > /dev/null 2>&1
 
 section "Setting default gtk terminal to alacritty..."
