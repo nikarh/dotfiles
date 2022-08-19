@@ -79,3 +79,38 @@
         device_id: 4186b37bceff2c32df76340e469f7e88
         entity_id: switch.bathroom_light_switch_right
         domain: switch
+- id: '1660725851495'
+  alias: Turn subwoofer on with TV
+  description: ''
+  trigger:
+  - platform: device
+    device_id: c9abbabbd27923d168ac0cec876920cc
+    domain: media_player
+    entity_id: media_player.living_room_tv
+    type: turned_on
+  condition:
+  - condition: state
+    entity_id: media_player.living_room_tv
+    state: 'on'
+  action:
+  - type: turn_on
+    device_id: 4cef1952e74c0d08d7175315a7230911
+    entity_id: switch.living_room_subwoofer
+    domain: switch
+  mode: single
+- id: '1660725891648'
+  alias: Turn subwoofer off with tv
+  description: ''
+  trigger:
+  - platform: device
+    device_id: c9abbabbd27923d168ac0cec876920cc
+    domain: media_player
+    entity_id: media_player.living_room_tv
+    type: turned_off
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 4cef1952e74c0d08d7175315a7230911
+    entity_id: switch.living_room_subwoofer
+    domain: switch
+  mode: single
