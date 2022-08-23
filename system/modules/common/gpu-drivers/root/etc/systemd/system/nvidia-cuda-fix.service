@@ -1,0 +1,11 @@
+[Unit]
+Before=sleep.target
+StopWhenUnneeded=yes
+[Service]
+Type=oneshot
+StandardOutput=syslog
+RemainAfterExit=yes
+ExecStart=/usr/bin/rmmod -f nvidia_uvm
+ExecStop=/usr/bin/modprobe nvidia_uvm
+[Install]
+WantedBy=sleep.target

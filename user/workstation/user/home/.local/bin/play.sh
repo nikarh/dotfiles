@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -x
-
 cd "$(dirname "$(readlink -f "$0")")" || exit
 
 function expand {
@@ -69,8 +67,6 @@ function run-game {
 
     eval "$(cat "$YAML" | yq -o p ".games[\"$GAME\"].env" | sed -r 's/([^ ]+) = (.*)/export \1="\2"/')" > /dev/null
 
-    cd "$GAME_DIR"
-
     echo "cd \"$GAME_DIR\""
     echo "export PATH=\"$WINE:\$PATH\""
     echo "export WINEPREFIX=\"$PREFIXES/$PREFIX\""
@@ -85,15 +81,20 @@ function run-game {
             wine __INITPREFIX > /dev/null 2>&1 || true
     fi
 
+    cd "$WINEPREFIX"
+
     # Replace symlinks to $HOME with directories
-    find "$WINEPREFIX/drive_c/users/$USER" -type l \
+    find "$WINEPREFIX/drive_c/users/$USER" -maxdepth 1 -type l \
         -exec unlink {} \; \
         -exec mkdir {} \;
 
-    if [[ "$DXVK" == "true" ]]; then
+    local dxvk_installed="$([ "$(find "$WINEPREFIX/drive_c/windows/syswow64/" -name '*.dll.old' | wc -l)" -eq 4 ] && echo 1)"
+
+    if [[ "$DXVK" == "true" ]] && [ ! $dxvk_installed ]; then
         setup_dxvk install
     fi
 
+    cd "$GAME_DIR"
     wine "$GAME_EXE"
     wineserver -k
 }

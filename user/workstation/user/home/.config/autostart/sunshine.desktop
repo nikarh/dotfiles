@@ -1,5 +1,5 @@
 [Desktop Entry]
 Name=Sunshine
 GenericName=Desktop Streaming
-Exec=/usr/bin/sunshine ${XDG_CONFIG_HOME}/sunshine/sunshine.conf
+Exec=/usr/bin/sunshine
 Terminal=false

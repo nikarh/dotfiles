@@ -3,6 +3,8 @@
 # Copy all configs to root
 sudo cp -ufrTv "$ROOT/root/" /
 
+sudo systemctl daemon-reload
+
 function install-xorg-conf {
     if [ -z "$XORG_GPU" ]; then
         XORG_GPU="$1"
@@ -31,7 +33,6 @@ if ! grep -Eqi "($(echo $GPU_DRIVER | sed s/nouveau/nvidia/ | sed s/i915/intel/ 
     echo -e \$GPU_DRIVER is set as \"$GPU_DRIVER\", but no such hardware detected\\n\\n$PCI_DISPLAY_CONTROLLER
     exit 1
 fi
-
 
 # Install driver
 if grep -q "i915" <<< "$GPU_DRIVER"; then
@@ -62,6 +63,10 @@ if grep -q "nvidia" <<< "$GPU_DRIVER"; then
     sudo rm -f /etc/X11/xorg.conf.d/20-gpu.conf
     sudo ln -sf /etc/modprobe.d/gpu.conf.nvidia /etc/modprobe.d/gpu.conf
     install-xorg-conf nvidia
+
+    sudo systemctl enable nvidia-cuda-fix
+else
+    sudo systemctl disable nvidia-cuda-fix
 fi
 
 if grep -q "nouveau" <<< "$GPU_DRIVER"; then
