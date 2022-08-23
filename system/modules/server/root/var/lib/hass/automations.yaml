@@ -36,31 +36,18 @@
     hvac_mode: 'off'
   mode: single
 - id: '1651653946293'
-  alias: Night
+  alias: 'Night: all blinds closed one hour after sunset'
   description: ''
   trigger:
   - platform: sun
     event: sunset
-    offset: 0
-  - platform: time
-    at: '22:00:00'
+    offset: 01:00
   condition: []
   action:
-  - device_id: d693bc9748e34d9e32c5c5d6befd8bc1
-    domain: cover
-    entity_id: cover.bedroom_blind
-    type: set_position
-    position: 0
-  - device_id: ac794bc2129ed23c069d801fc3f4a8cf
-    domain: cover
-    entity_id: cover.living_room_blind
-    type: set_position
-    position: 0
-  - device_id: 9d4c06a09cdbd8e5ece7db3ace86ef0b
-    domain: climate
-    entity_id: climate.office_ac
-    type: set_hvac_mode
-    hvac_mode: 'off'
+  - service: script.close_blinds
+    data: {}
+  - service: script.sleep
+    data: {}
   mode: single
 - id: '1659476830339'
   alias: Bathroom light switch
@@ -80,7 +67,7 @@
         entity_id: switch.bathroom_light_switch_right
         domain: switch
 - id: '1660725851495'
-  alias: Turn subwoofer on with TV
+  alias: Living room subwoofer on with TV
   description: ''
   trigger:
   - platform: device
@@ -99,7 +86,7 @@
     domain: switch
   mode: single
 - id: '1660725891648'
-  alias: Turn subwoofer off with tv
+  alias: Living room subwoofer off with tv
   description: ''
   trigger:
   - platform: device
@@ -112,5 +99,269 @@
   - type: turn_off
     device_id: 4cef1952e74c0d08d7175315a7230911
     entity_id: switch.living_room_subwoofer
+    domain: switch
+  mode: single
+- id: '1660986436298'
+  alias: Bathroom mirror light on motion
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 98b72d9bf2cae49d4a55d30da6f77830
+    entity_id: binary_sensor.bathroom_motion_sensor_occupancy
+    domain: binary_sensor
+  condition:
+  - condition: device
+    type: is_off
+    device_id: 4186b37bceff2c32df76340e469f7e88
+    entity_id: switch.bathroom_light_switch_left
+    domain: switch
+  - condition: device
+    type: is_off
+    device_id: 4186b37bceff2c32df76340e469f7e88
+    entity_id: switch.bathroom_light_switch_right
+    domain: switch
+  action:
+  - type: turn_on
+    device_id: 4186b37bceff2c32df76340e469f7e88
+    entity_id: switch.bathroom_light_switch_left
+    domain: switch
+  - service: automation.turn_on
+    data: {}
+    target:
+      entity_id: automation.bathroom_light_off_on_no_motion
+  mode: single
+- id: '1660986642933'
+  alias: Bathroom light off on no motion
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 98b72d9bf2cae49d4a55d30da6f77830
+    entity_id: binary_sensor.bathroom_motion_sensor_occupancy
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  - type: no_motion
+    platform: device
+    device_id: fb2f2a4df4c895d493bf323fb4497052
+    entity_id: binary_sensor.bathtub_motion_sensor_occupancy
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  condition:
+  - type: is_no_motion
+    condition: device
+    device_id: fb2f2a4df4c895d493bf323fb4497052
+    entity_id: binary_sensor.bathtub_motion_sensor_occupancy
+    domain: binary_sensor
+  - type: is_no_motion
+    condition: device
+    device_id: 98b72d9bf2cae49d4a55d30da6f77830
+    entity_id: binary_sensor.bathroom_motion_sensor_occupancy
+    domain: binary_sensor
+  action:
+  - type: turn_off
+    device_id: 4186b37bceff2c32df76340e469f7e88
+    entity_id: switch.bathroom_light_switch_left
+    domain: switch
+  - type: turn_off
+    device_id: 4186b37bceff2c32df76340e469f7e88
+    entity_id: switch.bathroom_light_switch_right
+    domain: switch
+  - service: automation.turn_off
+    data:
+      stop_actions: false
+    target:
+      entity_id: automation.bathroom_light_off_on_no_motion
+  mode: single
+- id: '1661169242658'
+  alias: Storage room lights on door open
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 93760a4d6154289819aab304b32a4bce
+    entity_id: binary_sensor.storage_room_door_sensor_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_on
+    device_id: d59021089e56a2cb7bd0da63ee1ce180
+    entity_id: switch.storage_room_light_switch
+    domain: switch
+  mode: single
+- id: '1661169271617'
+  alias: Storage room lights off on door closed
+  description: ''
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: 93760a4d6154289819aab304b32a4bce
+    entity_id: binary_sensor.storage_room_door_sensor_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_off
+    device_id: d59021089e56a2cb7bd0da63ee1ce180
+    entity_id: switch.storage_room_light_switch
+    domain: switch
+  mode: single
+- id: '1661170264835'
+  alias: Hall entrance door is open for a minute
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 37396c0644fd39bff62bd7445c3e3b63
+    entity_id: binary_sensor.entrance_door_sensor_contact
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  condition: []
+  action:
+  - service: notify.notify
+    data:
+      message: "\U0001F6AA Entrance door is opened for longer than a minute"
+  mode: single
+- id: '1661183630915'
+  alias: 'Night: close bedroom blind when window is closed'
+  description: ''
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: 4f83ba057cfdf73d5be6717db15b2f29
+    entity_id: binary_sensor.bedroom_window_sensor_contact
+    domain: binary_sensor
+  condition:
+  - condition: time
+    before: 04:00:00
+    after: '23:00:00'
+  action:
+  - device_id: 9fde1b08109e86b23ade505b9701a376
+    domain: cover
+    entity_id: cover.bedroom_blind
+    type: set_position
+    position: 0
+  mode: single
+- id: '1661183722515'
+  alias: 'Night: close living room blind when window is closed'
+  description: ''
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: 7e479da0f7c7917822f6c9d67f70c5b5
+    entity_id: binary_sensor.living_room_window_sensor_contact
+    domain: binary_sensor
+  condition:
+  - condition: time
+    before: 04:00:00
+    after: '23:00:00'
+  action:
+  - device_id: 261362453f14d5f3a22789bd507c039f
+    domain: cover
+    entity_id: cover.living_room_blind
+    type: set_position
+    position: 0
+  mode: single
+- id: '1661185523204'
+  alias: Hall light on entrance door open
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 37396c0644fd39bff62bd7445c3e3b63
+    entity_id: binary_sensor.entrance_door_sensor_contact
+    domain: binary_sensor
+  condition:
+  - condition: time
+    before: '23:30:00'
+    after: 08:00:00
+  - condition: device
+    type: is_off
+    device_id: 87f3babb3013fba4ab0034336823a395
+    entity_id: switch.hall_light_switch
+    domain: switch
+  action:
+  - type: turn_on
+    device_id: 87f3babb3013fba4ab0034336823a395
+    entity_id: switch.hall_light_switch
+    domain: switch
+  - service: automation.turn_on
+    data: {}
+    target:
+      entity_id: automation.light_off_on_door_close
+  mode: single
+- id: '1661190493468'
+  alias: 'Night: turn on HVAC at 23:30'
+  description: ''
+  trigger:
+  - platform: time
+    at: '23:30:00'
+  condition:
+  - condition: or
+    conditions:
+    - condition: device
+      device_id: dce74f49229abce281d66d80c8e234ed
+      domain: device_tracker
+      entity_id: device_tracker.anasteisha
+      type: is_home
+    - condition: device
+      device_id: 12c677cdb9c947739b61dcf009b5c407
+      domain: device_tracker
+      entity_id: device_tracker.oneplus_a5000
+      type: is_home
+  action:
+  - service: script.sleep
+    data: {}
+  mode: single
+- id: '1661190719605'
+  alias: Hall light off on entrace door closed
+  description: ''
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: 37396c0644fd39bff62bd7445c3e3b63
+    entity_id: binary_sensor.entrance_door_sensor_contact
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 87f3babb3013fba4ab0034336823a395
+    entity_id: switch.hall_light_switch
+    domain: switch
+  - service: automation.turn_off
+    data:
+      stop_actions: false
+    target:
+      entity_id: automation.light_off_on_door_close
+  mode: single
+- id: '1661191859192'
+  alias: Bathroom main light on motion
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: fb2f2a4df4c895d493bf323fb4497052
+    entity_id: binary_sensor.bathtub_motion_sensor_occupancy
+    domain: binary_sensor
+  condition:
+  - condition: state
+    entity_id: automation.bathroom_light_off_on_no_motion
+    state: 'on'
+  action:
+  - type: turn_on
+    device_id: 4186b37bceff2c32df76340e469f7e88
+    entity_id: switch.bathroom_light_switch_right
     domain: switch
   mode: single
