@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 cd "$(dirname "$(readlink -f "$0")")" || exit
 
 function expand {
@@ -61,24 +60,23 @@ function run-game {
     eval "$(cat "$YAML" | yq -o p '.env' | sed -r 's/([^ ]+) = (.*)/export \1="\2"/')" > /dev/null
 
     local DXVK="$(cat "$YAML" | yq ".games[\"$GAME\"].dxvk")"
+    local VKD3D="$(cat "$YAML" | yq ".games[\"$GAME\"].vkd3d")"
     local PREFIX="$(cat "$YAML" | yq ".games[\"$GAME\"].prefix")"
     local GAME_DIR="$(cat "$YAML" | yq ".games[\"$GAME\"].dir")"
     local GAME_EXE="$(cat "$YAML" | yq ".games[\"$GAME\"].exe")"
 
     eval "$(cat "$YAML" | yq -o p ".games[\"$GAME\"].env" | sed -r 's/([^ ]+) = (.*)/export \1="\2"/')" > /dev/null
 
-    echo "cd \"$GAME_DIR\""
-    echo "export PATH=\"$WINE:\$PATH\""
-    echo "export WINEPREFIX=\"$PREFIXES/$PREFIX\""
-    echo '$WINE '\""$GAME_EXE"\"
-
     export PATH="$WINE:$PATH"
     export WINEPREFIX="$PREFIXES/$PREFIX"
+    export DXVK_CONFIG_FILE="$CONFIG_DIR/dxvk.conf"
 
     # Init prefix
     if [ ! -d "$WINEPREFIX" ]; then
+        echo Initializing prefix
         WINEDLLOVERRIDES=winemenubuilder.exe=d \
             wine __INITPREFIX > /dev/null 2>&1 || true
+        wineserver --wait
     fi
 
     cd "$WINEPREFIX"
@@ -88,16 +86,43 @@ function run-game {
         -exec unlink {} \; \
         -exec mkdir {} \;
 
-    local dxvk_installed="$([ "$(find "$WINEPREFIX/drive_c/windows/syswow64/" -name '*.dll.old' | wc -l)" -eq 4 ] && echo 1)"
-
-    if [[ "$DXVK" == "true" ]] && [ ! $dxvk_installed ]; then
+    if [[ "$DXVK" != "false" ]] && ! (find "$WINEPREFIX/drive_c/windows/syswow64/" -name 'd3d11.dll.old' | grep -q .); then
+        echo Installing dxvk...
         setup_dxvk install
     fi
 
+    if [[ "$VKD3D" == "false" ]] && ! (find "$WINEPREFIX/drive_c/windows/syswow64/" -name 'd3d12.dll.old' | grep -q .); then
+        echo Installing vkd3d...
+        setup_vkd3d_proton install
+    fi
+
+    if ! find "$WINEPREFIX/drive_c/windows/syswow64/" -name 'nvapi.dll.old' | grep -q .; then
+        echo Installing dxvk-nvapi...
+        setup_dxvk_nvapi install
+    fi
+
+    # Enable nvidia DLSS 2.0
+    if [ -f /usr/lib/nvidia/wine/nvngx.dll ]; then
+        cp /usr/lib/nvidia/wine/nvngx.dll "$WINEPREFIX/drive_c/windows/system32/"
+        cp /usr/lib/nvidia/wine/_nvngx.dll "$WINEPREFIX/drive_c/windows/system32/"
+    fi
+
+    # Enable CUDA for DLSS 3.0 or PhysX. This is taken from wine-staging
+    if [ -f /usr/lib/wine/x86_64-windows/nvcuda.dll ]; then
+        cp /usr/lib/wine/x86_64-windows/nvcuda.dll "$WINEPREFIX/drive_c/windows/system32/"
+        cp /usr/lib32/wine/i386-windows/nvcuda.dll "$WINEPREFIX/drive_c/windows/syswow64/"
+    fi
+
+    echo "cd \"$GAME_DIR\""
+    echo "export PATH=\"$WINE:\$PATH\""
+    echo "export WINEPREFIX=\"$PREFIXES/$PREFIX\""
+    echo '$WINE '\""$GAME_EXE"\" $(cat "$YAML" | yq ".games[\"$GAME\"].args // \"\"" | sed -r 's/- ([^ ]+)/\1/')
+
     cd "$GAME_DIR"
-    wine "$GAME_EXE"
+    gamemoderun mangohud wine "$GAME_EXE" ${@:2} $(cat "$YAML" | yq ".games[\"$GAME\"].args // \"\"" | sed -r 's/- ([^ ]+)/\1/')
+
     wineserver -k
 }
 
 sync-to-sunshine
-run-game "$1"
+run-game "$1" "${@:2}"

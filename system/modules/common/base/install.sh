@@ -42,7 +42,7 @@ if ! grep -q '^[multilib]$' /etc/pacman.conf; then
 fi
 
 # Base
-pkg base pacman-contrib
+pkg base pacman-contrib asp
 
 # Always install these tools
 pkg $(pacman -Sgq base-devel) \
