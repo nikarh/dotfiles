@@ -5,7 +5,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-setxkbmap xorg-xkbutils xorg-xprop xorg-xrdb xorg-xset xorg-xmodmap \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
     xorg-xdpyinfo autorandr arandr brightnessctl autocutsel \
-    gebaar-libinput-fork xdotool \
+    xdotool \
     lightdm lightdm-gtk-greeter \
     libva-vdpau-driver
 

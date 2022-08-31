@@ -11,38 +11,30 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
-exec autocutsel -fork
-exec kbdd
-exec xrdb -all -load ~/.config/Xorg/.Xresources
-exec xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
-exec gebaard -b
-exec joystickwake
+exec --no-startup-id autocutsel -fork
+exec --no-startup-id xrdb -all -load ~/.config/Xorg/.Xresources
+exec --no-startup-id xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
+exec --no-startup-id joystickwake
 
 # Init input devices
-exec ~/.local/bin/init-input-devices.sh
+exec --no-startup-id ~/.local/bin/init-input-devices.sh
 # Init input devices on USB events
-exec ~/.local/bin/udev-monitor -s usb -e ~/.local/bin/init-input-devices.sh
+exec --no-startup-id ~/.local/bin/udev-monitor -s usb -e ~/.local/bin/init-input-devices.sh
 # Init input devices on session unlock
-exec ~/.local/bin/dbus-monitor.sh org.freedesktop.login1.Session Unlock ".*" ~/.local/bin/init-input-devices.sh
+exec --no-startup-id ~/.local/bin/dbus-monitor.sh org.freedesktop.login1.Session Unlock ".*" ~/.local/bin/init-input-devices.sh
 # Listen to xkb changes
-exec ~/.local/bin/xkb-switch-dbus.sh
+exec --no-startup-id ~/.local/bin/xkb-switch-dbus.sh
 
 # Start sunshine server
-exec systemstl start --user sunshine
-# Stop sunshine before sleep
-exec ~/.local/bin/dbus-monitor.sh org.freedesktop.systemd1.Manager UnitNew "suspend.target" \
-    systemstl stop --user sunshine
-# Start sunshine after wake and unlock
-exec ~/.local/bin/dbus-monitor.sh org.freedesktop.login1.Session Unlock ".*" "suspend.target" \
-    systemstl start --user sunshine
+exec --no-startup-id systemstl start --user sunshine
 
-exec picom
-exec dunst
-exec flameshot
-exec nm-applet
-exec syncthing-gtk
-exec insync start
-exec redshift-gtk -t 6500:2400
+exec --no-startup-id picom
+exec --no-startup-id dunst
+exec --no-startup-id flameshot
+exec --no-startup-id nm-applet
+exec --no-startup-id syncthing-gtk
+exec --no-startup-id insync start
+exec --no-startup-id redshift-gtk -t 6500:2400
 exec --no-startup-id i3-msg 'workspace '$ws1'; exec /usr/bin/alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main'
 exec --no-startup-id "feh --bg-scale /usr/share/backgrounds/wallpaper.png"
 

@@ -7,6 +7,57 @@ function expand {
 
 CONFIG_DIR="$HOME/.config/run-games"
 YAML="$CONFIG_DIR/games.yaml"
+RUNTIMES="$HOME/.local/share/wine/runtimes"
+LIBRARIES="$HOME/.local/share/wine/libraries"
+
+function file-get {
+    curl -s -fLo "$2" --create-dirs "$1"
+}
+
+function latest-release {
+    curl -s "https://api.github.com/repos/$1/releases" \
+        | jq -r '.[].assets[].browser_download_url' \
+        | grep "$2" \
+        | head -n 1
+}
+
+function prepare-runtime {
+    mkdir -p "$RUNTIMES"
+
+    local version="$1"
+    if [[ "$version" == "default" ]]; then
+        version="lutris-GE-Proton.*-x86_64"
+    fi
+
+    local url="$(latest-release GloriousEggroll/wine-ge-custom "wine-$version\.tar\.xz$")"
+    local version=$(echo $url | awk -F'/' '{print $NF}' | awk -F'.tar.xz' '{print $1}' | cut -c 6-)
+
+    ln -sf "$RUNTIMES/$version" "$RUNTIMES/default"
+    if ! [ -d "$RUNTIMES/$version" ]; then
+        echo Downloading "$version"
+        file-get "$url" "$RUNTIMES/wine.tar.xz"
+        tar -xf wine.tar.xz -C "$RUNTIMES" && rm "$RUNTIMES"/wine.tar.xz
+    fi
+}
+
+function update-libaries {
+    mkdir -p "$LIBRARIES"
+    mkdir -p "$LIBRARIES/dxvk-nvapi"
+    file-get "$(latest-release Sporif/dxvk-async "dxvk-async.*\.tar\.gz$")" "$LIBRARIES/dxvk-async.tar.gz"
+    file-get "$(latest-release jp7677/dxvk-nvapi "dxvk-nvapi.*\.tar\.gz$")" "$LIBRARIES/dxvk-nvapi.tar.gz"
+    file-get "$(latest-release HansKristian-Work/vkd3d-proton "vkd3d-proton.*\.tar\.zst$")" "$LIBRARIES/vkd3d-proton.tar.zst"
+
+    tar -xf "$LIBRARIES/dxvk-async.tar.gz" -C "$LIBRARIES" && mv "$LIBRARIES"/dxvk-async-* "$LIBRARIES"/dxvk-async && rm "$LIBRARIES"/dxvk-async.tar.gz
+    tar -xf "$LIBRARIES/vkd3d-proton.tar.zst" -C "$LIBRARIES" && mv "$LIBRARIES"/vkd3d-proton-* "$LIBRARIES"/vkd3d-proton && rm "$LIBRARIES"/vkd3d-proton.tar.zst
+    tar -xf "$LIBRARIES/dxvk-nvapi.tar.gz" -C "$LIBRARIES"/dxvk-nvapi && rm "$LIBRARIES"/dxvk-nvapi.tar.gz
+
+    if ! [ -f "$LIBRARIES"/dxvk-nvapi/setup_dxvk_nvapi.sh ]; then
+        file-get "https://aur.archlinux.org/cgit/aur.git/plain/setup_dxvk_nvapi.sh?h=dxvk-nvapi-mingw" \
+            "$LIBRARIES"/dxvk-nvapi/setup_dxvk_nvapi.sh
+    fi
+
+    chmod +x "$LIBRARIES"/*/*.sh
+}
 
 function sync-to-sunshine {
     local BANNERS="$CONFIG_DIR/banners"
@@ -18,7 +69,13 @@ function sync-to-sunshine {
 
     while read line; do
         local game="$(echo $line | awk '{print $2}')"
-        local game_id="$(cat "$YAML" | yq ".games[\"$game\"].steamgriddb_id")"
+        local game_id="$(cat "$YAML" | yq ".games[\"$game\"].steamgriddb_id // \"\"")"
+        local sunshine="$(cat "$YAML" | yq ".games[\"$game\"].sunshine")"
+
+        if [[ "$sunshine" == "false" ]]; then
+            continue
+        fi
+
         local game_data="$(jq --null-input \
             --arg name "$(cat "$YAML" | yq ".games[\"$game\"].name")" \
             --arg cmd "$(realpath "$0") $game" \
@@ -26,7 +83,7 @@ function sync-to-sunshine {
             '[{"name": $name, "output": "", "cmd": $cmd, "image-path": $image}]')"
 
         
-        if [ ! -f "$BANNERS/$game_id.png" ]; then
+        if [ -n "$game_id" ] && [ ! -f "$BANNERS/$game_id.png" ]; then
             local BANNER_URL=$(curl -H "Authorization: Bearer $SGDB_TOKEN" \
                 "https://www.steamgriddb.com/api/v2/grids/game/$game_id" \
                 | jq -r '.data[0].url')
@@ -54,8 +111,19 @@ function run-game {
         exit 1;
     fi
 
-    local WINE=$(cat "$YAML" | yq .runtime | expand)
+    local RUNTIME=$(cat "$YAML" | yq '.runtime // "default"' | expand)
     local PREFIXES=$(cat "$YAML" | yq .prefixes | expand)
+    local WINE="$RUNTIMES/$RUNTIME"
+
+    # Download runtime
+    if ! [ -d "$WINE" ]; then
+        prepare-runtime "$RUNTIME"
+    fi
+
+    # Download libraries
+    if ! [ -d "$LIBRARIES/dxvk-nvapi" ]; then
+        update-libaries
+    fi
 
     eval "$(cat "$YAML" | yq -o p '.env' | sed -r 's/([^ ]+) = (.*)/export \1="\2"/')" > /dev/null
 
@@ -86,19 +154,21 @@ function run-game {
         -exec unlink {} \; \
         -exec mkdir {} \;
 
-    if [[ "$DXVK" != "false" ]] && ! (find "$WINEPREFIX/drive_c/windows/syswow64/" -name 'd3d11.dll.old' | grep -q .); then
+    # Install libraries for games
+    local syswow="$WINEPREFIX/drive_c/windows/syswow64"
+    if ! diff -q "$syswow/d3d11.dll" "$LIBRARIES/dxvk-async/x32"; then
         echo Installing dxvk...
-        setup_dxvk install
+        $LIBRARIES/dxvk-async/setup_dxvk.sh install
     fi
 
-    if [[ "$VKD3D" == "false" ]] && ! (find "$WINEPREFIX/drive_c/windows/syswow64/" -name 'd3d12.dll.old' | grep -q .); then
-        echo Installing vkd3d...
-        setup_vkd3d_proton install
+    if ! diff -q "$syswow/d3d12.dll" "$LIBRARIES/vkd3d-proton/x86"; then
+        echo Installing vkd3d-proton...
+        $LIBRARIES/vkd3d-proton/setup_vkd3d_proton.sh install
     fi
 
-    if ! find "$WINEPREFIX/drive_c/windows/syswow64/" -name 'nvapi.dll.old' | grep -q .; then
+    if ! diff -q "$syswow/nvapi.dll" "$LIBRARIES/dxvk-nvapi/x32"; then
         echo Installing dxvk-nvapi...
-        setup_dxvk_nvapi install
+        $LIBRARIES/dxvk-nvapi/setup_dxvk_nvapi.sh install
     fi
 
     # Enable nvidia DLSS 2.0

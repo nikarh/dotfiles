@@ -9,8 +9,6 @@ pkg joystickwake
 pkg gamemode
 # Lovely hud as on a steam deck
 pkg mangohud
-# Only lutris and proton include these by default, build our own proton
-pkg vkd3d-proton-bin dxvk-bin dxvk-nvapi-mingw 
 
 if [ -n "$ARGS_streaming" ]; then
     # Game streaming
