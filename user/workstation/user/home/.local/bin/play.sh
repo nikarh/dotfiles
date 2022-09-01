@@ -135,7 +135,7 @@ function run-game {
 
     eval "$(cat "$YAML" | yq -o p ".games[\"$GAME\"].env" | sed -r 's/([^ ]+) = (.*)/export \1="\2"/')" > /dev/null
 
-    export PATH="$WINE:$PATH"
+    export PATH="$WINE/bin:$PATH"
     export WINEPREFIX="$PREFIXES/$PREFIX"
     export DXVK_CONFIG_FILE="$CONFIG_DIR/dxvk.conf"
 
@@ -173,20 +173,24 @@ function run-game {
 
     # Enable nvidia DLSS 2.0
     if [ -f /usr/lib/nvidia/wine/nvngx.dll ]; then
+        echo Copying ngngx.dll
         cp /usr/lib/nvidia/wine/nvngx.dll "$WINEPREFIX/drive_c/windows/system32/"
         cp /usr/lib/nvidia/wine/_nvngx.dll "$WINEPREFIX/drive_c/windows/system32/"
     fi
 
     # Enable CUDA for DLSS 3.0 or PhysX. This is taken from wine-staging
     if [ -f /usr/lib/wine/x86_64-windows/nvcuda.dll ]; then
+        echo Copying nvcuda
         cp /usr/lib/wine/x86_64-windows/nvcuda.dll "$WINEPREFIX/drive_c/windows/system32/"
         cp /usr/lib32/wine/i386-windows/nvcuda.dll "$WINEPREFIX/drive_c/windows/syswow64/"
     fi
 
+    wineserver --wait
+
     echo "cd \"$GAME_DIR\""
-    echo "export PATH=\"$WINE:\$PATH\""
+    echo "export PATH=\"$WINE/bin:\$PATH\""
     echo "export WINEPREFIX=\"$PREFIXES/$PREFIX\""
-    echo '$WINE '\""$GAME_EXE"\" $(cat "$YAML" | yq ".games[\"$GAME\"].args // \"\"" | sed -r 's/- ([^ ]+)/\1/')
+    echo 'wine '\""$GAME_EXE"\" $(cat "$YAML" | yq ".games[\"$GAME\"].args // \"\"" | sed -r 's/- ([^ ]+)/\1/')
 
     cd "$GAME_DIR"
     gamemoderun mangohud wine "$GAME_EXE" ${@:2} $(cat "$YAML" | yq ".games[\"$GAME\"].args // \"\"" | sed -r 's/- ([^ ]+)/\1/')
