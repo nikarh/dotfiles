@@ -12,13 +12,17 @@ export XDG_CACHE_HOME=~/.cache/
 export XDG_DATA_HOME=~/.local/share/
 export XDG_STATE_HOME=~/.local/share/
 
-export NPM_CONFIG_USERCONFIG=~/.config/npmrc
-export ANDROID_USER_HOME=~/.config/android
-export GRADLE_USER_HOME=~/.cache/gradle
-export RUSTUP_HOME=~/.local/share/rustup
-export CARGO_HOME=~/.local/share/cargo
-export NVM_DIR=~/.local/share/nvm
-export GOPATH=~/.cache/go
+export GNUPGHOME="${XDG_CONFIG_HOME}/gnupg"
+export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npmrc"
+export ANDROID_USER_HOME="${XDG_CONFIG_HOME}/android"
+
+export LESSHISTFILE="${XDG_CACHE_HOME}/lesshst"
+export GRADLE_USER_HOME="${XDG_CACHE_HOME}/gradle"
+export GOPATH="${XDG_CACHE_HOME}/go"
+
+export RUSTUP_HOME="${XDG_STATE_HOME}/rustup"
+export CARGO_HOME="${XDG_STATE_HOME}/cargo"
+export NVM_DIR="${XDG_STATE_HOME}/nvm"
 
 export AWS_CONFIG_FILE="~/.config/aws/config"
 

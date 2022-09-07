@@ -11,32 +11,7 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
-exec --no-startup-id autocutsel -fork
-exec --no-startup-id xrdb -all -load ~/.config/Xorg/.Xresources
-exec --no-startup-id xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
-exec --no-startup-id joystickwake
-
-# Init input devices
-exec --no-startup-id ~/.local/bin/init-input-devices.sh
-# Init input devices on USB events
-exec --no-startup-id ~/.local/bin/udev-monitor -s usb -e ~/.local/bin/init-input-devices.sh
-# Init input devices on session unlock
-exec --no-startup-id ~/.local/bin/dbus-monitor.sh org.freedesktop.login1.Session Unlock ".*" ~/.local/bin/init-input-devices.sh
-# Listen to xkb changes
-exec --no-startup-id ~/.local/bin/xkb-switch-dbus.sh
-
-# Start sunshine server
-exec --no-startup-id systemstl start --user sunshine
-
-exec --no-startup-id picom
-exec --no-startup-id dunst
-exec --no-startup-id flameshot
-exec --no-startup-id nm-applet
-exec --no-startup-id syncthing-gtk
-exec --no-startup-id insync start
-exec --no-startup-id redshift-gtk -t 6500:2400
-exec --no-startup-id i3-msg 'workspace '$ws1'; exec /usr/bin/alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main'
-exec --no-startup-id "feh --bg-scale /usr/share/backgrounds/wallpaper.png"
+exec --no-startup-id i3-msg "exec ~/.config/Xorg/init.sh \"$ws1\""
 
 # i3 config file (v4)
 set $mod Mod4
@@ -151,6 +126,7 @@ assign [class="Audacious"] $ws7
 assign [instance="zoom"] $ws8
 assign [class="Chromium"] $ws2
 
+for_window [title="Picture-in-Picture"] sticky enable
 for_window [class="jetbrains-toolbox"] floating enable
 
 # switch to workspace

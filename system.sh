@@ -1,5 +1,4 @@
 #!/bin/bash -e
-
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 export REBUILD_INITRD=0
