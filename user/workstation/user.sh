@@ -7,6 +7,8 @@ find "$ROOT/user/tools" -name Makefile -execdir make "BIN=$ROOT/user/home/.local
 section "Linking configs..."
 cp -frsTv "$ROOT/user/home/" ~ | prepend '  '
 
+source "$ROOT/user/home/.profile"
+
 systemctl enable --user syncthing
 
 # Unfortunately, sleep hooks are not working with user-level services

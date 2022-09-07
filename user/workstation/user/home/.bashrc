@@ -4,6 +4,8 @@ trysource() {
     if [ -f "$1" ]; then source "$1"; fi
 }
 
+trysource ~/.profile
+
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 

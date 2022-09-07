@@ -31,8 +31,8 @@ pkg alacritty \
 
 # Themes and fonts
 pkg lxappearance-gtk3 qt5ct qt6ct kvantum-theme-arc  \
-    noto-fonts noto-fonts-emoji ttf-nerd-fonts-symbols-mono ttf-ms-win10-auto \
-    ttf-dejavu ttf-hack ttf-font-awesome-4 \
+    noto-fonts noto-fonts-emoji ttf-ms-win10-auto \
+    ttf-dejavu ttf-hack ttf-nerd-fonts-symbols-1000-em-mono \
     arc-solid-gtk-theme flat-remix
 
 # Copy all configs to root

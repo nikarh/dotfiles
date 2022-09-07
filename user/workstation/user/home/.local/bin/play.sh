@@ -36,7 +36,7 @@ function prepare-runtime {
     if ! [ -d "$RUNTIMES/$version" ]; then
         echo Downloading "$version"
         file-get "$url" "$RUNTIMES/wine.tar.xz"
-        tar -xf wine.tar.xz -C "$RUNTIMES" && rm "$RUNTIMES"/wine.tar.xz
+        tar -xf "$RUNTIMES/wine.tar.xz" -C "$RUNTIMES" && rm "$RUNTIMES"/wine.tar.xz
     fi
 }
 
@@ -84,10 +84,13 @@ function sync-to-sunshine {
 
         
         if [ -n "$game_id" ] && [ ! -f "$BANNERS/$game_id.png" ]; then
-            local BANNER_URL=$(curl -H "Authorization: Bearer $SGDB_TOKEN" \
+            local BANNER_URL="$(curl -H "Authorization: Bearer $SGDB_TOKEN" \
                 "https://www.steamgriddb.com/api/v2/grids/game/$game_id" \
-                | jq -r '.data[0].url')
-            curl "$BANNER_URL" -o "$BANNERS/$game_id.png"
+                | jq -r '([.data[] | select(.width == 600)][0] | .url) // .data[0].url')"
+
+            curl "$BANNER_URL" -o "$BANNERS/$game_id.png.orig"
+            convert "$BANNERS/$game_id.png.orig" "$BANNERS/$game_id.png"
+            rm "$BANNERS/$game_id.png.orig"
         fi
 
         CONFIG="$(echo "$CONFIG" | jq ".apps += $game_data")"
@@ -96,20 +99,8 @@ function sync-to-sunshine {
     echo $CONFIG | jq >| "$HOME/.config/sunshine/apps_linux.json"
 }
 
-function run-game {
+function run-wine {
     local GAME="$1"
-
-    if [ -z "$GAME" ]; then
-        echo Provide game key as an argument:
-        echo "$(cat "$YAML" | yq '.games | keys')"
-        exit 1;
-    fi
-
-    if [[ "$(cat "$YAML" | yq ".games[\"$GAME\"]")" == "null" ]]; then
-        echo Invalid game "$GAME", provide valid game key as an argument:
-        echo "$(cat "$YAML" | yq '.games | keys')"
-        exit 1;
-    fi
 
     local RUNTIME=$(cat "$YAML" | yq '.runtime // "default"' | expand)
     local PREFIXES=$(cat "$YAML" | yq .prefixes | expand)
@@ -131,7 +122,7 @@ function run-game {
     local VKD3D="$(cat "$YAML" | yq ".games[\"$GAME\"].vkd3d")"
     local PREFIX="$(cat "$YAML" | yq ".games[\"$GAME\"].prefix")"
     local GAME_DIR="$(cat "$YAML" | yq ".games[\"$GAME\"].dir")"
-    local GAME_EXE="$(cat "$YAML" | yq ".games[\"$GAME\"].exe")"
+    local GAME_EXE="$(cat "$YAML" | yq ".games[\"$GAME\"].run")"
 
     eval "$(cat "$YAML" | yq -o p ".games[\"$GAME\"].env" | sed -r 's/([^ ]+) = (.*)/export \1="\2"/')" > /dev/null
 
@@ -198,5 +189,39 @@ function run-game {
     wineserver -k
 }
 
+function run-native {
+    local GAME="$1"
+    local RUN="$(cat "$YAML" | yq ".games[\"$GAME\"].run")"
+
+    "$RUN" $(cat "$YAML" | yq ".games[\"$GAME\"].args // \"\"" | sed -r 's/- ([^ ]+)/\1/')
+}
+
+function run {
+    local GAME="$1"
+
+    if [ -z "$GAME" ]; then
+        echo Provide game key as an argument:
+        echo "$(cat "$YAML" | yq '.games | keys')"
+        exit 1;
+    fi
+
+    if [[ "$(cat "$YAML" | yq ".games[\"$GAME\"]")" == "null" ]]; then
+        echo Invalid game "$GAME", provide valid game key as an argument:
+        echo "$(cat "$YAML" | yq '.games | keys')"
+        exit 1;
+    fi
+
+    local TYPE="$(cat "$YAML" | yq ".games[\"$GAME\"].type // \"wine\"")"
+
+    case "$TYPE" in
+        native)
+            run-native "$1" "${@:2}";;
+        "wine")
+            run-wine "$1" "${@:2}";;
+        *)
+            echo "invalid type";;
+    esac
+}
+
 sync-to-sunshine
-run-game "$1" "${@:2}"
+run "$1" "${@:2}"
