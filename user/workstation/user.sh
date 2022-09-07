@@ -11,9 +11,6 @@ source "$ROOT/user/home/.profile"
 
 systemctl enable --user syncthing
 
-# Unfortunately, sleep hooks are not working with user-level services
-sudo systemctl enable "locker@$USER.service"
-
 section "Downloading random stuff from the internet..."
 git-get https://github.com/mrzool/bash-sensible.git \
     ~/.config/bash-sensible | prepend '  '

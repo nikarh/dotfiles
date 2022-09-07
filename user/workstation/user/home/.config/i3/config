@@ -11,7 +11,9 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
-exec --no-startup-id i3-msg "exec ~/.config/Xorg/init.sh \"$ws1\""
+# Start terminal at first workspace
+exec --no-startup-id i3-msg 'workspace '$ws1'; exec /usr/bin/alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main'
+exec --no-startup-id i3-msg 'exec ~/.config/Xorg/init.sh'
 
 # i3 config file (v4)
 set $mod Mod4

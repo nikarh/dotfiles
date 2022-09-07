@@ -12,12 +12,16 @@ xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
 # Set keybaord/mouse settings when USB device plugged
 ~/.local/bin/udev-monitor -s usb -e ~/.local/bin/init-input-devices.sh&
 # Set keybaord/mouse settings when USB session is unlocked (e.g. after suspend)
-~/.local/bin/dbus-monitor.sh org.freedesktop.login1.Session Unlock ".*" ~/.local/bin/init-input-devices.sh&
+~/.local/bin/dbus-monitor.sh org.powertools Unlock ~/.local/bin/init-input-devices.sh&
 # Listen to xeyboard layout changes
 ~/.local/bin/xkb-switch-dbus.sh&
 
-# Start terminal at first workspace
-i3-msg 'workspace '$1'; exec /usr/bin/alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main'
+# Lock on suspend
+~/.local/bin/dbus-monitor.sh org.powertools Suspend ~/.local/bin/lock.sh&
+
+# Restart CUDA apps on sleep, since we are going to reinit nvidia_uvm on resume
+~/.local/bin/dbus-monitor.sh org.powertools Suspend ~/.local/bin/cuda-app-restart.sh suspend&
+~/.local/bin/dbus-monitor.sh org.powertools Unlock ~/.local/bin/cuda-app-restart.sh resume&
 
 # Should fix v-sync problems
 picom&
@@ -39,5 +43,6 @@ insync start
 
 # Start sunshine server
 if command -v sunshine &> /dev/null; then
-    systemstl start --user sunshine
+    echo "$(date) STARTING SUNSHINE" >> ~/log
+    systemctl start --user sunshine
 fi

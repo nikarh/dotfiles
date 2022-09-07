@@ -5,7 +5,7 @@ StopWhenUnneeded=yes
 Type=oneshot
 StandardOutput=syslog
 RemainAfterExit=yes
-ExecStart=/usr/bin/rmmod -f nvidia_uvm
-ExecStop=/usr/bin/modprobe nvidia_uvm
+ExecStop=/usr/bin/rmmod nvidia_uvm
+ExecStopPost=/usr/bin/modprobe nvidia_uvm
 [Install]
 WantedBy=sleep.target
