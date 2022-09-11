@@ -5,7 +5,7 @@ StopWhenUnneeded=yes
 Type=oneshot
 StandardOutput=syslog
 RemainAfterExit=yes
-ExecStop=/usr/bin/rmmod nvidia_uvm
-ExecStopPost=/usr/bin/modprobe nvidia_uvm
+ExecStart=dbus-send --system --type=signal / org.powertools.Suspend
+ExecStop=dbus-send --system --type=signal / org.powertools.Resume
 [Install]
 WantedBy=sleep.target

@@ -28,6 +28,28 @@ function pkg {
     fi
 }
 
+function pkg-local {
+    local package="$(cat "$1/PKGBUILD" | grep pkgname | awk -F'=' '{print $2}')"
+    local current_version="$(cat "$1/PKGBUILD" | grep 'pkgver\|pkgrel' | tr -d '\n' | sed -r 's/pkgver=(.*)pkgrel=(.*)/\1-\2/')"
+    local installed=$(pacman -Q "$package" 2> /dev/null)
+    local installed_version=$(echo $installed | awk '{ print $2 }')
+
+    if [ "$installed_version" != "$current_version" ]; then
+        local built_file="$package-$current_version-x86_64.pkg.tar.zst"
+        if [ ! -f "$1/$built_file" ]; then
+
+            (
+                cd "$1"
+                makepkg --noconfirm
+            )
+        fi
+        exit 1
+        yay -U --noconfirm "$1/$built_file"
+    fi
+
+    export ALL_PACKAGES_TO_INSTALL="$ALL_PACKAGES_TO_INSTALL $package"
+}
+
 function unpkg {
     local COMMAND="${COMMAND:-yay}"
     $COMMAND -Rnsc --noconfirm "$@" 2> /dev/null
@@ -101,6 +123,7 @@ yay -Rnscu --noconfirm "$(yay -Qtdq)" 2> /dev/null || true
 
 EXPLICITLY_INSTALLED=$(pacman -Qqett | sort)
 INSTALLED_BY_SETUP=$(echo "$ALL_PACKAGES_TO_INSTALL" | tr " " "\n" | sort)
+
 UNEXPECTED=$(comm --output-delimiter=--- -3 \
     <(echo "$EXPLICITLY_INSTALLED") \
     <(echo "$INSTALLED_BY_SETUP") | grep -v ^---)

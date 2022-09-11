@@ -1,33 +1,30 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -x
+RESTART_SUNSHINE=0
+RESTART_CONTAINERS=""
 
-if [ "$1" == "suspend" ]; then
-    # Stop sunshine
-    if [ "$(systemctl --user is-active sunshine)" == "active" ]; then
-        echo 1 > /tmp/cuda-fix-restart-sunshine
-        systemctl stop --user sunshine
-    fi
+# Stop sunshine
+if [ "$(systemctl --user is-active sunshine)" == "active" ]; then
+    RESTART_SUNSHINE=1
+    systemctl stop --user sunshine
 
-    # Find all docker containers with nvidia and stop them
-    docker ps -aq | while read container; do 
-        if [ "$(docker inspect "$container" | jq -r '.[0].HostConfig.DeviceRequests[0].Driver')" != "null" ]; then
-            docker kill "$container"
-            echo "$container" >> /tmp/cuda-containers-to-restart
-            echo $container with gpu
-        fi
-    done
-
-elif [ "$1" == "resume" ]; then
-    if [ -f /tmp/cuda-fix-restart-sunshine ]; then
-        systemctl start --user sunshine
-        rm /tmp/cuda-fix-restart-sunshine
-    fi
-
-    if [ -f /tmp/cuda-containers-to-restart ]; then
-        cat /tmp/cuda-containers-to-restart | while read container; do
-            docker start "$container"
-        done
-        rm /tmp/cuda-containers-to-restart
-    fi
 fi
+
+# Find all docker containers with nvidia and stop them
+docker ps -q | while read container; do 
+    if [ "$(docker inspect "$container" | jq -r '.[0].HostConfig.DeviceRequests[0].Driver')" != "null" ]; then
+        docker kill "$container"
+        RESTART_CONTAINERS="$RESTART_CONTAINERS $container"
+    fi
+done
+
+# Restart nvidia_uvm kernel module
+dbus-send --system --dest=org.powertools --print-reply --type=method_call / org.powertools.RestartNvidia
+
+if [ $RESTART_SUNSHINE -eq 1 ]; then
+    systemctl start --user sunshine
+fi
+
+echo $RESTART_CONTAINERS | while read container; do
+    docker start "$container"
+done

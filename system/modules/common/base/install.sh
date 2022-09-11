@@ -71,3 +71,4 @@ add-user-to-groups \
 # Enable units
 sudo systemctl enable earlyoom
 sudo systemctl enable systemd-timesyncd
+sudo systemctl enable sleep-dbus-signal

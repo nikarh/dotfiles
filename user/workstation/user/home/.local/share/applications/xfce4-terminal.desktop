@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Exec=alacritty
+Icon=alacritty
+Terminal=false
+Type=Application
+Categories=GTK;System;TerminalEmulator;
+StartupNotify=true
+Actions=preferences;

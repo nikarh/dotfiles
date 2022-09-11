@@ -16,6 +16,7 @@ export GNUPGHOME="${XDG_CONFIG_HOME}/gnupg"
 export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npmrc"
 export ANDROID_USER_HOME="${XDG_CONFIG_HOME}/android"
 
+export __GL_SHADER_DISK_CACHE_PATH="${XDG_CACHE_HOME}/nvidia"
 export LESSHISTFILE="${XDG_CACHE_HOME}/lesshst"
 export GRADLE_USER_HOME="${XDG_CACHE_HOME}/gradle"
 export GOPATH="${XDG_CACHE_HOME}/go"

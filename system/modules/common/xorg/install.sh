@@ -13,7 +13,7 @@ if [ -n "$ARGS_pipewire" ]; then
     pkg pipewire-jack
 fi
 
-pkg i3-gaps i3status-rust i3lock-fancy-rapid-git redshift \
+pkg i3-gaps i3status-rust i3lock-fancy-rapid-git \
     xkb-switch lxsession-gtk3 picom \
     dunst rofi rofi-calc rofi-dmenu 
 

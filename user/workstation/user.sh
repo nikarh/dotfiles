@@ -1,8 +1,9 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 
 section "Making everything makeable..."
-find "$ROOT/user/tools" -name Makefile -execdir make "BIN=$ROOT/user/home/.local/bin" \; | prepend '  '
+find -L "$ROOT/user/tools" -name Makefile -execdir make "BIN=$ROOT/user/home/.local/bin" \; | prepend '  '
 
 section "Linking configs..."
 cp -frsTv "$ROOT/user/home/" ~ | prepend '  '
@@ -26,7 +27,7 @@ section "Setting default gtk terminal to alacritty..."
 gsettings set org.gnome.desktop.default-applications.terminal exec alacritty
 gsettings set org.gnome.desktop.default-applications.terminal exec-arg -e
 gsettings set org.gnome.desktop.interface font-name "Noto Sans 12"
-# glib hardcodes terminals https://github.com/GNOME/glib/blob/master/gio/gdesktopappinfo.c#L2581
+# glib hardcodes terminals https://github.com/GNOME/glib/blob/main/gio/gdesktopappinfo.c#L2692
 ln -sf /usr/bin/alacritty ~/.local/bin/xterm
 
 section "Setting xdg defaults..."

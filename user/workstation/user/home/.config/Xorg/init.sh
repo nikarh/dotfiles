@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 
 # Synchronize xorg copy-paste buffers
 autocutsel -fork
@@ -20,8 +20,7 @@ xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
 ~/.local/bin/dbus-monitor.sh org.powertools Suspend ~/.local/bin/lock.sh&
 
 # Restart CUDA apps on sleep, since we are going to reinit nvidia_uvm on resume
-~/.local/bin/dbus-monitor.sh org.powertools Suspend ~/.local/bin/cuda-app-restart.sh suspend&
-~/.local/bin/dbus-monitor.sh org.powertools Unlock ~/.local/bin/cuda-app-restart.sh resume&
+~/.local/bin/dbus-monitor.sh org.powertools Resume ~/.local/bin/cuda-app-restart.sh&
 
 # Should fix v-sync problems
 picom&
@@ -32,8 +31,6 @@ joystickwake&
 
 # Network-manager tray icon
 nm-applet&
-# Night mode tray icon
-redshift-gtk -t 6500:2400&
 # Syncthing tray icon
 syncthing-gtk&
 # Screenshot daemon

@@ -64,9 +64,7 @@ if grep -q "nvidia" <<< "$GPU_DRIVER"; then
     sudo ln -sf /etc/modprobe.d/gpu.conf.nvidia /etc/modprobe.d/gpu.conf
     install-xorg-conf nvidia
 
-    sudo systemctl enable nvidia-cuda-fix
-else
-    sudo systemctl disable nvidia-cuda-fix
+    pkg-local "$ROOT/nvidia-uvm-reload"
 fi
 
 if grep -q "nouveau" <<< "$GPU_DRIVER"; then
