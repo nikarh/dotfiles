@@ -43,7 +43,6 @@ function pkg-local {
                 makepkg --noconfirm
             )
         fi
-        exit 1
         yay -U --noconfirm "$1/$built_file"
     fi
 

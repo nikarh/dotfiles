@@ -19,8 +19,10 @@ xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
 # Lock on suspend
 ~/.local/bin/dbus-monitor.sh org.powertools Suspend ~/.local/bin/lock.sh&
 
-# Restart CUDA apps on sleep, since we are going to reinit nvidia_uvm on resume
-~/.local/bin/dbus-monitor.sh org.powertools Resume ~/.local/bin/cuda-app-restart.sh&
+# Restart CUDA apps and nvidia_uvm on resume from sleep
+~/.local/bin/cuda-app-restart.sh init
+~/.local/bin/dbus-monitor.sh org.powertools Resume ~/.local/bin/cuda-app-restart.sh stop&
+~/.local/bin/dbus-monitor.sh org.powertools NvidiaRestarted ~/.local/bin/cuda-app-restart.sh start&
 
 # Should fix v-sync problems
 picom&
