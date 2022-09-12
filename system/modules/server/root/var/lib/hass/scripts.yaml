@@ -62,3 +62,24 @@ sleep:
         area_id: bedroom
   mode: single
   icon: mdi:sleep
+morning:
+  alias: Morning
+  sequence:
+  - parallel:
+    - device_id: 704034f8457078ef825dfdc17087585b
+      domain: climate
+      entity_id: climate.bedroom_ac
+      type: set_hvac_mode
+      hvac_mode: 'off'
+    - device_id: 9fde1b08109e86b23ade505b9701a376
+      domain: cover
+      entity_id: cover.bedroom_blind
+      type: set_position
+      position: 100
+    - device_id: 261362453f14d5f3a22789bd507c039f
+      domain: cover
+      entity_id: cover.living_room_blind
+      type: set_position
+      position: 100
+  mode: single
+  icon: mdi:weather-sunny

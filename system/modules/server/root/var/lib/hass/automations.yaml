@@ -46,8 +46,6 @@
   action:
   - service: script.close_blinds
     data: {}
-  - service: script.sleep
-    data: {}
   mode: single
 - id: '1659476830339'
   alias: Bathroom light switch
@@ -364,4 +362,152 @@
     device_id: 4186b37bceff2c32df76340e469f7e88
     entity_id: switch.bathroom_light_switch_right
     domain: switch
+  mode: single
+- id: '1661319071027'
+  alias: Turn the AC off in the morning
+  description: ''
+  trigger:
+  - platform: time
+    at: 09:00:00
+  condition: []
+  action:
+  - device_id: 704034f8457078ef825dfdc17087585b
+    domain: climate
+    entity_id: climate.bedroom_ac
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  mode: single
+- id: '1661458911665'
+  alias: Storage room lights off after a timeout
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_on
+    device_id: d59021089e56a2cb7bd0da63ee1ce180
+    entity_id: switch.storage_room_light_switch
+    domain: switch
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  condition: []
+  action:
+  - type: turn_off
+    device_id: d59021089e56a2cb7bd0da63ee1ce180
+    entity_id: switch.storage_room_light_switch
+    domain: switch
+  mode: single
+- id: '1661459017163'
+  alias: Storage room - close the door notification
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 93760a4d6154289819aab304b32a4bce
+    entity_id: binary_sensor.storage_room_door_sensor_contact
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - service: notify.notify
+    data:
+      message: "\U0001F4E6 Close the storage room door!"
+  mode: single
+- id: '1661532149158'
+  alias: Turn everything off when nobody's home
+  description: ''
+  trigger:
+  - platform: device
+    device_id: dce74f49229abce281d66d80c8e234ed
+    domain: device_tracker
+    entity_id: device_tracker.anasteisha
+    type: leaves
+    zone: zone.home
+  - platform: device
+    device_id: 12c677cdb9c947739b61dcf009b5c407
+    domain: device_tracker
+    entity_id: device_tracker.oneplus_a5000
+    type: leaves
+    zone: zone.home
+  condition:
+  - condition: device
+    device_id: dce74f49229abce281d66d80c8e234ed
+    domain: device_tracker
+    entity_id: device_tracker.anasteisha
+    type: is_not_home
+  - condition: device
+    device_id: 12c677cdb9c947739b61dcf009b5c407
+    domain: device_tracker
+    entity_id: device_tracker.oneplus_a5000
+    type: is_home
+  action:
+  - type: turn_off
+    device_id: 87f3babb3013fba4ab0034336823a395
+    entity_id: switch.hall_light_switch
+    domain: switch
+  - type: turn_off
+    device_id: 4186b37bceff2c32df76340e469f7e88
+    entity_id: switch.bathroom_light_switch_left
+    domain: switch
+  - type: turn_off
+    device_id: 4186b37bceff2c32df76340e469f7e88
+    entity_id: switch.bathroom_light_switch_right
+    domain: switch
+  - type: turn_off
+    device_id: 86f95b8b519f62e1acf657d68007979f
+    entity_id: switch.office_light_switch
+    domain: switch
+  - type: turn_off
+    device_id: bccbdf0bccb76716da274cc3def420de
+    entity_id: switch.bedroom_light_switch
+    domain: switch
+  - type: turn_off
+    device_id: d59021089e56a2cb7bd0da63ee1ce180
+    entity_id: switch.storage_room_light_switch
+    domain: switch
+  - device_id: 704034f8457078ef825dfdc17087585b
+    domain: climate
+    entity_id: climate.bedroom_ac
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  - device_id: 9d4c06a09cdbd8e5ece7db3ace86ef0b
+    domain: climate
+    entity_id: climate.office_ac
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  - service: notify.notify
+    data:
+      message: Seems that nobody's home, turning off lights and ACs
+  mode: single
+- id: '1661810146215'
+  alias: AC hour cycle - turn off
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: '58'
+    hours: '*'
+  condition: []
+  action:
+  - if:
+    - condition: device
+      device_id: 704034f8457078ef825dfdc17087585b
+      domain: climate
+      entity_id: climate.bedroom_ac
+      type: is_hvac_mode
+      hvac_mode: 'off'
+    then:
+    - device_id: 704034f8457078ef825dfdc17087585b
+      domain: climate
+      entity_id: climate.bedroom_ac
+      type: set_hvac_mode
+      hvac_mode: cool
+    else:
+    - device_id: 704034f8457078ef825dfdc17087585b
+      domain: climate
+      entity_id: climate.bedroom_ac
+      type: set_hvac_mode
+      hvac_mode: 'off'
   mode: single
