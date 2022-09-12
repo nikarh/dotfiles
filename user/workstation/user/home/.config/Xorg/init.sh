@@ -40,8 +40,10 @@ flameshot&
 # Google Drive client
 insync start
 
+# Watch games.yaml and generate .desktop entries and sunshine config
+play.sh watch&
+
 # Start sunshine server
 if command -v sunshine &> /dev/null; then
-    echo "$(date) STARTING SUNSHINE" >> ~/log
     systemctl start --user sunshine
 fi

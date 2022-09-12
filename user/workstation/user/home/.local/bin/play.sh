@@ -5,10 +5,11 @@ function expand {
     cat - | sed -r "s:~:/home/$USER:g"
 }
 
-CONFIG_DIR="$HOME/.config/run-games"
+CONFIG_DIR="$HOME/.config/play.sh"
 YAML="$CONFIG_DIR/games.yaml"
 RUNTIMES="$HOME/.local/share/wine/runtimes"
 LIBRARIES="$HOME/.local/share/wine/libraries"
+SGDB_TOKEN="$(cat $CONFIG_DIR/steamgriddb_key)"
 
 function file-get {
     curl -s -fLo "$2" --create-dirs "$1"
@@ -62,17 +63,15 @@ function update-libaries {
 function sync-to-sunshine {
     local BANNERS="$CONFIG_DIR/banners"
     mkdir -p "$HOME/.config/sunshine"
-    mkdir -p $BANNERS
+    mkdir -p "$BANNERS"
 
     local CONFIG='{"env": {"PATH": "$(PATH):$(HOME)\/.local\/bin"}, "apps": []}'
-    local SGDB_TOKEN="$(cat $CONFIG_DIR/steamgriddb_key)"
 
     while read line; do
         local game="$(echo $line | awk '{print $2}')"
         local game_id="$(cat "$YAML" | yq ".games[\"$game\"].steamgriddb_id // \"\"")"
-        local sunshine="$(cat "$YAML" | yq ".games[\"$game\"].sunshine")"
 
-        if [[ "$sunshine" == "false" ]]; then
+        if [[ "$(cat "$YAML" | yq ".games[\"$game\"].sunshine")" == "false" ]]; then
             continue
         fi
 
@@ -97,6 +96,44 @@ function sync-to-sunshine {
     done <<< "$(cat "$YAML" | yq '.games | keys')"
 
     echo $CONFIG | jq >| "$HOME/.config/sunshine/apps_linux.json"
+}
+
+function create-desktop-files {
+    local ICONS="$CONFIG_DIR/icons"
+    local APPS="$HOME/.local/share/applications/gamesh"
+    mkdir -p "$ICONS"
+
+    rm -f "$APPS"/*
+    mkdir -p "$APPS"
+
+    while read line; do
+        local game="$(echo $line | awk '{print $2}')"
+        local game_id="$(cat "$YAML" | yq ".games[\"$game\"].steamgriddb_id // \"\"")"
+
+        if [[ "$(cat "$YAML" | yq ".games[\"$game\"].desktop")" == "false" ]]; then
+            continue
+        fi
+
+        if [ -n "$game_id" ] && [ ! -f "$ICONS/$game_id.png" ]; then
+            local ICON_URL="$(curl -H "Authorization: Bearer $SGDB_TOKEN" \
+                "https://www.steamgriddb.com/api/v2/icons/game/$game_id" \
+                | jq -r '.data[0].thumb')"
+
+            curl "$ICON_URL" -o "$ICONS/$game_id.png"
+        fi
+
+        printf "%s\n" \
+            "[Desktop Entry]" \
+            "Type=Application" \
+            "Version=1.0" \
+            "Name=$(cat "$YAML" | yq ".games[\"$game\"].name")" \
+            "Path=$(dirname "$(realpath "$0")")" \
+            "Exec=$(realpath "$0") $game" \
+            "Icon=$ICONS/$game_id.png" \
+            "Terminal=false" \
+            "Categories=Games;" > "$APPS/$game.desktop"
+
+    done <<< "$(cat "$YAML" | yq '.games | keys')"
 }
 
 function run-wine {
@@ -223,5 +260,21 @@ function run {
     esac
 }
 
-sync-to-sunshine
-run "$1" "${@:2}"
+function refresh {
+    if ! sha1sum --quiet --check "$YAML.sha1" 2>/dev/null; then
+        sync-to-sunshine
+        create-desktop-files
+        sha1sum "$YAML" >| "$YAML.sha1"
+    fi
+}
+
+refresh
+
+if [ "$1" == "watch" ]; then
+    while inotifywait -e modify "$YAML"; do
+        echo "Refreshing sunshine config and desktop files"
+        refresh;
+    done
+else
+    run "$1" "${@:2}"
+fi

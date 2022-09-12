@@ -50,7 +50,8 @@ pkg $(pacman -Sgq base-devel) \
     openssh \
     systemd-swap \
     earlyoom \
-    direnv
+    direnv \
+    inotify-tools
 
 # Copy all configs to root
 sudo cp -ufrTv "$ROOT/root/" /
