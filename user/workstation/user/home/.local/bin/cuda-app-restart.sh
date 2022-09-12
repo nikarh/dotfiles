@@ -14,7 +14,7 @@ elif [ "$1" == "stop" ]; then
     fi
 
     # Find all docker containers with nvidia and stop them
-    docker ps -aq | while read container; do 
+    docker ps -q | while read container; do 
         if [ "$(docker inspect "$container" | jq -r '.[0].HostConfig.DeviceRequests[0].Driver')" != "null" ]; then
             docker kill "$container"
             echo "$container" >> "$CACHE/docker"
