@@ -50,19 +50,17 @@ shell_command:
   renew_lg_token: curl 'https://developer.lge.com/secure/ResetDevModeSession.dev?sessionToken={{ token }}'
 
 homekit:
-  port: 21064
-  name: Home Assistant Bridge
-  ip_address: 192.168.1.19
-  advertise_ip: 192.168.1.19
-  filter:
-    include_domains:
-      - switch
-      - light
-      - climate
-      - vacuum
-      - button
-      - humidifier
-      - cover
+  - name: Home Assistant Bridge
+    port: 21064
+    advertise_ip: 192.168.1.19
+    filter:
+      include_domains:
+        - switch
+        # - light
+        # - climate
+        # - vacuum
+        # - button
+        # - humidifier
 
 google_assistant:
   project_id: home-assistant-51b12

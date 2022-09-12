@@ -214,6 +214,15 @@ services:
     depends_on:
       init-mqtt-certs:
         condition: service_completed_successfully
+  mdns-repeater:
+    image: angelnu/mdns_repeater
+    container_name: mdns-repeater
+    restart: unless-stopped
+    logging: *logging
+    network_mode: host
+    environment:
+    - hostNIC=eno1
+    - dockerNIC=br-12889d5cd7a4
   filebrowser:
     image: filebrowser/filebrowser
     container_name: filebrowser
