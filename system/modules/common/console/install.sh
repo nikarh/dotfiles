@@ -1,7 +1,6 @@
 #!/bin/bash -e
 
-pkg terminus-font \
-    zip unzip p7zip unrar \
+pkg zip unzip p7zip unrar \
     man-db man-pages \
     neovim tmux \
     bash-completion starship git-delta grc fzf \
@@ -15,6 +14,3 @@ pkg terminus-font \
 if [ -n "$ARGS_gui" ]; then 
     pkg ueberzug
 fi
-
-# Copy all configs to root
-sudo cp -ufrTv "$ROOT/root/" /

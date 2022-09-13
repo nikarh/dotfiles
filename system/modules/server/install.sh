@@ -1,13 +1,16 @@
 #!/bin/bash -e
 
-pkg intel-hybrid-codec-driver intel-media-driver \
-    mdadm hdparm fuse-overlayfs dhclient \
-    ffmpeg mkvtoolnix-cli perl-rename
+pkg mdadm hdparm fuse-overlayfs dhclient \
+    btrfs-progs parted \
+    libva-headless ffmpeg-headless \
+    perl-rename \
+    lm_sensors
 
 sudo systemctl mask mdmonitor
 
 # Copy all configs to etc
 sudo cp -ufrTv "$ROOT/root/etc/" /etc
+sudo cp -ufrTv "$ROOT/root/usr/" /usr
 
 if [[ "$COPY_VAR" == "true" ]]; then
     sudo cp -ufrTv "$ROOT/root/var/" /var
@@ -34,6 +37,9 @@ sudo mount -a
 # Start services
 sudo systemctl enable dhclient@eno1
 sudo systemctl enable sshd
+sudo systemctl enable fancontrol
+sudo systemctl enable reduce-power-usage
+
 
 sudo docker-compose --project-directory="$ROOT" build
 sudo docker-compose --project-directory="$ROOT" up -d

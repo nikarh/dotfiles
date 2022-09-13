@@ -1,0 +1,11 @@
+INTERVAL=10
+DEVPATH=hwmon0=devices/virtual/thermal/thermal_zone0 hwmon2=devices/platform/nct6775.656
+DEVNAME=hwmon0=acpitz hwmon2=nct6796
+FCTEMPS=hwmon2/pwm1=hwmon0/temp1_input
+FCFANS= hwmon2/pwm1=hwmon2/fan1_input
+MINTEMP=hwmon2/pwm1=45
+MAXTEMP=hwmon2/pwm1=65
+MINSTART=hwmon2/pwm1=20
+MINSTOP=hwmon2/pwm1=35
+MINPWM=hwmon2/pwm1=20
+MAXPWM=hwmon2/pwm1=150

@@ -1,0 +1,9 @@
+[Unit]
+Description=Initialize power settings
+
+[Service]
+ExecStart=/usr/local/bin/reduce-power-usage.sh
+After=init.target
+
+[Install]
+WantedBy=multi-user.target
