@@ -13,7 +13,7 @@ log:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: nikolajs.arhipovs@gmail.com
+      email: n@arhipov.net
       caServer: https://acme-v02.api.letsencrypt.org/directory
       storage: /etc/traefik/acme.json
       dnsChallenge:

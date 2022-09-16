@@ -33,7 +33,7 @@
 	filesEncoding = utf-8
 [user]
 	name = Nikolay Arhipov
-	email = nikolajs.arhipovs@gmail.com
+	email = n@arhipov.net
 [pull]
     rebase = true
 [rebase]
