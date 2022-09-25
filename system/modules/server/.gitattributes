@@ -6,4 +6,5 @@ root/var/lib/filebrowser/** filter=git-crypt diff=git-crypt
 root/var/lib/mosquitto/users.conf filter=git-crypt diff=git-crypt
 root/var/lib/authelia/secrets/** filter=git-crypt diff=git-crypt
 root/var/lib/zigbee2mqtt/secret.yaml filter=git-crypt diff=git-crypt
+root/var/lib/valetudo/config.json filter=git-crypt diff=git-crypt
 secrets/** filter=git-crypt diff=git-crypt

@@ -194,6 +194,17 @@ services:
     depends_on:
       mqtt:
         condition: service_started
+  roborock-map:
+    container_name: roborock-map
+    image: nikarh/icantbelieveitsnotvaletudo
+    restart: unless-stopped
+    logging: *logging
+    volumes:
+      - /var/lib/mosquitto/certs/ca.crt:/etc/ssl/certs/mqtt.crt
+      - /var/lib/valetudo/config.json:/app/config.json
+    depends_on:
+      init-mqtt-certs:
+        condition: service_completed_successfully
   hass:
     image: homeassistant/home-assistant:stable
     container_name: hass
