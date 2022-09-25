@@ -29,6 +29,7 @@ http:
 automation: !include automations.yaml
 automation secret: !include secret_automations.yaml
 
+template: !include templates.yaml
 sensor: !include sensors.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml

@@ -8,7 +8,7 @@ roborock_clean_segment:
   mode: single
   icon: mdi:robot-vacuum
 close_blinds:
-  alias: Close blinds
+  alias: 'Evening: Close bedroom and living room blinds'
   sequence:
   - if:
     - type: is_not_open
@@ -37,7 +37,7 @@ close_blinds:
   mode: single
   icon: mdi:blinds
 sleep:
-  alias: Prepare HVAC for sleep
+  alias: 'Evening: Turn HVAC on'
   sequence:
   - device_id: 9d4c06a09cdbd8e5ece7db3ace86ef0b
     domain: climate
@@ -46,9 +46,16 @@ sleep:
     hvac_mode: 'off'
   - if:
     - condition: numeric_state
-      entity_id: sensor.s1_cloud_548774_temperature
+      entity_id: sensor.cgllc_s1_cdff_temperature
       attribute: environmen_temperature
       above: '21'
+      value_template: ''
+    - condition: template
+      value_template: '{% set d = now().day %}
+
+        {% set m = now().month %}
+
+        {{  (m == 5 and d > 20) or (m > 5 and m < 9) or (m == 9 and d < 10) }}'
     then:
     - device_id: 704034f8457078ef825dfdc17087585b
       domain: climate
@@ -60,17 +67,16 @@ sleep:
         temperature: 22.5
       target:
         area_id: bedroom
+    - service: automation.turn_on
+      data: {}
+      target:
+        entity_id: automation.ac_hour_cycle_turn_off
   mode: single
   icon: mdi:sleep
 morning:
-  alias: Morning
+  alias: 'Morning: Open bedroom and living room blinds'
   sequence:
   - parallel:
-    - device_id: 704034f8457078ef825dfdc17087585b
-      domain: climate
-      entity_id: climate.bedroom_ac
-      type: set_hvac_mode
-      hvac_mode: 'off'
     - device_id: 9fde1b08109e86b23ade505b9701a376
       domain: cover
       entity_id: cover.bedroom_blind
@@ -83,3 +89,73 @@ morning:
       position: 100
   mode: single
   icon: mdi:weather-sunny
+everything_off:
+  alias: All devices off
+  sequence:
+  - type: turn_off
+    device_id: 87f3babb3013fba4ab0034336823a395
+    entity_id: switch.hall_light_switch
+    domain: switch
+  - type: turn_off
+    device_id: 4186b37bceff2c32df76340e469f7e88
+    entity_id: switch.bathroom_light_switch_left
+    domain: switch
+  - type: turn_off
+    device_id: 4186b37bceff2c32df76340e469f7e88
+    entity_id: switch.bathroom_light_switch_right
+    domain: switch
+  - type: turn_off
+    device_id: 86f95b8b519f62e1acf657d68007979f
+    entity_id: switch.office_light_switch
+    domain: switch
+  - type: turn_off
+    device_id: bccbdf0bccb76716da274cc3def420de
+    entity_id: switch.bedroom_light_switch
+    domain: switch
+  - device_id: 704034f8457078ef825dfdc17087585b
+    domain: climate
+    entity_id: climate.bedroom_ac
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  - device_id: 9d4c06a09cdbd8e5ece7db3ace86ef0b
+    domain: climate
+    entity_id: climate.office_ac
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  - type: turn_off
+    device_id: 81e8e837ea194c7d88f55daecbdf997f
+    entity_id: switch.lava_lamp
+    domain: switch
+  - type: turn_off
+    device_id: 6bb2b0adab02bab06518cb8e04ac7c1d
+    entity_id: switch.bedroom_desk_lamp
+    domain: switch
+  mode: single
+  icon: mdi:close-octagon
+away:
+  alias: 'Away: All devices off and entrance automations on'
+  sequence:
+  - service: script.everything_off
+    data: {}
+  - service: automation.turn_on
+    data: {}
+    target:
+      entity_id:
+      - automation.away_entrance_door_closed
+      - automation.away_entrance_door_opened
+  mode: single
+  icon: mdi:shield-lock-outline
+morning_2:
+  alias: 'Morning: Bedroom hvac off'
+  sequence:
+  - device_id: 704034f8457078ef825dfdc17087585b
+    domain: climate
+    entity_id: climate.bedroom_ac
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  - service: automation.turn_off
+    data: {}
+    target:
+      entity_id: automation.ac_hour_cycle_turn_off
+  mode: single
+  icon: mdi:hvac-off

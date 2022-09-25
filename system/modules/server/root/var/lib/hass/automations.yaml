@@ -1,42 +1,18 @@
 - id: '1645430699628'
-  alias: Morning
-  description: ''
+  alias: 'Morning: open bedroom and living room blinds'
+  description: Open blinds
   trigger:
   - platform: time_pattern
     seconds: '00'
-    hours: '9'
+    hours: '10'
     minutes: '00'
-  condition:
-  - condition: time
-    weekday:
-    - mon
-    - tue
-    - wed
-    - thu
-    - fri
-    - sat
-    - sun
-    before: 00:00:00
-    after: 00:00:00
+  condition: []
   action:
-  - device_id: d693bc9748e34d9e32c5c5d6befd8bc1
-    domain: cover
-    entity_id: cover.bedroom_blind
-    type: set_position
-    position: 100
-  - device_id: ac794bc2129ed23c069d801fc3f4a8cf
-    domain: cover
-    entity_id: cover.living_room_blind
-    type: set_position
-    position: 100
-  - device_id: 704034f8457078ef825dfdc17087585b
-    domain: climate
-    entity_id: climate.bedroom_ac
-    type: set_hvac_mode
-    hvac_mode: 'off'
+  - service: script.morning
+    data: {}
   mode: single
 - id: '1651653946293'
-  alias: 'Night: all blinds closed one hour after sunset'
+  alias: 'Night: All blinds closed one hour after sunset'
   description: ''
   trigger:
   - platform: sun
@@ -178,7 +154,7 @@
       entity_id: automation.bathroom_light_off_on_no_motion
   mode: single
 - id: '1661169242658'
-  alias: Storage room lights on door open
+  alias: 'Storage room: Lights on door open'
   description: ''
   trigger:
   - type: opened
@@ -194,7 +170,7 @@
     domain: switch
   mode: single
 - id: '1661169271617'
-  alias: Storage room lights off on door closed
+  alias: 'Storage room: Lights off on door closed'
   description: ''
   trigger:
   - type: not_opened
@@ -237,6 +213,10 @@
     device_id: 4f83ba057cfdf73d5be6717db15b2f29
     entity_id: binary_sensor.bedroom_window_sensor_contact
     domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 3
   condition:
   - condition: time
     before: 04:00:00
@@ -257,6 +237,10 @@
     device_id: 7e479da0f7c7917822f6c9d67f70c5b5
     entity_id: binary_sensor.living_room_window_sensor_contact
     domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 3
   condition:
   - condition: time
     before: 04:00:00
@@ -286,6 +270,10 @@
     device_id: 87f3babb3013fba4ab0034336823a395
     entity_id: switch.hall_light_switch
     domain: switch
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
   action:
   - type: turn_on
     device_id: 87f3babb3013fba4ab0034336823a395
@@ -294,7 +282,9 @@
   - service: automation.turn_on
     data: {}
     target:
-      entity_id: automation.light_off_on_door_close
+      entity_id:
+      - automation.light_off_on_door_close
+      - automation.hall_light_off_on_2_minute_timeout
   mode: single
 - id: '1661190493468'
   alias: 'Night: turn on HVAC at 23:30'
@@ -315,6 +305,9 @@
       domain: device_tracker
       entity_id: device_tracker.oneplus_a5000
       type: is_home
+  - condition: state
+    entity_id: automation.away_entrance_door_opened
+    state: 'off'
   action:
   - service: script.sleep
     data: {}
@@ -342,7 +335,9 @@
     data:
       stop_actions: false
     target:
-      entity_id: automation.light_off_on_door_close
+      entity_id:
+      - automation.light_off_on_door_close
+      - automation.hall_light_off_on_2_minute_timeout
   mode: single
 - id: '1661191859192'
   alias: Bathroom main light on motion
@@ -364,21 +359,18 @@
     domain: switch
   mode: single
 - id: '1661319071027'
-  alias: Turn the AC off in the morning
-  description: ''
+  alias: 'Morning: Turn the AC off'
+  description: Turn bedroom AC and hourly automation off at 8:00
   trigger:
   - platform: time
-    at: 09:00:00
+    at: 08:00:00
   condition: []
   action:
-  - device_id: 704034f8457078ef825dfdc17087585b
-    domain: climate
-    entity_id: climate.bedroom_ac
-    type: set_hvac_mode
-    hvac_mode: 'off'
+  - service: script.morning_2
+    data: {}
   mode: single
 - id: '1661458911665'
-  alias: Storage room lights off after a timeout
+  alias: 'Storage room: Lights off after a timeout'
   description: ''
   trigger:
   - platform: device
@@ -398,7 +390,7 @@
     domain: switch
   mode: single
 - id: '1661459017163'
-  alias: Storage room - close the door notification
+  alias: 'Storage room: Close the door notification'
   description: ''
   trigger:
   - type: opened
@@ -416,74 +408,8 @@
     data:
       message: "\U0001F4E6 Close the storage room door!"
   mode: single
-- id: '1661532149158'
-  alias: Turn everything off when nobody's home
-  description: ''
-  trigger:
-  - platform: device
-    device_id: dce74f49229abce281d66d80c8e234ed
-    domain: device_tracker
-    entity_id: device_tracker.anasteisha
-    type: leaves
-    zone: zone.home
-  - platform: device
-    device_id: 12c677cdb9c947739b61dcf009b5c407
-    domain: device_tracker
-    entity_id: device_tracker.oneplus_a5000
-    type: leaves
-    zone: zone.home
-  condition:
-  - condition: device
-    device_id: dce74f49229abce281d66d80c8e234ed
-    domain: device_tracker
-    entity_id: device_tracker.anasteisha
-    type: is_not_home
-  - condition: device
-    device_id: 12c677cdb9c947739b61dcf009b5c407
-    domain: device_tracker
-    entity_id: device_tracker.oneplus_a5000
-    type: is_home
-  action:
-  - type: turn_off
-    device_id: 87f3babb3013fba4ab0034336823a395
-    entity_id: switch.hall_light_switch
-    domain: switch
-  - type: turn_off
-    device_id: 4186b37bceff2c32df76340e469f7e88
-    entity_id: switch.bathroom_light_switch_left
-    domain: switch
-  - type: turn_off
-    device_id: 4186b37bceff2c32df76340e469f7e88
-    entity_id: switch.bathroom_light_switch_right
-    domain: switch
-  - type: turn_off
-    device_id: 86f95b8b519f62e1acf657d68007979f
-    entity_id: switch.office_light_switch
-    domain: switch
-  - type: turn_off
-    device_id: bccbdf0bccb76716da274cc3def420de
-    entity_id: switch.bedroom_light_switch
-    domain: switch
-  - type: turn_off
-    device_id: d59021089e56a2cb7bd0da63ee1ce180
-    entity_id: switch.storage_room_light_switch
-    domain: switch
-  - device_id: 704034f8457078ef825dfdc17087585b
-    domain: climate
-    entity_id: climate.bedroom_ac
-    type: set_hvac_mode
-    hvac_mode: 'off'
-  - device_id: 9d4c06a09cdbd8e5ece7db3ace86ef0b
-    domain: climate
-    entity_id: climate.office_ac
-    type: set_hvac_mode
-    hvac_mode: 'off'
-  - service: notify.notify
-    data:
-      message: Seems that nobody's home, turning off lights and ACs
-  mode: single
 - id: '1661810146215'
-  alias: AC hour cycle - turn off
+  alias: 'Night: Bedroom AC hour cycle'
   description: ''
   trigger:
   - platform: time_pattern
@@ -510,4 +436,75 @@
       entity_id: climate.bedroom_ac
       type: set_hvac_mode
       hvac_mode: 'off'
+  mode: single
+- id: '1663451694383'
+  alias: 'Away: entrance door opened'
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 37396c0644fd39bff62bd7445c3e3b63
+    entity_id: binary_sensor.entrance_door_sensor_contact
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  condition: []
+  action:
+  - service: notify.notify
+    data:
+      message: ⚠️ Entrance door was opened!
+  mode: single
+- id: '1663451725210'
+  alias: 'Away: entrance door closed'
+  description: ''
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: 37396c0644fd39bff62bd7445c3e3b63
+    entity_id: binary_sensor.entrance_door_sensor_contact
+    domain: binary_sensor
+  condition:
+  - condition: not
+    conditions:
+    - type: is_not_open
+      condition: device
+      device_id: 37396c0644fd39bff62bd7445c3e3b63
+      entity_id: binary_sensor.entrance_door_sensor_contact
+      domain: binary_sensor
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 10
+  action:
+  - service: notify.notify
+    data:
+      message: ⚠️ Entrance door was closed!
+  mode: single
+- id: '1664102962531'
+  alias: Hall light off on 2 minute timeout
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_on
+    device_id: 87f3babb3013fba4ab0034336823a395
+    entity_id: switch.hall_light_switch
+    domain: switch
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 87f3babb3013fba4ab0034336823a395
+    entity_id: switch.hall_light_switch
+    domain: switch
+  - service: automation.turn_off
+    data: {}
+    target:
+      entity_id:
+      - automation.hall_light_off_on_2_minute_timeout
+      - automation.light_off_on_door_close
   mode: single
