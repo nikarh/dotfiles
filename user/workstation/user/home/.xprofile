@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export ERRFILE=$HOME/.cache/xsession-errors
+
 . ~/.profile
 . ~/.local/bin/init-input-devices.sh
 

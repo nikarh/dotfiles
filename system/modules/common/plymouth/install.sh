@@ -3,8 +3,8 @@
 pkg plymouth plymouth-theme-monoarch
 
 # Install plymouth hook
-if ! grep -q '^HOOKS.*plymouth' /etc/mkinitcpio.conf; then
-    sudo sed -E -i 's/^(HOOKS=.*udev)(.*)/\1 plymouth\2/' /etc/mkinitcpio.conf
+if ! grep -q '^HOOKS.*plymouth-crypt' /etc/mkinitcpio.conf; then
+    sudo sed -E -i 's/^(HOOKS=.*udev)(.*)/\1 plymouth-crypt\2/' /etc/mkinitcpio.conf
     export REBUILD_INITRD=1
 fi
 

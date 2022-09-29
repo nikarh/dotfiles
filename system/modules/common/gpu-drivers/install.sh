@@ -53,7 +53,7 @@ else
 fi
 
 if grep -q "nvidia" <<< "$GPU_DRIVER"; then
-    pkg nvidia nvidia-settings nvidia-utils-nvlax
+    pkg nvidia-dkms nvidia-settings nvidia-utils-nvlax
 
     DEVICE_ID=$(lspci | grep -i 'VGA.*NVIDIA' | awk '{print $1}' | sed -r 's/^(0*([0-9]+)[:.]0*([0-9]+)[:.]0*([0-9]+)).*/\2:\3:\4/')
     cat /etc/X11/xorg.conf.avail/20-gpu.nvidia.conf \
