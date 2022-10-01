@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export HISTFILE=~/.cache/.bash_history
+
 trysource() {
     if [ -f "$1" ]; then source "$1"; fi
 }

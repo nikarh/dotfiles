@@ -157,7 +157,7 @@
     max_icon_size = 48
 
     # Paths to default icons.
-    icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/:/usr/share/icons/Flat-Remix-Blue-Dark/:/usr/share/icons/Flat-Remix-Blue-Dark/actions/:/usr/share/icons/Flat-Remix-Blue-Dark/actions/scalable/:/usr/share/icons/Flat-Remix-Blue-Dark/actions/symbolic/:/usr/share/icons/Flat-Remix-Blue-Dark/animations/:/usr/share/icons/Flat-Remix-Blue-Dark/apps/:/usr/share/icons/Flat-Remix-Blue-Dark/apps/scalable/:/usr/share/icons/Flat-Remix-Blue-Dark/apps/symbolic/:/usr/share/icons/Flat-Remix-Blue-Dark/categories/:/usr/share/icons/Flat-Remix-Blue-Dark/categories/symbolic/:/usr/share/icons/Flat-Remix-Blue-Dark/devices/:/usr/share/icons/Flat-Remix-Blue-Dark/devices/symbolic/:/usr/share/icons/Flat-Remix-Blue-Dark/emblems/:/usr/share/icons/Flat-Remix-Blue-Dark/emblems/scalable/:/usr/share/icons/Flat-Remix-Blue-Dark/emblems/symbolic/:/usr/share/icons/Flat-Remix-Blue-Dark/emotes/:/usr/share/icons/Flat-Remix-Blue-Dark/mimetypes/:/usr/share/icons/Flat-Remix-Blue-Dark/mimetypes/scalable/:/usr/share/icons/Flat-Remix-Blue-Dark/mimetypes/symbolic/:/usr/share/icons/Flat-Remix-Blue-Dark/panel/:/usr/share/icons/Flat-Remix-Blue-Dark/places/:/usr/share/icons/Flat-Remix-Blue-Dark/places/scalable/:/usr/share/icons/Flat-Remix-Blue-Dark/places/symbolic/:/usr/share/icons/Flat-Remix-Blue-Dark/status/:/usr/share/icons/Flat-Remix-Blue-Dark/status/scalable/:/usr/share/icons/Flat-Remix-Blue-Dark/status/symbolic/
+    icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/:/usr/share/icons/Dracula/16/actions:/usr/share/icons/Dracula/16/apps:/usr/share/icons/Dracula/16/devices:/usr/share/icons/Dracula/16/mimetypes:/usr/share/icons/Dracula/16/places:/usr/share/icons/Dracula/16@2x/actions:/usr/share/icons/Dracula/16@2x/apps:/usr/share/icons/Dracula/16@2x/devices:/usr/share/icons/Dracula/16@2x/mimetypes:/usr/share/icons/Dracula/16@2x/places:/usr/share/icons/Dracula/22/actions:/usr/share/icons/Dracula/22/devices:/usr/share/icons/Dracula/22/emblems:/usr/share/icons/Dracula/22/mimetypes:/usr/share/icons/Dracula/22/places:/usr/share/icons/Dracula/22@2x/actions:/usr/share/icons/Dracula/22@2x/devices:/usr/share/icons/Dracula/22@2x/emblems:/usr/share/icons/Dracula/22@2x/mimetypes:/usr/share/icons/Dracula/22@2x/places:/usr/share/icons/Dracula/24/actions:/usr/share/icons/Dracula/24/animations:/usr/share/icons/Dracula/24/devices:/usr/share/icons/Dracula/24/places:/usr/share/icons/Dracula/24@2x/actions:/usr/share/icons/Dracula/24@2x/animations:/usr/share/icons/Dracula/24@2x/devices:/usr/share/icons/Dracula/24@2x/places:/usr/share/icons/Dracula/32/actions:/usr/share/icons/Dracula/32/devices:/usr/share/icons/Dracula/32@2x/actions:/usr/share/icons/Dracula/32@2x/devices:/usr/share/icons/Dracula/scalable/apps:/usr/share/icons/Dracula/scalable/devices:/usr/share/icons/Dracula/scalable/mimetypes:/usr/share/icons/Dracula/scalable/places:/usr/share/icons/Dracula/scalable@2x/apps:/usr/share/icons/Dracula/scalable@2x/devices:/usr/share/icons/Dracula/scalable@2x/mimetypes:/usr/share/icons/Dracula/scalable@2x/places:/usr/share/icons/Dracula/symbolic/actions:/usr/share/icons/Dracula/symbolic/apps:/usr/share/icons/Dracula/symbolic/categories:/usr/share/icons/Dracula/symbolic/devices:/usr/share/icons/Dracula/symbolic/emblems:/usr/share/icons/Dracula/symbolic/emotes:/usr/share/icons/Dracula/symbolic/mimetypes:/usr/share/icons/Dracula/symbolic/places:/usr/share/icons/Dracula/symbolic/status
 
     ### History ###
 
@@ -226,7 +226,7 @@
     # dunst will attempt to calculate an appropriate dpi value for each monitor
     # using the resolution and physical size. This might be useful in setups
     # where there are multiple screens with very different dpi values.
-    per_monitor_dpi = false
+    per_monitor_dpi = true
 
 [shortcuts]
     # Shortcuts are specified as [modifier+][modifier+]...key
@@ -250,19 +250,21 @@
     context = ctrl+shift+period
 
 [urgency_low]
-    background = "#294452"
-    foreground = "#c1c1c1"
-    frame_color = "#273238"
+    background = "#282A36"
+    foreground = "#f8f8f2"
+    frame_color = "#757783"
     timeout = 10
 
 [urgency_normal]
-    background = "#273238"
-    foreground = "#c1c1c1"
+    background = "#282A36"
+    foreground = "#f8f8f2"
+    frame_color = "#757783"
     timeout = 10
 
 [urgency_critical]
-    background = "#824125"
-    foreground = "#fdf6e3"
+    background = "#ff5555"
+    foreground = "#f8f8f2"
+    frame_color = "#ff5555"
     timeout = 0
     icon = "/usr/share/icons/Flat-Remix-Blue-Dark/panel/state-warning.svg"
 

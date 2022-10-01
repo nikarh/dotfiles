@@ -112,7 +112,11 @@ done <<< "$(cat "$PROFILE" | yq '.modules | keys')"
 
 # Rebuild initrd if required
 if [[ "$REBUILD_INITRD" -eq 1 ]]; then
-    sudo mkinitcpio -p linux
+    find /etc/mkinitcpio.d -name '*.preset' -exec basename {} \; \
+         | sed 's/.preset//' \
+         | while read preset; do \
+             sudo mkinitcpio -p $preset; \
+         done
 fi
 
 # Upgrade all packages

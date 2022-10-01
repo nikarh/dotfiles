@@ -46,7 +46,8 @@ pkg base pacman-contrib asp
 
 # Always install these tools
 pkg $(pacman -Sgq base-devel) \
-    pacman linux linux-firmware yay git git-crypt git-lfs \
+    pacman "$ARGS_kernel" "${ARGS_kernel}-headers" linux-firmware \
+    yay git git-crypt git-lfs \
     openssh \
     systemd-swap \
     earlyoom \

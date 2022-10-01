@@ -1,10 +1,15 @@
 #!/bin/bash -e
 
-pkg plymouth plymouth-theme-monoarch
+pkg plymouth plymouth-theme-minimal-dark-git
 
 # Install plymouth hook
-if ! grep -q '^HOOKS.*plymouth-crypt' /etc/mkinitcpio.conf; then
-    sudo sed -E -i 's/^(HOOKS=.*udev)(.*)/\1 plymouth-crypt\2/' /etc/mkinitcpio.conf
+if grep -q '^HOOKS.*udev' /etc/mkinitcpio.conf && ! grep -q '^HOOKS.*udev.*plymouth' /etc/mkinitcpio.conf; then
+    sudo sed -E -i 's/^(HOOKS=.*udev)(.*)/\1 plymouth\2/' /etc/mkinitcpio.conf
+    export REBUILD_INITRD=1
+fi
+
+if grep -q '^HOOKS.*systemd' /etc/mkinitcpio.conf && ! grep -q '^HOOKS.*systemd.*sd-plymouth' /etc/mkinitcpio.conf; then
+    sudo sed -E -i 's/^(HOOKS=.*systemd)(.*)/\1 sd-plymouth\2/' /etc/mkinitcpio.conf
     export REBUILD_INITRD=1
 fi
 
@@ -15,3 +20,5 @@ fi
 
 # Copy all configs to root
 sudo cp -ufrTv "$ROOT/root/" /
+
+create-groups nopasswdlogin

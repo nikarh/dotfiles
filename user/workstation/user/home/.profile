@@ -12,6 +12,8 @@ export XDG_CACHE_HOME=~/.cache/
 export XDG_DATA_HOME=~/.local/share/
 export XDG_STATE_HOME=~/.local/share/
 
+export INPUTRC=~/.config/bash/inputrc
+
 export GNUPGHOME="${XDG_CONFIG_HOME}/gnupg"
 export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npmrc"
 export ANDROID_USER_HOME="${XDG_CONFIG_HOME}/android"

@@ -13,8 +13,8 @@ if [ -n "$ARGS_pipewire" ]; then
     pkg pipewire-jack
 fi
 
-pkg i3-gaps i3status-rust i3lock-fancy-rapid-git \
-    xkb-switch lxsession-gtk3 picom \
+pkg i3-gaps i3status-rust i3lock-color \
+    xkb-switch picom \
     dunst rofi rofi-calc rofi-dmenu 
 
 # GUI applications
@@ -24,7 +24,7 @@ pkg alacritty \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
     qdirstat keepassxc flameshot qbittorrent insync syncthing syncthing-gtk-python3 \
     libsecret seahorse \
-    telegram-desktop slack-desktop epdfview onlyoffice-bin \
+    telegram-desktop slack-desktop epdfview-gtk3 onlyoffice-bin \
     krita inkscape aseprite-git \
     audacious vlc sonixd-appimage \
     gparted
@@ -33,13 +33,15 @@ pkg alacritty \
 pkg lxappearance-gtk3 qt5ct qt6ct kvantum-theme-arc  \
     noto-fonts noto-fonts-emoji ttf-ms-win10-auto \
     ttf-dejavu ttf-hack ttf-nerd-fonts-symbols-1000-em-mono \
-    arc-solid-gtk-theme flat-remix
+    dracula-gtk-theme ant-dracula-kde-theme ant-dracula-kvantum-theme-git \
+    dracula-cursors-git dracula-icons-git
 
 # Copy all configs to root
 sudo cp -ufrTv "$ROOT/root/" /
 
-# Start systemd units
+# Systemd units
 sudo systemctl enable autorandr.service
+sudo systemctl disable getty@tty1.service 
 
 if pacman -Qi plymouth > /dev/null 2>&1; then
     sudo systemctl disable lightdm.service > /dev/null
@@ -48,3 +50,4 @@ else
     sudo systemctl disable lightdm-plymouth.service
     sudo systemctl enable lightdm.service
 fi
+

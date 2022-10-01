@@ -2,15 +2,15 @@
 name = "plain"
 [theme.overrides]
 separator = ""
-idle_bg = "#202B33"
+idle_bg = "#282A36"
 idle_fg = "#738694"
-separator_bg = "#202B33"
+separator_bg = "#282A36"
 separator_fg = "#30404D"
-warning_bg = "#202B33"
+warning_bg = "#282A36"
 warning_fg = "#D9822B"
-critical_bg = "#202B33"
+critical_bg = "#282A36"
 critical_fg= "#A82A2A"
-info_bg = "#202B33"
+info_bg = "#282A36"
 info_fg = "#CED9E0"
 
 [icons]

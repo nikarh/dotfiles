@@ -5,11 +5,12 @@ function expand {
     cat - | sed -r "s:~:/home/$USER:g"
 }
 
-CONFIG_DIR="$HOME/.config/play.sh"
-YAML="$CONFIG_DIR/games.yaml"
-RUNTIMES="$HOME/.local/share/wine/runtimes"
-LIBRARIES="$HOME/.local/share/wine/libraries"
+CONFIG_DIR="/srv/games/.config"
+RUNTIMES="/srv/games/.wine/runtimes"
+LIBRARIES="/srv/games/.wine/libraries"
+
 SGDB_TOKEN="$(cat $CONFIG_DIR/steamgriddb_key)"
+YAML="$CONFIG_DIR/games.yaml"
 
 function file-get {
     curl -s -fLo "$2" --create-dirs "$1"

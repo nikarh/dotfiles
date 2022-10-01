@@ -1,5 +1,3 @@
-exec lxsession
-
 set $ws1 "1:  "
 set $ws2 "2:  "
 set $ws3 "3:  "
@@ -11,22 +9,24 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
+exec i3-msg 'exec ~/.config/Xorg/init.sh'
+
 # Start terminal at first workspace
-exec --no-startup-id i3-msg 'workspace '$ws1'; exec /usr/bin/alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main'
-exec --no-startup-id i3-msg 'exec ~/.config/Xorg/init.sh'
+exec i3-msg 'workspace '$ws1'; exec /usr/bin/alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main'
 
 # i3 config file (v4)
 set $mod Mod4
 
-font pango:Noto Sans 9
+font pango:Cantarell 9
 
-# class                 border  backgr. text    indicator child_border
-client.focused          #202B33 #30404D #F5F8FA #0E5A8A   #202B33
-client.focused_inactive #202B33 #293742 #BFCCD6 #484e50   #202B33
-client.unfocused        #10161A #182026 #8A9BA8 #182026   #10161A
-client.urgent           #2f343a #E1E8ED #394B59 #E1E8ED   #E1E8ED
-client.placeholder      #182026 #182026 #F5F8FA #182026   #182026
-client.background       #F5F8FA
+# class                 border  bground text    indicator child_border
+client.focused          #44475A #44475A #F8F8F2 #44475A   #44475A
+client.focused_inactive #44475A #44475A #F8F8F2 #44475A   #44475A
+client.unfocused        #303240 #303240 #BFBFBF #303240   #303240
+client.urgent           #44475A #44475A #F8F8F2 #44475A   #44475A
+client.placeholder      #282A36 #282A36 #F8F8F2 #282A36   #282A36
+
+client.background       #F8F8F2
 
 focus_follows_mouse no
 
@@ -188,15 +188,14 @@ bar {
         workspace_min_width 60
 
         colors {
-                background #202B33
-                statusline #F5F8FA
-                separator  #30404D
+                background #282A36
+                statusline #F8F8F2
+                separator  #44475A
 
-                # <colorclass>     <border> <background> <text>
-                focused_workspace  #30404D  #30404D      #F5F8FA
-                active_workspace   #202B33  #202B33      #BFCCD6
-                inactive_workspace #202B33  #202B33      #738694
-                urgent_workspace   #202B33  #E1E8ED      #394B59
-                binding_mode       #2f343a  #A66321aa    #F5F8FA
+                focused_workspace  #44475A #44475A #F8F8F2
+                active_workspace   #282A36 #44475A #F8F8F2
+                inactive_workspace #282A36 #282A36 #BFBFBF
+                urgent_workspace   #F8F8F2 #F8F8F2 #44475A
+                binding_mode       #F8F8F2 #F8F8F2 #44475A
         }
 }

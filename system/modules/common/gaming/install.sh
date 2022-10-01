@@ -16,3 +16,11 @@ if [ -n "$ARGS_streaming" ]; then
     # Unfortunately CUDA is required for encoding game stream to HVEC on GPU 
     pkg cuda
 fi
+
+
+if [ -n "$ARGS_user" ]; then
+    sudo useradd -m -g games -G nopasswdlogin,bluetooth,input,audio,video "$ARGS_user" 2>/dev/null || true
+    
+fi
+
+add-user-to-groups games

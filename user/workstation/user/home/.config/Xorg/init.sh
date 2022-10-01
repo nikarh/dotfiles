@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+set -x
+
+autorandr --change --default default
+
 # Synchronize xorg copy-paste buffers
 autocutsel -fork
 # Load cursor size, dpi, hinting
@@ -33,17 +37,21 @@ joystickwake&
 
 # Network-manager tray icon
 nm-applet&
+# Bluetooth tray icon
+blueman-applet&
+# Pulseaudio tray icon
+pasystray&
 # Syncthing tray icon
 syncthing-gtk&
 # Screenshot daemon
 flameshot&
 # Google Drive client
-insync start
+(sleep 2; insync start)&
 
 # Watch games.yaml and generate .desktop entries and sunshine config
 play.sh watch&
 
 # Start sunshine server
 if command -v sunshine &> /dev/null; then
-    systemctl start --user sunshine
+    systemctl start --user sunshine&
 fi
