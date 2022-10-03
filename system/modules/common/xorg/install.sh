@@ -13,7 +13,7 @@ if [ -n "$ARGS_pipewire" ]; then
     pkg pipewire-jack
 fi
 
-pkg i3-gaps i3status-rust i3lock-color \
+pkg i3-gaps i3status-rust i3lock-color betterlockscreen \
     xkb-switch picom \
     dunst rofi rofi-calc rofi-dmenu 
 
