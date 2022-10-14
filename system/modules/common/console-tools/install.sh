@@ -7,7 +7,7 @@ pkg zip unzip p7zip unrar \
     exa fd ripgrep bat \
     socat bandwhich traceroute \
     parallel lsof usbutils rsync htop iotop \
-    wget jq croc \
+    wget jq go-yq croc \
     rdfind \
     ranger \
 

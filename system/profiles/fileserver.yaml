@@ -1,4 +1,9 @@
+plugins:
+  - pacman
+  - initrd
+  - groups
 modules:
+  - name: common/yay
   - name: common/base
     hostname: files
     timezone: Europe/Riga
@@ -7,4 +12,5 @@ modules:
   - name: common/ucode
   - name: common/docker
   - name: common/console-tools
-  - name: server
+  - name: server/common
+  - name: server/files

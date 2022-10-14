@@ -1,0 +1,173 @@
+version: '3.5'
+secrets:
+  CF_TOKEN:
+    file: ../common/secrets/cf_token
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    logging: &logging
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    environment:
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_POLL_INTERVAL: 7200 # Checks for updates every two hours
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  traefik-cloudflare-companion:
+    image: tiredofit/traefik-cloudflare-companion:6.7.0
+    container_name: traefik-cloudflare-companion
+    restart: unless-stopped
+    logging: *logging
+    environment:
+      TRAEFIK_EXCLUDED_HOST1: home\.arhipov\.net
+      TARGET_DOMAIN: home___.arhipov.net
+      DOMAIN1: arhipov.net
+      DOMAIN1_ZONE_ID: 8f927f276e4b3481aba03ee4d29a9ef9
+      DOMAIN1_PROXIED: "false"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    secrets:
+      - CF_TOKEN
+  init-mqtt-certs:
+    image: alpine
+    command: >
+      sh -c "
+        apk add --no-cache openssl;
+        cd /certs;
+
+        if [ ! -e ca.key ]; then
+          openssl genrsa -out ca.key 2048;
+          openssl req -new -x509 -days 18250 -key ca.key -out ca.crt -config ca.cnf;
+        fi;
+
+        openssl genrsa -out server.key 2048;
+        openssl req -new -out server.csr -key server.key -config server.cnf;
+        openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -extensions v3_req -extfile server.cnf -days 360;
+      "
+    volumes:
+      - /var/lib/mosquitto/certs:/certs
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: mqtt
+    restart: unless-stopped
+    logging: *logging
+    ports:
+      - '8883:8883'
+    command: >
+      sh -c "
+        mkdir -p /mosquitto/tls/
+        cp /mosquitto/tls-orig/* /mosquitto/tls/;
+        chown 1883:1883 /mosquitto/tls/*;
+
+        cp /mosquitto/config/users.conf.unencrypted /mosquitto/config/users.conf
+        /usr/bin/mosquitto_passwd -U /mosquitto/config/users.conf;
+   
+        /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf;
+      "
+    volumes:
+      - /var/lib/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - /var/lib/mosquitto/users.conf:/mosquitto/config/users.conf.unencrypted:ro
+      - /var/lib/mosquitto/data:/mosquitto/data
+      - /var/lib/mosquitto/certs/server.key:/mosquitto/tls-orig/server.key
+      - /var/lib/mosquitto/certs/server.crt:/mosquitto/tls-orig/server.crt
+      - /var/lib/mosquitto/certs/ca.crt:/mosquitto/tls-orig/ca.crt
+    depends_on:
+      init-mqtt-certs:
+        condition: service_completed_successfully
+  traefik:
+    image: traefik:2.9
+    container_name: traefik
+    restart: unless-stopped
+    logging: *logging
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/lib/traefik:/etc/traefik
+      - /var/run/docker.sock:/var/run/docker.sock
+    secrets:
+      - "CF_TOKEN"
+    environment:
+      - "CF_DNS_API_TOKEN_FILE=/run/secrets/CF_TOKEN"
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.api.rule=Host(`traefik.pi.home.arhipov.net`)'
+      - 'traefik.http.routers.api.entrypoints=https'
+      - 'traefik.http.routers.api.service=api@internal'
+      - 'traefik.http.routers.api.middlewares=authelia@docker'
+  authelia:
+    image: authelia/authelia
+    container_name: authelia
+    restart: unless-stopped
+    logging: *logging
+    healthcheck:
+      disable: true
+    user: 1000:1000
+    environment:
+      AUTHELIA_JWT_SECRET_FILE: /config/secrets/jwt_secret
+      AUTHELIA_SESSION_SECRET_FILE: /config/secrets/session_secret
+      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /config/secrets/storage_encryption_key
+    volumes:
+      - /var/lib/authelia:/config
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.authelia.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.authelia.rule=Host(`authelia.pi.home.arhipov.net`)'
+      - 'traefik.http.routers.authelia.entrypoints=https'
+      - 'traefik.http.middlewares.authelia.forwardauth.address=http://authelia:8080/api/verify?rd=https://authelia.pi.home.arhipov.net'
+      - 'traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true'
+      - 'traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email'
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt
+    container_name: zigbee2mqtt
+    restart: unless-stopped
+    logging: *logging
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    volumes:
+      - /var/lib/mosquitto/certs/ca.crt:/etc/ssl/certs/mqtt.crt
+      - /var/lib/zigbee2mqtt:/app/data
+      - /dev/serial:/dev/serial
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.zigbee2mqtt.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.pi.home.arhipov.net`)'
+      - 'traefik.http.routers.zigbee2mqtt.entrypoints=https'
+      - 'traefik.http.routers.zigbee2mqtt.middlewares=authelia@docker'
+    depends_on:
+      mqtt:
+        condition: service_started
+  hass:
+    image: homeassistant/home-assistant:stable
+    container_name: hass
+    restart: unless-stopped
+    logging: *logging
+    ports:
+      # Apple HomeKit
+      - 21064:21064
+    volumes:
+      - /var/lib/mosquitto/certs/ca.crt:/etc/ssl/certs/mqtt.crt
+      - /var/lib/hass:/config
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.hass.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.hass.rule=Host(`hass.pi.home.arhipov.net`)'
+      - 'traefik.http.routers.hass.entrypoints=https'
+    depends_on:
+      init-mqtt-certs:
+        condition: service_completed_successfully
+  mdns-repeater:
+    image: angelnu/mdns_repeater
+    container_name: mdns-repeater
+    restart: unless-stopped
+    logging: *logging
+    network_mode: host
+    environment:
+    - hostNIC=eth1
+    - dockerNIC=br-7d8dee006381

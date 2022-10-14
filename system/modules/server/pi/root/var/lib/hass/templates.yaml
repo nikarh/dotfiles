@@ -1,0 +1,16 @@
+- sensor:
+  - name: "Vacuum main filter"
+    state: "{{ (states('sensor.valetudo_roborock_main_filter') | float(0)) / 60.0 | round(1) }}"
+    unit_of_measurement: "Hours"
+  - name: "Vacuum right brush"
+    state: "{{ (states('sensor.valetudo_roborock_right_brush') | float(0)) / 60.0 | round(1) }}"
+    unit_of_measurement: "Hours"
+  - name: "Vacuum main brush"
+    state: "{{ (states('sensor.valetudo_roborock_main_brush') | float(0)) / 60.0 | round(1) }}"
+    unit_of_measurement: "Hours"
+  - name: "Vacuum sensor cleaning"
+    state: "{{ (states('sensor.valetudo_roborock_sensor_cleaning') | float(0)) / 60.0 | round(1) }}"
+    unit_of_measurement: "Hours"
+- binary_sensor:
+  - name: "Bedroom air quality monitor PM25 on"
+    state: "{{ states('sensor.cgllc_s1_cdff_pm25_density') | float(99999) < 99999 }}"

@@ -1,4 +1,9 @@
+plugins:
+  - pacman
+  - initrd
+  - groups
 modules:
+  - name: common/yay
   - name: common/base
     hostname: home-pc-linux
     timezone: Europe/Riga
