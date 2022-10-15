@@ -39,7 +39,7 @@ jobs:
       - name: Prepare artifact
         run: |
           unzip -qq homer.zip -d homer
-          cp ./system/modules/server/files/root/var/lib/homer/config.yml ./homer/config.yml
+          cp ./system/modules/server/files/root/var/lib/homer/config.yml ./homer/assets/config.yml
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
