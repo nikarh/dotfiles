@@ -54,6 +54,7 @@ install-code-extensions \
     naumovs.color-highlight \
     chrislajoie.vscode-modelines \
     usernamehw.errorlens \
+    buenon.scratchpads anweber.vscode-httpyac \
     | prepend '  '
 
 section "Adding userChrome to firefox..."
