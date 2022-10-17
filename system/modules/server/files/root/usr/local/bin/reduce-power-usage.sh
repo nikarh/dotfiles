@@ -2,8 +2,6 @@
 
 # In total this reduces power usage by 3 watts
 
-echo '0' > '/proc/sys/kernel/nmi_watchdog';
-
 echo 'med_power_with_dipm' > '/sys/class/scsi_host/host0/link_power_management_policy';
 echo 'med_power_with_dipm' > '/sys/class/scsi_host/host1/link_power_management_policy';
 echo 'med_power_with_dipm' > '/sys/class/scsi_host/host2/link_power_management_policy';
