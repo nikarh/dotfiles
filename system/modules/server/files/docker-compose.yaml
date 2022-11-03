@@ -167,9 +167,9 @@ services:
       - 'traefik.http.routers.torrents.rule=Host(`torrents.files.home.arhipov.net`)'
       - 'traefik.http.routers.torrents.entrypoints=https'
       - 'traefik.http.routers.torrents.middlewares=authelia@docker'
-  jackett:
-    image: lscr.io/linuxserver/jackett:latest
-    container_name: jackett
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:develop
+    container_name: prowlarr
     restart: unless-stopped
     logging: *logging
     environment: &arr_env
@@ -177,13 +177,13 @@ services:
       PGID: 1000
       TZ: Europe/Riga
     volumes:
-      - /var/lib/jackett/config:/config
+      - /var/lib/prowlarr/config:/config
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.services.jackett.loadbalancer.server.port=9117'
-      - 'traefik.http.routers.jackett.rule=Host(`jackett.files.home.arhipov.net`)'
-      - 'traefik.http.routers.jackett.entrypoints=https'
-      - 'traefik.http.routers.jackett.middlewares=authelia@docker'
+      - 'traefik.http.services.prowlarr.loadbalancer.server.port=9696'
+      - 'traefik.http.routers.prowlarr.rule=Host(`prowlarr.files.home.arhipov.net`)'
+      - 'traefik.http.routers.prowlarr.entrypoints=https'
+      - 'traefik.http.routers.prowlarr.middlewares=authelia@docker'
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr

@@ -16,7 +16,7 @@ if [[ "$COPY_VAR" == "true" ]]; then
     sudo cp -ufrTv "$ROOT/root/var/" /var
 fi
 
-sudo chown -R 1000:1000 /var/lib/{qbittorrent,filebrowser,netdata,homer,jellyfin,radarr,jackett,bazarr}
+sudo chown -R 1000:1000 /var/lib/{qbittorrent,filebrowser,netdata,homer,jellyfin,radarr,prowlarr,bazarr}
 sudo chmod 600 /var/lib/sftpd/secrets/ssh*
 
 # Append bind mounts
