@@ -24,7 +24,7 @@ services:
     logging: *logging
     environment:
       TRAEFIK_EXCLUDED_HOST1: home\.arhipov\.net
-      TARGET_DOMAIN: home___.arhipov.net
+      TARGET_DOMAIN: homenet.arhipov.net
       DOMAIN1: arhipov.net
       DOMAIN1_ZONE_ID: 8f927f276e4b3481aba03ee4d29a9ef9
       DOMAIN1_PROXIED: false
