@@ -1,5 +1,7 @@
 [Match]
 Type=ether
+Name=eno1
 
 [Network]
 DHCP=yes
+IPForward=yes
