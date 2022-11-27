@@ -4,7 +4,8 @@ pkg mdadm hdparm fuse-overlayfs dhclient \
     btrfs-progs parted \
     libva-headless ffmpeg-headless \
     perl-rename \
-    lm_sensors
+    lm_sensors \
+    polkit `# required to reconnect to eth`
 
 sudo systemctl mask mdmonitor
 
@@ -35,7 +36,7 @@ sudo systemctl daemon-reload
 sudo mount -a
 
 # Start services
-sudo systemctl enable dhclient@eno1
+sudo systemctl enable systemd-networkd
 sudo systemctl enable sshd
 sudo systemctl enable fancontrol
 sudo systemctl enable reduce-power-usage
