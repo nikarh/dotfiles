@@ -4,6 +4,9 @@ x-logging: &logging
       options:
         max-size: "50k"
         max-file: "1"
+x-service-defaults: &service-defaults
+    restart: unless-stopped
+    logging: *logging
 volumes:
   mqtt-certs:
   mqtt-data:
@@ -30,10 +33,9 @@ services:
       - mqtt-certs:/certs
       - /var/lib/service-volumes/init-mqtt-certs:/cfg:ro
   mqtt:
+    << : *service-defaults
     image: eclipse-mosquitto
     container_name: mqtt
-    restart: unless-stopped
-    logging: *logging
     ports:
       - '8883:8883'
     command: >
@@ -55,10 +57,9 @@ services:
       init-mqtt-certs:
         condition: service_completed_successfully
   zigbee2mqtt:
+    << : *service-defaults
     image: koenkk/zigbee2mqtt
     container_name: zigbee2mqtt
-    restart: unless-stopped
-    logging: *logging
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:
@@ -89,10 +90,9 @@ services:
       - /var/lib/service-volumes/init-hass:/init-hass:ro
       - hass-data:/hass
   hass:
+    << : *service-defaults
     image: homeassistant/home-assistant:stable
     container_name: hass
-    restart: unless-stopped
-    logging: *logging
     ports:
       # Apple HomeKit
       - 21064:21064
@@ -111,10 +111,9 @@ services:
       init-hass-volume:
         condition: service_completed_successfully
   mdns-repeater:
+    << : *service-defaults
     image: angelnu/mdns_repeater
     container_name: mdns-repeater
-    restart: unless-stopped
-    logging: *logging
     network_mode: host
     environment:
     - hostNIC=eth1

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-local COMMAND="${COMMAND:-yay}"
-if ! command -v yay; then
+COMMAND="${COMMAND:-yay}"
+if ! command -v yay &> /dev/null; then
     COMMAND="sudo pacman"
 fi
 

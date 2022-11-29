@@ -9,7 +9,7 @@ function pkg {
         <(echo "$requested") \
         <(echo "$installed") | grep -v ^---)
     local COMMAND="${COMMAND:-yay --pgpfetch}"
-    if ! command -v yay; then
+    if ! command -v yay &> /dev/null; then
         COMMAND="sudo pacman"
     fi
 

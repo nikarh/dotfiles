@@ -1,13 +1,20 @@
 version: '3.5'
+x-common-service-defaults: &common-service-defaults
+  restart: unless-stopped
+  logging: 
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
 secrets:
   CF_TOKEN:
-    file: ./secrets/cf_token
+    file: ../common/secrets/cf_token
   AUTHELIA_JWT_SECRET:
-    file: ./secrets/authelia/jwt_secret
+    file: ../common/secrets/authelia/jwt_secret
   AUTHELIA_SESSION_SECRET:
-    file: ./secrets/authelia/session_secret
+    file: ../common/secrets/authelia/session_secret
   AUTHELIA_STORAGE_ENCRYPTION_KEY:
-    file: ./secrets/authelia/storage_encryption_key
+    file: ../common/secrets/authelia/storage_encryption_key
 volumes:
   traefik-data:
   authelia-data:
@@ -15,18 +22,17 @@ services:
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
-    restart: unless-stopped
+    << : *common-service-defaults
     environment:
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_POLL_INTERVAL: 7200
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
   traefik-cloudflare-companion:
-    image: tiredofit/traefik-cloudflare-companion
+    image: tiredofit/traefik-cloudflare-companion:${TRAEFIK_CLOUDFLARE_VERSION:-latest}
     container_name: traefik-cloudflare-companion
-    restart: unless-stopped
+    << : *common-service-defaults
     environment:
-      TRAEFIK_EXCLUDED_HOST1: home\.arhipov\.net
       TARGET_DOMAIN: homenet.arhipov.net
       DOMAIN1: arhipov.net
       DOMAIN1_ZONE_ID: 8f927f276e4b3481aba03ee4d29a9ef9
@@ -38,37 +44,40 @@ services:
   traefik:
     image: traefik
     container_name: traefik
-    restart: unless-stopped
+    << : *common-service-defaults
     ports:
       - 80:80
       - 443:443
     volumes:
-      - traefik-data:/data:ro
+      - traefik-data:/data
       - /var/lib/service-volumes/traefik:/etc/traefik:ro
       - /var/run/docker.sock:/var/run/docker.sock
     secrets:
       - CF_TOKEN
     environment:
-      - "CF_DNS_API_TOKEN_FILE=/run/secrets/CF_TOKEN"
+      CF_DNS_API_TOKEN_FILE: /run/secrets/CF_TOKEN
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.api.entrypoints=https'
       - 'traefik.http.routers.api.service=api@internal'
       - 'traefik.http.routers.api.middlewares=authelia@docker'
+      - 'traefik.http.routers.api.rule=Host(`traefik.${DOMAIN}`)'
   authelia:
     image: authelia/authelia
     container_name: authelia
-    restart: unless-stopped
+    << : *common-service-defaults
     healthcheck:
       disable: true
-    user: 1000:1000
     environment:
+      PUID: 1000
+      PGID: 1000
       AUTHELIA_JWT_SECRET_FILE: /run/secrets/AUTHELIA_JWT_SECRET
       AUTHELIA_SESSION_SECRET_FILE: /run/secrets/AUTHELIA_SESSION_SECRET
       AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/AUTHELIA_STORAGE_ENCRYPTION_KEY
     volumes:
-      - authelia-data:/data
-      - /var/lib/service-volumes/authelia:/config:ro
+      - authelia-data:/config/data:rw
+      - /var/lib/service-volumes/authelia/configuration.yml:/config/configuration.yml:ro
+      - /var/lib/service-volumes/authelia/users_database.yml:/config/users_database.yml:ro
     secrets:
       - AUTHELIA_JWT_SECRET
       - AUTHELIA_SESSION_SECRET
@@ -77,5 +86,7 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.services.authelia.loadbalancer.server.port=8080'
       - 'traefik.http.routers.authelia.entrypoints=https'
+      - 'traefik.http.routers.authelia.rule=Host(`authelia.${DOMAIN}`)'
       - 'traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true'
       - 'traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email'
+      - 'traefik.http.middlewares.authelia.forwardauth.address=http://authelia:8080/api/verify?rd=https://authelia.${DOMAIN}'

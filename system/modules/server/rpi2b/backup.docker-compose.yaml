@@ -1,72 +1,33 @@
 version: "3.5"
-x-hostname: &hostname rpi2b
 x-logging: &logging
       driver: "json-file"
       options:
         max-size: "50k"
         max-file: "1"
 secrets:
-  RESTIC_PASSWORD:
-    file: ./secrets/restic_password
+  MINIO_ACCESS_KEY:
+    file: ./secrets/minio_access_key
+  MINIO_SECRET_KEY:
+    file: ./secrets/minio_secret_key
 services:
   backup:
-    image: mazzolino/restic
+    image: offen/docker-volume-backup:v2
+    container_name: backup
     restart: unless-stopped
     logging: *logging
-    hostname: *hostname
     environment:
-      RUN_ON_STARTUP: "true"
-      BACKUP_CRON: "0 * * * * *"
-      RESTIC_PASSWORD_FILE: /run/secrets/RESTIC_PASSWORD
-      RESTIC_BACKUP_ARGS: >-
-        --tag docker-volumes
-        --verbose
-      RESTIC_FORGET_ARGS: >-
-        --keep-last 1
-      TZ: Europe/Riga
-    secrets:
-      - RESTIC_PASSWORD
+      AWS_ENDPOINT: minio.files.home.arhipov.net
+      AWS_S3_BUCKET_NAME: volume-backup
+      AWS_ACCESS_KEY_ID_FILE: /run/secrets/MINIO_ACCESS_KEY
+      AWS_SECRET_ACCESS_KEY_FILE: /run/secrets/MINIO_SECRET_KEY
     volumes:
-      - ./docker/backups:/mnt/restic
+      - /var/lib/service-volumes/volume-backup:/etc/dockervolumebackup/conf.d:ro
       - mqtt-certs:/data/mqtt-certs:ro
       - mqtt-data:/data/mqtt-data:ro
       - zigbee2mqtt-data:/data/zigbee2mqtt-data:ro
       - hass-data:/data/hass-data:ro
       - traefik-data:/data/hass-data:ro
       - authelia-data:/data/hass-data:ro
-  prune:
-    image: mazzolino/restic
-    restart: unless-stopped
-    logging: *logging
-    hostname: *hostname
-    environment:
-      RUN_ON_STARTUP: "true"
-      PRUNE_CRON: "0 0 4 * * *"
-      RESTIC_PASSWORD_FILE: /run/secrets/RESTIC_PASSWORD
-      TZ: Europe/Riga
     secrets:
-      - RESTIC_PASSWORD
-    volumes:
-      - ./docker/backups:/mnt/restic
-    depends_on:
-      backup:
-        condition: service_healthy
-  check:
-    image: mazzolino/restic
-    restart: unless-stopped
-    logging: *logging
-    hostname: *hostname
-    environment:
-      RUN_ON_STARTUP: "false"
-      CHECK_CRON: "0 15 5 * * *"
-      RESTIC_CHECK_ARGS: >-
-        --read-data-subset=10%
-      RESTIC_PASSWORD_FILE: /run/secrets/RESTIC_PASSWORD
-      TZ: Europe/Riga
-    secrets:
-      - RESTIC_PASSWORD
-    volumes:
-      - ./docker/backups:/mnt/restic
-    depends_on:
-      backup:
-        condition: service_healthy
+      - MINIO_ACCESS_KEY
+      - MINIO_SECRET_KEY

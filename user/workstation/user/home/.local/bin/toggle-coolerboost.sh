@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if ! command -v isw; then 
+if ! command -v isw &> /dev/null; then 
     exit
 fi
 

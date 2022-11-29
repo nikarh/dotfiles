@@ -22,7 +22,6 @@ sudo chmod 600 /var/lib/sftpd/secrets/ssh*
 
 # Append bind mounts
 sudo mkdir -p /var/data/{shares,home}
-mkdir -p /var/data/shares/tmp/ssd
 sudo mkdir -p /var/data/home/{shield/shared,{nikarh,anastasiia}/{data,shared}}
 
 # Fix permissions for PAM authentication
@@ -41,5 +40,11 @@ sudo systemctl enable sshd
 sudo systemctl enable fancontrol
 sudo systemctl enable reduce-power-usage
 
-sudo docker-compose --project-directory="$ROOT" build
-sudo docker-compose --project-directory="$ROOT" up -d
+docker-compose --project-directory="$ROOT" \
+    --env-file "$ROOT/.env" \
+    build
+docker-compose --project-directory="$ROOT" \
+    --env-file "$ROOT/.env" \
+    -f "$ROOT/docker-compose.yaml" \
+    -f "$ROOT/../common/docker-compose.yaml" \
+    up -d

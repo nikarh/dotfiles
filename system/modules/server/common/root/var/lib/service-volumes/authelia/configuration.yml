@@ -42,7 +42,7 @@ access_control:
       policy: bypass
       networks:
         - internal
-    - domain_regex: '^(traefik|torrents|netdata|prowlarr|sonarr|radarr|bazarr|jellyseerr)(\.files|\.(o|r|)pi)\.home\.arhipov\.net$'
+    - domain_regex: '^(traefik|minio|api.minio|torrents|netdata|prowlarr|sonarr|radarr|bazarr|jellyseerr)(\.files|\.(o|r|)pi)\.home\.arhipov\.net$'
       policy: bypass
       networks:
         - internal
@@ -92,9 +92,9 @@ regulation:
 
 storage:
   local:
-    path: /data/db.sqlite3
+    path: /config/data/db.sqlite3
 
 notifier:
   disable_startup_check: true
   filesystem:
-    filename: /data/notification.txt
+    filename: /config/data/notification.txt

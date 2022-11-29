@@ -37,3 +37,5 @@ fi
 if ! grep -q '^[multilib]$' /etc/pacman.conf; then
     sudo sed -i 'N;s/^#\[multilib\]\n#/\[multilib\]\n/' /etc/pacman.conf
 fi
+
+pkg yay
