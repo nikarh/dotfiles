@@ -1,9 +1,15 @@
 #!/bin/bash -e
 
+local COMMAND="${COMMAND:-yay}"
+if ! command -v yay; then
+    COMMAND="sudo pacman"
+fi
+
 # Upgrade all packages
 echo
-yay -Syu --noconfirm
-yay -Rnscu --noconfirm "$(yay -Qtdq)" 2> /dev/null || true
+
+$COMMAND -Syu --noconfirm
+$COMMAND -Rnscu --noconfirm "$($COMMAND -Qtdq)" 2> /dev/null || true
 
 EXPLICITLY_INSTALLED=$(pacman -Qqett | sort)
 INSTALLED_BY_SETUP=$(echo "$ALL_PACKAGES_TO_INSTALL" | tr " " "\n" | sort)

@@ -1,0 +1,121 @@
+version: '3.5'
+x-logging: &logging
+      driver: "json-file"
+      options:
+        max-size: "50k"
+        max-file: "1"
+volumes:
+  mqtt-certs:
+  mqtt-data:
+  zigbee2mqtt-data:
+  hass-data:
+services:
+  init-mqtt-certs:
+    image: alpine
+    command: >
+      sh -c "
+        apk add --no-cache openssl;
+        cd /certs;
+
+        if [ ! -e ca.key ]; then
+          openssl genrsa -out ca.key 2048;
+          openssl req -new -x509 -days 18250 -key ca.key -out ca.crt -config /cfg/ca.cnf;
+        fi;
+
+        openssl genrsa -out server.key 2048;
+        openssl req -new -out server.csr -key server.key -config /cfg/server.cnf;
+        openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -extensions v3_req -extfile /cfg/server.cnf -days 360;
+      "
+    volumes:
+      - mqtt-certs:/certs
+      - /var/lib/service-volumes/init-mqtt-certs:/cfg:ro
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: mqtt
+    restart: unless-stopped
+    logging: *logging
+    ports:
+      - '8883:8883'
+    command: >
+      sh -c "
+        mkdir -p /mosquitto/tls/
+        cp /mosquitto/tls-orig/* /mosquitto/tls/;
+        chown 1883:1883 /mosquitto/tls/*;
+
+        cp /mosquitto/config/users.conf.unencrypted /mosquitto/users.conf
+        /usr/bin/mosquitto_passwd -U /mosquitto/users.conf;
+   
+        /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf;
+      "
+    volumes:
+      - /var/lib/service-volumes/mqtt:/mosquitto/config:ro
+      - mqtt-certs:/mosquitto/tls-orig:ro
+      - mqtt-data:/data
+    depends_on:
+      init-mqtt-certs:
+        condition: service_completed_successfully
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt
+    container_name: zigbee2mqtt
+    restart: unless-stopped
+    logging: *logging
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    volumes:
+      - mqtt-certs:/etc/ssl/mqtt-certs
+      - zigbee2mqtt-data:/app/data
+      - /var/lib/service-volumes/zigbee2mqtt/configuration.yaml:/app/data/configuration.yaml:ro
+      - /var/lib/service-volumes/zigbee2mqtt/secret.yaml:/app/data/secret.yaml:ro
+      - /dev/serial:/dev/serial
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.zigbee2mqtt.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.rpi.home.arhipov.net`)'
+      - 'traefik.http.routers.zigbee2mqtt.entrypoints=https'
+      - 'traefik.http.routers.zigbee2mqtt.middlewares=authelia@docker'
+    depends_on:
+      mqtt:
+        condition: service_started
+  init-hass-volume:
+    image: alpine
+    command: >
+      sh -c "
+        if [ -z "$(ls -A /hass)" ]; then
+          cp -R /init-hass/* /hass/
+        fi
+      "
+    volumes:
+      - /var/lib/service-volumes/init-hass:/init-hass:ro
+      - hass-data:/hass
+  hass:
+    image: homeassistant/home-assistant:stable
+    container_name: hass
+    restart: unless-stopped
+    logging: *logging
+    ports:
+      # Apple HomeKit
+      - 21064:21064
+    volumes:
+      - mqtt-certs:/etc/ssl/mqtt-certs
+      - hass-data:/config
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.hass.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.hass.rule=Host(`hass.rpi.home.arhipov.net`)'
+      - 'traefik.http.routers.hass.entrypoints=https'
+    depends_on:
+      init-mqtt-certs:
+        condition: service_completed_successfully
+      init-hass-volume:
+        condition: service_completed_successfully
+  mdns-repeater:
+    image: angelnu/mdns_repeater
+    container_name: mdns-repeater
+    restart: unless-stopped
+    logging: *logging
+    network_mode: host
+    environment:
+    - hostNIC=eth1
+    - dockerNIC=br-7d8dee006381

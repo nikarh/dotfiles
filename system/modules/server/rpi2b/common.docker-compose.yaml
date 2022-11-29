@@ -1,0 +1,49 @@
+version: '3.5'
+x-logging: &logging
+      driver: "json-file"
+      options:
+        max-size: "50k"
+        max-file: "1"
+volumes:
+  traefik-data:
+  authelia-data:
+  mqtt-certs:
+  mqtt-data:
+  zigbee2mqtt-data:
+  hass-data:
+secrets:
+  CF_TOKEN:
+    file: ../common/secrets/cf_token
+  AUTHELIA_JWT_SECRET:
+    file: ../common/secrets/authelia/jwt_secret
+  AUTHELIA_SESSION_SECRET:
+    file: ../common/secrets/authelia/session_secret
+  AUTHELIA_STORAGE_ENCRYPTION_KEY:
+    file: ../common/secrets/authelia/storage_encryption_key
+services:
+  watchtower:
+    extends:
+      file: ../common/docker-compose.yaml
+      service: watchtower
+    logging: *logging
+  traefik-cloudflare-companion:
+    extends:
+      file: ../common/docker-compose.yaml
+      service: traefik-cloudflare-companion
+    image: tiredofit/traefik-cloudflare-companion:6.7.0
+    logging: *logging
+  traefik:
+    extends:
+      file: ../common/docker-compose.yaml
+      service: traefik
+    logging: *logging
+    labels:
+      - 'traefik.http.routers.api.rule=Host(`traefik.rpi.home.arhipov.net`)'
+  authelia:
+    extends:
+      file: ../common/docker-compose.yaml
+      service: authelia
+    logging: *logging
+    labels:
+      - 'traefik.http.routers.authelia.rule=Host(`authelia.rpi.home.arhipov.net`)'
+      - 'traefik.http.middlewares.authelia.forwardauth.address=http://authelia:8080/api/verify?rd=https://authelia.rpi.home.arhipov.net'

@@ -1,0 +1,81 @@
+version: '3.5'
+secrets:
+  CF_TOKEN:
+    file: ./secrets/cf_token
+  AUTHELIA_JWT_SECRET:
+    file: ./secrets/authelia/jwt_secret
+  AUTHELIA_SESSION_SECRET:
+    file: ./secrets/authelia/session_secret
+  AUTHELIA_STORAGE_ENCRYPTION_KEY:
+    file: ./secrets/authelia/storage_encryption_key
+volumes:
+  traefik-data:
+  authelia-data:
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    environment:
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_POLL_INTERVAL: 7200
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  traefik-cloudflare-companion:
+    image: tiredofit/traefik-cloudflare-companion
+    container_name: traefik-cloudflare-companion
+    restart: unless-stopped
+    environment:
+      TRAEFIK_EXCLUDED_HOST1: home\.arhipov\.net
+      TARGET_DOMAIN: homenet.arhipov.net
+      DOMAIN1: arhipov.net
+      DOMAIN1_ZONE_ID: 8f927f276e4b3481aba03ee4d29a9ef9
+      DOMAIN1_PROXIED: "false"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    secrets:
+      - CF_TOKEN
+  traefik:
+    image: traefik
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - traefik-data:/data:ro
+      - /var/lib/service-volumes/traefik:/etc/traefik:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    secrets:
+      - CF_TOKEN
+    environment:
+      - "CF_DNS_API_TOKEN_FILE=/run/secrets/CF_TOKEN"
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.api.entrypoints=https'
+      - 'traefik.http.routers.api.service=api@internal'
+      - 'traefik.http.routers.api.middlewares=authelia@docker'
+  authelia:
+    image: authelia/authelia
+    container_name: authelia
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+    user: 1000:1000
+    environment:
+      AUTHELIA_JWT_SECRET_FILE: /run/secrets/AUTHELIA_JWT_SECRET
+      AUTHELIA_SESSION_SECRET_FILE: /run/secrets/AUTHELIA_SESSION_SECRET
+      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/AUTHELIA_STORAGE_ENCRYPTION_KEY
+    volumes:
+      - authelia-data:/data
+      - /var/lib/service-volumes/authelia:/config:ro
+    secrets:
+      - AUTHELIA_JWT_SECRET
+      - AUTHELIA_SESSION_SECRET
+      - AUTHELIA_STORAGE_ENCRYPTION_KEY
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.authelia.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.authelia.entrypoints=https'
+      - 'traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true'
+      - 'traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email'

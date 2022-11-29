@@ -1,0 +1,72 @@
+version: "3.5"
+x-hostname: &hostname rpi2b
+x-logging: &logging
+      driver: "json-file"
+      options:
+        max-size: "50k"
+        max-file: "1"
+secrets:
+  RESTIC_PASSWORD:
+    file: ./secrets/restic_password
+services:
+  backup:
+    image: mazzolino/restic
+    restart: unless-stopped
+    logging: *logging
+    hostname: *hostname
+    environment:
+      RUN_ON_STARTUP: "true"
+      BACKUP_CRON: "0 * * * * *"
+      RESTIC_PASSWORD_FILE: /run/secrets/RESTIC_PASSWORD
+      RESTIC_BACKUP_ARGS: >-
+        --tag docker-volumes
+        --verbose
+      RESTIC_FORGET_ARGS: >-
+        --keep-last 1
+      TZ: Europe/Riga
+    secrets:
+      - RESTIC_PASSWORD
+    volumes:
+      - ./docker/backups:/mnt/restic
+      - mqtt-certs:/data/mqtt-certs:ro
+      - mqtt-data:/data/mqtt-data:ro
+      - zigbee2mqtt-data:/data/zigbee2mqtt-data:ro
+      - hass-data:/data/hass-data:ro
+      - traefik-data:/data/hass-data:ro
+      - authelia-data:/data/hass-data:ro
+  prune:
+    image: mazzolino/restic
+    restart: unless-stopped
+    logging: *logging
+    hostname: *hostname
+    environment:
+      RUN_ON_STARTUP: "true"
+      PRUNE_CRON: "0 0 4 * * *"
+      RESTIC_PASSWORD_FILE: /run/secrets/RESTIC_PASSWORD
+      TZ: Europe/Riga
+    secrets:
+      - RESTIC_PASSWORD
+    volumes:
+      - ./docker/backups:/mnt/restic
+    depends_on:
+      backup:
+        condition: service_healthy
+  check:
+    image: mazzolino/restic
+    restart: unless-stopped
+    logging: *logging
+    hostname: *hostname
+    environment:
+      RUN_ON_STARTUP: "false"
+      CHECK_CRON: "0 15 5 * * *"
+      RESTIC_CHECK_ARGS: >-
+        --read-data-subset=10%
+      RESTIC_PASSWORD_FILE: /run/secrets/RESTIC_PASSWORD
+      TZ: Europe/Riga
+    secrets:
+      - RESTIC_PASSWORD
+    volumes:
+      - ./docker/backups:/mnt/restic
+    depends_on:
+      backup:
+        condition: service_healthy

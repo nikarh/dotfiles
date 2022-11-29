@@ -4,35 +4,24 @@ require-arg "hostname"
 require-arg "timezone"
 
 # Base
-pkg base pacman pacman-contrib asp
+pkg base pacman
 
 # Always install these tools
-pkg $(pacman -Sgq base-devel) \
-    "$ARGS_kernel" "${ARGS_kernel}-headers" linux-firmware \
-    yay git git-crypt git-lfs \
-    openssh \
-    systemd-swap \
-    earlyoom \
-    direnv \
-    inotify-tools
+pkg "$ARGS_kernel" "${ARGS_kernel}-headers" linux-firmware \
+    git git-crypt git-lfs direnv openssh \
+    systemd-swap earlyoom
 
 # Copy all configs to root
 sudo cp -ufrTv "$ROOT/root/" /
 
-# Setup hostname
-if [[ "$(cat /etc/hostname)" != "$(echo "$ARGS_hostname")" ]]; then
-    echo $ARGS_hostname | sudo tee /etc/hostname > /dev/null
-fi
-
-# Set timezone
+# Setup hostname and timezone
+sudo hostnamectl set-hostname "$ARGS_hostname"
 sudo timedatectl set-timezone "$ARGS_timezone"
 sudo timedatectl set-ntp true
 
-add-user-to-groups \
-    input storage audio video systemd-journal \
-    uucp `# serial port`
-
 # Enable units
-sudo systemctl enable earlyoom
-sudo systemctl enable systemd-timesyncd
-sudo systemctl enable sleep-dbus-signal
+sudo systemctl enable --now earlyoom
+sudo systemctl enable --now systemd-timesyncd
+sudo systemctl enable --now systemd-swap
+
+add-user-to-groups systemd-journal

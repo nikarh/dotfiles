@@ -1,2 +1,2 @@
-root/var/lib/authelia/secrets/** filter=git-crypt diff=git-crypt
+root/var/lib/service-volumes/authelia/users_database.yaml filter=git-crypt diff=git-crypt
 secrets/** filter=git-crypt diff=git-crypt

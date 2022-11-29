@@ -8,6 +8,7 @@ modules:
     hostname: files
     timezone: Europe/Riga
     kernel: linux-lts
+  - name: common/base-workstation
   - name: common/bootloader
   - name: common/ucode
   - name: common/docker

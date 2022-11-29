@@ -9,6 +9,9 @@ function pkg {
         <(echo "$requested") \
         <(echo "$installed") | grep -v ^---)
     local COMMAND="${COMMAND:-yay --pgpfetch}"
+    if ! command -v yay; then
+        COMMAND="sudo pacman"
+    fi
 
     export ALL_PACKAGES_TO_INSTALL="$ALL_PACKAGES_TO_INSTALL $requested"
 
@@ -33,7 +36,7 @@ function pkg-local {
                 makepkg --noconfirm
             )
         fi
-        yay -U --noconfirm "$1/$built_file"
+        sudo pacman -U --noconfirm "$1/$built_file"
     fi
 
     export ALL_PACKAGES_TO_INSTALL="$ALL_PACKAGES_TO_INSTALL $package"

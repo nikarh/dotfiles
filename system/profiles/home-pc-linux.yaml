@@ -8,6 +8,7 @@ modules:
     hostname: home-pc-linux
     timezone: Europe/Riga
     kernel: linux-lts
+  - name: common/base-workstation
   - name: common/faillock
     conf: |
       deny = 15

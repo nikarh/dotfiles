@@ -1,0 +1,22 @@
+- platform: template
+  sensors:
+    bedroom_heater_local_temperature:
+      friendly_name: "Bedroom heater local temperature"
+      unit_of_measurement: "c"
+      icon_template: mdi:temperature
+      value_template: "{{ state_attr('climate.bedroom_heater', 'local_temperature') }}"
+    office_heater_local_temperature:
+      friendly_name: "Office heater local temperature"
+      unit_of_measurement: "c"
+      icon_template: mdi:temperature
+      value_template: "{{ state_attr('climate.office_heater', 'local_temperature') }}"
+    living_room_window_heater_local_temperature:
+      friendly_name: "Bedroom heater local temperature"
+      unit_of_measurement: "c"
+      icon_template: mdi:temperature
+      value_template: "{{ state_attr('climate.living_room_window_heater', 'local_temperature') }}"
+    living_room_balcony_heater_local_temperature:
+      friendly_name: "Bedroom heater local temperature"
+      unit_of_measurement: "c"
+      icon_template: mdi:temperature
+      value_template: "{{ state_attr('climate.living_room_balcony_heater', 'local_temperature') }}"
