@@ -7,19 +7,42 @@ server:
 
 log:
   level: debug
+
 totp:
   issuer: home.arhipov.net
 
 authentication_backend:
   file:
-    path: /config/users_database.yml
+    path: /etc/authelia/secrets/users_database.yml
     watch: true
+
+session:
+  name: authelia_session
+  expiration: 3600  # 1 hour
+  inactivity: 300  # 5 minutes
+  domain: home.arhipov.net
+
+regulation:
+  max_retries: 3
+  find_time: 120
+  ban_time: 300
+
+storage:
+  local:
+    path: /config/data/db.sqlite3
+
+notifier:
+  disable_startup_check: true
+  filesystem:
+    filename: /config/data/notification.txt
 
 access_control:
   networks:
   - name: internal
     networks:
     - 172.19.0.0/16
+    - 172.18.0.0/16
+    - 172.17.0.0/16
     - 192.168.1.0/24
   default_policy: deny
   rules:
@@ -42,7 +65,7 @@ access_control:
       policy: bypass
       networks:
         - internal
-    - domain_regex: '^(traefik|minio|api.minio|torrents|netdata|prowlarr|sonarr|radarr|bazarr|jellyseerr)(\.files|\.(o|r|)pi)\.home\.arhipov\.net$'
+    - domain_regex: '^(traefik|minio(|-console)|torrents|netdata|prowlarr|sonarr|radarr|bazarr|jellyseerr)(\.files|\.(o|r|)pi)\.home\.arhipov\.net$'
       policy: bypass
       networks:
         - internal
@@ -78,23 +101,3 @@ access_control:
       policy: one_factor
       subject:
         - "user:nikarh"
-
-session:
-  name: authelia_session
-  expiration: 3600  # 1 hour
-  inactivity: 300  # 5 minutes
-  domain: home.arhipov.net
-
-regulation:
-  max_retries: 3
-  find_time: 120
-  ban_time: 300
-
-storage:
-  local:
-    path: /config/data/db.sqlite3
-
-notifier:
-  disable_startup_check: true
-  filesystem:
-    filename: /config/data/notification.txt

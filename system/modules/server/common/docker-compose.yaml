@@ -15,6 +15,10 @@ secrets:
     file: ../common/secrets/authelia/session_secret
   AUTHELIA_STORAGE_ENCRYPTION_KEY:
     file: ../common/secrets/authelia/storage_encryption_key
+  AUTHELIA_OIDC_HMAC:
+    file: ../common/secrets/authelia/oidc_hmac
+  AUTHELIA_OIDC_ISSUER_PRIVATE_KEY:
+    file: ../common/secrets/authelia/oidc_issuer_private_key
 volumes:
   traefik-data:
   authelia-data:
@@ -66,22 +70,28 @@ services:
     image: authelia/authelia
     container_name: authelia
     << : *common-service-defaults
-    healthcheck:
-      disable: true
     environment:
       PUID: 1000
       PGID: 1000
       AUTHELIA_JWT_SECRET_FILE: /run/secrets/AUTHELIA_JWT_SECRET
       AUTHELIA_SESSION_SECRET_FILE: /run/secrets/AUTHELIA_SESSION_SECRET
       AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/AUTHELIA_STORAGE_ENCRYPTION_KEY
+      AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE: /run/secrets/AUTHELIA_OIDC_HMAC
+      AUTHELIA_IDENTITY_PROVIDERS_OIDC_ISSUER_PRIVATE_KEY_FILE: /run/secrets/AUTHELIA_OIDC_ISSUER_PRIVATE_KEY
+    command:
+        - authelia
+        - '--config=/etc/authelia/configuration.yml'
+        - '--config=/etc/authelia/secrets/configuration.oidc.yml'
     volumes:
+        # /config is chowned, so volume has right permissions
       - authelia-data:/config/data:rw
-      - /var/lib/service-volumes/authelia/configuration.yml:/config/configuration.yml:ro
-      - /var/lib/service-volumes/authelia/users_database.yml:/config/users_database.yml:ro
+      - /var/lib/service-volumes/authelia:/etc/authelia:ro
     secrets:
       - AUTHELIA_JWT_SECRET
       - AUTHELIA_SESSION_SECRET
       - AUTHELIA_STORAGE_ENCRYPTION_KEY
+      - AUTHELIA_OIDC_HMAC
+      - AUTHELIA_OIDC_ISSUER_PRIVATE_KEY
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.authelia.loadbalancer.server.port=8080'
