@@ -24,9 +24,11 @@ services:
       MINIO_IDENTITY_OPENID_REDIRECT_URI: https://minio-console.${DOMAIN}/oauth_callback
       MINIO_IDENTITY_OPENID_CONFIG_URL: https://authelia.${DOMAIN}/.well-known/openid-configuration
       MINIO_IDENTITY_OPENID_CLIENT_ID: minio
-      MINIO_IDENTITY_OPENID_SCOPES: openid,groups
+      MINIO_IDENTITY_OPENID_SCOPES: openid,profile,email,groups
       MINIO_IDENTITY_OPENID_CLAIM_NAME: groups
-      MINIO_IDENTITY_OPENID_CLIENT_SECRET_FILE: MINIO_OIDC_SECRET
+      MINIO_ROOT_USER: nikarh
+      MINIO_ROOT_PASSWORD_FILE: /run/secrets/MINIO_OIDC_SECRET
+      MINIO_IDENTITY_OPENID_CLIENT_SECRET_FILE: /run/secrets/MINIO_OIDC_SECRET
     volumes:
       - /var/data/shares/minio:/data
     secrets:
@@ -43,11 +45,12 @@ services:
       - 'traefik.http.routers.minio-api.entrypoints=https'
       - 'traefik.http.routers.minio-api.service=minio-api'
       - 'traefik.http.routers.minio-api.middlewares=authelia@docker'
-    command:
-      - server
-      - /data
-      - --console-address
-      - :8080
+    entrypoint: ""
+    command: >
+      sh -c "
+        export MINIO_IDENTITY_OPENID_CLIENT_SECRET="$(cat $$MINIO_IDENTITY_OPENID_CLIENT_SECRET_FILE)";
+        /usr/bin/docker-entrypoint.sh server /data --console-address :8080;
+      "
   samba:
     build: docker/samba
     container_name: samba

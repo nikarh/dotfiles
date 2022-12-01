@@ -1,10 +1,7 @@
 #!/bin/bash -e
 
 sudo cp -ufrTv "$ROOT/root/etc/" /etc
-
-if [[ "$COPY_VAR" == "true" ]]; then
-    sudo cp -ufrTv "$ROOT/root/var/" /var
-fi
+sudo cp -ufrTv "$ROOT/root/var/" /var
 
 sudo apt update
 sudo apt intstall docker.io docker-compose

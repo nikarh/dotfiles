@@ -12,10 +12,7 @@ sudo systemctl mask mdmonitor
 # Copy all configs to etc
 sudo cp -ufrTv "$ROOT/root/etc/" /etc
 sudo cp -ufrTv "$ROOT/root/usr/" /usr
-
-if [[ "$COPY_VAR" == "true" ]]; then
-    sudo cp -ufrTv "$ROOT/root/var/" /var
-fi
+sudo cp -ufrTv "$ROOT/root/var/" /var
 
 sudo chown -R 1000:1000 /var/lib/{qbittorrent,filebrowser,netdata,homer,jellyfin,radarr,prowlarr,bazarr}
 sudo chmod 600 /var/lib/sftpd/secrets/ssh*
