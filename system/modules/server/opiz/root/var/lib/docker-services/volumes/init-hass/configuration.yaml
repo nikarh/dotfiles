@@ -46,7 +46,7 @@ mqtt:
   password: !secret mqtt_password
   discovery: true
   discovery_prefix: homeassistant
-  certificate: /etc/ssl/certs/mqtt.crt
+  certificate: /etc/ssl/mqtt-certs/ca.crt
   
 shell_command:
   renew_lg_token: curl 'https://developer.lge.com/secure/ResetDevModeSession.dev?sessionToken={{ token }}'

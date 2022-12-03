@@ -1,3 +1,4 @@
 #!/bin/bash -e
 
-sudo cp -ufrTv "$ROOT/root/var/" /var/
+# Copy all system configs
+sudo cp -ufrTv "$ROOT/root/" /

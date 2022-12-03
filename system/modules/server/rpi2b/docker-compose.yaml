@@ -82,7 +82,7 @@ services:
     image: alpine
     command: >
       sh -c "
-        if [ -z "$(ls -A /hass)" ]; then
+        if [ -z "$$(ls -A /hass)" ]; then
           cp -R /init-hass/* /hass/
         fi
       "

@@ -1,37 +1,17 @@
 version: '3.5'
-secrets:
-  CF_TOKEN:
-    file: ../common/secrets/cf_token
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+volumes:
+  mqtt-certs:
+  mosquitto-data:
+  zigbee2mqtt-data:
+  hass-data:
 services:
-  watchtower:
-    image: containrrr/watchtower
-    container_name: watchtower
-    restart: unless-stopped
-    logging: &logging
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "5"
-    environment:
-      WATCHTOWER_CLEANUP: "true"
-      WATCHTOWER_POLL_INTERVAL: 7200 # Checks for updates every two hours
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-  traefik-cloudflare-companion:
-    image: tiredofit/traefik-cloudflare-companion:6.7.0
-    container_name: traefik-cloudflare-companion
-    restart: unless-stopped
-    logging: *logging
-    environment:
-      TRAEFIK_EXCLUDED_HOST1: home\.arhipov\.net
-      TARGET_DOMAIN: homenet.arhipov.net
-      DOMAIN1: arhipov.net
-      DOMAIN1_ZONE_ID: 8f927f276e4b3481aba03ee4d29a9ef9
-      DOMAIN1_PROXIED: "false"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    secrets:
-      - CF_TOKEN
   init-mqtt-certs:
     image: alpine
     command: >
@@ -41,20 +21,20 @@ services:
 
         if [ ! -e ca.key ]; then
           openssl genrsa -out ca.key 2048;
-          openssl req -new -x509 -days 18250 -key ca.key -out ca.crt -config ca.cnf;
+          openssl req -new -x509 -days 18250 -key ca.key -out ca.crt -config /cfg/ca.cnf;
         fi;
 
         openssl genrsa -out server.key 2048;
-        openssl req -new -out server.csr -key server.key -config server.cnf;
-        openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -extensions v3_req -extfile server.cnf -days 360;
+        openssl req -new -out server.csr -key server.key -config /cfg/server.cnf;
+        openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -extensions v3_req -extfile /cfg/server.cnf -days 360;
       "
     volumes:
-      - /var/lib/mosquitto/certs:/certs
+      - mqtt-certs:/certs
+      - /var/lib/docker-services/volumes/init-mqtt-certs:/cfg:ro
   mqtt:
     image: eclipse-mosquitto
     container_name: mqtt
-    restart: unless-stopped
-    logging: *logging
+    << : *service-defaults
     ports:
       - '8883:8883'
     command: >
@@ -63,110 +43,76 @@ services:
         cp /mosquitto/tls-orig/* /mosquitto/tls/;
         chown 1883:1883 /mosquitto/tls/*;
 
-        cp /mosquitto/config/users.conf.unencrypted /mosquitto/config/users.conf
-        /usr/bin/mosquitto_passwd -U /mosquitto/config/users.conf;
+        cp /mosquitto/config/users.conf /mosquitto/users.conf
+        /usr/bin/mosquitto_passwd -U /mosquitto/users.conf;
    
         /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf;
       "
     volumes:
-      - /var/lib/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
-      - /var/lib/mosquitto/users.conf:/mosquitto/config/users.conf.unencrypted:ro
-      - /var/lib/mosquitto/data:/mosquitto/data
-      - /var/lib/mosquitto/certs/server.key:/mosquitto/tls-orig/server.key
-      - /var/lib/mosquitto/certs/server.crt:/mosquitto/tls-orig/server.crt
-      - /var/lib/mosquitto/certs/ca.crt:/mosquitto/tls-orig/ca.crt
+      - mosquitto-data:/mosquitto/data
+      - mqtt-certs:/mosquitto/tls-orig:ro
+      - /var/lib/docker-services/volumes/mosquitto:/mosquitto/config:ro
     depends_on:
       init-mqtt-certs:
         condition: service_completed_successfully
-  traefik:
-    image: traefik:2.9
-    container_name: traefik
-    restart: unless-stopped
-    logging: *logging
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - /var/lib/traefik:/etc/traefik
-      - /var/run/docker.sock:/var/run/docker.sock
-    secrets:
-      - "CF_TOKEN"
-    environment:
-      - "CF_DNS_API_TOKEN_FILE=/run/secrets/CF_TOKEN"
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.api.rule=Host(`traefik.pi.home.arhipov.net`)'
-      - 'traefik.http.routers.api.entrypoints=https'
-      - 'traefik.http.routers.api.service=api@internal'
-      - 'traefik.http.routers.api.middlewares=authelia@docker'
-  authelia:
-    image: authelia/authelia
-    container_name: authelia
-    restart: unless-stopped
-    logging: *logging
-    healthcheck:
-      disable: true
-    user: 1000:1000
-    environment:
-      AUTHELIA_JWT_SECRET_FILE: /config/secrets/jwt_secret
-      AUTHELIA_SESSION_SECRET_FILE: /config/secrets/session_secret
-      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /config/secrets/storage_encryption_key
-    volumes:
-      - /var/lib/authelia:/config
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.authelia.loadbalancer.server.port=8080'
-      - 'traefik.http.routers.authelia.rule=Host(`authelia.pi.home.arhipov.net`)'
-      - 'traefik.http.routers.authelia.entrypoints=https'
-      - 'traefik.http.middlewares.authelia.forwardauth.address=http://authelia:8080/api/verify?rd=https://authelia.pi.home.arhipov.net'
-      - 'traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true'
-      - 'traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email'
   zigbee2mqtt:
     image: koenkk/zigbee2mqtt
     container_name: zigbee2mqtt
-    restart: unless-stopped
-    logging: *logging
+    << : *service-defaults
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:
-      - /var/lib/mosquitto/certs/ca.crt:/etc/ssl/certs/mqtt.crt
-      - /var/lib/zigbee2mqtt:/app/data
+      - mqtt-certs:/etc/ssl/mqtt-certs
+      - zigbee2mqtt-data:/app/data
+      - /var/lib/docker-services/volumes/zigbee2mqtt/configuration.yaml:/app/data/configuration.yaml:ro
+      - /var/lib/docker-services/volumes/zigbee2mqtt/secret.yaml:/app/data/secret.yaml:ro
       - /dev/serial:/dev/serial
       - /etc/localtime:/etc/localtime:ro
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.zigbee2mqtt.loadbalancer.server.port=8080'
-      - 'traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.pi.home.arhipov.net`)'
+      - 'traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.${DOMAIN}`)'
       - 'traefik.http.routers.zigbee2mqtt.entrypoints=https'
       - 'traefik.http.routers.zigbee2mqtt.middlewares=authelia@docker'
     depends_on:
       mqtt:
         condition: service_started
+  init-hass-volume:
+    image: alpine
+    command: >
+      sh -c "
+        if [ -z \"$$(ls -A /hass)\" ]; then
+          cp -R /init-hass/* /hass/
+        fi
+      "
+    volumes:
+      - /var/lib/docker-services/volumes/init-hass:/init-hass:ro
+      - hass-data:/hass
   hass:
     image: homeassistant/home-assistant:stable
     container_name: hass
-    restart: unless-stopped
-    logging: *logging
+    << : *service-defaults
     ports:
       # Apple HomeKit
       - 21064:21064
     volumes:
-      - /var/lib/mosquitto/certs/ca.crt:/etc/ssl/certs/mqtt.crt
-      - /var/lib/hass:/config
+      - mqtt-certs:/etc/ssl/mqtt-certs:ro
+      - hass-data:/config
       - /etc/localtime:/etc/localtime:ro
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.hass.loadbalancer.server.port=8080'
-      - 'traefik.http.routers.hass.rule=Host(`hass.pi.home.arhipov.net`)'
+      - 'traefik.http.routers.hass.rule=Host(`hass.${DOMAIN}`)'
       - 'traefik.http.routers.hass.entrypoints=https'
     depends_on:
+      init-hass-volume:
+        condition: service_completed_successfully
       init-mqtt-certs:
         condition: service_completed_successfully
   mdns-repeater:
     image: angelnu/mdns_repeater
     container_name: mdns-repeater
-    restart: unless-stopped
-    logging: *logging
+    << : *service-defaults
     network_mode: host
     environment:
     - hostNIC=eth1

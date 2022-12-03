@@ -9,10 +9,8 @@ pkg mdadm hdparm fuse-overlayfs dhclient \
 
 sudo systemctl mask mdmonitor
 
-# Copy all configs to etc
-sudo cp -ufrTv "$ROOT/root/etc/" /etc
-sudo cp -ufrTv "$ROOT/root/usr/" /usr
-sudo cp -ufrTv "$ROOT/root/var/" /var
+# Copy all system configs
+sudo cp -ufrTv "$ROOT/root/" /
 
 sudo chown -R 1000:1000 /var/lib/{qbittorrent,filebrowser,netdata,homer,jellyfin,radarr,prowlarr,bazarr}
 sudo chmod 600 /var/lib/sftpd/secrets/ssh*

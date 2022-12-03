@@ -1,10 +1,14 @@
 #!/bin/bash -e
 
-sudo cp -ufrTv "$ROOT/root/etc/" /etc
-sudo cp -ufrTv "$ROOT/root/var/" /var
+# Copy all system configs
+sudo cp -ufrTv "$ROOT/root/" /
 
 sudo apt update
-sudo apt intstall docker.io docker-compose
+sudo apt install docker.io docker-compose
 sudo apt upgrade
 
-docker-compose --project-directory="$ROOT" up -d
+docker-compose --project-directory="$ROOT" \
+    --env-file "$ROOT/.env" \
+    -f "$ROOT/docker-compose.yaml" \
+    -f "$ROOT/../common/docker-compose.yaml" \
+    up -d

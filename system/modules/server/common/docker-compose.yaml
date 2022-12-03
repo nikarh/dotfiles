@@ -54,7 +54,7 @@ services:
       - 443:443
     volumes:
       - traefik-data:/data
-      - /var/lib/service-volumes/traefik:/etc/traefik:ro
+      - /var/lib/docker-services/volumes/traefik:/etc/traefik:ro
       - /var/run/docker.sock:/var/run/docker.sock
     secrets:
       - CF_TOKEN
@@ -85,7 +85,7 @@ services:
     volumes:
         # /config is chowned, so volume has right permissions
       - authelia-data:/config/data:rw
-      - /var/lib/service-volumes/authelia:/etc/authelia:ro
+      - /var/lib/docker-services/volumes/authelia:/etc/authelia:ro
     secrets:
       - AUTHELIA_JWT_SECRET
       - AUTHELIA_SESSION_SECRET

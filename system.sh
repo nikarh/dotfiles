@@ -16,8 +16,8 @@ PROFILE="system/profiles/$PROFILE.yaml"
 
 if [[ -z "$PROFILE" ]] || [[ ! -f "$PROFILE" ]]; then
     # shellcheck disable=SC2046
-    echo Invalid profile, use one of the following:
-    ls profiles | tr ' ' '\n' | sed -r 's/^(.*).yaml/ \1/'
+    echo Invalid profile "$PROFILE", use one of the following:
+    ls system/profiles | tr ' ' '\n' | sed -r 's/^(.*).yaml/ \1/'
     exit 1
 fi
 

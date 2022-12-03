@@ -1,2 +1,2 @@
-root/var/lib/service-volumes/authelia/secrets/** filter=git-crypt diff=git-crypt
+**/secrets/** filter=git-crypt diff=git-crypt
 secrets/** filter=git-crypt diff=git-crypt
