@@ -1,0 +1,54 @@
+version: "3.5"
+x-logging: &logging
+      driver: "json-file"
+      options:
+        max-size: "50k"
+        max-file: "1"
+secrets:
+  MINIO_ACCESS_KEY:
+    file: ./secrets/minio_access_key
+  MINIO_SECRET_KEY:
+    file: ./secrets/minio_secret_key
+services:
+  backup:
+    image: offen/docker-volume-backup:v2
+    container_name: backup
+    restart: unless-stopped
+    logging: *logging
+    environment:
+      AWS_ENDPOINT: minio.files.home.arhipov.net
+      AWS_S3_BUCKET_NAME: volume-backup
+      AWS_ACCESS_KEY_ID_FILE: /run/secrets/MINIO_ACCESS_KEY
+      AWS_SECRET_ACCESS_KEY_FILE: /run/secrets/MINIO_SECRET_KEY
+      BACKUP_RETENTION_DAYS: 3
+      BACKUP_PRUNING_LEEWAY: 5m
+    entrypoint: ""
+    command: >
+      sh -c "
+        mkdir -p /etc/dockervolumebackup/conf.d;
+        cd /data;
+        for f in *; do
+          echo BACKUP_SOURCES=/data/$${f} >> /etc/dockervolumebackup/conf.d/$${f};
+          echo AWS_S3_PATH=/${DOMAIN}/$${f} >> /etc/dockervolumebackup/conf.d/$${f};
+          (
+            set -a;
+            echo Initial backup of $${f};
+            source /etc/dockervolumebackup/conf.d/$${f};
+            backup;
+          );
+        done;
+
+        /root/entrypoint.sh;
+      "
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      # Volumes to backup
+      - mqtt-certs:/data/mqtt-certs:ro
+      - mosquitto-data:/data/mosquitto-data:ro
+      - zigbee2mqtt-data:/data/zigbee2mqtt-data:ro
+      - hass-data:/data/hass-data:ro
+      - traefik-data:/data/traefik-data:ro
+      - authelia-data:/data/authelia-data:ro
+    secrets:
+      - MINIO_ACCESS_KEY
+      - MINIO_SECRET_KEY

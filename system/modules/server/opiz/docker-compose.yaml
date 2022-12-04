@@ -109,11 +109,11 @@ services:
         condition: service_completed_successfully
       init-mqtt-certs:
         condition: service_completed_successfully
-  mdns-repeater:
-    image: angelnu/mdns_repeater
-    container_name: mdns-repeater
-    << : *service-defaults
-    network_mode: host
-    environment:
-    - hostNIC=eth1
-    - dockerNIC=br-7d8dee006381
+  # mdns-repeater:
+  #   image: angelnu/mdns_repeater
+  #   container_name: mdns-repeater
+  #   << : *service-defaults
+  #   network_mode: host
+  #   environment:
+  #   - hostNIC=eth1
+  #   - dockerNIC=br-7d8dee006381
