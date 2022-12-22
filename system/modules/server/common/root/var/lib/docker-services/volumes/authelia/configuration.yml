@@ -61,11 +61,11 @@ access_control:
       policy: bypass
       networks:
         - internal
-    - domain_regex: '^(zigbee2mqtt)\.(o|r|)pi\.home\.arhipov\.net$'
+    - domain_regex: '^(esphome|zigbee2mqtt)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
       policy: bypass
       networks:
         - internal
-    - domain_regex: '^(traefik|minio(|-console)|torrents|netdata|prowlarr|sonarr|radarr|bazarr|jellyseerr)(\.files|\.(o|r|)pi)\.home\.arhipov\.net$'
+    - domain_regex: '^(traefik|minio(|-console)|torrents|netdata|prowlarr|sonarr|radarr|bazarr|jellyseerr)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
       policy: bypass
       networks:
         - internal
@@ -79,12 +79,12 @@ access_control:
       subject:
         - "group:samba"
     # Administrative
-    - domain_regex: '^(traefik|netdata)((o|r|)pi\.|)\.files\.home\.arhipov\.net$'
+    - domain_regex: '^(traefik|netdata)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
       policy: one_factor
       subject:
         - "group:admins"
     # Residential
-    - domain_regex: '^(hass|zigbee2mqtt)\.(o|r|)pi\.home\.arhipov\.net$'
+    - domain_regex: '^(hass|zigbee2mqtt|esphome)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
       policy: one_factor
       subject:
         - "group:residents"

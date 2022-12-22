@@ -8,6 +8,8 @@ x-service-defaults: &service-defaults
       max-file: ${LOG_MAX_FILE:-5}
   healthcheck:
     disable: true
+volumes:
+  esphome-data:
 secrets:
   MINIO_OIDC_SECRET:
     file: ../common/secrets/minio_oidc_secret
@@ -284,6 +286,27 @@ services:
       - 'traefik.http.routers.photoprism.rule=Host(`photos.${DOMAIN}`)'
       - 'traefik.http.routers.photoprism.entrypoints=https'
       - 'traefik.http.routers.photoprism.middlewares=authelia@docker'
+  esphome:
+    image: esphome/esphome
+    container_name: esphome
+    << : *service-defaults
+    volumes:
+      - esphome-data:/config
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.esphome.loadbalancer.server.port=6052'
+      - 'traefik.http.routers.esphome.rule=Host(`esphome.${DOMAIN}`)'
+      - 'traefik.http.routers.esphome.entrypoints=https'
+      - 'traefik.http.routers.esphome.middlewares=authelia@docker'
+  mdns-repeater:
+    image: angelnu/mdns_repeater
+    container_name: mdns-repeater
+    << : *service-defaults
+    network_mode: host
+    environment:
+    - hostNIC=eno1
+    - dockerNIC=br-64a8b7fbc7a7
   netdata:
     image: netdata/netdata
     container_name: netdata
