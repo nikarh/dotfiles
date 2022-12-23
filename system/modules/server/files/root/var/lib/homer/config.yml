@@ -103,6 +103,11 @@ services:
         subtitle: "Photos collection"
         url: "https://photos.files.home.arhipov.net"
         target: "_blank"
+      - name: "ESPHome"
+        icon: "fas fa-microchip"
+        subtitle: "ESPHome device console"
+        url: "https://esphome.files.home.arhipov.net"
+        target: "_blank"
   - name: Media
     items:
       - name: "Jellyfin"
