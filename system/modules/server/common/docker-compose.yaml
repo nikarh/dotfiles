@@ -29,7 +29,7 @@ services:
     << : *common-service-defaults
     environment:
       WATCHTOWER_CLEANUP: "true"
-      WATCHTOWER_POLL_INTERVAL: 7200
+      WATCHTOWER_SCHEDULE: "0 42 4 * * *"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
   traefik-cloudflare-companion:
