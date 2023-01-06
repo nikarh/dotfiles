@@ -1,15 +1,14 @@
 version: '3.5'
-x-logging: &logging
-      driver: "json-file"
-      options:
-        max-size: "50k"
-        max-file: "1"
 x-service-defaults: &service-defaults
-    restart: unless-stopped
-    logging: *logging
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
 volumes:
   mqtt-certs:
-  mqtt-data:
+  mosquitto-data:
   zigbee2mqtt-data:
   hass-data:
 services:
@@ -31,11 +30,11 @@ services:
       "
     volumes:
       - mqtt-certs:/certs
-      - /var/lib/service-volumes/init-mqtt-certs:/cfg:ro
+      - /var/lib/docker-services/volumes/init-mqtt-certs:/cfg:ro
   mqtt:
-    << : *service-defaults
     image: eclipse-mosquitto
     container_name: mqtt
+    << : *service-defaults
     ports:
       - '8883:8883'
     command: >
@@ -44,35 +43,35 @@ services:
         cp /mosquitto/tls-orig/* /mosquitto/tls/;
         chown 1883:1883 /mosquitto/tls/*;
 
-        cp /mosquitto/config/users.conf.unencrypted /mosquitto/users.conf
+        cp /mosquitto/config/users.conf /mosquitto/users.conf
         /usr/bin/mosquitto_passwd -U /mosquitto/users.conf;
    
         /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf;
       "
     volumes:
-      - /var/lib/service-volumes/mqtt:/mosquitto/config:ro
+      - mosquitto-data:/mosquitto/data
       - mqtt-certs:/mosquitto/tls-orig:ro
-      - mqtt-data:/data
+      - /var/lib/docker-services/volumes/mosquitto:/mosquitto/config:ro
     depends_on:
       init-mqtt-certs:
         condition: service_completed_successfully
   zigbee2mqtt:
-    << : *service-defaults
     image: koenkk/zigbee2mqtt
     container_name: zigbee2mqtt
+    << : *service-defaults
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:
       - mqtt-certs:/etc/ssl/mqtt-certs
       - zigbee2mqtt-data:/app/data
-      - /var/lib/service-volumes/zigbee2mqtt/configuration.yaml:/app/data/configuration.yaml:ro
-      - /var/lib/service-volumes/zigbee2mqtt/secret.yaml:/app/data/secret.yaml:ro
+      - /var/lib/docker-services/volumes/zigbee2mqtt/configuration.yaml:/app/data/configuration.yaml:ro
+      - /var/lib/docker-services/volumes/zigbee2mqtt/secret.yaml:/app/data/secret.yaml:ro
       - /dev/serial:/dev/serial
       - /etc/localtime:/etc/localtime:ro
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.zigbee2mqtt.loadbalancer.server.port=8080'
-      - 'traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.rpi.home.arhipov.net`)'
+      - 'traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.${DOMAIN}`)'
       - 'traefik.http.routers.zigbee2mqtt.entrypoints=https'
       - 'traefik.http.routers.zigbee2mqtt.middlewares=authelia@docker'
     depends_on:
@@ -82,38 +81,38 @@ services:
     image: alpine
     command: >
       sh -c "
-        if [ -z "$$(ls -A /hass)" ]; then
+        if [ -z \"$$(ls -A /hass)\" ]; then
           cp -R /init-hass/* /hass/
         fi
       "
     volumes:
-      - /var/lib/service-volumes/init-hass:/init-hass:ro
+      - /var/lib/docker-services/volumes/init-hass:/init-hass:ro
       - hass-data:/hass
   hass:
-    << : *service-defaults
     image: homeassistant/home-assistant:stable
     container_name: hass
+    << : *service-defaults
     ports:
       # Apple HomeKit
       - 21064:21064
     volumes:
-      - mqtt-certs:/etc/ssl/mqtt-certs
+      - mqtt-certs:/etc/ssl/mqtt-certs:ro
       - hass-data:/config
       - /etc/localtime:/etc/localtime:ro
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.hass.loadbalancer.server.port=8080'
-      - 'traefik.http.routers.hass.rule=Host(`hass.rpi.home.arhipov.net`)'
+      - 'traefik.http.routers.hass.rule=Host(`hass.${DOMAIN}`)'
       - 'traefik.http.routers.hass.entrypoints=https'
     depends_on:
-      init-mqtt-certs:
-        condition: service_completed_successfully
       init-hass-volume:
         condition: service_completed_successfully
+      init-mqtt-certs:
+        condition: service_completed_successfully
   mdns-repeater:
-    << : *service-defaults
     image: angelnu/mdns_repeater
     container_name: mdns-repeater
+    << : *service-defaults
     network_mode: host
     environment:
     - hostNIC=eth1

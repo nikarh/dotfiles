@@ -22,6 +22,6 @@ ChrootDirectory %h
 #LogLevel VERBOSE
 
 # PAM password checking
-AuthenticationMethods keyboard-interactive
+AuthenticationMethods publickey keyboard-interactive
 ChallengeResponseAuthentication yes
 UsePAM yes

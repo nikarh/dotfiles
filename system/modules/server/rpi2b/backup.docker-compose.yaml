@@ -1,33 +1,45 @@
 version: "3.5"
-x-logging: &logging
-      driver: "json-file"
-      options:
-        max-size: "50k"
-        max-file: "1"
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
 secrets:
-  MINIO_ACCESS_KEY:
-    file: ./secrets/minio_access_key
-  MINIO_SECRET_KEY:
-    file: ./secrets/minio_secret_key
+  SSH_KEY:
+    file: ../common/secrets/backup_rsa
 services:
-  backup:
-    image: offen/docker-volume-backup:v2
+  backup: &backup
+    build: ../common/docker/backup
     container_name: backup
-    restart: unless-stopped
-    logging: *logging
+    << : *service-defaults
     environment:
-      AWS_ENDPOINT: minio.files.home.arhipov.net
-      AWS_S3_BUCKET_NAME: volume-backup
-      AWS_ACCESS_KEY_ID_FILE: /run/secrets/MINIO_ACCESS_KEY
-      AWS_SECRET_ACCESS_KEY_FILE: /run/secrets/MINIO_SECRET_KEY
+      BUCKET: ${DOMAIN}
     volumes:
-      - /var/lib/service-volumes/volume-backup:/etc/dockervolumebackup/conf.d:ro
-      - mqtt-certs:/data/mqtt-certs:ro
-      - mqtt-data:/data/mqtt-data:ro
-      - zigbee2mqtt-data:/data/zigbee2mqtt-data:ro
-      - hass-data:/data/hass-data:ro
-      - traefik-data:/data/hass-data:ro
-      - authelia-data:/data/hass-data:ro
+      - /etc/localtime:/etc/localtime:ro
+      # Volumes to backup
+      - mqtt-certs:/volumes/mqtt-certs:ro
+      - mosquitto-data:/volumes/mosquitto-data:ro
+      - zigbee2mqtt-data:/volumes/zigbee2mqtt-data:ro
+      - hass-data:/volumes/hass-data:ro
+      - traefik-data:/volumes/traefik-data:ro
+      - authelia-data:/volumes/authelia-data:ro
     secrets:
-      - MINIO_ACCESS_KEY
-      - MINIO_SECRET_KEY
+      - SSH_KEY
+  restore:
+    <<: *backup
+    restart: on-failure:1
+    profiles: 
+      - restore
+    container_name: restore
+    command: [ "/backup.sh", "restore_all", "${RESTORE_FROM}" ]
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      # Volumes to backup
+      - mqtt-certs:/volumes/mqtt-certs
+      - mosquitto-data:/volumes/mosquitto-data
+      - zigbee2mqtt-data:/volumes/zigbee2mqtt-data
+      - hass-data:/volumes/hass-data
+      - traefik-data:/volumes/traefik-data
+      - authelia-data:/volumes/authelia-data

@@ -17,12 +17,17 @@ sudo chmod 600 /var/lib/sftpd/secrets/ssh*
 
 # Append bind mounts
 sudo mkdir -p /var/data/{shares,home}
-sudo mkdir -p /var/data/home/{shield/shared,{nikarh,anastasiia}/{data,shared}}
+sudo mkdir -p /var/data/home/{backup/data,shield/shared,{nikarh,anastasiia}/{data,shared}}
 
 # Fix permissions for PAM authentication
 sudo chown files:files /var/data/shares/*
 sudo chown files:files /var/data/home/*/*
 sudo chmod 755 /var/data/home/*
+
+# SSH authorized_keys for backup user
+sudo cp -ufrTv "$ROOT/home/backup/" /var/data/home/backup/
+sudo chmod -R go-rx /var/data/home/backup/.ssh
+sudo chown -R files:files /var/data/home/backup/.ssh
 
 sudo sed -i '/# BEGIN mounts/,/# END mounts/d' /etc/fstab
 cat "$ROOT/root/fstab" | sudo tee -a /etc/fstab > /dev/null

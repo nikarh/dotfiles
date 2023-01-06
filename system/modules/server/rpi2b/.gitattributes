@@ -1,6 +1,7 @@
-root/var/lib/service-volumes/init-hass/.storage/** filter=git-crypt diff=git-crypt
-root/var/lib/service-volumes/init-hass/service-account.json filter=git-crypt diff=git-crypt
-root/var/lib/service-volumes/init-hass/secrets.yaml filter=git-crypt diff=git-crypt
-root/var/lib/service-volumes/zigbee2mqtt/secret.yaml filter=git-crypt diff=git-crypt
-root/var/lib/service-volumes/mqtt/users.conf filter=git-crypt diff=git-crypt
+**/init-hass/.storage/** filter=git-crypt diff=git-crypt
+**/init-hass/service-account.json filter=git-crypt diff=git-crypt
+**/init-hass/secrets.yaml filter=git-crypt diff=git-crypt
+**/mosquitto/users.conf filter=git-crypt diff=git-crypt
+**/zigbee2mqtt/secret.yaml filter=git-crypt diff=git-crypt
+**/secrets/** filter=git-crypt diff=git-crypt
 secrets/** filter=git-crypt diff=git-crypt

@@ -65,7 +65,7 @@ access_control:
       policy: bypass
       networks:
         - internal
-    - domain_regex: '^(traefik|minio(|-console)|torrents|netdata|prowlarr|sonarr|radarr|bazarr|jellyseerr)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
+    - domain_regex: '^(traefik|torrents|netdata|prowlarr|sonarr|radarr|bazarr|jellyseerr)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
       policy: bypass
       networks:
         - internal
