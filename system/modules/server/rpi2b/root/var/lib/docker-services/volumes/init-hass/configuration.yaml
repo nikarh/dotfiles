@@ -8,7 +8,7 @@ homeassistant:
   elevation: 0
   unit_system: metric
   time_zone: "Europe/Riga"
-  external_url: "https://hass.rpi.home.arhipov.net"
+  external_url: "https://hass.pi.home.arhipov.net"
   legacy_templates: false
 
   auth_providers:

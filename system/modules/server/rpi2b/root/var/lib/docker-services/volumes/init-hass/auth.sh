@@ -2,7 +2,7 @@
 set -e
 
 AUTHELIA_URL=http://authelia:8080
-FORWARDED_HOST=https://hass.rpi.home.arhipov.net
+FORWARDED_HOST=https://hass.pi.home.arhipov.net
 
 username="$(echo -n "$username" | jq -aRs .)"
 password="$(echo -n "$password" | jq -aRs .)"
