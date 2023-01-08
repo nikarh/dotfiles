@@ -27,6 +27,6 @@ services:
       - bazarr-data:/volumes/bazarr-data:ro
       - readarr-data:/volumes/readarr-data:ro
       - prowlarr-data:/volumes/prowlarr-data:ro
-      - jellyseer-data:/volumes/jellyseer-data:ro
+      - jellyseerr-data:/volumes/jellyseerr-data:ro
     secrets:
       - SSH_KEY

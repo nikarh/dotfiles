@@ -15,7 +15,7 @@ volumes:
   bazarr-data:
   readarr-data:
   prowlarr-data:
-  jellyseer-data:
+  jellyseerr-data:
 services:
   samba:
     build: docker/samba
@@ -107,7 +107,7 @@ services:
       PGID: 1000
       TZ: Europe/Riga
     volumes:
-      - /var/lib/prowlarr/config:/config
+      - prowlarr-data:/config
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.prowlarr.loadbalancer.server.port=9696'
@@ -120,7 +120,7 @@ services:
     << : *service-defaults
     environment: *arr_env
     volumes:
-      - /var/lib/radarr/config:/config
+      - radarr-data:/config
       - /var/data/shares/tmp:/downloads
     labels:
       - 'traefik.enable=true'
@@ -134,7 +134,7 @@ services:
     << : *service-defaults
     environment: *arr_env
     volumes:
-      - /var/lib/sonarr/config:/config
+      - sonarr-data:/config
       - /var/data/shares/tmp:/downloads
     labels:
       - 'traefik.enable=true'
@@ -148,7 +148,7 @@ services:
     << : *service-defaults
     environment: *arr_env
     volumes:
-      - /var/lib/bazarr/config:/config
+      - bazarr-data:/config
       - /var/data/shares/tmp:/downloads
     labels:
       - 'traefik.enable=true'
@@ -160,11 +160,10 @@ services:
     image: fallenbagel/jellyseerr:develop
     container_name: jellyseerr
     << : *service-defaults
-    user: 1000:1000
     environment:
       TZ: Europe/Riga
     volumes:
-      - /var/lib/jellyseerr:/app/config
+      - jellyseerr-data:/app/config
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.jellyseerr.loadbalancer.server.port=5055'
