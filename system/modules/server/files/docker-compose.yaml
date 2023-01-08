@@ -10,6 +10,12 @@ x-service-defaults: &service-defaults
     disable: true
 volumes:
   esphome-data:
+  radarr-data:
+  sonarr-data:
+  bazarr-data:
+  readarr-data:
+  prowlarr-data:
+  jellyseer-data:
 services:
   samba:
     build: docker/samba

@@ -46,5 +46,6 @@ docker-compose --project-directory="$ROOT" \
 docker-compose --project-directory="$ROOT" \
     --env-file "$ROOT/.env" \
     -f "$ROOT/docker-compose.yaml" \
+    -f "$ROOT/backup.docker-compose.yaml" \
     -f "$ROOT/../common/docker-compose.yaml" \
     up -d

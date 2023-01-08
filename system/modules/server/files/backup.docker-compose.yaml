@@ -1,0 +1,32 @@
+version: "3.5"
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+secrets:
+  SSH_KEY:
+    file: ../common/secrets/backup_rsa
+services:
+  backup:
+    build: ../common/docker/backup
+    container_name: backup
+    << : *service-defaults
+    environment:
+      BUCKET: ${DOMAIN}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      # Volumes to backup
+      - traefik-data:/volumes/traefik-data:ro
+      - authelia-data:/volumes/authelia-data:ro
+      - esphome-data:/volumes/esphome-data:ro
+      - radarr-data:/volumes/radarr-data:ro
+      - sonarr-data:/volumes/sonarr-data:ro
+      - bazarr-data:/volumes/bazarr-data:ro
+      - readarr-data:/volumes/readarr-data:ro
+      - prowlarr-data:/volumes/prowlarr-data:ro
+      - jellyseer-data:/volumes/jellyseer-data:ro
+    secrets:
+      - SSH_KEY
