@@ -156,10 +156,26 @@ services:
       - 'traefik.http.routers.bazarr.rule=Host(`bazarr.${DOMAIN}`)'
       - 'traefik.http.routers.bazarr.entrypoints=https'
       - 'traefik.http.routers.bazarr.middlewares=authelia@docker'
+  readarr:
+    image: hotio/readarr:testing
+    container_name: readarr
+    << : *service-defaults
+    environment: *arr_env
+    volumes:
+      - readarr-data:/config
+      - /var/data/shares/tmp:/downloads
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.readarr.loadbalancer.server.port=8787'
+      - 'traefik.http.routers.readarr.rule=Host(`readarr.${DOMAIN}`)'
+      - 'traefik.http.routers.readarr.entrypoints=https'
+      - 'traefik.http.routers.readarr.middlewares=authelia@docker'
   jellyseerr:
     image: fallenbagel/jellyseerr:develop
     container_name: jellyseerr
     << : *service-defaults
+    # User will break with a volume due to no chown
+    # user: 1000:1000
     environment:
       TZ: Europe/Riga
     volumes:
