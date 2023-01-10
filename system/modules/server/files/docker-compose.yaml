@@ -16,6 +16,7 @@ volumes:
   readarr-data:
   prowlarr-data:
   jellyseerr-data:
+  kavita-data:
 services:
   samba:
     build: docker/samba
@@ -234,6 +235,22 @@ services:
       - 'traefik.http.services.jellyfin.loadbalancer.server.port=8096'
       - 'traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`)'
       - 'traefik.http.routers.jellyfin.entrypoints=https'
+
+  kavita:
+    image: kizaing/kavita:latest
+    container_name: kavita
+    << : *service-defaults
+    environment:
+      TZ: Europe/Riga
+    volumes:
+      - /var/data/shares/tmp/Books:/books
+      - kavita-data:/kavita/config
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.kavita.loadbalancer.server.port=5000'
+      - 'traefik.http.routers.kavita.rule=Host(`kavita.${DOMAIN}`)'
+      - 'traefik.http.routers.kavita.entrypoints=https'
+      - 'traefik.http.routers.kavita.middlewares=authelia@docker'
   photoprism:
     image: photoprism/photoprism:latest
     container_name: photoprism

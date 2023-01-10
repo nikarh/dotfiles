@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e
+set -x
 
 cp /etc/samba/smb-base.conf /etc/samba/smb.conf
 
@@ -11,7 +12,8 @@ for f in /home/*; do
   username="$(basename $f)"
   useradd -MNo -u 1000 -g 1000 -s /usr/bin/nologin "$username" || true;
   usermod -p "*" "$username"
-  echo -e "$username\n$username\n" | pdbedit -a "$username" -t
+
+  echo -e "$username\n$username\n" | smbpasswd -a -s "$username"
 done
 
 # Create personal shares

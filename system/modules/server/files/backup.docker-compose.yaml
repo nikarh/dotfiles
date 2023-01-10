@@ -28,5 +28,6 @@ services:
       - readarr-data:/volumes/readarr-data:ro
       - prowlarr-data:/volumes/prowlarr-data:ro
       - jellyseerr-data:/volumes/jellyseerr-data:ro
+      - kavita-data:/volumes/kavita-data:ro
     secrets:
       - SSH_KEY
