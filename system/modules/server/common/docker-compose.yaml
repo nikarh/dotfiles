@@ -33,6 +33,7 @@ services:
     container_name: traefik-cloudflare-companion
     << : *common-service-defaults
     environment:
+      CONTAINER_ENABLE_MONITORING: "false"
       TARGET_DOMAIN: homenet.arhipov.net
       DOMAIN1: arhipov.net
       DOMAIN1_ZONE_ID: 8f927f276e4b3481aba03ee4d29a9ef9
