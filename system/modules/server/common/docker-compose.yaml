@@ -8,13 +8,13 @@ x-common-service-defaults: &common-service-defaults
       max-file: ${LOG_MAX_FILE:-5}
 secrets:
   CF_TOKEN:
-    file: ../common/secrets/cf_token
+    file: ../common/docker/secrets/cf_token
   AUTHELIA_JWT_SECRET:
-    file: ../common/secrets/authelia/jwt_secret
+    file: ../common/docker/secrets/authelia/jwt_secret
   AUTHELIA_SESSION_SECRET:
-    file: ../common/secrets/authelia/session_secret
+    file: ../common/docker/secrets/authelia/session_secret
   AUTHELIA_STORAGE_ENCRYPTION_KEY:
-    file: ../common/secrets/authelia/storage_encryption_key
+    file: ../common/docker/secrets/authelia/storage_encryption_key
 volumes:
   traefik-data:
   authelia-data:

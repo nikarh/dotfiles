@@ -1,0 +1,63 @@
+version: '3.5'
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+volumes:
+  immich-db-data:
+  immich-data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/var/data/shares/nikarh/immich'
+services:
+  immich-redis:
+    image: redis:6.2
+    container_name: immich-redis
+    << : *service-defaults
+    command: >
+      --requirepass ${IMMICH_REDIS_PASSWORD}
+  immich-postgres:
+    image: postgres:14
+    container_name: immich-postgres
+    environment:
+      POSTGRES_DB: immich
+      POSTGRES_USER: immich
+      POSTGRES_PASSWORD: ${IMMICH_DB_PASSWORD}
+      PG_DATA: /var/lib/postgresql/data
+    volumes:
+      - immich-db-data:/var/lib/postgresql/data
+    restart: always
+  immich:
+    image: martabal/immich:latest
+    container_name: immich
+    << : *service-defaults
+    environment:
+      - DB_HOSTNAME=immich-postgres
+      - DB_PORT=5432
+      - DB_DATABASE_NAME=immich
+      - DB_USERNAME=immich
+      - DB_PASSWORD=${IMMICH_DB_PASSWORD}
+      - REDIS_HOSTNAME=immich-redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${IMMICH_REDIS_PASSWORD}
+      - JWT_SECRET=${IMMICH_JWT_SECRET}
+      - DISABLE_MACHINE_LEARNING=true
+      - TZ=Europe/Riga
+    volumes:
+      - immich-data:/photos
+    depends_on:
+      immich-postgres:
+        condition: service_started
+      immich-redis:
+        condition: service_started
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.immich.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.immich.rule=Host(`immich.${DOMAIN}`)'
+      - 'traefik.http.routers.immich.entrypoints=https'
+      - 'traefik.http.routers.immich.middlewares=authelia@docker'
