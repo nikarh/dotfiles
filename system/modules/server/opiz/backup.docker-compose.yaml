@@ -19,11 +19,5 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       # Volumes to backup
-      - mqtt-certs:/volumes/mqtt-certs:ro
-      - mosquitto-data:/volumes/mosquitto-data:ro
-      - zigbee2mqtt-data:/volumes/zigbee2mqtt-data:ro
-      - hass-data:/volumes/hass-data:ro
-      - traefik-data:/volumes/traefik-data:ro
-      - authelia-data:/volumes/authelia-data:ro
     secrets:
       - SSH_KEY
