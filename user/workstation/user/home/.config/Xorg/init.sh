@@ -15,13 +15,15 @@ xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
 ~/.local/bin/init-input-devices.sh
 # Set keybaord/mouse settings when USB device plugged
 ~/.local/bin/udev-monitor -s usb -e ~/.local/bin/init-input-devices.sh&
-# Set keybaord/mouse settings when USB session is unlocked (e.g. after suspend)
-~/.local/bin/dbus-monitor.sh org.powertools Unlock ~/.local/bin/init-input-devices.sh&
+# Set keybaord/mouse settings after resume from suspend
+~/.local/bin/dbus-monitor.sh org.powertools Resume ~/.local/bin/init-input-devices.sh&
+~/.local/bin/dbus-monitor.sh org.freedesktop.login1.Session Unlock ~/.local/bin/init-input-devices.sh&
 # Listen to xeyboard layout changes
 ~/.local/bin/xkb-switch-dbus.sh&
 
 # Lock on suspend
-~/.local/bin/dbus-monitor.sh org.powertools Suspend ~/.local/bin/lock.sh&
+#~/.local/bin/dbus-monitor.sh org.powertools Suspend ~/.local/bin/lock.sh&
+light-locker &
 
 # Restart CUDA apps and nvidia_uvm on resume from sleep
 ~/.local/bin/cuda-app-restart.sh init
