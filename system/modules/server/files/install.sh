@@ -1,11 +1,13 @@
 #!/bin/bash -e
 
-pkg mdadm hdparm fuse-overlayfs dhclient \
-    btrfs-progs parted \
+pkg hdparm fuse-overlayfs dhclient \
+    btrfs-progs compsize parted \
     libva-headless ffmpeg-headless \
     perl-rename \
-    lm_sensors \
-    polkit `# required to reconnect to eth`
+    lm_sensors
+
+# Required for eth
+pkg polkit
 
 sudo systemctl mask mdmonitor
 

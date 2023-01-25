@@ -43,7 +43,7 @@ bindsym $mod+Shift+q kill
 bindsym $mod+Return exec "LANG=en alacritty -t Terminal"
 bindsym $mod+c exec --no-startup-id "rofi -combi-modi window,drun -show combi -modi combi"
 bindsym $mod+x exec --no-startup-id "rofi -show run -terminal alacritty -font"
-bindsym $mod+g exec --no-startup-id "rofi -show calc -modi calc -no-show-match -no-sort"
+bindsym $mod+g exec --no-startup-id "rofi -modi emoji -show emoji"
 
 # change focus
 bindsym $mod+h focus left

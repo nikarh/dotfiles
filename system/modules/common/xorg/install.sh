@@ -15,7 +15,7 @@ fi
 
 pkg i3-wm i3status-rust i3lock-color betterlockscreen \
     xkb-switch picom \
-    dunst rofi rofi-calc rofi-dmenu 
+    dunst rofi rofi-calc rofi-dmenu rofi-emoji
 
 # GUI applications
 pkg alacritty \
@@ -26,7 +26,7 @@ pkg alacritty \
     libsecret seahorse \
     telegram-desktop slack-desktop epdfview-gtk3 onlyoffice-bin \
     krita inkscape aseprite-git \
-    audacious vlc sonixd-bin \
+    audacious vlc feishin-appimage \
     gparted
 
 # Themes and fonts

@@ -9,6 +9,7 @@ modules:
     timezone: Europe/Riga
     kernel: linux-lts
   - name: common/base-workstation
+  - name: common/btrfs
   - name: common/faillock
     conf: |
       deny = 15

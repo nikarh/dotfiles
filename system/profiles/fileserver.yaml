@@ -11,6 +11,7 @@ modules:
   - name: common/base-workstation
   - name: common/bootloader
   - name: common/ucode
+  - name: common/btrfs
   - name: common/docker
   - name: common/console-tools
   - name: server/common
