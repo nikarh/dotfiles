@@ -11,4 +11,4 @@ pkg diffutils upx dhex sysstat gdb svgcleaner `# General use` \
     ftgl hashlink haxe llvm `# Haxe game dev` \
     mongodb-compass \
     jetbrains-toolbox openjdk8-doc openjdk8-src jdk8-openjdk \
-    libvips aws-cli-v2-bin
+    libvips aws-cli-v2
