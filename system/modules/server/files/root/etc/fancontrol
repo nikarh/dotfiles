@@ -7,5 +7,5 @@ MINTEMP=hwmon2/pwm1=45
 MAXTEMP=hwmon2/pwm1=65
 MINSTART=hwmon2/pwm1=20
 MINSTOP=hwmon2/pwm1=35
-MINPWM=hwmon2/pwm1=20
+MINPWM=hwmon2/pwm1=35
 MAXPWM=hwmon2/pwm1=150

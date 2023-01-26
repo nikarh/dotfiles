@@ -12,8 +12,8 @@ echo 'med_power_with_dipm' > '/sys/class/scsi_host/host3/link_power_management_p
 echo 'auto' > '/sys/block/sda/device/power/control';
 echo 'auto' > '/sys/block/sdb/device/power/control';
 echo 'auto' > '/sys/block/sdc/device/power/control';
-# echo 'auto' > '/sys/block/sdd/device/power/control';
-# echo 'auto' > '/sys/block/sde/device/power/control';
+echo 'auto' > '/sys/block/sdd/device/power/control';
+echo 'auto' > '/sys/block/sde/device/power/control';
 
 echo 'auto' > '/sys/bus/pci/devices/0000:03:00.0/power/control';
 echo 'auto' > '/sys/bus/pci/devices/0000:00:1f.0/power/control';
