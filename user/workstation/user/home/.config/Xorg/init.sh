@@ -43,15 +43,15 @@ nm-applet&
 blueman-applet&
 # Pulseaudio tray icon
 pasystray&
-# Syncthing tray icon
-syncthing-gtk&
 # Screenshot daemon
 flameshot&
+# Syncthing tray icon
+syncthing-gtk&
 # Google Drive client
 (sleep 2; insync start)&
 
 # Watch games.yaml and generate .desktop entries and sunshine config
-play.sh watch&
+/home/nikarh/.local/bin/play.sh watch&
 
 # Start sunshine server
 if command -v sunshine &> /dev/null; then
