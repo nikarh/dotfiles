@@ -33,7 +33,7 @@ services:
       - immich-db-data:/var/lib/postgresql/data
     restart: always
   immich:
-    image: martabal/immich:latest
+    image: ghcr.io/imagegenius/immich:latest
     container_name: immich
     << : *service-defaults
     environment:
@@ -57,7 +57,7 @@ services:
         condition: service_started
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.services.immich.loadbalancer.server.port=8090'
+      - 'traefik.http.services.immich.loadbalancer.server.port=8080'
       - 'traefik.http.routers.immich.rule=Host(`immich.${DOMAIN}`)'
       - 'traefik.http.routers.immich.entrypoints=https'
       - 'traefik.http.routers.immich.middlewares=authelia@docker'
