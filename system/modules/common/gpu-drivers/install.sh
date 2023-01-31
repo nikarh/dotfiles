@@ -53,6 +53,8 @@ else
 fi
 
 if grep -q "nvidia" <<< "$GPU_DRIVER"; then
+    # Use a driver with unlocked limits for encoders/decoders
+    # https://github.com/keylase/nvidia-patch
     pkg nvidia-dkms nvidia-settings nvidia-utils-nvlax
 
     DEVICE_ID=$(lspci | grep -i 'VGA.*NVIDIA' | awk '{print $1}' | sed -r 's/^(0*([0-9]+)[:.]0*([0-9]+)[:.]0*([0-9]+)).*/\2:\3:\4/')

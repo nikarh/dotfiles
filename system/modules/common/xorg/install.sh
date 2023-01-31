@@ -15,7 +15,7 @@ fi
 
 pkg i3-wm i3status-rust i3lock-color betterlockscreen \
     xkb-switch picom \
-    dunst rofi rofi-calc rofi-dmenu rofi-emoji
+    dunst rofi rofi-calc rofi-emoji
 
 # GUI applications
 pkg alacritty \
