@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-pkg scrcpy rclone-browser
+pkg scrcpy
 
 # Copy all configs to root
 sudo cp -ufrTv "$ROOT/root/" /

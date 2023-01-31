@@ -9,7 +9,7 @@ window:
   dynamic_padding: true
 
 scrolling:
-  history: 10000
+  history: 50000
   multiplier: 3
   faux_multiplier: 3
 
@@ -27,7 +27,7 @@ font:
 colors:
   primary:
     background: '#282a36'
-    foreground: '#f8f8f2'
+    foreground: '#fdf6e3'
     bright_foreground: '#ffffff'
   cursor:
     text: CellBackground
@@ -44,7 +44,7 @@ colors:
       background: '#ffb86c'
   footer_bar:
     background: '#282a36'
-    foreground: '#f8f8f2'
+    foreground: '#fdf6e3'
   hints:
     start:
       foreground: '#282a36'
@@ -78,7 +78,7 @@ colors:
     white: '#f8f8f2'
 
 bell:
-  color: '0xfdf6e3'
+  color: '#fdf6e3'
 
 mouse_bindings:
   - { mouse: Middle, action: PasteSelection }
