@@ -33,7 +33,7 @@ services:
       - immich-db-data:/var/lib/postgresql/data
     restart: always
   immich:
-    image: ghcr.io/imagegenius/immich:latest
+    image: ghcr.io/imagegenius/immich:noml
     container_name: immich
     << : *service-defaults
     environment:

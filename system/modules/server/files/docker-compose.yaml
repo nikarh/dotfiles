@@ -235,7 +235,6 @@ services:
       - 'traefik.http.services.jellyfin.loadbalancer.server.port=8096'
       - 'traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`)'
       - 'traefik.http.routers.jellyfin.entrypoints=https'
-
   kavita:
     image: kizaing/kavita:latest
     container_name: kavita
