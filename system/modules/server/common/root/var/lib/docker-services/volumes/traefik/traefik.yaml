@@ -26,6 +26,12 @@ entryPoints:
         entryPoint:
           to: https
           scheme: https
+    proxyProtocol:
+      trustedIPs:
+        - "192.168.1.2/32"
+    forwardedHeaders:
+      trustedIPs:
+        - "192.168.1.2/32"
   https:
     address: ":443"
     http:
@@ -39,3 +45,9 @@ entryPoints:
               - "*.pi.home.arhipov.net"
               - "*.rpi.home.arhipov.net"
               - "*.opi.home.arhipov.net"
+    proxyProtocol:
+      trustedIPs:
+        - "192.168.1.2/32"
+    forwardedHeaders:
+      trustedIPs:
+        - "192.168.1.2/32"
