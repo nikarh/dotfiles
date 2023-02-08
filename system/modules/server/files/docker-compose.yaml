@@ -1,4 +1,8 @@
 version: '3.5'
+x-arr-env: &arr_env
+  PGID: 1000
+  PUID: 1000
+  TZ: Europe/Riga
 x-service-defaults: &service-defaults
   restart: unless-stopped
   logging:
@@ -17,6 +21,15 @@ volumes:
   prowlarr-data:
   jellyseerr-data:
   kavita-data:
+  filebrowser-data:
+  qbittorrent-data:
+  syncthing-data:
+  jellyfin-config:
+  photoprism-import:
+  photoprism-database:
+  photoprism-storage:
+  netdata-lib:
+  netdata-cache:
 services:
   samba:
     build: docker/samba
@@ -58,7 +71,7 @@ services:
     << : *service-defaults
     user: '1000:1000'
     volumes:
-      - /var/lib/homer:/www/assets
+      - /var/lib/homer:/www/assets:ro
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.homer.rule=Host(`home.arhipov.net`)'
@@ -83,15 +96,16 @@ services:
       - "-c=/data/filebrowser.json"
       - "-p=8080"
   qbittorrent:
-    image: maltyxx/qbittorrent:latest
+    image: linuxserver/qbittorrent
     container_name: qbittorrent
     << : *service-defaults
-    user: 1000:1000
     ports:
       - 49152:49152/tcp
       - 49152:49152/udp
+    environment:
+      << : *arr_env
     volumes:
-      - /var/lib/qbittorrent/config:/config
+      - qbittorrent-data:/config
       - /var/data/shares/tmp:/downloads
     labels:
       - 'traefik.enable=true'
@@ -103,10 +117,7 @@ services:
     image: lscr.io/linuxserver/prowlarr:develop
     container_name: prowlarr
     << : *service-defaults
-    environment: &arr_env
-      PUID: 1000
-      PGID: 1000
-      TZ: Europe/Riga
+    environment: *arr_env
     volumes:
       - prowlarr-data:/config
     labels:
@@ -193,7 +204,6 @@ services:
     image: syncthing/syncthing
     container_name: syncthing
     << : *service-defaults
-    user: 1000:1000
     ports:
       - 22000:22000/tcp
       - 22000:22000/udp
@@ -201,7 +211,8 @@ services:
     environment:
       TZ: Europe/Riga
     volumes:
-      - /var/lib/syncthing/nikarh:/var/syncthing/config
+      # Check permissions
+      - syncthing-data:/var/syncthing/config
       - /var/data/shares/nikarh:/var/data/shares/nikarh
     labels:
       - 'traefik.enable=true'
@@ -210,10 +221,9 @@ services:
       - 'traefik.http.routers.syncthing.entrypoints=https'
       - 'traefik.http.routers.syncthing.middlewares=authelia@docker'
   jellyfin:
-    image: jellyfin/jellyfin
+    image: lscr.io/linuxserver/jellyfin
     container_name: jellyfin
     << : *service-defaults
-    user: 1000:1000
     group_add:
       - "989" # render
       - "985" # video
@@ -223,10 +233,10 @@ services:
     devices:
       - /dev/dri:/dev/dri
     environment:
+      << : *arr_env
       JELLYFIN_PublishedServerUrl: https://media.${DOMAIN}
     volumes:
-      - /var/lib/jellyfin/config:/config:rw
-      - /var/lib/jellyfin/cache:/cache:rw
+      - jellyfin-config:/config
       - /var/data/shares/tmp:/media:ro
       - /var/data/shares/nikarh/Music:/music
       - /var/data/shares/nikarh/Videos:/nikarh/videos
@@ -254,8 +264,8 @@ services:
     image: photoprism/photoprism:latest
     container_name: photoprism
     << : *service-defaults
-    user: 1000:1000
     environment:
+      << : *arr_env
       PHOTOPRISM_ORIGINALS_LIMIT: 1000               # File size limit for originals in MB (increase for high-res video)
       PHOTOPRISM_HTTP_COMPRESSION: "gzip"            # Improves transfer speed and bandwidth utilization (none or gzip)
       PHOTOPRISM_DEBUG: "false"                      # Run in debug mode (shows additional log messages)
@@ -272,17 +282,16 @@ services:
       PHOTOPRISM_SITE_DESCRIPTION: ""
       PHOTOPRISM_SITE_AUTHOR: ""
     volumes:
+      - photoprism-import:/photoprism/import
+      - photoprism-database:/photoprism/database
+      - photoprism-storage:/photoprism/storage
       - /var/data/shares/nikarh/Pictures:/photoprism/originals:ro
-      - /var/lib/photoprism/import:/photoprism/import
-      - /var/lib/photoprism/storage:/photoprism/storage
-      - /var/lib/photoprism/database:/photoprism/database
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.photoprism.loadbalancer.server.port=2342'
       - 'traefik.http.routers.photoprism.rule=Host(`photos.${DOMAIN}`)'
       - 'traefik.http.routers.photoprism.entrypoints=https'
       - 'traefik.http.routers.photoprism.middlewares=authelia@docker'
-  
   esphome:
     image: esphome/esphome
     container_name: esphome
@@ -318,9 +327,10 @@ services:
       DOCKER_USR: 1000
       DOCKER_GRP: 1000
     volumes:
-      - /var/lib/netdata/config:/etc/netdata
-      - /var/lib/netdata/lib:/var/lib/netdata
-      - /var/lib/netdata/cache:/var/cache/netdata
+      - netdata-lib:/var/lib/netdata
+      - netdata-cache:/var/cache/netdata
+      - /var/lib/netdata/netdata.conf:/etc/netdata/netdata.conf:ro
+      - /var/lib/netdata/cloud.conf:/var/lib/netdata/cloud.d/cloud.conf:ro
       - /etc/passwd:/host/etc/passwd:ro
       - /etc/group:/host/etc/group:ro
       - /proc:/host/proc:ro

@@ -16,7 +16,7 @@ sudo cp -ufrTv "$ROOT/root/etc/" /etc
 sudo cp -ufrTv "$ROOT/root/usr/" /usr
 sudo cp -ufrTv "$ROOT/root/var/" /var
 
-sudo chown -R 1000:1000 /var/lib/{qbittorrent,filebrowser,netdata,homer,jellyfin,radarr,prowlarr,bazarr}
+# TODO: Move to init container?
 sudo chmod 600 /var/lib/sftpd/secrets/ssh*
 
 # Append bind mounts
@@ -47,6 +47,27 @@ sudo systemctl enable reduce-power-usage
 docker-compose --project-directory="$ROOT" \
     --env-file "$ROOT/.env" \
     build
+
+if [[ "$RESTORE" == "true" ]]; then
+    docker-compose --project-directory="$ROOT" \
+        --env-file "$ROOT/.env" \
+        -f "$ROOT/docker-compose.yaml" \
+        -f "$ROOT/backup.docker-compose.yaml" \
+        -f "$ROOT/immich.docker-compose.yaml" \
+        -f "$ROOT/../common/docker-compose.yaml" \
+        --profile restore \
+        up restore
+
+    docker-compose --project-directory="$ROOT" \
+        --env-file "$ROOT/.env" \
+        -f "$ROOT/docker-compose.yaml" \
+        -f "$ROOT/backup.docker-compose.yaml" \
+        -f "$ROOT/immich.docker-compose.yaml" \
+        -f "$ROOT/../common/docker-compose.yaml" \
+        --profile restore \
+        rm -sf restore
+fi
+
 docker-compose --project-directory="$ROOT" \
     --env-file "$ROOT/.env" \
     -f "$ROOT/docker-compose.yaml" \

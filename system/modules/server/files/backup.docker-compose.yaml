@@ -29,5 +29,12 @@ services:
       - prowlarr-data:/volumes/prowlarr-data:ro
       - jellyseerr-data:/volumes/jellyseerr-data:ro
       - kavita-data:/volumes/kavita-data:ro
+      - filebrowser-data:/volumes/filebrowser-data:ro
+      - qbittorrent-data:/volumes/qbittorrent-data:ro
+      - syncthing-data:/volumes/syncthing-data:ro
+      - jellyfin-config:/volumes/jellyfin-data:ro
+      - photoprism-database:/volumes/photoprism-database:ro
+      - netdata-lib:/volumes/netdata-lib:ro
+      - netdata-cache:/volumes/netdata-cache:ro
     secrets:
       - SSH_KEY
