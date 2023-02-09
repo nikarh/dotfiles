@@ -18,6 +18,8 @@ xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
 # Set keybaord/mouse settings after resume from suspend
 ~/.local/bin/dbus-monitor.sh org.powertools Resume ~/.local/bin/init-input-devices.sh&
 ~/.local/bin/dbus-monitor.sh org.freedesktop.login1.Session Unlock ~/.local/bin/init-input-devices.sh&
+# Unlock is not enough for dm-tool lock
+~/.local/bin/dbus-monitor.sh org.freedesktop.login1.Manager SessionRemoved ~/.local/bin/init-input-devices.sh&
 # Listen to xeyboard layout changes
 ~/.local/bin/xkb-switch-dbus.sh&
 

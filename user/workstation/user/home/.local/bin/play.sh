@@ -14,7 +14,7 @@ RUNTIMES="$(cat "$YAML" | "$YQ" '.paths.runtimes' | expand)"
 LIBRARIES="$(cat "$YAML" | "$YQ" '.paths.libraries' | expand)"
 CACHE="$(cat "$YAML" | "$YQ" '.paths.cache' | expand)"
 SHELLS="$(cat "$YAML" | "$YQ" '.paths.shells' | expand)"
-SGDB_TOKEN="$(cat "$(cat "$YAML" | "$YQ" '.paths.shells')" || echo)"
+SGDB_TOKEN="$(cat "$(cat "$YAML" | "$YQ" '.paths.steamgriddb_key')" || echo)"
 
 function file-get {
     curl -s -fLo "$2" --create-dirs "$1"
@@ -37,8 +37,12 @@ function get-steamgriddb-id {
     mkdir -p "$CACHE"
     touch "$CACHE/steamgriddb_ids.json"
 
+    if [[ "$(cat "$YAML" | "$YQ" ".games[\"$1\"].steamgriddb")" == "false" ]]; then
+        return
+    fi
+
     # Try to extract from games.yaml
-    local id="$(cat "$YAML" | "$YQ" ".games[\"$1\"].steamgriddb_id")"
+    local id="$(cat "$YAML" | "$YQ" ".games[\"$1\"].steamgriddb_id // \"\"")"
     if [ -n "$id" ]; then
         echo "$id";
         return
@@ -60,7 +64,7 @@ function get-steamgriddb-id {
     # Try to find in steamgriddb and cache it
     local steamgridb_id="$(curl -s -H "Authorization: Bearer $SGDB_TOKEN" \
         "https://www.steamgriddb.com/api/v2/search/autocomplete/$(printf %s "$1" | jq -s -R -r @uri)" \
-        | jq .data[0].id)"
+        | jq -r '.data[0].id // ""')"
 
     echo "$ids" | jq --arg id "$steamgridb_id" ". + {\"$name\": \$id}" >| "$CACHE/steamgriddb_ids.json"
     echo "$steamgridb_id"
@@ -136,10 +140,14 @@ function sync-to-sunshine {
 
     local CONFIG='{"env": {"PATH": "$(PATH):$(HOME)\/.local\/bin"}, "apps": []}'
 
-    while read line; do
+    while read game; do
         local game_id="$(get-steamgriddb-id "$game")"
 
         if [[ "$(cat "$YAML" | "$YQ" ".games[\"$game\"].sunshine")" == "false" ]]; then
+            continue
+        fi
+
+        if [[ "$(cat "$YAML" | "$YQ" ".games[\"$game\"].steamgriddb")" == "false" ]]; then
             continue
         fi
 
@@ -175,7 +183,7 @@ function create-desktop-files {
     rm -f "$APPS"/*
     mkdir -p "$APPS"
 
-    while read line; do
+    while read game; do
         local game_id="$(get-steamgriddb-id "$game")"
 
         if [[ "$(cat "$YAML" | "$YQ" ".games[\"$game\"].desktop")" == "false" ]]; then
