@@ -44,8 +44,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       # Configs
-      - /var/lib/samba/run.sh:/run.sh:ro
-      - /var/lib/samba/smb.conf:/etc/samba/smb-base.conf
+      - /var/lib/docker-services/volumes/samba/run.sh:/run.sh:ro
+      - /var/lib/docker-services/volumes/samba/smb.conf:/etc/samba/smb-base.conf
       # Data
       - /var/data/home:/home
   sftpd:
@@ -57,12 +57,12 @@ services:
     entrypoint: /run.sh
     volumes:
       # Configs
-      - /var/lib/sftpd/secrets/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
-      - /var/lib/sftpd/secrets/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key:ro
-      - /var/lib/sftpd/sshd_config:/etc/ssh/sshd_config:ro
-      - /var/lib/sftpd/run.sh:/run.sh:ro
-      - /var/lib/sftpd/authelia.sh:/authelia.sh:ro
-      - /var/lib/sftpd/base-auth:/etc/pam.d/base-auth:ro
+      - /var/lib/docker-services/volumes/sftpd/secrets/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
+      - /var/lib/docker-services/volumes/sftpd/secrets/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key:ro
+      - /var/lib/docker-services/volumes/sftpd/sshd_config:/etc/ssh/sshd_config:ro
+      - /var/lib/docker-services/volumes/sftpd/run.sh:/run.sh:ro
+      - /var/lib/docker-services/volumes/sftpd/authelia.sh:/authelia.sh:ro
+      - /var/lib/docker-services/volumes/sftpd/base-auth:/etc/pam.d/base-auth:ro
       # Data
       - /var/data/home:/home
   homer:
@@ -71,7 +71,7 @@ services:
     << : *service-defaults
     user: '1000:1000'
     volumes:
-      - /var/lib/homer:/www/assets:ro
+      - /var/lib/docker-services/volumes/homer:/www/assets:ro
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.homer.rule=Host(`home.arhipov.net`)'
@@ -83,7 +83,7 @@ services:
     user: 1000:1000
     volumes:
       - /var/data/home:/srv
-      - /var/lib/filebrowser:/data
+      - filebrowser-data:/mnt
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.files.loadbalancer.server.port=8080'
@@ -91,9 +91,9 @@ services:
       - 'traefik.http.routers.files.entrypoints=https'
       - 'traefik.http.routers.files.middlewares=authelia@docker'
     command: 
-      - "--cache-dir=/data/cache"
-      - "-d=/data/filebrowser.db"
-      - "-c=/data/filebrowser.json"
+      - "--cache-dir=/mnt/data/cache"
+      - "-d=/mnt/data/filebrowser.db"
+      - "-c=/mnt/data/filebrowser.json"
       - "-p=8080"
   qbittorrent:
     image: linuxserver/qbittorrent
@@ -329,8 +329,8 @@ services:
     volumes:
       - netdata-lib:/var/lib/netdata
       - netdata-cache:/var/cache/netdata
-      - /var/lib/netdata/netdata.conf:/etc/netdata/netdata.conf:ro
-      - /var/lib/netdata/cloud.conf:/var/lib/netdata/cloud.d/cloud.conf:ro
+      - /var/lib/docker-services/volumes/netdata/netdata.conf:/etc/netdata/netdata.conf:ro
+      - /var/lib/docker-services/volumes/netdata/cloud.conf:/var/lib/netdata/cloud.d/cloud.conf:ro
       - /etc/passwd:/host/etc/passwd:ro
       - /etc/group:/host/etc/group:ro
       - /proc:/host/proc:ro
