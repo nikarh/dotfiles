@@ -273,7 +273,7 @@ function run-wine {
     while read line; do
         local from="$(cat "$YAML" | $YQ ".games[\"$GAME\"].mounts[\"$line\"]")"
         ln -sf "$from" "$WINEPREFIX/dosdevices/${line}:"
-    done <<< "$(cat "$YAML" | $YQ ".games[\"$GAME\"].mounts[] | key")"
+    done <<< "$(cat "$YAML" | $YQ '.games["'"$GAME"'"].mounts[] | key')"
 
     # Install libraries for games
     local system32="$WINEPREFIX/drive_c/windows/system32"
@@ -286,7 +286,7 @@ function run-wine {
             echo Installing $line...
             find "$LIBRARIES/$line/$version/" -maxdepth 1 -name "*.sh" -type f -exec {} install \;
         fi
-    done <<< "$(cat "$YAML" | $YQ ".libraries[] | key")"
+    done <<< "$(cat "$YAML" | $YQ '.libraries[] | key')"
 
     # Enable nvidia DLSS 2.0, this comes with nvidia-utils
     if [ -f /usr/lib/nvidia/wine/nvngx.dll ]; then
