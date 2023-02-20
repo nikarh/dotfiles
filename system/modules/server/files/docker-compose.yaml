@@ -259,7 +259,9 @@ services:
       - 'traefik.http.services.kavita.loadbalancer.server.port=5000'
       - 'traefik.http.routers.kavita.rule=Host(`kavita.${DOMAIN}`)'
       - 'traefik.http.routers.kavita.entrypoints=https'
-      - 'traefik.http.routers.kavita.middlewares=authelia@docker'
+      # Has it's own auth
+      # - 'traefik.http.routers.photoprism.middlewares=authelia@docker'
+
   photoprism:
     image: photoprism/photoprism:latest
     container_name: photoprism

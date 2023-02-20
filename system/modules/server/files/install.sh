@@ -17,7 +17,7 @@ sudo cp -ufrTv "$ROOT/root/usr/" /usr
 sudo cp -ufrTv "$ROOT/root/var/" /var
 
 # TODO: Move to init container?
-sudo chmod 600 /var/lib/sftpd/secrets/ssh*
+sudo chmod 600 /var/lib/docker-services/volumes/sftpd/secrets/ssh*
 
 # Append bind mounts
 sudo mkdir -p /var/data/{shares,home}
