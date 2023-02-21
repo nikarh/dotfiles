@@ -10,9 +10,9 @@ secrets:
   SSH_KEY:
     file: ../common/docker/secrets/backup_rsa
 services:
-  backup:
+  volume-backup:
     build: ../common/docker/backup
-    container_name: backup
+    container_name: volume-backup
     << : *service-defaults
     environment:
       BUCKET: ${DOMAIN}
