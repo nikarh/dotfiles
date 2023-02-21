@@ -127,6 +127,7 @@ assign [instance="^open.spotify.com.*"] $ws7
 assign [class="Audacious"] $ws7
 assign [instance="zoom"] $ws8
 assign [class="Chromium"] $ws2
+assign [class="MongoDB Compass"] $ws9
 
 for_window [title="Picture-in-Picture"] sticky enable
 for_window [class="jetbrains-toolbox"] floating enable
