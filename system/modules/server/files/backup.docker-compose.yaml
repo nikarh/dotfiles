@@ -36,5 +36,8 @@ services:
       - photoprism-database:/volumes/photoprism-database:ro
       - netdata-lib:/volumes/netdata-lib:ro
       - netdata-cache:/volumes/netdata-cache:ro
+      - mail-data:/volumes/mail-data:ro
+      - roundcube-db:/volumes/roundcube-db:ro
+      - immich-db-data:/volumes/immich-db-data:ro
     secrets:
       - SSH_KEY

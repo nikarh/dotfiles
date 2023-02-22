@@ -65,7 +65,7 @@ access_control:
       policy: bypass
       networks:
         - internal
-    - domain_regex: '^(traefik|torrents|netdata|readarr|prowlarr|sonarr|radarr|bazarr|jellyseerr|kavita|immich)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
+    - domain_regex: '^(traefik|torrents|netdata|readarr|prowlarr|sonarr|radarr|bazarr|jellyseerr|kavita|immich|mail)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
       policy: bypass
       networks:
         - internal
