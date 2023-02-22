@@ -1,0 +1,27 @@
+version: '3.5'
+x-arr-env: &arr_env
+  PGID: 1000
+  PUID: 1000
+  TZ: Europe/Riga
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+  healthcheck:
+    disable: true
+secrets:
+  IMAP_AUTH:
+    file: ./docker/secrets/imap.env
+services:
+  imapsync:
+    build: docker/imapsync
+    container_name: imapsync
+    << : *service-defaults
+    user: 911:1000
+    volumes:
+      - /var/data/shares/nikarh/Backup/mail:/mail
+    secrets:
+      - IMAP_AUTH

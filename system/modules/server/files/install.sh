@@ -46,31 +46,14 @@ sudo systemctl enable reduce-power-usage
 
 docker-compose --project-directory="$ROOT" \
     --env-file "$ROOT/.env" \
+    -f "$ROOT/docker-compose.yaml" \
+    -f "$ROOT/mail.docker-compose.yaml" \
     build
-
-if [[ "$RESTORE" == "true" ]]; then
-    docker-compose --project-directory="$ROOT" \
-        --env-file "$ROOT/.env" \
-        -f "$ROOT/docker-compose.yaml" \
-        -f "$ROOT/backup.docker-compose.yaml" \
-        -f "$ROOT/immich.docker-compose.yaml" \
-        -f "$ROOT/../common/docker-compose.yaml" \
-        --profile restore \
-        up restore
-
-    docker-compose --project-directory="$ROOT" \
-        --env-file "$ROOT/.env" \
-        -f "$ROOT/docker-compose.yaml" \
-        -f "$ROOT/backup.docker-compose.yaml" \
-        -f "$ROOT/immich.docker-compose.yaml" \
-        -f "$ROOT/../common/docker-compose.yaml" \
-        --profile restore \
-        rm -sf restore
-fi
 
 docker-compose --project-directory="$ROOT" \
     --env-file "$ROOT/.env" \
     -f "$ROOT/docker-compose.yaml" \
+    -f "$ROOT/mail.docker-compose.yaml" \
     -f "$ROOT/backup.docker-compose.yaml" \
     -f "$ROOT/immich.docker-compose.yaml" \
     -f "$ROOT/../common/docker-compose.yaml" \
