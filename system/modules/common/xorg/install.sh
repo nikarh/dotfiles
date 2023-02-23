@@ -18,7 +18,8 @@ pkg i3-wm i3status-rust i3lock-color betterlockscreen \
     dunst rofi rofi-calc rofi-emoji
 
 # GUI applications
-pkg alacritty \
+# glib hardcodes terminals https://github.com/GNOME/glib/blob/main/gio/gdesktopappinfo.c#L2692
+pkg alacritty xterm-alacritty-symlink \
     eom xarchiver gsimplecal \
     chromium chromium-widevine firefox vdhcoapp-bin torbrowser-launcher \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \

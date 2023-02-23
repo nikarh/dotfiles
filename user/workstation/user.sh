@@ -27,8 +27,6 @@ section "Setting default gtk terminal to alacritty..."
 gsettings set org.gnome.desktop.default-applications.terminal exec alacritty
 gsettings set org.gnome.desktop.default-applications.terminal exec-arg -e
 gsettings set org.gnome.desktop.interface font-name "Noto Sans 12"
-# glib hardcodes terminals https://github.com/GNOME/glib/blob/main/gio/gdesktopappinfo.c#L2692
-ln -sf /usr/bin/alacritty ~/.local/bin/xterm
 
 section "Setting xdg defaults..."
 xdg-mime default thunar.desktop inode/directory
