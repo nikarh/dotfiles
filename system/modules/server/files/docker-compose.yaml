@@ -65,22 +65,6 @@ services:
       - /var/lib/docker-services/volumes/sftpd/base-auth:/etc/pam.d/base-auth:ro
       # Data
       - /var/data/home:/home
-  gdrive-backup:
-    image: rclone/rclone
-    container_name: gdrive-backup
-    << : *service-defaults
-    user: 911:1000
-    entrypoint: ""
-    volumes:
-      - /var/lib/docker-services/volumes/rclone:/config/rclone
-      - /var/data/shares/nikarh/Backup:/backup
-    command: >
-      sh -c '
-        while true; do
-          rclone sync gdrive: "/backup/Google Drive";
-          sleep 1h;
-        done
-      '
   homer:
     image: b4bz/homer
     container_name: homer

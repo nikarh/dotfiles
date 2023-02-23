@@ -41,3 +41,39 @@ services:
       - immich-db-data:/volumes/immich-db-data:ro
     secrets:
       - SSH_KEY
+
+  # Backup google drive to home server
+  gdrive-backup-from:
+    build: ./docker/rclone
+    container_name: gdrive-backup-from
+    << : *service-defaults
+    user: 911:1000
+    entrypoint: ""
+    volumes:
+      - /var/lib/docker-services/volumes/rclone:/config/rclone
+      - /var/data/shares/nikarh/Backup:/backup
+    command: >
+      sh -c '
+        while true; do
+          rclone -vv sync gdrive-ro: "/backup/Google Drive" --exclude "/BACKUP/**";
+          sleep 1h;
+        done
+      '
+  # Backup documents to google drive
+  gdrive-backup-to:
+    build: ./docker/rclone
+    container_name: gdrive-backup-to
+    << : *service-defaults
+    user: 911:1000
+    entrypoint: ""
+    volumes:
+      - /var/lib/docker-services/volumes/rclone:/config/rclone
+      - /var/data/shares/nikarh/Backup:/backup
+    command: >
+      sh -c '
+        rclone -vv sync "/backup/Documents" gdrive-rw:/BACKUP/;
+        inotifywait -qmr -t 43200 /backup/Documents | while read -r file ; do
+          echo "Debouncing $(timeout 5 cat | wc -l) further changes";
+          rclone -vv sync "/backup/Documents" gdrive-rw:/BACKUP/;
+        done
+      '
