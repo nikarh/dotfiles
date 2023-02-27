@@ -6,4 +6,4 @@ if [ -n "$ARGS_gui" ]; then
     pkg nm-connection-editor network-manager-applet
 fi
 
-sudo systemctl enable NetworkManager
+enable-service NetworkManager

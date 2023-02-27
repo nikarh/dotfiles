@@ -2,6 +2,7 @@ plugins:
   - pacman
   - initrd
   - groups
+  - systemd
 modules:
   - name: common/base
     hostname: rpi2b

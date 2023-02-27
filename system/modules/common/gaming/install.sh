@@ -17,13 +17,12 @@ if [ -n "$ARGS_streaming" ]; then
     pkg cuda
 fi
 
-
 if [ -n "$ARGS_user" ]; then
     sudo useradd -m -g games -G nopasswdlogin,bluetooth,input,audio,video "$ARGS_user" 2>/dev/null || true
     sudo mkdir -p /srv/games
     # sudo chown games:games /src/games
     # sudo chmod g+s games/
-    sudo setfacl -d -Rm g:games:rwX /srv/games
+    # sudo setfacl -d -Rm g:games:rwX /srv/games
 fi
 
 add-user-to-groups games

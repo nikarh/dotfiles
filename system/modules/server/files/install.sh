@@ -39,10 +39,10 @@ sudo systemctl daemon-reload
 sudo mount -a
 
 # Start services
-sudo systemctl enable systemd-networkd
-sudo systemctl enable sshd
-sudo systemctl enable fancontrol
-sudo systemctl enable reduce-power-usage
+enable-service systemd-networkd
+enable-service sshd
+enable-service fancontrol
+enable-service reduce-power-usage
 
 docker-compose --project-directory="$ROOT" \
     --env-file "$ROOT/.env" \

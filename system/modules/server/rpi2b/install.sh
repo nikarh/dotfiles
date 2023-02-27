@@ -2,7 +2,7 @@
 
 sudo cp -ufrTv "$ROOT/root/" /
 
-sudo systemctl enable --now disable-leds
+enable-service --now disable-leds
 
 docker-compose --project-directory="$ROOT" \
     --env-file "$ROOT/.env" \

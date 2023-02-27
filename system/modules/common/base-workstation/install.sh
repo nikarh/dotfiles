@@ -12,4 +12,4 @@ add-user-to-groups \
     uucp `# serial port`
 
 # Enable units
-sudo systemctl enable sleep-dbus-signal
+enable-service sleep-dbus-signal

@@ -3,5 +3,5 @@
 # Copy all configs to root
 sudo cp -ufrTv "$ROOT/root/" /
 
-sudo systemctl enable wakeup-disable-GPP0
+enable-service wakeup-disable-GPP0
 

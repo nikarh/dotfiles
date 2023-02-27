@@ -20,8 +20,8 @@ sudo timedatectl set-timezone "$ARGS_timezone"
 sudo timedatectl set-ntp true
 
 # Enable units
-sudo systemctl enable --now earlyoom
-sudo systemctl enable --now systemd-timesyncd
-sudo systemctl enable --now systemd-swap
+enable-service --now earlyoom
+enable-service --now systemd-timesyncd
+enable-service --now systemd-swap
 
 add-user-to-groups systemd-journal

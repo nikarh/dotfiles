@@ -2,6 +2,7 @@
 
 if [[ -n "$DEBUG" ]]; then
     set -x
+    export WINEDEBUG=warn+all
 else 
     export WINEDEBUG=-all
 fi
@@ -280,7 +281,7 @@ function run-wine {
     while read line; do
         if [ -z "$line" ]; then continue; fi
         if ! grep -Fxq "$line" "$WINEPREFIX/.winetricks"; then
-            winetricks $line
+            winetricks -q $line
             echo "$line" >> "$WINEPREFIX/.winetricks"
         fi
     done <<< "$(cat "$YAML" | $YQ ".games[\"$GAME\"].winetricks[]")"

@@ -41,14 +41,14 @@ pkg lxappearance-gtk3 qt5ct qt6ct kvantum-theme-arc  \
 sudo cp -ufrTv "$ROOT/root/" /
 
 # Systemd units
-sudo systemctl enable autorandr.service
-sudo systemctl disable getty@tty1.service 
+enable-service autorandr.service
+disable-service getty@tty1.service 
 
 if pacman -Qi plymouth > /dev/null 2>&1; then
-    sudo systemctl disable lightdm.service > /dev/null
-    sudo systemctl enable lightdm-plymouth.service
+    disable-service lightdm.service > /dev/null
+    enable-service lightdm-plymouth.service
 else
-    sudo systemctl disable lightdm-plymouth.service
-    sudo systemctl enable lightdm.service
+    disable-service lightdm-plymouth.service
+    enable-service lightdm.service
 fi
 

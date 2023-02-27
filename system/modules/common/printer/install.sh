@@ -10,5 +10,5 @@ fi
 # Copy all configs to root
 sudo cp -ufrTv "$ROOT/root/" /
 
-sudo systemctl enable cups
+enable-service cups
 add-user-to-groups lp

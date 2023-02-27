@@ -2,4 +2,4 @@
 
 pkg localtime-git
 
-sudo systemctl enable localtime.service
+enable-service localtime.service
