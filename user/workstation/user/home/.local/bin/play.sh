@@ -1,4 +1,10 @@
-#!/usr/bin/bash -ex
+#!/usr/bin/bash -e
+
+if [[ -n "$DEBUG" ]]; then
+    set -x
+else 
+    export WINEDEBUG=-all
+fi
 
 cd "$(dirname "$(readlink -f "$0")")" || exit
 
@@ -22,7 +28,7 @@ function file-get {
 
 function release {
     local version="$2"
-    local res=$(curl -s "https://api.github.com/repos/$1/releases/$([[ "$2" != "latest" ]] && echo "tag/")$2")
+    local res=$(curl -s "https://api.github.com/repos/$1/releases/$([[ "$2" != "latest" ]] && echo "tags/")$2")
 
     echo $(echo "$res" | jq -r '.tag_name')
     echo $(echo "$res" | jq -r '.assets[].browser_download_url' | grep "$3" | head -n 1)
@@ -88,7 +94,6 @@ function install-release {
     if [[ "$2" == "latest" ]]; then
         ln -sf "$4/$version" "$4/latest"
     fi
-
 }
 
 function prepare-runtime {
@@ -96,13 +101,22 @@ function prepare-runtime {
 }
 
 function prepare-library {
-    local version="$(cat "$YAML" | "$YQ" ".libraries[\"$1\"] // \"\"")"
-    if [ -n "$version" ]; then
-        install-release "$2" "$version" "$3" "$LIBRARIES/$1"
+    local version="$(cat "$YAML" | "$YQ" ".libraries[\"$1\"].version // \"\"")"
+    local source="$(cat "$YAML" | "$YQ" ".libraries[\"$1\"].source // \"\"")"
+    if [ -z "$version" ]; then
+        return
+    fi
 
-        if [ -n "$4" ] && ! [ -f "$LIBRARIES"/$1/$version/setup_$1.sh ]; then
-            file-get "$4" "$LIBRARIES"/$1/$version/setup_$1.sh
-        fi
+    if [ -z "$source" ]; then
+        install-release "$2" "$version" "$3" "$LIBRARIES/$1"
+    else
+        local path="$LIBRARIES/$1/${source##*/}"
+        file-get "$source" "$path"
+        untar "$path" "$LIBRARIES/$1/$version"
+    fi
+
+    if [ -n "$4" ] && ! [ -f "$LIBRARIES"/$1/$version/setup_$1.sh ]; then
+        file-get "$4" "$LIBRARIES"/$1/$version/setup_$1.sh
     fi
 }
 
@@ -115,7 +129,7 @@ function prepare-libaries {
     prepare-library dxvk-nvapi   jp7677/dxvk-nvapi              ".*\.tar\.gz$" "https://aur.archlinux.org/cgit/aur.git/plain/setup_dxvk_nvapi.sh?h=dxvk-nvapi-mingw"
     prepare-library vkd3d-proton HansKristian-Work/vkd3d-proton ".*\.tar\.zst$"
 
-    chmod +x "$LIBRARIES"/*/*/*.sh
+    find "$LIBRARIES" -name "*.sh" -type f -exec chmod +x {} \;
 }
 
 function prepare-winetricks {
@@ -231,25 +245,27 @@ function run-wine {
     local RUNTIME=$(cat "$YAML" | "$YQ" '.runtime // "latest"')
     local WINE="$RUNTIMES/$RUNTIME"
 
-    prepare-runtime
+    prepare-runtime "$RUNTIME"
     prepare-libaries
 
     eval "$(cat "$YAML" | "$YQ" -o p '.env' | sed -r 's/([^ ]+) = (.*)/export \1="\2"/')" > /dev/null
 
-    local PREFIX="$(cat "$YAML" | "$YQ" ".games[\"$GAME\"].prefix")"
-    local GAME_DIR="$(cat "$YAML" | "$YQ" ".games[\"$GAME\"].dir")"
+    local NAME="$(cat "$YAML" | "$YQ" ".games[\"$GAME\"].name")"
+    local PREFIX="$(cat "$YAML" | "$YQ" ".games[\"$GAME\"].prefix // \"$NAME\"")"
     local GAME_EXE="$(cat "$YAML" | "$YQ" ".games[\"$GAME\"].run")"
 
     eval "$(cat "$YAML" | "$YQ" -o p ".games[\"$GAME\"].env" | sed -r 's/([^ ]+) = (.*)/export \1="\2"/')" > /dev/null
 
     export PATH="$WINE/bin:$PATH"
     export WINEPREFIX="$PREFIXES/$PREFIX"
+    export WINEDLLOVERRIDES="winemenubuilder.exe="
+
+    local GAME_DIR="$(cat "$YAML" | "$YQ" ".games[\"$GAME\"].dir // \"$WINEPREFIX/drive_c\"")"
 
     # Init prefix
     if [ ! -d "$WINEPREFIX" ]; then
         echo Initializing prefix
-        WINEDLLOVERRIDES=winemenubuilder.exe=d \
-            wine __INITPREFIX > /dev/null 2>&1 || true
+        wine __INITPREFIX > /dev/null 2>&1 || true
         wineserver --wait
     fi
 
@@ -272,19 +288,28 @@ function run-wine {
     # Mounts
     while read line; do
         local from="$(cat "$YAML" | $YQ ".games[\"$GAME\"].mounts[\"$line\"]")"
-        ln -sf "$from" "$WINEPREFIX/dosdevices/${line}:"
+        ln -Tsf "$from" "$WINEPREFIX/dosdevices/${line}:"
     done <<< "$(cat "$YAML" | $YQ '.games["'"$GAME"'"].mounts[] | key')"
 
     # Install libraries for games
     local system32="$WINEPREFIX/drive_c/windows/system32"
 
     while read line; do
-        local version="$(cat "$YAML" | "$YQ" ".libraries[\"$line\"]")"
-        local dll="$(find "$LIBRARIES/$line/$version/x64" -name "*.dll" | head -n 1)"
+        local version="$(cat "$YAML" | "$YQ" ".libraries[\"$line\"].version")"
+
+        # FIXME: Ugly hack for dxvk-async 2.1
+        local dll="$(find "$LIBRARIES/$line/$version/x64" -name "*.dll" -not -name '*_config.dll' | head -n 1)"
         
         if ! diff -q "$system32/${dll##*/}" "$dll"; then
             echo Installing $line...
-            find "$LIBRARIES/$line/$version/" -maxdepth 1 -name "*.sh" -type f -exec {} install \;
+
+            # FIXME: Ugly hack for dxvk-async 2.1
+            local command=install
+            if [[ "$line/$version" == "dxvk-async/fork-2.1" ]]; then
+                command=""
+            fi
+
+            find "$LIBRARIES/$line/$version/" -maxdepth 2 -name "*.sh" -type f -exec {} $command \;
         fi
     done <<< "$(cat "$YAML" | $YQ '.libraries[] | key')"
 
@@ -302,10 +327,17 @@ function run-wine {
         cp "$LIBRARIES/nvcuda/nvcuda32.dll" "$WINEPREFIX/drive_c/windows/syswow64/nvcuda.dll"
     fi
 
+    # Before scripts
+    while read line; do
+        if [ -z "$line" ]; then continue; fi
+        $line
+    done <<< "$(cat "$YAML" | $YQ ".games[\"$GAME\"].before[]")"
+
     wineserver --wait
 
     cd "$GAME_DIR"
     gamemoderun mangohud wine "$GAME_EXE" ${@:2} $(cat "$YAML" | "$YQ" ".games[\"$GAME\"].args[]")
+    wineserver --wait
 
     if [[ "$(cat "$YAML" | $YQ ".games[\"$GAME\"].cleanup")" != "false" ]]; then
         wineserver -k
