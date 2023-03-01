@@ -4,7 +4,7 @@ require-arg "hostname"
 require-arg "timezone"
 
 # Base
-pkg base pacman
+pkg base pacman sudo
 
 # Always install these tools
 pkg "$ARGS_kernel" "${ARGS_kernel}-headers" linux-firmware \

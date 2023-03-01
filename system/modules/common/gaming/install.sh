@@ -3,6 +3,8 @@
 # Copy all configs to root
 sudo cp -ufrTv "$ROOT/root/" /
 
+pkg cemu
+
 # Prevents sleep on gamepad inputs
 pkg joystickwake
 # Improves performance and prevents sleep
