@@ -24,8 +24,8 @@ xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
 ~/.local/bin/xkb-switch-dbus.sh&
 
 # Lock on suspend
-#~/.local/bin/dbus-monitor.sh org.powertools Suspend ~/.local/bin/lock.sh&
-light-locker &
+~/.local/bin/dbus-monitor.sh org.powertools Suspend ~/.local/bin/lock.sh&
+#light-locker &
 
 # Restart CUDA apps and nvidia_uvm on resume from sleep
 ~/.local/bin/cuda-app-restart.sh init
