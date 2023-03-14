@@ -3,6 +3,7 @@ plugins:
   - initrd
   - groups
   - systemd
+  - reboot-watcher
 modules:
   - name: common/yay
   - name: common/base

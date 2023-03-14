@@ -7,19 +7,35 @@ idle_fg = "#738694"
 separator_bg = "#282A36"
 separator_fg = "#30404D"
 warning_bg = "#282A36"
-warning_fg = "#D9822B"
+warning_fg = "#e5a96e"
 critical_bg = "#282A36"
-critical_fg= "#A82A2A"
+critical_fg = "#db6e6e"
 info_bg = "#282A36"
 info_fg = "#CED9E0"
 
 [icons]
 icons = "awesome4"
+[icons.overrides]
+docker = "\uf308"
+update = "󰏕"
+disk_drive = "󰋊"
+memory_mem = "\uf85a"
+microphone = "󰍬"
+headphones = "󰋋"
+
+[[block]]
+block = "custom"
+hide_when_empty = true
+command = """Z
+    test -f "/tmp/reboot-indicator" && echo "\uf021 Reboot" || echo ""
+"""
+[block.theme_overrides]
+idle_fg = "#CED9E0"
 
 [[block]]
 block = "pacman"
 format = " $icon $pacman.eng(w:1)/$aur.eng(w:1) "
-format_up_to_date = " \uf219 "
+format_up_to_date = ""
 interval = 3600
 aur_command = "yay -Qua"
 
@@ -50,3 +66,51 @@ command = "date +\"%a %d %b %R %:::z\""
 [[block]]
 block = "custom_dbus"
 path = "/CurrentKeyboardLayout"
+
+[[block]]
+block = "custom"
+json = true
+persistent = true
+command = """
+    (echo change && pactl subscribe) | stdbuf -oL -eL grep -E change\\|source | while read line; do
+        pactl -f json list sources \
+        | jq -r '.[] 
+            | select(.name=="'$(pactl get-default-source)'")
+            | (.properties."alsa.card_name")
+                 + " " + (.properties."device.profile.description")
+                 + " " + (.properties."media.name")' \
+        | awk '{$1=$1};1' \
+        | sed 's/Mic In //g' \
+        | jq -R -c '{
+            text: .,
+            icon: "microphone",
+            state: (if . == "" then "idle" elif '$(pactl list source-outputs short | grep -q '[^\\s]' && echo true || echo false)' then "critical" else "info" end)
+        }'
+    done
+"""
+[[block.click]]
+button = "left"
+cmd = "/home/nikarh/.local/bin/padevice.sh in"
+
+[[block]]
+block = "custom"
+json = true
+persistent = true
+command = """
+    (echo change && pactl subscribe) | stdbuf -oL -eL grep -E change\\|sink | while read line; do
+        pactl -f json list sinks \
+            | jq -r '.[] 
+                | select(.name=="'$(pactl get-default-sink)'")
+                | (.properties."alsa.card_name")
+                    + " " + (.properties."media.name")' \
+            | awk '{$1=$1};1' \
+            | jq -R -c '{
+                text: .,
+                icon: "headphones",
+            state: (if . == "" then "idle" elif '$(pactl list sink-inputs short | grep -q '[^\\s]' && echo true || echo false)' then "critical" else "info" end)
+            }'
+    done
+"""
+[[block.click]]
+button = "left"
+cmd = "/home/nikarh/.local/bin/padevice.sh out"
