@@ -3,6 +3,12 @@
 while true
 do
     LAYOUT="$(xkb-switch)"
-    busctl --user call i3.status.rs /CurrentKeyboardLayout i3.status.rs SetStatus s $LAYOUT
+    if echo "$LAYOUT" | grep -qv "lv\|ru"; then
+        "$HOME"/.local/bin/init-input-devices.sh
+        LAYOUT="$(xkb-switch)"
+    fi
+
+    busctl --user call rs.i3status /CurrentKeyboardLayout rs.i3status.custom SetText ss "$LAYOUT" "$LAYOUT"
+
     xkb-switch -w
 done

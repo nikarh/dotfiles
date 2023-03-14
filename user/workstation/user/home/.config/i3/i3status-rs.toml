@@ -1,5 +1,5 @@
 [theme]
-name = "plain"
+theme = "plain"
 [theme.overrides]
 separator = ""
 idle_bg = "#282A36"
@@ -14,44 +14,39 @@ info_bg = "#282A36"
 info_fg = "#CED9E0"
 
 [icons]
-name = "awesome"
-[icons.overrides]
-time = ""
+icons = "awesome4"
 
 [[block]]
 block = "pacman"
-format = "{pacman:1}/{aur:1}"
+format = " $icon $pacman.eng(w:1)/$aur.eng(w:1) "
+format_up_to_date = " \uf219 "
 interval = 3600
 aur_command = "yay -Qua"
 
 [[block]]
 block = "docker"
 interval = 2
-format = "{running:1}/{total:1}"
+format = " $icon $running.eng(w:1)/$total.eng(w:1) "
 
 [[block]]
 block = "disk_space"
 path = "/"
-alias = ""
 info_type = "available"
-format = "{alias} {available:3}"
-unit = "GB"
+format = " $icon $available "
 interval = 20
 warning = 3.0
 alert = 1.0
 
 [[block]]
 block = "memory"
-display_type = "memory"
-format_mem = "{mem_avail:4;G}"
-clickable = false
+format = " $icon $mem_avail "
 
 [[block]]
 block = "custom"
 interval = 2
+format = " $text "
 command = "date +\"%a %d %b %R %:::z\""
 
 [[block]]
 block = "custom_dbus"
-name = "CurrentKeyboardLayout"
-initial_text = "lv"
+path = "/CurrentKeyboardLayout"
