@@ -1,5 +1,25 @@
 #!/usr/bin/env bash
 
+LIST_CMD="list sinks"
+SELECT_CMD=set-default-sink
+SELECTED_CMD="get-default-sink"
+PROMPT=Output
+
+case $1 in
+  sink|o|out|output|"")
+    ;;
+  source|i|in|input)
+    LIST_CMD="list sources"
+    SELECT_CMD=set-default-source
+    SELECTED_CMD="get-default-source"
+    PROMPT=Input
+    ;;
+  *)
+    echo 'Invalid argument, provide either (source|i|in|input) or (sink|o|out|output)'
+    exit 1
+    ;;
+esac
+
 if test -t 0; then
   SELECTED_COLOR="\033[1;32m"
   FAINT_COLOR="\033[2m"
@@ -9,26 +29,8 @@ else
   SELECTED_COLOR='<span weight=\"bold\">'
   FAINT_COLOR='<span foreground=\"gray\">'
   ENDCOLOR='</span>'
-  DMENU="rofi -dmenu -markup-rows -i -no-custom"
+  DMENU="rofi -dmenu -markup-rows -i -no-custom -p $PROMPT"
 fi
-
-LIST_CMD="list sinks"
-SELECT_CMD=set-default-sink
-SELECTED_CMD="get-default-sink"
-
-case $1 in
-  sink|o|out|output|"")
-    ;;
-  source|i|in|input)
-    LIST_CMD="list sources"
-    SELECT_CMD=set-default-source
-    SELECTED_CMD="get-default-source"
-    ;;
-  *)
-    echo 'Invalid argument, provide either (source|i|in|input) or (sink|o|out|output)'
-    exit 1
-    ;;
-esac
 
 CURRENT="$(pactl $SELECTED_CMD)"
 

@@ -8,6 +8,14 @@ do
         LAYOUT="$(xkb-switch)"
     fi
 
+    if [[ "$LAYOUT" == "en" ]]; then
+        LAYOUT="🇺🇸"
+    elif [[ "$LAYOUT" == "lv" ]]; then
+        LAYOUT="🇱🇻"
+    elif [[ "$LAYOUT" == "ru" ]]; then
+        LAYOUT="🇷🇺"
+    fi
+
     busctl --user call rs.i3status /CurrentKeyboardLayout rs.i3status.custom SetText ss "$LAYOUT" "$LAYOUT"
 
     xkb-switch -w
