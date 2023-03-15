@@ -49,18 +49,6 @@ set hidden            " Do not force buffer saving when switching
 set autochdir         " Change directory to the one edited file is in
 
 let g:solarized_termtrans=1
-colorscheme solarized
-set background=dark
-
-if has('gui_running')
-    set background=light
-    set guifont=Hack\ 12
-
-    set guioptions-=m  "remove menu bar
-    set guioptions-=T  "remove toolbar
-    set guioptions-=r  "remove right-hand scroll bar
-    set guioptions-=L  "remove left-hand scroll bar
-endif
 
 highlight clear SignColumn
 

@@ -42,7 +42,7 @@ default_floating_border pixel 1
 bindsym $mod+Shift+q kill
 bindsym $mod+Return exec "LANG=en alacritty -t Terminal"
 bindsym $mod+c exec --no-startup-id "rofi -combi-modi window,drun -show combi -modi combi"
-bindsym $mod+x exec --no-startup-id "rofi -show run -terminal alacritty -font"
+bindsym $mod+x exec --no-startup-id "MODE_SWITCHER=true rofi -show run -terminal alacritty -font"
 bindsym $mod+g exec --no-startup-id "rofi -modi emoji -show emoji"
 
 # change focus
@@ -131,6 +131,9 @@ assign [class="MongoDB Compass"] $ws9
 
 for_window [title="Picture-in-Picture"] sticky enable
 for_window [class="jetbrains-toolbox"] floating enable
+
+for_window [urgent="latest" class="KeePassXC"] focus
+for_window [urgent="latest" class="Slack"] focus
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1

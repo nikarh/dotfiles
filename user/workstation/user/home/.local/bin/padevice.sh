@@ -9,7 +9,7 @@ else
   SELECTED_COLOR='<span weight=\"bold\">'
   FAINT_COLOR='<span foreground=\"gray\">'
   ENDCOLOR='</span>'
-  DMENU="rofi -dmenu -markup-rows -i"
+  DMENU="rofi -dmenu -markup-rows -i -no-custom"
 fi
 
 LIST_CMD="list sinks"

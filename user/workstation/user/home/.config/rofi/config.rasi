@@ -7,37 +7,9 @@ configuration {
     terminal: "alacritty";
     ssh-client: "ssh";
     ssh-command: "{terminal} -e {ssh-client} {host}";
-    /*	run-command: "{cmd}";*/
-    /*	run-list-command: "";*/
-    /*	run-shell-command: "{terminal} -e {cmd}";*/
-    /*	window-command: "xkill -id {window}";*/
-    /*	window-match-fields: "all";*/
-    /*	drun-icon-theme: ;*/
-    /*	disable-history: false;*/
-    /*	sort: false;*/
-    /*  levenshtein-sort: true; */
-    /*	case-sensitive: false;*/
-    /*	cycle: true;*/
-    /*	eh: 1;*/
-    /*	auto-select: false;*/
-    /*	parse-hosts: false;*/
-    /*	parse-known-hosts: true;*/
-    /*  matching: "fuzzy";*/
-    /*	tokenize: true;*/
-    /*	m: "-5";*/
-    /*	line-margin: 2;*/
-    /*	line-padding: 1;*/
-    /*	filter: ;*/
-    /*	separator-style: "dash";*/
-    /*	hide-scrollbar: false;*/
-    /*	fullscreen: false;*/
-    /*	fake-transparency: false;*/
-    /*	dpi: -1;*/
-    /*	threads: 0;*/
-    /*	scrollbar-width: 8;*/
-    /*	scroll-method: 0;*/
-    /*	fake-background: "screenshot";*/
-    /*	window-format: "{w}    {i}{c}   {t}";*/
-    /*	click-to-exit: true;*/
-    /*	show-match: true;*/
-    }    
+
+    kb-mode-next: "Tab";
+    kb-mode-previous: "ISO_Left_Tab";
+    kb-element-next: "";
+    kb-element-prev: "";
+}

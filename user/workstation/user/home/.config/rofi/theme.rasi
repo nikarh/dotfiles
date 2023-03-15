@@ -36,11 +36,19 @@
     selected-urgent-foreground:  rgba(249, 249, 249, 100%);
     selected-urgent-background:  rgba(165, 66, 66, 100%);
 }
+
 window {
     background-color: @background;
     border:           1;
     padding:          5;
 }
+
+@media ( enabled: env(MODE_SWITCHER, false)) {
+  window {
+    children: [inputbar, message, mode-switcher, listview];
+  }
+}
+
 mainbox {
     border:  0;
     padding: 0;
@@ -48,7 +56,7 @@ mainbox {
 message {
     border:       2px 0px 0px ;
     border-color: @separatorcolor;
-    padding:      1px ;
+    padding:      1px;
 }
 textbox {
     text-color: @foreground;
@@ -57,17 +65,22 @@ listview {
     fixed-height: 0;
     border:       2px 0px 0px ;
     border-color: @separatorcolor;
-    spacing:      2px ;
     scrollbar:    true;
     padding:      2px 0px 0px ;
 }
 element {
     border:  0;
-    padding: 1px ;
+    padding: 2px;
 }
+
+element-icon {
+    margin: 5px;
+}
+
 element-text {
-    background-color: inherit;
     text-color:       inherit;
+    vertical-align:   0.5;
+    horizontal-align: 0.0;
 }
 element.normal.normal {
     background-color: @normal-background;
@@ -113,8 +126,9 @@ scrollbar {
     padding:      0;
 }
 mode-switcher {
-    border:       2px 0px 0px ;
+    border:       2px 0px 0px;
     border-color: @separatorcolor;
+    expand: false;
 }
 button {
     spacing:    0;
@@ -150,7 +164,4 @@ textbox-prompt-colon {
     margin:     0px 0.3em 0em 0em ;
     text-color: @normal-foreground;
     text-color: rgba(255, 255, 255, 30%);
-}
-element-icon {
-    margin: 5px;
 }
