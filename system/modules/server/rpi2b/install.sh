@@ -2,8 +2,8 @@
 
 sudo cp -ufrTv "$ROOT/root/" /
 
-enable-service --now disable-leds
-enable-service --now dhcpcd dhcpcd@enu1u1
+enable-service --now systemd-resolved
+enable-service --now systemd-networkd
 
 docker-compose --project-directory="$ROOT" \
     --env-file "$ROOT/.env" \

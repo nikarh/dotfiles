@@ -34,6 +34,10 @@ services:
   mqtt:
     image: eclipse-mosquitto
     container_name: mqtt
+    networks:
+      default:
+        aliases:
+          - mqtt.home.arhipov.net
     << : *service-defaults
     ports:
       - '8883:8883'
@@ -115,5 +119,5 @@ services:
     << : *service-defaults
     network_mode: host
     environment:
-    - hostNIC=enu1u1
-    - dockerNIC=br-ea22bd3d1ead
+    - hostNIC=eth0
+    - dockerNIC=br-d06dc676247a

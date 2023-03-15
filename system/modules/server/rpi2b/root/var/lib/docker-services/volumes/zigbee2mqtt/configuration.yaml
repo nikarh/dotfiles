@@ -4,7 +4,7 @@ permit_join: false
 
 mqtt:
   base_topic: zigbee2mqtt
-  server: 'mqtts://mqtt:8883'
+  server: 'mqtts://mqtt.home.arhipov.net:8883'
   user: zigbee2mqtt
   password: '!secret password'
   ca: '/etc/ssl/mqtt-certs/ca.crt'
