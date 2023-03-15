@@ -1,7 +1,7 @@
 [Match]
 Type=ether
 # Either we are explicit here, or we must unmanage veth networks for docker
-Name=eno1
+Name=eth0
 
 [Network]
 DHCP=yes

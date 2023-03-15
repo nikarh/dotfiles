@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-pkg hdparm fuse-overlayfs dhclient \
+pkg hdparm fuse-overlayfs \
     btrfs-progs compsize parted \
     perl-rename \
     lm_sensors
