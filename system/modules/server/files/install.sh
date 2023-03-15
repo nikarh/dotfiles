@@ -2,7 +2,6 @@
 
 pkg hdparm fuse-overlayfs dhclient \
     btrfs-progs compsize parted \
-    libva-headless ffmpeg-headless \
     perl-rename \
     lm_sensors
 

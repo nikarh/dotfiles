@@ -115,5 +115,5 @@ services:
     << : *service-defaults
     network_mode: host
     environment:
-    - hostNIC=eth0
+    - hostNIC=enu1u1
     - dockerNIC=br-ea22bd3d1ead

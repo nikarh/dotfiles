@@ -313,7 +313,7 @@ services:
     << : *service-defaults
     network_mode: host
     environment:
-    - hostNIC=eno1
+    - hostNIC=eth0
     - dockerNIC=br-64a8b7fbc7a7
   netdata:
     image: netdata/netdata
