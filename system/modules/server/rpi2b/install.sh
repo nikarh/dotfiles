@@ -3,6 +3,7 @@
 sudo cp -ufrTv "$ROOT/root/" /
 
 enable-service --now disable-leds
+enable-service --now dhcpcd dhcpcd@enu1u1
 
 docker-compose --project-directory="$ROOT" \
     --env-file "$ROOT/.env" \
