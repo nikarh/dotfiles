@@ -201,7 +201,7 @@ services:
       - 'traefik.http.middlewares.jellyheaders.headers.customrequestheaders.X-API-Key=MTY1NDcyMzQ0NDI4MDExYmE5MDA4LWE4NTQtNGQ1Mi1hN2FjLWVjZTA3OWRjMDkzZik='
       - 'traefik.http.middlewares.jellyheaders.headers.customrequestheaders.X-API-User=4'
   syncthing:
-    image: syncthing/syncthing
+    image: lscr.io/linuxserver/syncthing
     container_name: syncthing
     << : *service-defaults
     ports:
@@ -209,10 +209,10 @@ services:
       - 22000:22000/udp
       - 21027:21027/udp
     environment:
-      TZ: Europe/Riga
+      << : *arr_env
     volumes:
       # Check permissions
-      - syncthing-data:/var/syncthing/config
+      - syncthing-data:/config
       - /var/data/shares/nikarh:/var/data/shares/nikarh
     labels:
       - 'traefik.enable=true'
