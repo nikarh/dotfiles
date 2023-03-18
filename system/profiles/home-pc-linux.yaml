@@ -3,7 +3,7 @@ hooks:
   - initrd
   - groups
   - systemd
-  - reboot-watcher
+  - reboot-indicator
 modules:
   - name: common/yay
   - name: common/base
