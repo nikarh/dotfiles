@@ -32,8 +32,9 @@ volumes:
   netdata-cache:
 services:
   samba:
-    build: docker/samba
+    build: ./docker/images/samba
     container_name: samba
+    image: nikarh/samba
     << : *service-defaults
     ports:
       - 137:137/udp # nmbd

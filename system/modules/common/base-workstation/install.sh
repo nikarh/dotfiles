@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 pkg pacman-contrib asp \
-    $(pacman -Sgq base-devel) \
+    $(pacman -Sgq base-devel) base-devel \
     inotify-tools
 
 # Copy all configs to root

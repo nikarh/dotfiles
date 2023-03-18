@@ -11,7 +11,8 @@ secrets:
     file: ../common/docker/secrets/backup_rsa
 services:
   volume-backup:
-    build: ../common/docker/backup
+    build: ../common/docker/images/backup
+    image: nikarh/backup
     container_name: volume-backup
     << : *service-defaults
     environment:
@@ -44,7 +45,8 @@ services:
 
   # Backup google drive to home server
   gdrive-backup-from:
-    build: ./docker/rclone
+    build: ./docker/images/rclone
+    image: nikarh/rclone
     container_name: gdrive-backup-from
     << : *service-defaults
     user: 911:1000
@@ -61,7 +63,8 @@ services:
       '
   # Backup documents to google drive
   gdrive-backup-to:
-    build: ./docker/rclone
+    build: ./docker/images/rclone
+    image: nikarh/rclone
     container_name: gdrive-backup-to
     << : *service-defaults
     user: 911:1000

@@ -20,7 +20,8 @@ volumes:
   roundcube-db:
 services:
   imapsync:
-    build: docker/imapsync
+    build: ./docker/images/imapsync
+    image: nikarh/imapsync
     container_name: imapsync
     << : *service-defaults
     user: 1000:1000
