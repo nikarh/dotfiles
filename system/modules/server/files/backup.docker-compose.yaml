@@ -51,11 +51,11 @@ services:
     entrypoint: ""
     volumes:
       - /var/lib/docker-services/volumes/rclone:/config/rclone
-      - /var/data/shares/nikarh/Backup:/backup
+      - /var/data/shares/nikarh/Backup/Google Drive:/backup
     command: >
       sh -c '
         while true; do
-          rclone -vv sync gdrive-ro: "/backup/Google Drive" --exclude "/BACKUP/**";
+          rclone -vv sync gdrive-ro: "/backup" --exclude "/BACKUP/**";
           sleep 1h;
         done
       '
@@ -68,12 +68,21 @@ services:
     entrypoint: ""
     volumes:
       - /var/lib/docker-services/volumes/rclone:/config/rclone
-      - /var/data/shares/nikarh/Backup:/backup
+      - /var/data/shares/nikarh/Documents:/backup/Documents
+      - /var/data/shares/nikarh/Syncthing/My Music/Projects/Mixdown:/backup/Mixdown
+      - /var/data/shares/nikarh/Syncthing/KeePass:/backup/KeePass
+      - /var/data/home/nikarh/data/Music/Melissa Cross/Baritone:/backup/Vocal Warm-Ups
     command: >
       sh -c '
-        rclone -vv sync "/backup/Documents" gdrive-rw:/BACKUP/;
-        inotifywait -qmr -t 43200 /backup/Documents | while read -r file ; do
-          echo "Debouncing $(timeout 5 cat | wc -l) further changes";
-          rclone -vv sync "/backup/Documents" gdrive-rw:/BACKUP/;
+        rclone -vv sync "/backup" gdrive-rw:/BACKUP/;
+        inotifywait -qmr -t 0 /backup | while true; do
+          if ! ps -a -o comm | grep -q ^inotifywait$; then
+            echo "Intofiywait died!"
+            break;
+          fi;
+          sleep 5;
+          head -n 1;
+        done | while read -r file ; do
+          rclone -vv sync "/backup" gdrive-rw:/BACKUP/;
         done
       '

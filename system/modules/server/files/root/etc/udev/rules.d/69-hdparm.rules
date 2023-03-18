@@ -1,1 +1,1 @@
-ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="sd[b-f]", ATTRS{queue/rotational}=="1", RUN+="/usr/bin/hdparm -S 5 /dev/%k"
+ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="sd[b-f]", ATTRS{queue/rotational}=="1", RUN+="/usr/bin/hdparm -S 50 /dev/%k"
