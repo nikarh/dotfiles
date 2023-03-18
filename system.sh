@@ -22,16 +22,16 @@ if [[ -z "$PROFILE" ]] || [[ ! -f "$PROFILE" ]]; then
 fi
 
 # Install yq
-source "$(pwd)/system/plugins/yq/pre.sh"
+source "$(pwd)/system/hooks/yq/pre.sh"
 
-# Pre-setup plugins
+# Pre-setup hooks
 while read line; do
     INDEX=$(echo $line | awk '{print $2}')
-    if [[ -f "$(pwd)/system/plugins/$INDEX/pre.sh" ]]; then
+    if [[ -f "$(pwd)/system/hooks/$INDEX/pre.sh" ]]; then
         echo Running pre-setup script for $INDEX
-        source "$(pwd)/system/plugins/$INDEX/pre.sh"
+        source "$(pwd)/system/hooks/$INDEX/pre.sh"
     fi
-done <<< "$(cat "$PROFILE" | yq '.plugins')"
+done <<< "$(cat "$PROFILE" | yq '.hooks')"
 
 # Install modules
 while read line; do
@@ -47,11 +47,11 @@ while read line; do
     eval "$(echo "$ARGS" | sed -r 's/^([^=]+)=.*/unset \1/')" > /dev/null
 done <<< "$(cat "$PROFILE" | yq '.modules | keys')"
 
-# Post-setup plugins
+# Post-setup hooks
 while read line; do
     INDEX=$(echo $line | awk '{print $2}')
-    if [[ -f "$(pwd)/system/plugins/$INDEX/post.sh" ]]; then
+    if [[ -f "$(pwd)/system/hooks/$INDEX/post.sh" ]]; then
         echo Running post-setup script for $INDEX
-        source "$(pwd)/system/plugins/$INDEX/post.sh"
+        source "$(pwd)/system/hooks/$INDEX/post.sh"
     fi
-done <<< "$(cat "$PROFILE" | yq '(.plugins // []) | reverse')"
+done <<< "$(cat "$PROFILE" | yq '(.hooks // []) | reverse')"
