@@ -5,22 +5,20 @@ sudo cp -ufrTv "$ROOT/root/" /
 enable-service --now systemd-resolved
 enable-service --now systemd-networkd
 
-docker-compose --project-directory="$ROOT" \
-    --env-file "$ROOT/.env" \
-    build
-
 if [[ "$RESTORE" == "true" ]]; then
-    docker-compose --project-directory="$ROOT" \
-        -f "$ROOT/docker-compose.yaml" \
-        -f "$ROOT/backup.docker-compose.yaml" \
-        -f "$ROOT/../common/docker-compose.yaml" \
+    docker-compose \
+        --project-name="backup" \
+        --project-directory="$ROOT" \
+        --env-file="$ROOT/.env" \
+        ---file="$ROOT/docker/projects/backup.docker-compose.yaml" \
         --profile restore \
         up restore
 
-    docker-compose --project-directory="$ROOT" \
-        -f "$ROOT/docker-compose.yaml" \
-        -f "$ROOT/backup.docker-compose.yaml" \
-        -f "$ROOT/../common/docker-compose.yaml" \
+    docker-compose \
+        --project-name="backup" \
+        --project-directory="$ROOT" \
+        --file="$ROOT/docker/projects/backup.docker-compose.yaml" \
+        --env-file="$ROOT/.env" \
         --profile restore \
         rm -sf restore
 fi
