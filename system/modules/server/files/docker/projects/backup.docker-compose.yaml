@@ -9,10 +9,42 @@ x-service-defaults: &service-defaults
 secrets:
   SSH_KEY:
     file: ../common/docker/secrets/backup_rsa
+# FIXME: This is a hack, because backup project references these volumes.
+# Perfectly we would want to get rid of that file, inline volumes to their projects,
+# Mount /var/lib/docker/volumes to backup container and use label to figure out what to backup.
+volumes:
+  # Common
+  traefik-data:
+  authelia-data:
+  # Media
+  jellyfin-config:
+  kavita-data:
+  qbittorrent-data:
+  prowlarr-data:
+  radarr-data:
+  sonarr-data:
+  bazarr-data:
+  readarr-data:
+  jellyseerr-data:
+  # Files
+  netdata-lib:
+  netdata-cache:
+  filebrowser-data:
+  syncthing-data:
+  photoprism-import:
+  photoprism-database:
+  photoprism-storage:
+  esphome-data:
+  # Mail
+  mail-data:
+  roundcube-db:
+  # Immich
+  immich-db-data:
 services:
+  # Backup docker volumes to ftp
+  # TODO: use labels for that
   volume-backup:
-    build: ../common/docker/images/backup
-    image: nikarh/backup
+    image: nikarh/dotfiles-backup
     container_name: volume-backup
     << : *service-defaults
     environment:
@@ -43,10 +75,9 @@ services:
     secrets:
       - SSH_KEY
 
-  # Backup google drive to home server
+  # Backup gdrive documents to home server
   gdrive-backup-from:
-    build: ./docker/images/rclone
-    image: nikarh/rclone
+    image: nikarh/dotfiles-rclone
     container_name: gdrive-backup-from
     << : *service-defaults
     user: 911:1000
@@ -61,10 +92,9 @@ services:
           sleep 1h;
         done
       '
-  # Backup documents to google drive
+  # Backup home server documents to gdrive
   gdrive-backup-to:
-    build: ./docker/images/rclone
-    image: nikarh/rclone
+    image: nikarh/dotfiles-rclone
     container_name: gdrive-backup-to
     << : *service-defaults
     user: 911:1000

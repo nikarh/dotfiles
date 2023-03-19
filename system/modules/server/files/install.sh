@@ -35,7 +35,6 @@ sudo chown -R files:files /var/data/home/backup/.ssh
 sudo sed -i '/# BEGIN mounts/,/# END mounts/d' /etc/fstab
 cat "$ROOT/root/fstab" | sudo tee -a /etc/fstab > /dev/null
 sudo systemctl daemon-reload
-sudo mount -a
 
 # Start services
 enable-service systemd-networkd
@@ -43,20 +42,13 @@ enable-service sshd
 enable-service fancontrol
 enable-service reduce-power-usage
 
-docker-compose --project-directory="$ROOT" \
-    --env-file "$ROOT/.env" \
-    -f "$ROOT/docker-compose.yaml" \
-    -f "$ROOT/mail.docker-compose.yaml" \
-    -f "$ROOT/backup.docker-compose.yaml" \
-    -f "$ROOT/immich.docker-compose.yaml" \
-    -f "$ROOT/../common/docker-compose.yaml" \
-    build
-
-docker-compose --project-directory="$ROOT" \
-    --env-file "$ROOT/.env" \
-    -f "$ROOT/docker-compose.yaml" \
-    -f "$ROOT/mail.docker-compose.yaml" \
-    -f "$ROOT/backup.docker-compose.yaml" \
-    -f "$ROOT/immich.docker-compose.yaml" \
-    -f "$ROOT/../common/docker-compose.yaml" \
-    up -d
+find "$ROOT/docker/projects" -name '*.docker-compose.yaml' | while read -r file; do
+    PROJECT_NAME="$(basename -- "$file" | cut -d'.' -f1)"
+    echo "Starting containers for $PROJECT_NAME"
+    docker-compose \
+        --project-name="$PROJECT_NAME" \
+        --project-directory="$ROOT" \
+        --env-file="$ROOT/.env" \
+        --file="$file" \
+        up -d
+done

@@ -1,4 +1,4 @@
-version: '3.5'
+version: '3.8'
 x-service-defaults: &service-defaults
   restart: unless-stopped
   logging:

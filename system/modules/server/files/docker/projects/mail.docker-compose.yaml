@@ -1,8 +1,4 @@
-version: '3.5'
-x-arr-env: &arr_env
-  PGID: 1000
-  PUID: 1000
-  TZ: Europe/Riga
+version: '3.8'
 x-service-defaults: &service-defaults
   restart: unless-stopped
   logging:
@@ -20,8 +16,7 @@ volumes:
   roundcube-db:
 services:
   imapsync:
-    build: ./docker/images/imapsync
-    image: nikarh/imapsync
+    image: nikarh/dotfiles-imapsync
     container_name: imapsync
     << : *service-defaults
     user: 1000:1000

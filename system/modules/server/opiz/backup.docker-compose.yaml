@@ -10,8 +10,7 @@ secrets:
     file: ../common/docker/secrets/backup_rsa
 services:
   backup:
-    build: ../common/docker/images/backup
-    image: nikarh/backup
+    image: nikarh/dotfiles-backup
     container_name: backup
     restart: unless-stopped
     << : *service-defaults

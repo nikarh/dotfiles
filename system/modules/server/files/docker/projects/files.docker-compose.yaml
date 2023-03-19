@@ -1,0 +1,193 @@
+version: '3.8'
+x-arr-env: &arr_env
+  PGID: 1000
+  PUID: 1000
+  TZ: Europe/Riga
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+  healthcheck:
+    disable: true
+volumes:
+  netdata-lib:
+  netdata-cache:
+  filebrowser-data:
+  syncthing-data:
+  photoprism-import:
+  photoprism-database:
+  photoprism-storage:
+  esphome-data:
+services:
+  # Basic monitoring
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: netdata
+    << : *service-defaults
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    environment:
+      DISABLE_TELEMETRY: 1
+      DOCKER_USR: 1000
+      DOCKER_GRP: 1000
+    volumes:
+      - netdata-lib:/var/lib/netdata
+      - netdata-cache:/var/cache/netdata
+      - /var/lib/docker-services/volumes/netdata/netdata.conf:/etc/netdata/netdata.conf:ro
+      - /var/lib/docker-services/volumes/netdata/cloud.conf:/var/lib/netdata/cloud.d/cloud.conf:ro
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.netdata.loadbalancer.server.port=19999'
+      - 'traefik.http.routers.netdata.rule=Host(`netdata.${DOMAIN}`)'
+      - 'traefik.http.routers.netdata.entrypoints=https'
+      - 'traefik.http.routers.netdata.middlewares=authelia@docker'
+  # This is required at least for esphome
+  mdns-repeater:
+    image: angelnu/mdns_repeater
+    container_name: mdns-repeater
+    << : *service-defaults
+    network_mode: host
+    environment:
+    - hostNIC=eth0
+    - dockerNIC=br-64a8b7fbc7a7
+  # Homer is served from GH pages on the outside world,
+  # but we also serve it from here for internal access.
+  homer:
+    image: b4bz/homer
+    container_name: homer
+    << : *service-defaults
+    user: '1000:1000'
+    volumes:
+      - /var/lib/docker-services/volumes/homer:/www/assets:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.homer.rule=Host(`home.arhipov.net`)'
+      - 'traefik.http.routers.homer.entrypoints=https'
+  samba:
+    image: nikarh/dotfiles-samba
+    container_name: samba
+    << : *service-defaults
+    ports:
+      - 137:137/udp # nmbd
+      - 138:138/udp # nmbd
+      - 139:139 # smb over netbios
+      - 445:445 # smb over tcp
+    entrypoint: /run.sh
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      # Configs
+      - /var/lib/docker-services/volumes/samba/run.sh:/run.sh:ro
+      - /var/lib/docker-services/volumes/samba/smb.conf:/etc/samba/smb-base.conf
+      # Data
+      - /var/data/home:/home
+  sftpd:
+    image: atmoz/sftp:alpine
+    container_name: sftpd
+    << : *service-defaults
+    ports:
+      - '2222:22'
+    entrypoint: /run.sh
+    volumes:
+      # Configs
+      - /var/lib/docker-services/volumes/sftpd/secrets/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
+      - /var/lib/docker-services/volumes/sftpd/secrets/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key:ro
+      - /var/lib/docker-services/volumes/sftpd/sshd_config:/etc/ssh/sshd_config:ro
+      - /var/lib/docker-services/volumes/sftpd/run.sh:/run.sh:ro
+      - /var/lib/docker-services/volumes/sftpd/authelia.sh:/authelia.sh:ro
+      - /var/lib/docker-services/volumes/sftpd/base-auth:/etc/pam.d/base-auth:ro
+      # Data
+      - /var/data/home:/home
+  filebrowser:
+    image: filebrowser/filebrowser
+    container_name: filebrowser
+    << : *service-defaults
+    user: 1000:1000
+    volumes:
+      - /var/data/home:/srv
+      - filebrowser-data:/mnt
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.files.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.files.rule=Host(`${DOMAIN}`)'
+      - 'traefik.http.routers.files.entrypoints=https'
+      - 'traefik.http.routers.files.middlewares=authelia@docker'
+    command: 
+      - "--cache-dir=/mnt/data/cache"
+      - "-d=/mnt/data/filebrowser.db"
+      - "-c=/mnt/data/filebrowser.json"
+      - "-p=8080"
+  syncthing:
+    image: lscr.io/linuxserver/syncthing
+    container_name: syncthing
+    << : *service-defaults
+    ports:
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
+    environment:
+      << : *arr_env
+    volumes:
+      - syncthing-data:/config
+      - /var/data/shares/nikarh:/var/data/shares/nikarh
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.syncthing.loadbalancer.server.port=8384'
+      - 'traefik.http.routers.syncthing.rule=Host(`syncthing.${DOMAIN}`)'
+      - 'traefik.http.routers.syncthing.entrypoints=https'
+      - 'traefik.http.routers.syncthing.middlewares=authelia@docker'
+  photoprism:
+    image: photoprism/photoprism
+    container_name: photoprism
+    << : *service-defaults
+    environment:
+      << : *arr_env
+      PHOTOPRISM_ORIGINALS_LIMIT: 1000               # File size limit for originals in MB (increase for high-res video)
+      PHOTOPRISM_HTTP_COMPRESSION: "gzip"            # Improves transfer speed and bandwidth utilization (none or gzip)
+      PHOTOPRISM_DEBUG: "false"                      # Run in debug mode (shows additional log messages)
+      PHOTOPRISM_PUBLIC: "true"                      # No authentication required (disables password protection)
+      PHOTOPRISM_SPONSOR: "true"
+      PHOTOPRISM_READONLY: "true"                    # Don't modify originals directory (reduced functionality)
+      PHOTOPRISM_EXPERIMENTAL: "true"                # Enables experimental featuress
+      PHOTOPRISM_UPLOAD_NSFW: "true"                 # Allow uploads that MAY be offensive
+      PHOTOPRISM_DATABASE_DRIVER: "sqlite"           # SQLite is an embedded database that doesn't require a servers
+      PHOTOPRISM_DATABASE_DSN: "/photoprism/database/db.sqlite"
+      PHOTOPRISM_SITE_URL: "https://photos.${DOMAIN}/"  # Public PhotoPrism URL
+      PHOTOPRISM_SITE_TITLE: "Photos"
+      PHOTOPRISM_SITE_CAPTION: "My photos"
+      PHOTOPRISM_SITE_DESCRIPTION: ""
+      PHOTOPRISM_SITE_AUTHOR: ""
+    volumes:
+      - photoprism-import:/photoprism/import
+      - photoprism-database:/photoprism/database
+      - photoprism-storage:/photoprism/storage
+      - /var/data/shares/nikarh/Photos:/photoprism/originals:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.photoprism.loadbalancer.server.port=2342'
+      - 'traefik.http.routers.photoprism.rule=Host(`photos.${DOMAIN}`)'
+      - 'traefik.http.routers.photoprism.entrypoints=https'
+      - 'traefik.http.routers.photoprism.middlewares=authelia@docker'
+  esphome:
+    image: esphome/esphome
+    container_name: esphome
+    << : *service-defaults
+    volumes:
+      - esphome-data:/config
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.esphome.loadbalancer.server.port=6052'
+      - 'traefik.http.routers.esphome.rule=Host(`esphome.${DOMAIN}`)'
+      - 'traefik.http.routers.esphome.entrypoints=https'
+      - 'traefik.http.routers.esphome.middlewares=authelia@docker'
