@@ -44,11 +44,15 @@ enable-service sshd
 enable-service fancontrol
 enable-service reduce-power-usage
 
-DOCKER_NIC="$(ip --json link | jq -r '(.[].ifname|select(. | startswith("br-"))) // "undefined"')"
+DOCKER_NIC="$(ip --json link | jq -r '([.[].ifname | select(. | startswith("br-"))][0])')"
+sed "s/DOCKER_NIC=.*/DOCKER_NIC=${DOCKER_NIC}/g" "$ROOT/.env.default" > "$ROOT/.env.new"
+if ! diff -q "$ROOT/.env.new" "$ROOT/.env" > /dev/null 2>&1; then
+    echo "Moving env"
+    mv "$ROOT/.env.new" "$ROOT/.env"
+fi
 
 docker-compose \
     --project-directory="$ROOT" \
     --env-file="$ROOT/.env" \
-    -e "DOCKER_NIC=$DOCKER_NIC" \
     $(find "$ROOT/docker/projects" -name '*.docker-compose.yaml' -exec echo -f {} \;) \
     up -d

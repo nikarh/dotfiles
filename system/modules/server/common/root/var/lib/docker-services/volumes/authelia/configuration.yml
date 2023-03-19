@@ -40,9 +40,7 @@ access_control:
   networks:
   - name: internal
     networks:
-    - 172.19.0.0/16
-    - 172.18.0.0/16
-    - 172.17.0.0/16
+    - 172.0.0.0/8
     - 192.168.1.0/24
   default_policy: deny
   rules:
