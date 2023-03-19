@@ -8,7 +8,9 @@ pkg hdparm fuse-overlayfs \
 # Required for eth
 pkg polkit
 
-sudo systemctl mask mdmonitor
+if [[ "$(readlink -f /etc/systemd/system/mdmonitor.service)" != "/dev/null" ]]; then
+    sudo systemctl mask mdmonitor
+fi
 
 # Copy all system configs
 sudo cp -ufrTv "$ROOT/root/etc/" /etc

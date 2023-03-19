@@ -50,7 +50,6 @@ services:
     environment:
       BUCKET: ${DOMAIN}
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       # Volumes to backup
       - traefik-data:/volumes/traefik-data:ro
       - authelia-data:/volumes/authelia-data:ro

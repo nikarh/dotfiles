@@ -85,7 +85,6 @@ services:
       - 445:445 # smb over tcp
     entrypoint: /run.sh
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       # Configs
       - /var/lib/docker-services/volumes/samba/run.sh:/run.sh:ro
       - /var/lib/docker-services/volumes/samba/smb.conf:/etc/samba/smb-base.conf
@@ -184,7 +183,6 @@ services:
     << : *service-defaults
     volumes:
       - esphome-data:/config
-      - /etc/localtime:/etc/localtime:ro
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.esphome.loadbalancer.server.port=6052'
