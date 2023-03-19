@@ -44,8 +44,11 @@ enable-service sshd
 enable-service fancontrol
 enable-service reduce-power-usage
 
+DOCKER_NIC="$(ip --json link | jq -r '(.[].ifname|select(. | startswith("br-"))) // "undefined"')"
+
 docker-compose \
     --project-directory="$ROOT" \
     --env-file="$ROOT/.env" \
+    -e "DOCKER_NIC=$DOCKER_NIC" \
     $(find "$ROOT/docker/projects" -name '*.docker-compose.yaml' -exec echo -f {} \;) \
     up -d

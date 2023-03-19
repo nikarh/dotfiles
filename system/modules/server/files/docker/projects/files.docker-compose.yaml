@@ -60,7 +60,7 @@ services:
     network_mode: host
     environment:
     - hostNIC=eth0
-    - dockerNIC=br-64a8b7fbc7a7
+    - dockerNIC=${DOCKER_NIC}
   # Homer is served from GH pages on the outside world,
   # but we also serve it from here for internal access.
   homer:

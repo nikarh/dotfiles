@@ -120,4 +120,4 @@ services:
     network_mode: host
     environment:
     - hostNIC=eth0
-    - dockerNIC=br-d06dc676247a
+    - dockerNIC=${DOCKER_NIC}
