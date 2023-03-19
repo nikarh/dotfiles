@@ -17,7 +17,6 @@ services:
     environment:
       BUCKET: ${DOMAIN}
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       # Volumes to backup
     secrets:
       - SSH_KEY

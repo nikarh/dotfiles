@@ -10,7 +10,7 @@ VOLUMES=/volumes
 function backup {
   local VOLUME="$1"
   local TARGET="$SFTP_ROOT/$BUCKET/$VOLUME"
-  local DATE="$(date +"%FT%H-%M-%S")"
+  local DATE="$(date +"%FT%H-%M-%S%z")"
 
   if [ -z "$VOLUME" ]; then
     echo "Volume is required"

@@ -27,7 +27,6 @@ services:
     environment:
       BUCKET: ${DOMAIN}
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       # Volumes to backup
       - mqtt-certs:/volumes/mqtt-certs:ro
       - mosquitto-data:/volumes/mosquitto-data:ro
@@ -45,7 +44,6 @@ services:
     container_name: restore
     command: [ "/backup.sh", "restore_all", "${RESTORE_FROM}" ]
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       # Volumes to backup
       - mqtt-certs:/volumes/mqtt-certs
       - mosquitto-data:/volumes/mosquitto-data
