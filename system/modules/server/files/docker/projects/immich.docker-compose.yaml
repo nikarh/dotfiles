@@ -6,6 +6,10 @@ x-service-defaults: &service-defaults
     options:
       max-size: ${LOG_MAX_SIZE:-200k}
       max-file: ${LOG_MAX_FILE:-5}
+networks:
+  default:
+    name: services
+    external: true
 volumes:
   immich-db-data:
   immich-data:

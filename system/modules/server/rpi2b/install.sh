@@ -5,6 +5,8 @@ sudo cp -ufrTv "$ROOT/root/" /
 enable-service --now systemd-resolved
 enable-service --now systemd-networkd
 
+docker network create services > /dev/null 2>&1 || true
+
 if [[ "$RESTORE" == "true" ]]; then
     docker-compose \
         --project-name="backup" \
