@@ -9,15 +9,15 @@ if [[ "$RESTORE" == "true" ]]; then
     docker-compose \
         --project-directory="$ROOT" \
         --env-file="$ROOT/.env" \
-        --file="$ROOT/docker/projects/backup.docker-compose.yaml" \
         --profile restore \
+        $(find "$ROOT/docker/projects" -name '*.docker-compose.yaml' -exec echo -f {} \;) \
         up restore
 
     docker-compose \
         --project-directory="$ROOT" \
         --env-file="$ROOT/.env" \
-        --file="$ROOT/docker/projects/backup.docker-compose.yaml" \
         --profile restore \
+        $(find "$ROOT/docker/projects" -name '*.docker-compose.yaml' -exec echo -f {} \;) \
         rm -sf restore
 fi
 
