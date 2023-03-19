@@ -12,10 +12,6 @@ x-service-defaults: &service-defaults
       max-file: ${LOG_MAX_FILE:-5}
   healthcheck:
     disable: true
-networks:
-  default:
-    name: services
-    external: true
 volumes:
   jellyfin-config:
   kavita-data:

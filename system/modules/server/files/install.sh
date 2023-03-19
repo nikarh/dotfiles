@@ -44,16 +44,8 @@ enable-service sshd
 enable-service fancontrol
 enable-service reduce-power-usage
 
-
-
-docker network create services > /dev/null 2>&1 || true
-find "$ROOT/docker/projects" -name '*.docker-compose.yaml' | while read -r file; do
-    PROJECT_NAME="$(basename -- "$file" | cut -d'.' -f1)"
-    echo "Starting containers for $PROJECT_NAME"
-    docker-compose \
-        --project-name="$PROJECT_NAME" \
-        --project-directory="$ROOT" \
-        --env-file="$ROOT/.env" \
-        --file="$file" \
-        up -d
-done
+docker-compose \
+    --project-directory="$ROOT" \
+    --env-file="$ROOT/.env" \
+    $(find "$ROOT/docker/projects" -name '*.docker-compose.yaml' -exec echo -f {} \;) \
+    up -d

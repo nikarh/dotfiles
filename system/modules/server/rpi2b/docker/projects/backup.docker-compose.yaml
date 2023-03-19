@@ -6,23 +6,9 @@ x-service-defaults: &service-defaults
     options:
       max-size: ${LOG_MAX_SIZE:-200k}
       max-file: ${LOG_MAX_FILE:-5}
-networks:
-  default:
-    name: services
-    external: true
 secrets:
   SSH_KEY:
     file: ../common/docker/secrets/backup_rsa
-# FIXME: This is a hack, because backup project references these volumes.
-# Perfectly we would want to get rid of that file, inline volumes to their projects,
-# Mount /var/lib/docker/volumes to backup container and use label to figure out what to backup.
-volumes:
-  mqtt-certs:
-  mosquitto-data:
-  zigbee2mqtt-data:
-  hass-data:
-  traefik-data:
-  authelia-data:
 services:
   backup: &backup
     image: nikarh/dotfiles-backup

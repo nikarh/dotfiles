@@ -6,44 +6,9 @@ x-service-defaults: &service-defaults
     options:
       max-size: ${LOG_MAX_SIZE:-200k}
       max-file: ${LOG_MAX_FILE:-5}
-networks:
-  default:
-    name: services
-    external: true
 secrets:
   SSH_KEY:
     file: ../common/docker/secrets/backup_rsa
-# FIXME: This is a hack, because backup project references these volumes.
-# Perfectly we would want to get rid of that file, inline volumes to their projects,
-# Mount /var/lib/docker/volumes to backup container and use label to figure out what to backup.
-volumes:
-  # Common
-  traefik-data:
-  authelia-data:
-  # Media
-  jellyfin-config:
-  kavita-data:
-  qbittorrent-data:
-  prowlarr-data:
-  radarr-data:
-  sonarr-data:
-  bazarr-data:
-  readarr-data:
-  jellyseerr-data:
-  # Files
-  netdata-lib:
-  netdata-cache:
-  filebrowser-data:
-  syncthing-data:
-  photoprism-import:
-  photoprism-database:
-  photoprism-storage:
-  esphome-data:
-  # Mail
-  mail-data:
-  roundcube-db:
-  # Immich
-  immich-db-data:
 services:
   # Backup docker volumes to ftp
   # TODO: use labels for that
