@@ -91,7 +91,9 @@ services:
       # Data
       - /var/data/home:/home
   sftpd:
-    image: atmoz/sftp:alpine
+    # On 2023.03.15 alpine version started freezing on connection.
+    # Migrated to ubuntu.
+    image: atmoz/sftp
     container_name: sftpd
     << : *service-defaults
     ports:
@@ -104,7 +106,8 @@ services:
       - /var/lib/docker-services/volumes/sftpd/sshd_config:/etc/ssh/sshd_config:ro
       - /var/lib/docker-services/volumes/sftpd/run.sh:/run.sh:ro
       - /var/lib/docker-services/volumes/sftpd/authelia.sh:/authelia.sh:ro
-      - /var/lib/docker-services/volumes/sftpd/base-auth:/etc/pam.d/base-auth:ro
+      - /var/lib/docker-services/volumes/sftpd/pam-ubuntu-auth:/etc/pam.d/common-auth:ro
+      #- /var/lib/docker-services/volumes/sftpd/pam-alpine:/etc/pam.d/base-auth:ro
       # Data
       - /var/data/home:/home
   filebrowser:
