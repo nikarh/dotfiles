@@ -98,7 +98,7 @@ services:
     << : *service-defaults
     ports:
       # Apple HomeKit
-      - 21064:21064
+      - 21063:21063
     volumes:
       - mqtt-certs:/etc/ssl/mqtt-certs:ro
       - hass-data:/config

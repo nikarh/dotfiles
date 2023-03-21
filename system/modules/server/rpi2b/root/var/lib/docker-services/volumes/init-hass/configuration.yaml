@@ -42,7 +42,7 @@ shell_command:
 
 homekit:
   - name: Home Assistant Bridge
-    port: 21064
+    port: 21063
     advertise_ip: 192.168.1.19
     filter:
       include_domains:
