@@ -1,0 +1,7 @@
+auth	required	pam_env.so
+auth	required	pam_exec.so expose_authtok quiet	/authelia.sh
+
+account	required	pam_permit.so
+
+session  required	  pam_deny.so
+password required   pam_deny.so

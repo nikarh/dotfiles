@@ -34,7 +34,7 @@ services:
       - mail-data:/home
       - /var/lib/docker-services/volumes/dovecot/dovecot.conf:/etc/dovecot/dovecot.conf
       - /var/lib/docker-services/volumes/dovecot/authelia.sh:/authelia.sh:ro
-      - /var/lib/docker-services/volumes/dovecot/base-auth:/etc/pam.d/dovecot:ro
+      - /var/lib/docker-services/volumes/dovecot/pam-dovecot:/etc/pam.d/dovecot:ro
     # Install curl and jq for authelia pam shell script
     command: >
       sh -c '

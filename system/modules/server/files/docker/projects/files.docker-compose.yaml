@@ -106,8 +106,7 @@ services:
       - /var/lib/docker-services/volumes/sftpd/sshd_config:/etc/ssh/sshd_config:ro
       - /var/lib/docker-services/volumes/sftpd/run.sh:/run.sh:ro
       - /var/lib/docker-services/volumes/sftpd/authelia.sh:/authelia.sh:ro
-      - /var/lib/docker-services/volumes/sftpd/pam-ubuntu-auth:/etc/pam.d/common-auth:ro
-      #- /var/lib/docker-services/volumes/sftpd/pam-alpine:/etc/pam.d/base-auth:ro
+      - /var/lib/docker-services/volumes/sftpd/pam-sshd:/etc/pam.d/sshd:ro
       # Data
       - /var/data/home:/home
   filebrowser:

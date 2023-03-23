@@ -35,5 +35,4 @@ curl -sf \
     -H 'X-Original-Url: '$FORWARDED_HOST'' -H 'X-Forwarded-Method: GET' \
     "$AUTHELIA_URL/api/verify"
 
-echo "Auth verify ok"
 exit 0

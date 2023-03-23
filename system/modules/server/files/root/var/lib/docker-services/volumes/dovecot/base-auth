@@ -1,9 +1,0 @@
-# basic PAM configuration for Alpine.
-auth	required	pam_env.so
-auth	required	pam_exec.so expose_authtok quiet	/authelia.sh
-
-account	required	pam_permit.so
-
-session [default=1]	pam_permit.so
-session requisite	pam_deny.so
-session required	pam_permit.so

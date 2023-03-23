@@ -1,0 +1,12 @@
+auth     requisite  pam_succeed_if.so uid eq 1000 quiet_success
+auth     required   pam_env.so
+auth     required   pam_exec.so expose_authtok quiet /authelia.sh
+
+account  required   pam_permit.so
+
+session  required   pam_loginuid.so
+# Without this login freezes for some reason
+session  required   pam_limits.so
+session  required   pam_permit.so
+
+password required   pam_permit.so

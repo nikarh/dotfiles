@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if ! which jq >/dev/null; then
-  if which jq >/dev/null; then
+  if which apk >/dev/null; then
     apk add --no-cache jq curl
   else
     apt-get update -y

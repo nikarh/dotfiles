@@ -1,3 +1,0 @@
-# basic PAM configuration for Alpine.
-auth	required	pam_env.so
-auth	required	pam_exec.so expose_authtok quiet	/authelia.sh
