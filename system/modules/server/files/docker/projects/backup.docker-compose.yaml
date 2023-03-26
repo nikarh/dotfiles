@@ -75,7 +75,7 @@ services:
       - /var/data/home/nikarh/data/Music/Melissa Cross/Baritone:/backup/Vocal Warm-Ups
     command: >
       sh -c '
-        rclone -vv sync "/backup" gdrive-rw:/BACKUP/;
+        rclone -vv sync "/backup" gdrive-rw:/BACKUP/ --exclude ".stignore" --exclude ".stfolder/";
         inotifywait -qmr -t 0 /backup | while true; do
           if ! ps -a -o comm | grep -q ^inotifywait$; then
             echo "Intofiywait died!"
@@ -84,6 +84,6 @@ services:
           sleep 5;
           head -n 1;
         done | while read -r file ; do
-          rclone -vv sync "/backup" gdrive-rw:/BACKUP/;
+          rclone -vv sync "/backup" gdrive-rw:/BACKUP/ --exclude ".stignore" --exclude ".stfolder/";
         done
       '
