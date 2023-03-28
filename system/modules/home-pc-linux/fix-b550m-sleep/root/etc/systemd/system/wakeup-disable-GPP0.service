@@ -2,7 +2,8 @@
 Description=Fix suspend by disabling GPP0 sleepstate
 
 [Service]
-ExecStart=/bin/bash -c "echo GPP0 >> /proc/acpi/wakeup"
+ExecStartPre=/bin/bash -c "echo GPP0 >> /proc/acpi/wakeup"
+ExecStart=/bin/bash -c "echo GPP8 >> /proc/acpi/wakeup"
 
 [Install]
 WantedBy=multi-user.target
