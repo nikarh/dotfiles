@@ -26,7 +26,6 @@ exec dunst
 exec flameshot
 exec nm-applet --indicator
 exec syncthing-gtk
-exec XDG_CURRENT_DESKTOP=Unity insync start
 exec alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main
 exec gammastep-indicator -t 6500:2400
 exec dex -a

@@ -27,11 +27,6 @@ xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
 ~/.local/bin/dbus-monitor.sh org.powertools Suspend ~/.local/bin/lock.sh&
 #light-locker &
 
-# Restart CUDA apps and nvidia_uvm on resume from sleep
-~/.local/bin/cuda-app-restart.sh init
-~/.local/bin/dbus-monitor.sh org.powertools Resume ~/.local/bin/cuda-app-restart.sh stop&
-~/.local/bin/dbus-monitor.sh org.powertools NvidiaRestarted ~/.local/bin/cuda-app-restart.sh start&
-
 # Should fix v-sync problems
 picom&
 # Notification daemon
@@ -49,8 +44,6 @@ pasystray&
 flameshot&
 # Syncthing tray icon
 syncthing-gtk&
-# Google Drive client
-(sleep 2; insync start)&
 
 # Watch games.yaml and generate .desktop entries and sunshine config
 /home/nikarh/.local/bin/play.sh watch&

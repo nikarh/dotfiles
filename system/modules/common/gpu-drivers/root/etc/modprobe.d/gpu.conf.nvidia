@@ -2,5 +2,11 @@ install i915 /usr/bin/false
 install intel_agp /usr/bin/false
 
 options nvidia-drm modeset=1
-#options nvidia NVreg_UsePageAttributeTable=1 
-#options nvidia NVreg_PreserveVideoMemoryAllocations=1
+
+# https://wiki.gentoo.org/wiki/NVIDIA/nvidia-drivers/en
+options nvidia NVreg_UsePageAttributeTable=1 
+
+# http://download.nvidia.com/XFree86/Linux-x86_64/530.41.03/README/powermanagement.html
+options nvidia NVreg_PreserveVideoMemoryAllocations=1
+# Default is /tmp. Unfortunately it's not big enough, it should have at least 10GB to fit VRAM
+options nvidia NVreg_TemporaryFilePath=/run

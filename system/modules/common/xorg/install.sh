@@ -23,7 +23,7 @@ pkg alacritty xterm-alacritty-symlink \
     eom xarchiver gsimplecal \
     chromium chromium-widevine firefox vdhcoapp-bin torbrowser-launcher \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
-    qdirstat keepassxc flameshot qbittorrent insync syncthing syncthing-gtk \
+    qdirstat keepassxc flameshot qbittorrent syncthing syncthing-gtk \
     libsecret seahorse \
     telegram-desktop slack-desktop epdfview-gtk3 onlyoffice-bin \
     krita inkscape aseprite-git \

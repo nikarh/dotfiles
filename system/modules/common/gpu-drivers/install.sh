@@ -66,7 +66,9 @@ if grep -q "nvidia" <<< "$GPU_DRIVER"; then
     sudo ln -sf /etc/modprobe.d/gpu.conf.nvidia /etc/modprobe.d/gpu.conf
     install-xorg-conf nvidia
 
-    pkg-local "$ROOT/nvidia-uvm-reload"
+    # Only enable suspend
+    # Resume is already handled in /usr/lib/systemd/system-sleep/nvidia hook
+    enable-service nvidia-suspend
 fi
 
 if grep -q "nouveau" <<< "$GPU_DRIVER"; then
