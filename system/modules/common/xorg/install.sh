@@ -42,13 +42,7 @@ sudo cp -ufrTv "$ROOT/root/" /
 
 # Systemd units
 enable-service autorandr.service
+enable-service lightdm.service
 disable-service getty@tty1.service 
 
-if pacman -Qi plymouth > /dev/null 2>&1; then
-    disable-service lightdm.service > /dev/null
-    enable-service lightdm-plymouth.service
-else
-    disable-service lightdm-plymouth.service
-    enable-service lightdm.service
-fi
 

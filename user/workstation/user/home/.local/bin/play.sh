@@ -115,6 +115,7 @@ function prepare-library {
         file-get "$source" "$path"
         untar "$path" "$LIBRARIES/$1/$version"
     fi
+    
 
     if [ -n "$4" ] && ! [ -f "$LIBRARIES"/$1/$version/setup_$1.sh ]; then
         file-get "$4" "$LIBRARIES"/$1/$version/setup_$1.sh

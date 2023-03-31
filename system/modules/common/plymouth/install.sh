@@ -8,8 +8,8 @@ if grep -q '^HOOKS.*udev' /etc/mkinitcpio.conf && ! grep -q '^HOOKS.*udev.*plymo
     export REBUILD_INITRD=1
 fi
 
-if grep -q '^HOOKS.*systemd' /etc/mkinitcpio.conf && ! grep -q '^HOOKS.*systemd.*sd-plymouth' /etc/mkinitcpio.conf; then
-    sudo sed -E -i 's/^(HOOKS=.*systemd)(.*)/\1 sd-plymouth\2/' /etc/mkinitcpio.conf
+if grep -q '^HOOKS.*systemd' /etc/mkinitcpio.conf && ! grep -q '^HOOKS.*systemd.*plymouth' /etc/mkinitcpio.conf; then
+    sudo sed -E -i 's/^(HOOKS=.*systemd)(.*)/\1 plymouth\2/' /etc/mkinitcpio.conf
     export REBUILD_INITRD=1
 fi
 

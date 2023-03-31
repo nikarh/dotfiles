@@ -110,4 +110,15 @@
     "prettier.documentSelectors": [
         "**/*.{ts,js,css,scss,json,yml,yaml}"
     ],
+    "cSpell.userWords": [
+        "flate",
+        "nikarh",
+        "wineserver"
+    ],
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[css]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
 }
