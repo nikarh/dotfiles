@@ -24,7 +24,7 @@ xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
 ~/.local/bin/xkb-switch-dbus.sh&
 
 # Lock on suspend
-~/.local/bin/dbus-monitor.sh org.powertools Suspend ~/.local/bin/lock.sh&
+~/.local/bin/dbus-monitor.sh org.powertools Suspend betterlockscreen -l dim&
 #light-locker &
 
 # Should fix v-sync problems
@@ -42,13 +42,6 @@ blueman-applet&
 pasystray&
 # Screenshot daemon
 flameshot&
-# Syncthing tray icon
-syncthing-gtk&
 
-# Watch games.yaml and generate .desktop entries and sunshine config
-/home/nikarh/.local/bin/play.sh watch&
-
-# Start sunshine server
-if command -v sunshine &> /dev/null; then
-    systemctl start --user sunshine&
-fi
+# https://github.com/i3/i3/issues/5186
+systemctl start --user sunshine

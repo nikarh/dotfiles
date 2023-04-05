@@ -13,7 +13,7 @@ if [ -n "$ARGS_pipewire" ]; then
     pkg pipewire-jack
 fi
 
-pkg i3-wm i3status-rust i3lock-color betterlockscreen \
+pkg i3-wm i3status-rust i3lock-color-git betterlockscreen-git \
     xkb-switch picom \
     dunst rofi rofi-calc rofi-emoji
 
@@ -22,8 +22,8 @@ pkg i3-wm i3status-rust i3lock-color betterlockscreen \
 pkg alacritty xterm-alacritty-symlink \
     eom xarchiver gsimplecal \
     chromium chromium-widevine firefox vdhcoapp-bin torbrowser-launcher \
-    thunar thunar-archive-plugin thunar-volman tumbler gvfs-smb \
-    qdirstat keepassxc flameshot qbittorrent syncthing syncthing-gtk \
+    thunar thunar-archive-plugin thunar-volman tumbler \
+    qdirstat keepassxc flameshot qbittorrent syncthing \
     libsecret seahorse \
     telegram-desktop slack-desktop epdfview-gtk3 onlyoffice-bin \
     krita inkscape aseprite-git \

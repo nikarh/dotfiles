@@ -1,0 +1,9 @@
+#%PAM-1.0
+auth            include         system-auth
+account         include         system-auth
+
+session         [success=ignore default=2] pam_succeed_if.so user = games
+session         optional        pam_xauth.so
+session         optional        pam_systemd.so
+
+session         include         system-auth

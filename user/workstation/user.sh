@@ -11,6 +11,7 @@ cp -frsTv "$ROOT/user/home/" ~ | prepend '  '
 source "$ROOT/user/home/.profile"
 
 systemctl enable --user syncthing
+systemctl enable --user sunshine
 
 section "Downloading random stuff from the internet..."
 git-get https://github.com/mrzool/bash-sensible.git \

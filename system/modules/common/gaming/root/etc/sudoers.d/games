@@ -1,0 +1,10 @@
+User_Alias GAMES_USERS = %games
+Cmnd_Alias PLAY= /usr/bin/play.sh,/usr/bin/winecfg
+
+Defaults:GAMES_USERS env_reset
+Defaults:GAMES_USERS env_keep += DISPLAY
+Defaults:GAMES_USERS env_keep += XAUTHORITY
+Defaults:GAMES_USERS env_keep += PULSE_SERVER
+Defaults	!lecture,tty_tickets,!fqdn
+
+GAMES_USERS ALL=(games) NOPASSWD: PLAY

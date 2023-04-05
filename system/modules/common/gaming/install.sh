@@ -12,6 +12,9 @@ pkg gamemode
 # Lovely hud as on a steam deck
 pkg mangohud
 
+pkg-local "$ROOT/pkg/wine-nvcuda"
+pkg-local "$ROOT/pkg/play.sh"
+
 if [ -n "$ARGS_streaming" ]; then
     # Game streaming
     pkg sunshine
@@ -20,11 +23,16 @@ if [ -n "$ARGS_streaming" ]; then
 fi
 
 if [ -n "$ARGS_user" ]; then
-    sudo useradd -m -g games -G nopasswdlogin,bluetooth,input,audio,video "$ARGS_user" 2>/dev/null || true
-    sudo mkdir -p /srv/games
-    # sudo chown games:games /src/games
-    # sudo chmod g+s games/
-    # sudo setfacl -d -Rm g:games:rwX /srv/games
+    sudo useradd -m -g games -G bluetooth,input,audio,video "$ARGS_user" 2>/dev/null || true
+    sudo usermod games -s /sbin/nologin
+    sudo passwd -l games
+
+    sudo chmod g+x /home/games
+    sudo loginctl enable-linger games
+
+    SUENV="DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u games)/bus"
+    sudo -u games $SUENV systemctl --user enable --now play.sh
+    sudo -u games $SUENV systemctl --user enable --now syncthing
 fi
 
 add-user-to-groups games

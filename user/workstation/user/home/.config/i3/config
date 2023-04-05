@@ -39,6 +39,9 @@ floating_modifier $mod
 
 default_floating_border pixel 1
 
+bindsym XF86AudioPlay exec "betterlockscreen -l dim"
+bindsym XF86AudioStop exec "dm-tool switch-to-greeter"
+
 bindsym $mod+Shift+q kill
 bindsym $mod+Return exec "LANG=en alacritty -t Terminal"
 bindsym $mod+c exec --no-startup-id "rofi -combi-modi window,drun -show combi -modi combi"

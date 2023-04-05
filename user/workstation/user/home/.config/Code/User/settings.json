@@ -111,9 +111,27 @@
         "**/*.{ts,js,css,scss,json,yml,yaml}"
     ],
     "cSpell.userWords": [
+        "bytemuck",
+        "demultiplication",
+        "dlss",
+        "dxvk",
+        "endianness",
         "flate",
+        "flatpak",
+        "frametime",
+        "gamemoderun",
+        "MANGOHUD",
         "nikarh",
-        "wineserver"
+        "nvapi",
+        "physx",
+        "rsvg",
+        "runtimes",
+        "steamgriddb",
+        "vcrun",
+        "vram",
+        "winecfg",
+        "wineserver",
+        "winetricks"
     ],
     "[typescriptreact]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -121,4 +139,5 @@
     "[css]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
+    "editor.minimap.enabled": false,
 }
