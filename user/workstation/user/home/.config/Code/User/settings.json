@@ -140,4 +140,6 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "editor.minimap.enabled": false,
+    "grammarly.config.documentDialect": "american",
+    "grammarly.config.suggestions.OxfordComma": true,
 }

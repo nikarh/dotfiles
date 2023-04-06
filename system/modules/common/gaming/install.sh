@@ -24,8 +24,8 @@ fi
 
 if [ -n "$ARGS_user" ]; then
     sudo useradd -m -g games -G bluetooth,input,audio,video "$ARGS_user" 2>/dev/null || true
-    sudo usermod games -s /sbin/nologin
-    sudo passwd -l games
+    sudo usermod games -s /sbin/nologin > /dev/null
+    sudo passwd -l games > /dev/null
 
     sudo chmod g+x /home/games
     sudo loginctl enable-linger games

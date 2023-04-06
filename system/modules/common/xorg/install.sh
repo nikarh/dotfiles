@@ -37,6 +37,8 @@ pkg lxappearance-gtk3 qt5ct qt6ct kvantum-theme-arc  \
     dracula-gtk-theme ant-dracula-kde-theme ant-dracula-kvantum-theme-git \
     dracula-cursors-git dracula-icons-git
 
+pkg-local "$ROOT/pkg/micro-locker"
+
 # Copy all configs to root
 sudo cp -ufrTv "$ROOT/root/" /
 

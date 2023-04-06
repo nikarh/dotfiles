@@ -15,17 +15,14 @@ xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
 ~/.local/bin/init-input-devices.sh
 # Set keybaord/mouse settings when USB device plugged
 ~/.local/bin/udev-monitor -s usb -e ~/.local/bin/init-input-devices.sh&
-# Set keybaord/mouse settings after resume from suspend
-~/.local/bin/dbus-monitor.sh org.powertools Resume ~/.local/bin/init-input-devices.sh&
-~/.local/bin/dbus-monitor.sh org.freedesktop.login1.Session Unlock ~/.local/bin/init-input-devices.sh&
-# Unlock is not enough for dm-tool lock
-~/.local/bin/dbus-monitor.sh org.freedesktop.login1.Manager SessionRemoved ~/.local/bin/init-input-devices.sh&
 # Listen to xeyboard layout changes
 ~/.local/bin/xkb-switch-dbus.sh&
 
-# Lock on suspend
-~/.local/bin/dbus-monitor.sh org.powertools Suspend betterlockscreen -l dim&
-#light-locker &
+# Lock on dbus session lock singal
+ON_SUSPEND="betterlockscreen -l dim" \
+ON_LOCK="betterlockscreen -l dim" \
+ON_UNLOCK="killall i3lock" \
+    micro-locker&
 
 # Should fix v-sync problems
 picom&
