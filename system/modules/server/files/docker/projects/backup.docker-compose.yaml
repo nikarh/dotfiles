@@ -18,7 +18,8 @@ services:
     << : *service-defaults
     environment:
       MAXIMUM_BACKUP_NUMBER: 3
-      SFTP_SERVER: files
+      SFTP_HOST: files
+      SFTP_PORT: 2222
       SFTP_USER: backup
       SFTP_ROOT: /data/${DOMAIN}/
     volumes:
