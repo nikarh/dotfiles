@@ -74,6 +74,7 @@ services:
       - 49152:49152/tcp
       - 49152:49152/udp
     environment:
+      DOCKER_MODS: ghcr.io/gabe565/linuxserver-mod-vuetorrent
       << : *arr_env
     volumes:
       - qbittorrent-data:/config
