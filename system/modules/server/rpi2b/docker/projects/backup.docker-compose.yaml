@@ -11,11 +11,14 @@ secrets:
     file: ../common/docker/secrets/backup_rsa
 services:
   backup: &backup
-    image: nikarh/dotfiles-backup
+    image: nikarh/fileserver-sftpd-backup
     container_name: backup
     << : *service-defaults
     environment:
-      BUCKET: ${DOMAIN}
+      MAXIMUM_BACKUP_NUMBER: 3
+      SFTP_SERVER: files
+      SFTP_USER: backup
+      SFTP_ROOT: /data/${DOMAIN}/
     volumes:
       # Volumes to backup
       - mqtt-certs:/volumes/mqtt-certs:ro

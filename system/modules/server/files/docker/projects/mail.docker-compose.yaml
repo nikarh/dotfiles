@@ -16,9 +16,11 @@ volumes:
   roundcube-db:
 services:
   imapsync:
-    image: nikarh/dotfiles-imapsync
+    image: nikarh/fileserver-imapsync
     container_name: imapsync
     << : *service-defaults
+    environment:
+      USERNAME: nikarh
     user: 1000:1000
     volumes:
       - mail-data:/home
@@ -28,8 +30,6 @@ services:
     image: dovecot/dovecot
     container_name: dovecot
     << : *service-defaults
-    environment:
-      TEST_ENV: testenv
     volumes:
       - mail-data:/home
       - /var/lib/docker-services/volumes/dovecot/dovecot.conf:/etc/dovecot/dovecot.conf

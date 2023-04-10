@@ -75,7 +75,7 @@ services:
       - 'traefik.http.routers.homer.rule=Host(`home.arhipov.net`)'
       - 'traefik.http.routers.homer.entrypoints=https'
   samba:
-    image: nikarh/dotfiles-samba
+    image: nikarh/fileserver-samba
     container_name: samba
     << : *service-defaults
     ports:
@@ -83,12 +83,8 @@ services:
       - 138:138/udp # nmbd
       - 139:139 # smb over netbios
       - 445:445 # smb over tcp
-    entrypoint: /run.sh
     volumes:
-      # Configs
-      - /var/lib/docker-services/volumes/samba/run.sh:/run.sh:ro
-      - /var/lib/docker-services/volumes/samba/smb.conf:/etc/samba/smb-base.conf
-      # Data
+      - /var/lib/docker-services/volumes/samba/create-shares.sh:/scripts/create-shares.sh:ro
       - /var/data/home:/home
   sftpd:
     # On 2023.03.15 alpine version started freezing on connection.

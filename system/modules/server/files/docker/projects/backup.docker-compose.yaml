@@ -13,11 +13,14 @@ services:
   # Backup docker volumes to ftp
   # TODO: use labels for that
   volume-backup:
-    image: nikarh/dotfiles-backup
+    image: nikarh/fileserver-sftpd-backup
     container_name: volume-backup
     << : *service-defaults
     environment:
-      BUCKET: ${DOMAIN}
+      MAXIMUM_BACKUP_NUMBER: 3
+      SFTP_SERVER: files
+      SFTP_USER: backup
+      SFTP_ROOT: /data/${DOMAIN}/
     volumes:
       # Volumes to backup
       - traefik-data:/volumes/traefik-data:ro
@@ -45,7 +48,7 @@ services:
 
   # Backup gdrive documents to home server
   gdrive-backup-from:
-    image: nikarh/dotfiles-rclone
+    image: nikarh/fileserver-rclone
     container_name: gdrive-backup-from
     << : *service-defaults
     user: 911:1000
@@ -62,7 +65,7 @@ services:
       '
   # Backup home server documents to gdrive
   gdrive-backup-to:
-    image: nikarh/dotfiles-rclone
+    image: nikarh/fileserver-rclone
     container_name: gdrive-backup-to
     << : *service-defaults
     user: 911:1000
