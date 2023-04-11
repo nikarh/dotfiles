@@ -3,14 +3,7 @@
 # Copy all configs to root
 sudo cp -ufrTv "$ROOT/root/" /
 
-pkg cemu
-
-# Prevents sleep on gamepad inputs
-pkg joystickwake
-# Improves performance and prevents sleep
-pkg gamemode
-# Lovely hud as on a steam deck
-pkg mangohud
+pkg cemu joystickwake gamemode mangohud
 
 pkg-local "$ROOT/pkg/wine-nvcuda"
 pkg-local "$ROOT/pkg/play.sh"
@@ -31,8 +24,14 @@ if [ -n "$ARGS_user" ]; then
     sudo loginctl enable-linger games
 
     SUENV="DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u games)/bus"
-    sudo -u games $SUENV systemctl --user enable --now play.sh
-    sudo -u games $SUENV systemctl --user enable --now syncthing
+
+    if [[ "$(sudo -u games $SUENV systemctl --user is-enabled play.sh)" != "enabled" ]]; then
+        sudo -u games $SUENV systemctl --user enable --now play.sh
+    fi
+
+    if [[ "$(sudo -u games $SUENV systemctl --user is-enabled syncthing)" != "enabled" ]]; then
+        sudo -u games $SUENV systemctl --user enable --now syncthing
+    fi
 fi
 
 add-user-to-groups games
