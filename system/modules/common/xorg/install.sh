@@ -46,5 +46,3 @@ sudo cp -ufrTv "$ROOT/root/" /
 enable-service autorandr.service
 enable-service lightdm.service
 disable-service getty@tty1.service 
-
-

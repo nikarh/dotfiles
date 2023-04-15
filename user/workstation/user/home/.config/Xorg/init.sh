@@ -8,8 +8,6 @@ autorandr --change --default default
 autocutsel -fork
 # Load cursor size, dpi, hinting
 xrdb -all -load ~/.config/Xorg/.Xresources
-# Load key bindings
-xbindkeys -f ~/.config/Xorg/.xbindkeysrc --poll-rc
 
 # Set keybaord/mouse settings
 ~/.local/bin/init-input-devices.sh

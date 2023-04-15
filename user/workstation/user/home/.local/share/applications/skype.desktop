@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-Icon=Skype
-Name=Skype
-GenericName=Skype as a chromium app
-Comment=Launch chromium with Skype
-Exec=chromium --app="https://web.skype.com/"
-Terminal=false

@@ -1,1 +1,1 @@
-EARLYOOM_ARGS="-m 1 -n -r 60 --prefer '(node|java)' --avoid '(^|/)(init|systemd|XorgX|firefox|keepasxc|awesome|dockerd)|containerd|cbatticon|lxpollkit|lxclipboard$'"
+EARLYOOM_ARGS="-m 1 -n -r 60 --prefer '(node|java)' --avoid '(^|/)(init|systemd|XorgX|firefox|keepasxc|awesome|dockerd|i3lock)|containerd|cbatticon|lxpollkit|lxclipboard$'"
