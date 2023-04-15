@@ -2,7 +2,7 @@
 set -e
 
 AUTHELIA_URL=http://authelia:8080
-FORWARDED_HOST=https://files.home.arhipov.net
+FORWARDED_HOST=https://mail.files.home.arhipov.net
 
 username="$(echo -n "$PAM_USER" | jq -aRs .)"
 password="$(echo -n "$(cat -)" | jq -aRs .)"

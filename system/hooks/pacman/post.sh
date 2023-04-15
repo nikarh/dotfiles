@@ -14,7 +14,7 @@ $COMMAND -Syu --noconfirm
 # Remove unrequired dependencies
 UNREQUIRED="$($COMMAND -Qtdq)"
 if [[ -n "$UNREQUIRED" ]]; then
-    echo $COMMAND -Rnscu --noconfirm $UNREQUIRED 2> /dev/null || true
+    $COMMAND -Rnscu --noconfirm $UNREQUIRED 2> /dev/null || true
 fi
 
 EXPLICITLY_INSTALLED=$(pacman -Qqett | sort)

@@ -106,7 +106,7 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.hass.loadbalancer.server.port=8080'
-      - 'traefik.http.routers.hass.rule=Host(`hass.${DOMAIN}`)'
+      - 'traefik.http.routers.hass.rule=Host(`hass.${DOMAIN}`, `h.u8.lv`)'
       - 'traefik.http.routers.hass.entrypoints=https'
     depends_on:
       init-hass-volume:

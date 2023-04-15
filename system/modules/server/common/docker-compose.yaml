@@ -38,10 +38,17 @@ services:
     << : *common-service-defaults
     environment:
       CONTAINER_ENABLE_MONITORING: "false"
-      TARGET_DOMAIN: homenet.arhipov.net
+      TARGET_DOMAIN: homenet.u8.lv
       DOMAIN1: arhipov.net
       DOMAIN1_ZONE_ID: 8f927f276e4b3481aba03ee4d29a9ef9
+      DOMAIN1_TARGET_DOMAIN: homenet.arhipov.net
       DOMAIN1_PROXIED: "false"
+      DOMAIN2: u8.lv
+      DOMAIN2_ZONE_ID: a7a5b30ac9c981dc8d845ef0e398e939
+      DOMAIN2_TARGET_DOMAIN: homenet.u8.lv
+      DOMAIN2_PROXIED: "true"
+      TRAEFIK_EXCLUDED_HOST1: u8\.lv
+      TRAEFIK_EXCLUDED_HOST2: home\.arhipov\.net
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     secrets:
@@ -68,7 +75,7 @@ services:
       - 'traefik.http.routers.api.middlewares=authelia@docker'
       - 'traefik.http.routers.api.rule=Host(`traefik.${DOMAIN}`)'
   authelia:
-    image: authelia/authelia
+    image: authelia/authelia:v4.38.0-beta2
     container_name: authelia
     << : *common-service-defaults
     environment:
@@ -79,10 +86,13 @@ services:
       AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/AUTHELIA_STORAGE_ENCRYPTION_KEY
       AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE: /run/secrets/AUTHELIA_OIDC_HMAC
       AUTHELIA_IDENTITY_PROVIDERS_OIDC_ISSUER_PRIVATE_KEY_FILE: /run/secrets/AUTHELIA_OIDC_ISSUER_PRIVATE_KEY
+      DOMAIN: ${DOMAIN}
+      HOSTNAME: ${HOSTNAME}
     command:
         - authelia
         - '--config=/etc/authelia/configuration.yml'
         - '--config=/etc/authelia/secrets/configuration.oidc.yml'
+        - '--config.experimental.filters=expand-env'
     volumes:
         # /config is chowned, so volume has right permissions
       - authelia-data:/config/data:rw
@@ -97,7 +107,7 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.services.authelia.loadbalancer.server.port=8080'
       - 'traefik.http.routers.authelia.entrypoints=https'
-      - 'traefik.http.routers.authelia.rule=Host(`authelia.${DOMAIN}`)'
+      - 'traefik.http.routers.authelia.rule=Host(`authelia.${DOMAIN}`, `authelia-${HOSTNAME}.u8.lv`)'
       - 'traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true'
       - 'traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email'
-      - 'traefik.http.middlewares.authelia.forwardauth.address=http://authelia:8080/api/verify?rd=https://authelia.${DOMAIN}'
+      - 'traefik.http.middlewares.authelia.forwardauth.address=http://authelia:8080/api/authz/forward-auth'

@@ -142,4 +142,7 @@
     "editor.minimap.enabled": false,
     "grammarly.config.documentDialect": "american",
     "grammarly.config.suggestions.OxfordComma": true,
+    "[yaml]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
 }

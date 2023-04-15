@@ -1,0 +1,34 @@
+version: '3.8'
+x-common-service-defaults: &common-service-defaults
+  restart: unless-stopped
+  logging: 
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+secrets:
+  CF_TOKEN:
+    file: ../common/docker/secrets/cf_token
+services:
+  ddns-arhipov-net:
+    image: oznu/cloudflare-ddns:latest
+    container_name: ddns-arhipov-net
+    << : *common-service-defaults
+    environment:
+      API_KEY_FILE: /run/secrets/CF_TOKEN
+      ZONE: arhipov.net
+      SUBDOMAIN: homenet
+      PROXIED: false
+    secrets:
+      - CF_TOKEN
+  ddns-u8-lv:
+    image: oznu/cloudflare-ddns:latest
+    container_name: ddns-u8-lv
+    << : *common-service-defaults
+    environment:
+      API_KEY_FILE: /run/secrets/CF_TOKEN
+      ZONE: u8.lv
+      SUBDOMAIN: homenet
+      PROXIED: true
+    secrets:
+      - CF_TOKEN

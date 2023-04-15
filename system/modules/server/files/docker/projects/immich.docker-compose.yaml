@@ -33,7 +33,7 @@ services:
       - immich-db-data:/var/lib/postgresql/data
     restart: always
   immich:
-    image: ghcr.io/imagegenius/immich:noml
+    image: ghcr.io/imagegenius/immich:latest
     container_name: immich
     << : *service-defaults
     environment:
@@ -58,5 +58,8 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.immich.loadbalancer.server.port=8080'
-      - 'traefik.http.routers.immich.rule=Host(`immich.${DOMAIN}`)'
+      - 'traefik.http.routers.immich.rule=Host(`immich.${DOMAIN}`, `i.u8.lv`)'
       - 'traefik.http.routers.immich.entrypoints=https'
+      - "traefik.http.routers.immich.middlewares=immich-redirect"
+      - "traefik.http.middlewares.immich-redirect.redirectregex.regex=^https://i\\.u8\\.lv/(.*)"
+      - "traefik.http.middlewares.immich-redirect.redirectregex.replacement=https://immich.${DOMAIN}/$$1"
