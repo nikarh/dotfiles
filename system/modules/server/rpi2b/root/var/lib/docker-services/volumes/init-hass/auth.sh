@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+INTERNAL_AUTHELIA_URL=http://authelia:8080
 AUTHELIA_URL=https://authelia.files.home.arhipov.net
 FORWARDED_HOST=https://hass.pi.home.arhipov.net
 
@@ -32,12 +33,12 @@ fi
 curl -sf \
     -b "$cookie" \
     -H 'X-Original-Url: '$FORWARDED_HOST'' -H 'X-Forwarded-Method: GET' \
-    "$AUTHELIA_URL/api/verify"
+    "$INTERNAL_AUTHELIA_URL/api/verify"
 
 # Get display name
 response="$(curl -sf \
     -b "$cookie" \
-    "$AUTHELIA_URL/api/user/info"
+    "$INTERNAL_AUTHELIA_URL/api/user/info"
 )"
 display_name="$(echo "$response" | jq -r .data.display_name)"
 

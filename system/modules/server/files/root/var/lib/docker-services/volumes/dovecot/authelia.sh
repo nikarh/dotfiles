@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+INTERNAL_AUTHELIA_URL=http://authelia:8080
 AUTHELIA_URL=https://authelia.files.home.arhipov.net
 FORWARDED_HOST=https://mail.files.home.arhipov.net
 
@@ -33,7 +34,7 @@ fi
 curl -sf \
     -b "$cookie" \
     -H 'X-Original-Url: '$FORWARDED_HOST'' -H 'X-Forwarded-Method: GET' \
-    "$AUTHELIA_URL/api/verify"
+    "$INTERNAL_AUTHELIA_URL/api/verify"
 
 echo "Auth verify ok"
 exit 0
