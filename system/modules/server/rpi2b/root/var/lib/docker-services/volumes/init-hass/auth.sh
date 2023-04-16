@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-AUTHELIA_URL=http://authelia:8080
+AUTHELIA_URL=https://authelia.files.home.arhipov.net
 FORWARDED_HOST=https://hass.pi.home.arhipov.net
 
 username="$(echo -n "$username" | jq -aRs .)"
