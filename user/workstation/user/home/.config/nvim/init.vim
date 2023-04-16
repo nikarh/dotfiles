@@ -22,7 +22,6 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'scrooloose/nerdtree'
 Plug 'junegunn/fzf.vim'
 
 " Integrations
@@ -80,9 +79,9 @@ set hlsearch   " when there is a previous search pattern, highlight all its matc
 
 " sync clipboard
 set clipboard=unnamed,unnamedplus
-if has('unix') && !has('mac') && !empty($DISPLAY) && !empty(getreg('+'))
-    autocmd VimLeave * call system("xsel -ib", getreg('+'))
-endif
+"if has('unix') && !has('mac') && !empty($DISPLAY) && !empty(getreg('+'))
+"    autocmd VimLeave * call system("xsel -ib", getreg('+'))
+"endif
 
 " Enable mouse
 set mouse=a
@@ -106,12 +105,7 @@ else
     set listchars=eol:$,tab:>-,extends:>,precedes:<,conceal:+
 endif
 
-nnoremap <leader>n :NERDTreeToggle<CR>
-
 let g:vim_markdown_folding_disabled = 1
-
-" Close VIM if NERDTree is last open window
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " vim-airline
 let g:airline#extensions#tabline#enabled = 1
