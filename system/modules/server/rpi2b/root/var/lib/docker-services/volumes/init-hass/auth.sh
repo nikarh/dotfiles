@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-INTERNAL_AUTHELIA_URL=http://authelia:8080
 AUTHELIA_URL=https://authelia.files.home.arhipov.net
 FORWARDED_HOST=https://hass.pi.home.arhipov.net
 
@@ -23,7 +22,7 @@ headerSize=$(sed -n '$ s/^\([0-9]*\),.*$/\1/ p' <<< "${response}")
 bodySize=$(sed -n '$ s/^.*,\([0-9]*\)$/\1/ p' <<< "${response}")
 headers="${response:0:${headerSize}}"
 body="${response:${headerSize}:${bodySize}}"
-cookie="$(grep -i ^set-cookie <<< "$headers" | cut -c 13-)"
+cookie="$(grep -i ^set-cookie <<< "$headers" | cut -c 13- | awk '{print $1}')"
 
 if [[ "$(echo $body | jq -r .status)" != "OK" ]]; then
     exit 1
@@ -33,12 +32,12 @@ fi
 curl -sf \
     -b "$cookie" \
     -H 'X-Original-Url: '$FORWARDED_HOST'' -H 'X-Forwarded-Method: GET' \
-    "$INTERNAL_AUTHELIA_URL/api/verify"
+    "$AUTHELIA_URL/api/verify"
 
 # Get display name
 response="$(curl -sf \
     -b "$cookie" \
-    "$INTERNAL_AUTHELIA_URL/api/user/info"
+    "$AUTHELIA_URL/api/user/info"
 )"
 display_name="$(echo "$response" | jq -r .data.display_name)"
 
