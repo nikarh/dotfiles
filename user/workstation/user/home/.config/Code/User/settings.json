@@ -1,8 +1,8 @@
 {
     "redhat.telemetry.enabled": false,
     "breadcrumbs.enabled": true,
-    "terminal.integrated.fontFamily": "hack,fontawesome",
-    "editor.fontFamily": "hack,fontawesome",
+    "terminal.integrated.fontFamily": "Hack Nerd Font Propo",
+    "editor.fontFamily": "Hack Nerd Font Propo",
     "editor.renderWhitespace": "all",
     "editor.scrollBeyondLastLine": false,
     "editor.scrollbar.verticalScrollbarSize": 8,
@@ -23,7 +23,7 @@
     "workbench.tree.indent": 20,
     "[rust]": {
         "editor.defaultFormatter": "rust-lang.rust-analyzer",
-        "editor.formatOnSave": true,
+        "editor.formatOnSave": false,
     },
     "C_Cpp.clang_format_sortIncludes": true,
     "C_Cpp.default.cppStandard": "c++14",
@@ -34,14 +34,7 @@
     "cmake.configureOnOpen": true,
     "editor.mouseWheelZoom": true,
     "workbench.colorTheme": "One Dark Pro Darker",
-    "rust-client.channel": "stable",
-    "rust-client.trace.server": "verbose",
-    "rust.all_features": true,
-    "rust-analyzer.cargo.allFeatures": true,
     "rust-analyzer.linkedProjects": [],
-    "shellcheck.customArgs": [
-        "-x"
-    ],
     "security.workspace.trust.untrustedFiles": "open",
     "kotlin.compiler.jvm.target": "16",
     "files.exclude": {
@@ -66,26 +59,6 @@
     "gradle.debug": true,
     "java.eclipse.downloadSources": true,
     "kotlin.trace.server": "verbose",
-    "vs-kubernetes": {
-        "disable-linters": [
-            "resource-limits"
-        ],
-        "vs-kubernetes.namespace": "",
-        "vs-kubernetes.kubectl-path": "",
-        "vs-kubernetes.helm-path": "",
-        "vs-kubernetes.minikube-path": "",
-        "vs-kubernetes.kubectlVersioning": "user-provided",
-        "vs-kubernetes.outputFormat": "yaml",
-        "vs-kubernetes.kubeconfig": "",
-        "vs-kubernetes.knownKubeconfigs": [],
-        "vs-kubernetes.autoCleanupOnDebugTerminate": false,
-        "vs-kubernetes.nodejs-autodetect-remote-root": true,
-        "vs-kubernetes.nodejs-remote-root": "",
-        "vs-kubernetes.nodejs-debug-port": 9229,
-        "vs-kubernetes.local-tunnel-debug-provider": "",
-        "checkForMinikubeUpgrade": true,
-        "imageBuildTool": "Docker"
-    },
     "sqltools.format": {
         "reservedWordCase": "lower",
         "linesBetweenQueries": 2,
@@ -95,7 +68,6 @@
     "rust-analyzer.debug.engineSettings": {
     
     },
-    "haxe.enableCodeLens": true,
     "terminal.integrated.gpuAcceleration": "off",
     "terminal.external.linuxExec": "alacritty",
     "editor.guides.indentation": true,
@@ -111,24 +83,50 @@
         "**/*.{ts,js,css,scss,json,yml,yaml}"
     ],
     "cSpell.userWords": [
+        "alacritty",
+        "Aseprite",
         "bytemuck",
+        "bytestring",
+        "classpath",
         "demultiplication",
+        "DLC's",
+        "dlcs",
         "dlss",
+        "Dsun",
         "dxvk",
         "endianness",
+        "esbenp",
+        "etag",
+        "factorypath",
         "flate",
         "flatpak",
         "frametime",
         "gamemoderun",
+        "goimports",
+        "grammarly",
+        "Hasher",
+        "javaagent",
         "MANGOHUD",
+        "middlewares",
+        "nextest",
         "nikarh",
         "nvapi",
         "physx",
+        "Propo",
+        "reqwest",
         "rsvg",
         "runtimes",
+        "rustfmt",
+        "rustup",
+        "schemars",
+        "sqltools",
         "steamgriddb",
+        "thiserror",
+        "upcasting",
         "vcrun",
+        "vmargs",
         "vram",
+        "vsintellicode",
         "winecfg",
         "wineserver",
         "winetricks"
@@ -139,10 +137,18 @@
     "[css]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "editor.minimap.enabled": false,
-    "grammarly.config.documentDialect": "american",
-    "grammarly.config.suggestions.OxfordComma": true,
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
     "[yaml]": {
         "editor.defaultFormatter": "redhat.vscode-yaml"
     },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.minimap.enabled": true,
+    "grammarly.config.documentDialect": "american",
+    "grammarly.config.suggestions.OxfordComma": true,
+    "rust-analyzer.rustfmt.overrideCommand": null,
+    "editor.guides.bracketPairs": true,
 }

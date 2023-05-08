@@ -2,7 +2,7 @@
 @theme "~/.config/rofi/theme.rasi"
 
 configuration {
-    font: "Hack\ 15";
+    font: "Hack Nerd Font Propo\ 15";
     show-icons: true;
     terminal: "alacritty";
     ssh-client: "ssh";

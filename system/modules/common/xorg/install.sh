@@ -33,8 +33,7 @@ pkg alacritty xterm-alacritty-symlink \
 # Themes and fonts
 pkg lxappearance-gtk3 qt5ct qt6ct kvantum-theme-arc  \
     noto-fonts noto-fonts-emoji ttf-ms-win10-auto \
-    ttf-dejavu ttf-hack ttf-nerd-fonts-symbols-1000-em-mono \
-    dracula-gtk-theme ant-dracula-kde-theme ant-dracula-kvantum-theme-git \
+    ttf-dejavu ttf-hack dracula-gtk-theme ant-dracula-kde-theme ant-dracula-kvantum-theme-git \
     dracula-cursors-git dracula-icons-git
 
 pkg-local "$ROOT/pkg/micro-locker"

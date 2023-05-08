@@ -19,7 +19,6 @@ icons = "awesome4"
 docker = "\uf308"
 update = "󰏕"
 disk_drive = "󰋊"
-memory_mem = "\uf85a"
 microphone = "󰍬"
 headphones = "󰋋"
 
@@ -32,12 +31,12 @@ command = """Z
 [block.theme_overrides]
 idle_fg = "#CED9E0"
 
-[[block]]
-block = "pacman"
-format = " $icon $pacman.eng(w:1)/$aur.eng(w:1) "
-format_up_to_date = ""
-interval = 3600
-aur_command = "yay -Qua"
+# [[block]]
+# block = "pacman"
+# format = " $icon $pacman.eng(w:1)/$aur.eng(w:1) "
+# format_up_to_date = ""
+# interval = 3600
+# aur_command = "yay -Qua"
 
 [[block]]
 block = "docker"
