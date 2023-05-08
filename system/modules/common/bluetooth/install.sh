@@ -7,7 +7,7 @@ if [ -n "$ARGS_gui" ]; then
 fi
 
 # Copy all configs to root
-sudo cp -ufrTv "$ROOT/root/" /
+sudo cp -ufrT "$ROOT/root/" /
 
 # Auto-enable bluetooth
 if ! grep -q '^AutoEnable=true$' /etc/bluetooth/main.conf; then

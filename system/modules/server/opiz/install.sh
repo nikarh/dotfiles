@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # Copy all system configs
-sudo cp -ufrTv "$ROOT/root/" /
+sudo cp -ufrT "$ROOT/root/" /
 
 # sudo apt update
 # sudo apt install docker.io docker-compose

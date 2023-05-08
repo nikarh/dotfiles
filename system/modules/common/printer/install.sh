@@ -8,7 +8,7 @@ if [ -n "$ARGS_gui" ]; then
 fi
 
 # Copy all configs to root
-sudo cp -ufrTv "$ROOT/root/" /
+sudo cp -ufrT "$ROOT/root/" /
 
 enable-service cups
 add-user-to-groups lp

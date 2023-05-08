@@ -11,8 +11,7 @@ echo
 # Upgrade all dependencies
 $COMMAND -Syu --noconfirm
 
-# Remove unrequired dependencies
-UNREQUIRED="$($COMMAND -Qtdq)"
+UNREQUIRED="$($COMMAND -Qtdq || echo)"
 if [[ -n "$UNREQUIRED" ]]; then
     $COMMAND -Rnscu --noconfirm $UNREQUIRED 2> /dev/null || true
 fi

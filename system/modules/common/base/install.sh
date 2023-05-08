@@ -12,7 +12,7 @@ pkg "$ARGS_kernel" "${ARGS_kernel}-headers" linux-firmware \
     systemd-swap earlyoom
 
 # Copy all configs to root
-sudo cp -ufrTv "$ROOT/root/" /
+sudo cp -ufrT "$ROOT/root/" /
 
 # Setup hostname and timezone
 sudo hostnamectl set-hostname "$ARGS_hostname"

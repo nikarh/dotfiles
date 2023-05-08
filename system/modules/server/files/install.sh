@@ -13,9 +13,9 @@ if [[ "$(readlink -f /etc/systemd/system/mdmonitor.service)" != "/dev/null" ]]; 
 fi
 
 # Copy all system configs
-sudo cp -ufrTv "$ROOT/root/etc/" /etc
-sudo cp -ufrTv "$ROOT/root/usr/" /usr
-sudo cp -ufrTv "$ROOT/root/var/" /var
+sudo cp -ufrT "$ROOT/root/etc/" /etc
+sudo cp -ufrT "$ROOT/root/usr/" /usr
+sudo cp -ufrT "$ROOT/root/var/" /var
 
 # TODO: Move to init container?
 sudo chmod 600 /var/lib/docker-services/volumes/sftpd/secrets/ssh*
@@ -30,7 +30,7 @@ sudo chown files:files /var/data/home/*/*
 sudo chmod 755 /var/data/home/*
 
 # SSH authorized_keys for backup user
-sudo cp -ufrTv "$ROOT/home/backup/" /var/data/home/backup/
+sudo cp -ufrT "$ROOT/home/backup/" /var/data/home/backup/
 sudo chmod -R go-rx /var/data/home/backup/.ssh
 sudo chown -R files:files /var/data/home/backup/.ssh
 

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-sudo cp -ufrTv "$ROOT/root/" /
+sudo cp -ufrT "$ROOT/root/" /
 
 enable-service --now systemd-resolved
 enable-service --now systemd-networkd

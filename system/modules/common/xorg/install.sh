@@ -39,7 +39,7 @@ pkg lxappearance-gtk3 qt5ct qt6ct kvantum-theme-arc  \
 pkg-local "$ROOT/pkg/micro-locker"
 
 # Copy all configs to root
-sudo cp -ufrTv "$ROOT/root/" /
+sudo cp -ufrT "$ROOT/root/" /
 
 # Systemd units
 enable-service autorandr.service
