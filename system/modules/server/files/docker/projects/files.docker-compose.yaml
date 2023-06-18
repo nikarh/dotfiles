@@ -124,6 +124,20 @@ services:
       - "-d=/mnt/data/filebrowser.db"
       - "-c=/mnt/data/filebrowser.json"
       - "-p=8080"
+  miniserve:
+    image: docker.io/svenstaro/miniserve
+    << : *service-defaults
+    user: 1000:1000
+    volumes:
+      - /var/data/shares/tmp/Games:/data
+    command:
+      - /data
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.miniserve.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.miniserve.rule=Host(`miniserve.${DOMAIN}`)'
+      - 'traefik.http.routers.miniserve.entrypoints=https'
+      - 'traefik.http.middlewares.miniserve.basicauth.users=${MINISERVE_AUTH}'
   syncthing:
     image: lscr.io/linuxserver/syncthing
     container_name: syncthing
