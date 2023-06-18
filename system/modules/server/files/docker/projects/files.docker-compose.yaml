@@ -125,16 +125,14 @@ services:
       - "-c=/mnt/data/filebrowser.json"
       - "-p=8080"
   miniserve:
-    image: python:3.9-slim
+    image: httpd
+    container_name: miniserve
     << : *service-defaults
-    user: 1000:1000
     volumes:
-      - /var/data/shares/tmp/Games:/data
-    working_dir: /data
-    command: "python -m http.server 8080"
+      - /var/data/shares/tmp/Games:/usr/local/apache2/htdocs:ro
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.services.miniserve.loadbalancer.server.port=8080'
+      - 'traefik.http.services.miniserve.loadbalancer.server.port=80'
       - 'traefik.http.routers.miniserve.rule=Host(`miniserve.${DOMAIN}`)'
       - 'traefik.http.routers.miniserve.entrypoints=https'
       - "traefik.http.routers.miniserve.middlewares=miniserve-auth"
