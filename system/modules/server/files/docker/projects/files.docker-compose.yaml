@@ -125,13 +125,13 @@ services:
       - "-c=/mnt/data/filebrowser.json"
       - "-p=8080"
   miniserve:
-    image: docker.io/svenstaro/miniserve
+    image: python:3.9-slim
     << : *service-defaults
     user: 1000:1000
     volumes:
       - /var/data/shares/tmp/Games:/data
-    command:
-      - /data
+    working_dir: /data
+    command: "python -m http.server 8000"
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.miniserve.loadbalancer.server.port=8080'
