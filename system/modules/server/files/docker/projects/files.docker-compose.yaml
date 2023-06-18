@@ -131,7 +131,7 @@ services:
     volumes:
       - /var/data/shares/tmp/Games:/data
     working_dir: /data
-    command: "python -m http.server 8000"
+    command: "python -m http.server 8080"
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.services.miniserve.loadbalancer.server.port=8080'
