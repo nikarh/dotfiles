@@ -137,7 +137,8 @@ services:
       - 'traefik.http.services.miniserve.loadbalancer.server.port=8080'
       - 'traefik.http.routers.miniserve.rule=Host(`miniserve.${DOMAIN}`)'
       - 'traefik.http.routers.miniserve.entrypoints=https'
-      - 'traefik.http.middlewares.miniserve.basicauth.users=${MINISERVE_AUTH}'
+      - "traefik.http.routers.miniserve.middlewares=miniserve-auth"
+      - 'traefik.http.middlewares.miniserve-auth.basicauth.users=${MINISERVE_AUTH}'
   syncthing:
     image: lscr.io/linuxserver/syncthing
     container_name: syncthing
