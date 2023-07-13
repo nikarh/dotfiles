@@ -173,7 +173,6 @@ services:
       - 'traefik.http.services.jellyseerr.loadbalancer.server.port=5055'
       - 'traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.${DOMAIN}`)'
       - 'traefik.http.routers.jellyseerr.entrypoints=https'
-      - 'traefik.http.routers.jellyseerr.middlewares=authelia@docker'
       # We leverage authelia, autologin here until https://github.com/Fallenbagel/jellyseerr/pull/184 is merged
       # - 'traefik.http.routers.jellyseerr.middlewares=authelia@docker,jellyheaders'
       # - 'traefik.http.middlewares.jellyheaders.headers.customrequestheaders.X-API-Key=MTY4OTIzMjU4NzYxOGY2ZjU5MDRkLWExZTctNDNiMy1iZTgwLWVhZTk5YTIxNjlmNw=='
