@@ -28,8 +28,7 @@ trysource /usr/share/nvm/init-nvm.sh
 if type -P fd > /dev/null; then
     FZF_CTRL_T_COMMAND="fd"
 fi
-FZF_TMUX=1
+
 trysource /usr/share/fzf/completion.bash
 trysource /usr/share/fzf/key-bindings.bash
-trysource ~/.fzf.bash
 
