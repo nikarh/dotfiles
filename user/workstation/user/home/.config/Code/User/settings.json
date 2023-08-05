@@ -23,7 +23,7 @@
     "workbench.tree.indent": 20,
     "[rust]": {
         "editor.defaultFormatter": "rust-lang.rust-analyzer",
-        "editor.formatOnSave": false,
+        "editor.formatOnSave": true,
     },
     "C_Cpp.clang_format_sortIncludes": true,
     "C_Cpp.default.cppStandard": "c++14",
@@ -46,14 +46,20 @@
     "go.formatTool": "goimports",
     "workbench.startupEditor": "none",
     "java.configuration.runtimes": [
+
         {
             "name": "JavaSE-1.8",
-            "path": "/usr/lib/jvm/java-8-openjdk",
+            "path": "/usr/lib/jvm/java-8-openjdk"
+        },
+        {
+            "name": "JavaSE-17",
+            "path": "/usr/lib/jvm/java-17-openjdk",
             "default": true
         },
         {
-            "name": "JavaSE-19",
-            "path": "/usr/lib/jvm/java-19-openjdk",
+            "name": "JavaSE-20",
+            "path": "/usr/lib/jvm/java-20-openjdk",
+            "default": false
         },
     ],
     "gradle.debug": true,
@@ -72,7 +78,7 @@
     "terminal.external.linuxExec": "alacritty",
     "editor.guides.indentation": true,
     "typescript.updateImportsOnFileMove.enabled": "always",
-    "java.jdt.ls.java.home": "/usr/lib/jvm/java-19-openjdk",
+    "java.jdt.ls.java.home": "/usr/lib/jvm/java-20-openjdk",
     "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx1G -Xms100m -javaagent:\"/home/nikarh/.vscode-oss/extensions/gabrielbb.vscode-lombok-1.0.1/server/lombok.jar\"",
     "lldb.suppressUpdateNotifications": true,
     "workbench.editor.limit.enabled": true,
@@ -85,6 +91,7 @@
     "cSpell.userWords": [
         "alacritty",
         "Aseprite",
+        "backface",
         "bytemuck",
         "bytestring",
         "classpath",
@@ -105,9 +112,11 @@
         "goimports",
         "grammarly",
         "Hasher",
+        "hecs",
         "javaagent",
         "MANGOHUD",
         "middlewares",
+        "nalgebra",
         "nextest",
         "nikarh",
         "nvapi",
@@ -129,7 +138,8 @@
         "vsintellicode",
         "winecfg",
         "wineserver",
-        "winetricks"
+        "winetricks",
+        "yapgeir"
     ],
     "[typescriptreact]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -151,4 +161,42 @@
     "grammarly.config.suggestions.OxfordComma": true,
     "rust-analyzer.rustfmt.overrideCommand": null,
     "editor.guides.bracketPairs": true,
+    "yaml.customTags": [
+        "!And",
+        "!And sequence",
+        "!If",
+        "!If sequence",
+        "!Not",
+        "!Not sequence",
+        "!Equals",
+        "!Equals sequence",
+        "!Or",
+        "!Or sequence",
+        "!FindInMap",
+        "!FindInMap sequence",
+        "!Base64",
+        "!Join",
+        "!Join sequence",
+        "!Cidr",
+        "!Ref",
+        "!Sub",
+        "!Sub sequence",
+        "!GetAtt",
+        "!GetAZs",
+        "!ImportValue",
+        "!ImportValue sequence",
+        "!Select",
+        "!Select sequence",
+        "!Split",
+        "!Split sequence"
+    ],
+    "aws.telemetry": false,
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.inlineSuggest.enabled": true,
+    "window.confirmBeforeClose": "always",
+    "debug.terminal.clearBeforeReusing": true,
+    "terminal.integrated.allowChords": false,
+    "terminal.integrated.defaultProfile.linux": "bash",
 }

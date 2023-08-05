@@ -41,6 +41,7 @@ modules:
   - name: common/printer
     gui: true
   - name: common/development
+  - name: common/work
   - name: home-pc-linux/android
   - name: home-pc-linux/fancontrol
   - name: home-pc-linux/fix-b550m-sleep

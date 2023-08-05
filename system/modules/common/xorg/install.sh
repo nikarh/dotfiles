@@ -22,7 +22,7 @@ pkg i3-wm i3status-rust i3lock-color-git betterlockscreen-git \
 pkg alacritty xterm-alacritty-symlink \
     eom xarchiver gsimplecal \
     chromium chromium-widevine firefox vdhcoapp-bin torbrowser-launcher \
-    thunar thunar-archive-plugin thunar-volman tumbler \
+    thunar thunar-archive-plugin thunar-volman tumbler gvfs \
     qdirstat keepassxc flameshot qbittorrent syncthing \
     libsecret seahorse \
     telegram-desktop slack-desktop epdfview-gtk3 onlyoffice-bin \
@@ -33,7 +33,7 @@ pkg alacritty xterm-alacritty-symlink \
 # Themes and fonts
 pkg lxappearance-gtk3 qt5ct qt6ct kvantum-theme-arc  \
     noto-fonts noto-fonts-emoji ttf-ms-win10-auto \
-    ttf-dejavu ttf-hack dracula-gtk-theme ant-dracula-kde-theme ant-dracula-kvantum-theme-git \
+    ttf-dejavu ttf-hack-nerd dracula-gtk-theme ant-dracula-kde-theme ant-dracula-kvantum-theme-git \
     dracula-cursors-git dracula-icons-git
 
 pkg-local "$ROOT/pkg/micro-locker"
