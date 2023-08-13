@@ -100,7 +100,7 @@ access_control:
         - "group:residents"
     - domain_regex:
         - '^(roborock|files)\.home\.arhipov\.net$'
-        - '^(f)\.u8\.lv$'
+        - '^(f|r)\.u8\.lv$'
       policy: one_factor
       subject:
         - "group:residents"
