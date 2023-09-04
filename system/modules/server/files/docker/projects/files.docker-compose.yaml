@@ -171,7 +171,7 @@ services:
       PHOTOPRISM_EXPERIMENTAL: "true"                # Enables experimental featuress
       PHOTOPRISM_UPLOAD_NSFW: "true"                 # Allow uploads that MAY be offensive
       PHOTOPRISM_DATABASE_DRIVER: "sqlite"           # SQLite is an embedded database that doesn't require a servers
-      PHOTOPRISM_DATABASE_DSN: "/photoprism/database/db.sqlite"
+      PHOTOPRISM_DATABASE_DSN: "/photoprism/database/db/db.sqlite"
       PHOTOPRISM_SITE_URL: "https://photos.${DOMAIN}/"  # Public PhotoPrism URL
       PHOTOPRISM_SITE_TITLE: "Photos"
       PHOTOPRISM_SITE_CAPTION: "My photos"
