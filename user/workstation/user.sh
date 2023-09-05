@@ -40,7 +40,7 @@ install-code-extensions \
     PKief.material-icon-theme zhuangtongfa.material-theme \
     k--kato.intellij-idea-keybindings 2gua.rainbow-brackets \
     ms-vscode.cpptools ms-vscode.cmake-tools \
-    rust-lang.rust-analyzer tamasfe.even-better-toml vadimcn.vscode-lldb \
+    rust-lang.rust-analyzer tamasfe.even-better-toml \
     mtxr.sqltools mtxr.sqltools-driver-pg \
     fwcd.kotlin \
     redhat.vscode-yaml \
@@ -54,6 +54,51 @@ install-code-extensions \
     chrislajoie.vscode-modelines \
     usernamehw.errorlens \
     buenon.scratchpads anweber.vscode-httpyac \
+    bradlc.vscode-tailwindcss \
+    circledev.glsl-canvas \
+    emilast.LogFileHighlighter \
+    esbenp.prettier-vscode \
+    GitHub.copilot \
+    github.vscode-github-actions \
+    Gruntfuggly.todo-tree \
+    IronGeek.vscode-env \
+    JScearcy.rust-doc-viewer \
+    ms-azuretools.vscode-docker \
+    ms-dotnettools.vscode-dotnet-runtime \
+    ms-kubernetes-tools.kind-vscode \
+    ms-kubernetes-tools.vscode-kubernetes-tools \
+    ms-vscode.cpptools-extension-pack \
+    ms-vscode.cpptools-themes \
+    ms-vscode.makefile-tools \
+    ms-vscode.remote-explorer \
+    ms-vscode-remote.remote-containers \
+    ms-vscode-remote.remote-ssh \
+    ms-vscode-remote.remote-ssh-edit \
+    ms-vscode.test-adapter-converter \
+    ms-vsliveshare.vsliveshare \
+    naco-siren.gradle-language \
+    Orta.vscode-jest \
+    paulheg.image-diff \
+    raczzalan.webgl-glsl-editor \
+    redhat.java \
+    redhat.vscode-xml \
+    richardwillis.vscode-gradle-extension-pack \
+    sandipchitale.vscode-kubernetes-edit-kubeconfig \
+    sandipchitale.vscode-kubernetes-helm-extension-pack \
+    sandipchitale.vscode-kubernetes-helm-extras \
+    shengchen.vscode-checkstyle \
+    streetsidesoftware.code-spell-checker \
+    tomoki1207.pdf \
+    vscjava.vscode-gradle \
+    vscjava.vscode-java-debug \
+    vscjava.vscode-java-dependency \
+    vscjava.vscode-java-pack \
+    vscjava.vscode-java-test \
+    vscjava.vscode-lombok \
+    vscjava.vscode-maven \
+    waderyan.gitblame \
+    wgsl-analyzer.wgsl-analyzer \
+    znck.grammarly \
     | prepend '  '
 
 section "Adding userChrome to firefox..."

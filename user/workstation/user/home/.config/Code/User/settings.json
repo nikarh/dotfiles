@@ -74,8 +74,9 @@
     "rust-analyzer.debug.engineSettings": {
     
     },
-    "terminal.integrated.gpuAcceleration": "off",
+    "terminal.integrated.gpuAcceleration": "on",
     "terminal.external.linuxExec": "alacritty",
+    "terminal.integrated.enablePersistentSessions": false,
     "editor.guides.indentation": true,
     "typescript.updateImportsOnFileMove.enabled": "always",
     "java.jdt.ls.java.home": "/usr/lib/jvm/java-20-openjdk",
@@ -199,4 +200,10 @@
     "debug.terminal.clearBeforeReusing": true,
     "terminal.integrated.allowChords": false,
     "terminal.integrated.defaultProfile.linux": "bash",
+    "github.copilot.enable": {
+        "*": true,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false
+    },
 }

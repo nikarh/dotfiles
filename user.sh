@@ -27,17 +27,20 @@ function file-get {
 
 function install-code-extensions {
     local INSTALLED_EXTENSIONS=$(code --list-extensions)
+    local UNEXPECTED=$(comm --output-delimiter=--- -3 \
+        <(echo "$INSTALLED_EXTENSIONS" | tr " " "\n" | sort) \
+        <(echo "$@" | tr " " "\n" | sort) | grep -v ^---)
+
+    if [[ -n "$UNEXPECTED" ]]; then
+        echo Unexpected extensions installed:
+        echo "$(echo "$UNEXPECTED" | sed 's/ /\n    /g')"
+    fi
+
     for EXTENSION in "$@"; do
         if ! echo "$INSTALLED_EXTENSIONS" | grep -qw "$EXTENSION"; then
             code --install-extension "$EXTENSION" 2>&1;
         fi
     done
-
-    local UNEXPECTED=$(comm --output-delimiter=--- -3 \
-        <(echo "$INSTALLED_EXTENSIONS" | tr " " "\n" | sort) \
-        <(echo "$@" | tr " " "\n" | sort) | grep -v ^---)
-
-    echo Unexpected extensions installed: $UNEXPECTED
 }
 
 function ln-all {
