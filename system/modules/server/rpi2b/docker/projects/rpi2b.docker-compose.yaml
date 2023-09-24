@@ -48,6 +48,8 @@ services:
         chown 1883:1883 /mosquitto/tls/*;
 
         cp /mosquitto/config/users.conf /mosquitto/users.conf
+        chown mosquitto:mosquitto /mosquitto/users.conf
+        chmod 660 /mosquitto/users.conf;
         /usr/bin/mosquitto_passwd -U /mosquitto/users.conf;
    
         /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf;
