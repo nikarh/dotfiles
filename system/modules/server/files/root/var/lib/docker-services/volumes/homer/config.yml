@@ -42,7 +42,7 @@ message:
   content: "SFTP is accessible at <a href=\"sftp://files.home.arhipov.net:2222\">files.home.arhipov.net:2222</a>"
 
 services:
-  - name: Home
+  - name: Devices
     items:
       - name: Router
         subtitle: WAN->Ethernet router
@@ -98,10 +98,20 @@ services:
         subtitle: "P2P file sharing"
         url: "https://syncthing.files.home.arhipov.net"
         target: "_blank"
+      - name: "Immich"
+        icon: "fas fa-image-portrait"
+        subtitle: "Phone photo backups"
+        url: "https://immich.files.home.arhipov.net"
+        target: "_blank"
       - name: "Photoprism"
         icon: "fas fa-camera-retro"
-        subtitle: "Photos collection"
+        subtitle: "DSLR photos"
         url: "https://photos.files.home.arhipov.net"
+        target: "_blank"
+      - name: "Mail"
+        icon: "fas fa-envelope"
+        subtitle: "Mail backup"
+        url: "https://mail.files.home.arhipov.net"
         target: "_blank"
       - name: "ESPHome"
         icon: "fas fa-microchip"
@@ -112,8 +122,13 @@ services:
     items:
       - name: "Jellyfin"
         icon: "fas fa-film"
-        subtitle: "Media server"
+        subtitle: "Media streaming"
         url: "https://media.files.home.arhipov.net"
+        target: "_blank"
+      - name: "Kavita"
+        icon: "fas fa-book"
+        subtitle: "Book streaming"
+        url: "https://kavita.files.home.arhipov.net"
         target: "_blank"
       - name: "Jellyseerr"
         icon: "fas fa-clapperboard"
@@ -129,6 +144,11 @@ services:
         icon: "fas fa-satellite-dish"
         subtitle: "Shows fetcher"
         url: "https://sonarr.files.home.arhipov.net"
+        target: "_blank"
+      - name: "Readarr"
+        icon: "fas fa-satellite-dish"
+        subtitle: "Books fetcher"
+        url: "https://readarr.files.home.arhipov.net"
         target: "_blank"
       - name: "Bazarr"
         icon: "fas fa-closed-captioning"
