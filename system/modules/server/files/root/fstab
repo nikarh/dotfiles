@@ -1,7 +1,6 @@
 # BEGIN mounts
 LABEL=bigdata /var/data auto rw,defaults,autodefrag,nossd,noatime,compress=zstd,x-systemd.device-timeout=10 0 0
-LABEL=data /mnt auto rw,defaults,nofail,noatime,x-systemd.device-timeout=10 0 0
-#LABEL=smalldisks /mnt auto rw,defaults,autodefrag,nossd,noatime,compress=zstd
+LABEL=smalldata /var/smalldata auto rw,defaults,autodefrag,nossd,noatime,compress=zstd,x-systemd.device-timeout=10 0 0
 
 /var/data/shares/tmp /var/data/home/shield/shared           none defaults,rbind,nofail 0 0
 /var/data/shares/nikarh /var/data/home/nikarh/data          none defaults,rbind,nofail 0 0

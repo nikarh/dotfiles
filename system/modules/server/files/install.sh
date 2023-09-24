@@ -21,12 +21,14 @@ sudo cp -ufrT "$ROOT/root/var/" /var
 sudo chmod 600 /var/lib/docker-services/volumes/sftpd/secrets/ssh*
 
 # Append bind mounts
+sudo mkdir -p /var/smalldata
 sudo mkdir -p /var/data/{shares,home}
 sudo mkdir -p /var/data/home/{backup/data,shield/shared,{nikarh,anastasiia}/{data,shared}}
 
 # Fix permissions for PAM authentication
 sudo chown files:files /var/data/shares/*
 sudo chown files:files /var/data/home/*/*
+sudo chown files:files /var/smalldata
 sudo chmod 755 /var/data/home/*
 
 # SSH authorized_keys for backup user
