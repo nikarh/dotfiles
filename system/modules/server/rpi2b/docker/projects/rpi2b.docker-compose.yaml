@@ -32,7 +32,7 @@ services:
       - mqtt-certs:/certs
       - /var/lib/docker-services/volumes/init-mqtt-certs:/cfg:ro
   mqtt:
-    image: eclipse-mosquitto
+    image: eclipse-mosquitto:2.0.15
     container_name: mqtt
     networks:
       default:
