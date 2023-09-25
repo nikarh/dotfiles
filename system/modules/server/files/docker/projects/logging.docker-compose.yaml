@@ -13,6 +13,8 @@ x-common-service-defaults: &common-service-defaults
 volumes:
   vector-logs:
   fail2ban-db:
+  loki-data:
+  grafana-data:
 services:
   vector:
     image: timberio/vector:latest-alpine
@@ -25,6 +27,56 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - /var/lib/docker-services/volumes/vector:/etc/vector
       - vector-logs:/out
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    <<: *common-service-defaults
+    volumes:
+      - loki-data:/loki
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    <<: *common-service-defaults
+    user: "1000"
+    environment:
+      GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+      GF_AUTH_BASIC_ENABLED: "false"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_USERS_AUTO_ASSIGN_ORG: "true"
+      GF_USERS_AUTO_ASSIGN_ORG_ROLE: "Admin"
+      GF_AUTH_PROXY_ENABLED: "true"
+      GF_AUTH_PROXY_HEADER_NAME: "Remote-User"
+      GF_AUTH_PROXY_HEADERS: "Name:Remote-Name Email:Remote-Email Groups:Remote-Groups"
+      GF_AUTH_PROXY_AUTO_SIGN_UP: "true"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        mkdir -p /etc/grafana/provisioning/datasources
+        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
+        apiVersion: 1
+        datasources:
+        - name: Loki
+          type: loki
+          access: proxy
+          orgId: 1
+          url: http://loki:3100
+          basicAuth: false
+          isDefault: true
+          version: 1
+          editable: false
+        EOF
+        /run.sh
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN}`)"
+      - "traefik.http.routers.grafana.entrypoints=https"
+      - "traefik.http.routers.grafana.middlewares=authelia@docker"
   logrotate:
     image: linkyard/logrotate
     container_name: logrotate
