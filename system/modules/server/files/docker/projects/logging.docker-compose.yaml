@@ -1,0 +1,67 @@
+version: "3.8"
+x-common-env: &common_env
+  PGID: 1000
+  PUID: 1000
+  TZ: Europe/Riga
+x-common-service-defaults: &common-service-defaults
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+volumes:
+  vector-logs:
+  fail2ban-db:
+services:
+  vector:
+    image: timberio/vector:latest-alpine
+    container_name: vector
+    <<: *common-service-defaults
+    environment:
+      VECTOR_OPENSSL_LEGACY_PROVIDER: "false"
+      TZ: Europe/Riga
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - /var/lib/docker-services/volumes/vector:/etc/vector
+      - vector-logs:/out
+  logrotate:
+    image: linkyard/logrotate
+    container_name: logrotate
+    <<: *common-service-defaults
+    environment:
+      LOGROTATE_FILE_PATTERN: "*.log"
+      LOGROTATE_ROTATE: "0"
+      LOGROTATE_TRUNCATE: "copytruncate"
+      LOGROTATE_CRON: "*/5 0 0 0 0"
+      LOGROTATE_SIZE: "10M"
+    volumes:
+      - vector-logs:/logs
+  init-fail2ban-volume:
+    image: alpine
+    command: >
+      sh -c "
+        mkdir -p /db/fail2ban;
+        chown 1000:1000 /db/fail2ban;
+      "
+    volumes:
+      - fail2ban-db:/db
+  fail2ban:
+    image: lscr.io/linuxserver/fail2ban:latest
+    container_name: fail2ban
+    <<: *common-service-defaults
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    network_mode: host
+    environment:
+      <<: *common_env
+      VERBOSITY: -vvv
+    volumes:
+      - /var/lib/docker-services/volumes/fail2ban/jail.local:/config/fail2ban/jail.local:ro
+      - /var/lib/docker-services/volumes/fail2ban/fail2ban.local:/config/fail2ban/fail2ban.local:ro
+      - vector-logs:/remotelogs:ro
+      - fail2ban-db:/db
+    depends_on:
+      init-fail2ban-volume:
+        condition: service_completed_successfully

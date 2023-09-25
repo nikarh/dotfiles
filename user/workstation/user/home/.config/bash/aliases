@@ -11,8 +11,8 @@ alias tetris='docker run --rm -it nikarh/gotromino'
 alias dicker='docker'
 alias got='git'
 
-if type -P exa > /dev/null; then
-    alias ls='exa'
-    alias l='exa -la'
-    alias e='exa -la'
+if type -P eza > /dev/null; then
+    alias ls='eza'
+    alias l='eza -la'
+    alias e='eza -la'
 fi

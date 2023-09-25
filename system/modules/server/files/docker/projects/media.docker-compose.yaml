@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 x-arr-env: &arr_env
   PGID: 1000
   PUID: 1000
@@ -26,7 +26,7 @@ services:
   jellyfin:
     image: lscr.io/linuxserver/jellyfin
     container_name: jellyfin
-    << : *service-defaults
+    <<: *service-defaults
     group_add:
       - "989" # render
       - "985" # video
@@ -36,7 +36,7 @@ services:
     devices:
       - /dev/dri:/dev/dri
     environment:
-      << : *arr_env
+      <<: *arr_env
       JELLYFIN_PublishedServerUrl: https://media.${DOMAIN}
     volumes:
       - jellyfin-config:/config
@@ -44,135 +44,135 @@ services:
       - /var/data/shares/nikarh/Music:/music
       - /var/data/shares/nikarh/Videos:/nikarh/videos
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.jellyfin.loadbalancer.server.port=8096'
-      - 'traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`, `j.u8.lv`)'
-      - 'traefik.http.routers.jellyfin.entrypoints=https'
+      - "traefik.enable=true"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+      - "traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`, `j.u8.lv`)"
+      - "traefik.http.routers.jellyfin.entrypoints=https"
   # Book UI
   kavita:
     image: kizaing/kavita
     container_name: kavita
-    << : *service-defaults
+    <<: *service-defaults
     environment:
       TZ: Europe/Riga
     volumes:
       - /var/data/shares/tmp/Books:/books
       - kavita-data:/kavita/config
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.kavita.loadbalancer.server.port=5000'
-      - 'traefik.http.routers.kavita.rule=Host(`kavita.${DOMAIN}`)'
-      - 'traefik.http.routers.kavita.entrypoints=https'
+      - "traefik.enable=true"
+      - "traefik.http.services.kavita.loadbalancer.server.port=5000"
+      - "traefik.http.routers.kavita.rule=Host(`kavita.${DOMAIN}`)"
+      - "traefik.http.routers.kavita.entrypoints=https"
       # Has it's own auth, does not support any alternative auth or auto-login.
       # TODO: Pass constant authorization header? Does it expire?
       # - 'traefik.http.routers.photoprism.middlewares=authelia@docker'
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent
     container_name: qbittorrent
-    << : *service-defaults
+    <<: *service-defaults
     ports:
       - 49152:49152/tcp
       - 49152:49152/udp
     environment:
       DOCKER_MODS: ghcr.io/gabe565/linuxserver-mod-vuetorrent
-      << : *arr_env
+      <<: *arr_env
     volumes:
       - qbittorrent-data:/config
       - /var/data/shares/tmp:/downloads
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.torrents.loadbalancer.server.port=8080'
-      - 'traefik.http.routers.torrents.rule=Host(`torrents.${DOMAIN}`)'
-      - 'traefik.http.routers.torrents.entrypoints=https'
-      - 'traefik.http.routers.torrents.middlewares=authelia@docker'
+      - "traefik.enable=true"
+      - "traefik.http.services.torrents.loadbalancer.server.port=8080"
+      - "traefik.http.routers.torrents.rule=Host(`torrents.${DOMAIN}`)"
+      - "traefik.http.routers.torrents.entrypoints=https"
+      - "traefik.http.routers.torrents.middlewares=authelia@docker"
   # Indexer manager
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:develop
     container_name: prowlarr
-    << : *service-defaults
+    <<: *service-defaults
     environment: *arr_env
     volumes:
       - prowlarr-data:/config
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.prowlarr.loadbalancer.server.port=9696'
-      - 'traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)'
-      - 'traefik.http.routers.prowlarr.entrypoints=https'
-      - 'traefik.http.routers.prowlarr.middlewares=authelia@docker'
+      - "traefik.enable=true"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)"
+      - "traefik.http.routers.prowlarr.entrypoints=https"
+      - "traefik.http.routers.prowlarr.middlewares=authelia@docker"
   # Movie manager
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
-    << : *service-defaults
+    <<: *service-defaults
     environment: *arr_env
     volumes:
       - radarr-data:/config
       - /var/data/shares/tmp:/downloads
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.radarr.loadbalancer.server.port=7878'
-      - 'traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)'
-      - 'traefik.http.routers.radarr.entrypoints=https'
-      - 'traefik.http.routers.radarr.middlewares=authelia@docker'
+      - "traefik.enable=true"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)"
+      - "traefik.http.routers.radarr.entrypoints=https"
+      - "traefik.http.routers.radarr.middlewares=authelia@docker"
   # Show manager
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
-    << : *service-defaults
+    <<: *service-defaults
     environment: *arr_env
     volumes:
       - sonarr-data:/config
       - /var/data/shares/tmp:/downloads
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.sonarr.loadbalancer.server.port=8989'
-      - 'traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)'
-      - 'traefik.http.routers.sonarr.entrypoints=https'
-      - 'traefik.http.routers.sonarr.middlewares=authelia@docker'
+      - "traefik.enable=true"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)"
+      - "traefik.http.routers.sonarr.entrypoints=https"
+      - "traefik.http.routers.sonarr.middlewares=authelia@docker"
   # Subtitle manager
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
-    << : *service-defaults
+    <<: *service-defaults
     environment: *arr_env
     volumes:
       - bazarr-data:/config
       - /var/data/shares/tmp:/downloads
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.bazarr.loadbalancer.server.port=6767'
-      - 'traefik.http.routers.bazarr.rule=Host(`bazarr.${DOMAIN}`)'
-      - 'traefik.http.routers.bazarr.entrypoints=https'
-      - 'traefik.http.routers.bazarr.middlewares=authelia@docker'
+      - "traefik.enable=true"
+      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.${DOMAIN}`)"
+      - "traefik.http.routers.bazarr.entrypoints=https"
+      - "traefik.http.routers.bazarr.middlewares=authelia@docker"
   # Book manager
   readarr:
     image: hotio/readarr:testing
     container_name: readarr
-    << : *service-defaults
+    <<: *service-defaults
     environment: *arr_env
     volumes:
       - readarr-data:/config
       - /var/data/shares/tmp:/downloads
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.readarr.loadbalancer.server.port=8787'
-      - 'traefik.http.routers.readarr.rule=Host(`readarr.${DOMAIN}`)'
-      - 'traefik.http.routers.readarr.entrypoints=https'
-      - 'traefik.http.routers.readarr.middlewares=authelia@docker'
+      - "traefik.enable=true"
+      - "traefik.http.services.readarr.loadbalancer.server.port=8787"
+      - "traefik.http.routers.readarr.rule=Host(`readarr.${DOMAIN}`)"
+      - "traefik.http.routers.readarr.entrypoints=https"
+      - "traefik.http.routers.readarr.middlewares=authelia@docker"
   # Movie/show request manager
   jellyseerr:
     image: fallenbagel/jellyseerr:develop
     container_name: jellyseerr
-    << : *service-defaults
+    <<: *service-defaults
     environment:
       TZ: Europe/Riga
     volumes:
       - jellyseerr-data:/app/config
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.jellyseerr.loadbalancer.server.port=5055'
-      - 'traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.${DOMAIN}`)'
-      - 'traefik.http.routers.jellyseerr.entrypoints=https'
+      - "traefik.enable=true"
+      - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
+      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.${DOMAIN}`)"
+      - "traefik.http.routers.jellyseerr.entrypoints=https"
       # We leverage authelia, autologin here until https://github.com/Fallenbagel/jellyseerr/pull/184 is merged
       # - 'traefik.http.routers.jellyseerr.middlewares=authelia@docker,jellyheaders'
       # - 'traefik.http.middlewares.jellyheaders.headers.customrequestheaders.X-API-Key=MTY4OTIzMjU4NzYxOGY2ZjU5MDRkLWExZTctNDNiMy1iZTgwLWVhZTk5YTIxNjlmNw=='

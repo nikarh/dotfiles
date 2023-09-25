@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 x-service-defaults: &service-defaults
   restart: unless-stopped
   logging:
@@ -18,7 +18,7 @@ services:
   imapsync:
     image: nikarh/fileserver-imapsync
     container_name: imapsync
-    << : *service-defaults
+    <<: *service-defaults
     environment:
       USERNAME: nikarh
     user: 1000:1000
@@ -29,7 +29,7 @@ services:
   dovecot:
     image: dovecot/dovecot
     container_name: dovecot
-    << : *service-defaults
+    <<: *service-defaults
     volumes:
       - mail-data:/home
       - /var/lib/docker-services/volumes/dovecot/dovecot.conf:/etc/dovecot/dovecot.conf
@@ -46,15 +46,15 @@ services:
   roundcube:
     image: roundcube/roundcubemail
     container_name: roundcube
-    << : *service-defaults
+    <<: *service-defaults
     environment:
       ROUNDCUBEMAIL_DEFAULT_HOST: dovecot
       ROUNDCUBEMAIL_DB_TYPE: sqlite
     volumes:
       - roundcube-db:/var/roundcube/db
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.roundcube.loadbalancer.server.port=80'
-      - 'traefik.http.routers.roundcube.rule=Host(`mail.${DOMAIN}`, `mail.u8.lv`)'
-      - 'traefik.http.routers.roundcube.entrypoints=https'
-      - 'traefik.http.routers.roundcube.middlewares=authelia@docker'
+      - "traefik.enable=true"
+      - "traefik.http.services.roundcube.loadbalancer.server.port=80"
+      - "traefik.http.routers.roundcube.rule=Host(`mail.${DOMAIN}`, `mail.u8.lv`)"
+      - "traefik.http.routers.roundcube.entrypoints=https"
+      - "traefik.http.routers.roundcube.middlewares=authelia@docker"

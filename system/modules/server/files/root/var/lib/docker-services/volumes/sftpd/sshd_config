@@ -19,9 +19,12 @@ ForceCommand internal-sftp
 ChrootDirectory %h
 
 # Enable this for more logs
-#LogLevel VERBOSE
+LogLevel VERBOSE
 
 # PAM password checking
 AuthenticationMethods publickey keyboard-interactive
 ChallengeResponseAuthentication yes
 UsePAM yes
+
+Match User backups
+    AuthenticationMethods publickey

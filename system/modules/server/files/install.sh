@@ -23,7 +23,7 @@ sudo chmod 600 /var/lib/docker-services/volumes/sftpd/secrets/ssh*
 # Append bind mounts
 sudo mkdir -p /var/smalldata
 sudo mkdir -p /var/data/{shares,home}
-sudo mkdir -p /var/data/home/{backup/data,shield/shared,{nikarh,anastasiia}/{data,shared}}
+sudo mkdir -p /var/data/home/{backups/data,shield/shared,{nikarh,anastasiia}/{data,shared}}
 
 # Fix permissions for PAM authentication
 sudo chown files:files /var/data/shares/*
@@ -31,10 +31,10 @@ sudo chown files:files /var/data/home/*/*
 sudo chown files:files /var/smalldata
 sudo chmod 755 /var/data/home/*
 
-# SSH authorized_keys for backup user
-sudo cp -ufrT "$ROOT/home/backup/" /var/data/home/backup/
-sudo chmod -R go-rx /var/data/home/backup/.ssh
-sudo chown -R files:files /var/data/home/backup/.ssh
+# SSH authorized_keys for backups user
+sudo cp -ufrT "$ROOT/home/backups/" /var/data/home/backups/
+sudo chmod -R go-rx /var/data/home/backups/.ssh
+sudo chown -R files:files /var/data/home/backups/.ssh
 
 sudo sed -i '/# BEGIN mounts/,/# END mounts/d' /etc/fstab
 cat "$ROOT/root/fstab" | sudo tee -a /etc/fstab > /dev/null

@@ -1,7 +1,7 @@
-version: '3.8'
+version: "3.8"
 x-common-service-defaults: &common-service-defaults
   restart: unless-stopped
-  logging: 
+  logging:
     driver: "json-file"
     options:
       max-size: ${LOG_MAX_SIZE:-200k}
@@ -13,7 +13,7 @@ services:
   ddns-arhipov-net:
     image: oznu/cloudflare-ddns:latest
     container_name: ddns-arhipov-net
-    << : *common-service-defaults
+    <<: *common-service-defaults
     environment:
       API_KEY_FILE: /run/secrets/CF_TOKEN
       ZONE: arhipov.net
@@ -24,7 +24,7 @@ services:
   ddns-u8-lv:
     image: oznu/cloudflare-ddns:latest
     container_name: ddns-u8-lv
-    << : *common-service-defaults
+    <<: *common-service-defaults
     environment:
       API_KEY_FILE: /run/secrets/CF_TOKEN
       ZONE: u8.lv

@@ -1,0 +1,16 @@
+timezone = "Europe/Riga"
+
+[sources.sftp-logs]
+type = "docker_logs"
+include_images = ["atmoz/sftp"]
+
+[transforms.sftp-parsed]
+type = "remap"
+inputs = ["sftp-logs"]
+source = '.message, err = format_timestamp(.timestamp, "%b %d %H:%M:%S", "Europe/Riga") + " files sshd: " + .message'
+
+[sinks.sftp-file]
+type = "file"
+inputs = ["sftp-parsed"]
+path = "/out/sftp.log"
+encoding.codec = "text"

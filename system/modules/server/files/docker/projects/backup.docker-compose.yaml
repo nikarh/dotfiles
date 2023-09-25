@@ -15,12 +15,12 @@ services:
   volume-backup:
     image: nikarh/fileserver-sftpd-backup
     container_name: volume-backup
-    << : *service-defaults
+    <<: *service-defaults
     environment:
       MAXIMUM_BACKUP_NUMBER: 3
       SFTP_HOST: files
       SFTP_PORT: 2222
-      SFTP_USER: backup
+      SFTP_USER: backups
       SFTP_ROOT: /data/${DOMAIN}/
     volumes:
       # Volumes to backup
@@ -51,7 +51,7 @@ services:
   gdrive-backup-from:
     image: nikarh/fileserver-rclone
     container_name: gdrive-backup-from
-    << : *service-defaults
+    <<: *service-defaults
     user: 911:1000
     entrypoint: ""
     volumes:
@@ -68,7 +68,7 @@ services:
   gdrive-backup-to:
     image: nikarh/fileserver-rclone
     container_name: gdrive-backup-to
-    << : *service-defaults
+    <<: *service-defaults
     user: 911:1000
     entrypoint: ""
     volumes:

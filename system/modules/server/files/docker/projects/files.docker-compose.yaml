@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 x-arr-env: &arr_env
   PGID: 1000
   PUID: 1000
@@ -27,7 +27,7 @@ services:
     image: netdata/netdata
     container_name: netdata
     hostname: netdata
-    << : *service-defaults
+    <<: *service-defaults
     cap_add:
       - SYS_PTRACE
     security_opt:
@@ -47,37 +47,37 @@ services:
       - /sys:/host/sys:ro
       - /etc/os-release:/host/etc/os-release:ro
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.netdata.loadbalancer.server.port=19999'
-      - 'traefik.http.routers.netdata.rule=Host(`netdata.${DOMAIN}`)'
-      - 'traefik.http.routers.netdata.entrypoints=https'
-      - 'traefik.http.routers.netdata.middlewares=authelia@docker'
+      - "traefik.enable=true"
+      - "traefik.http.services.netdata.loadbalancer.server.port=19999"
+      - "traefik.http.routers.netdata.rule=Host(`netdata.${DOMAIN}`)"
+      - "traefik.http.routers.netdata.entrypoints=https"
+      - "traefik.http.routers.netdata.middlewares=authelia@docker"
   # This is required at least for esphome
   mdns-repeater:
     image: angelnu/mdns_repeater
     container_name: mdns-repeater
-    << : *service-defaults
+    <<: *service-defaults
     network_mode: host
     environment:
-    - hostNIC=eth0
-    - dockerNIC=${DOCKER_NIC}
+      - hostNIC=eth0
+      - dockerNIC=${DOCKER_NIC}
   # Homer is served from GH pages on the outside world,
   # but we also serve it from here for internal access.
   homer:
     image: b4bz/homer
     container_name: homer
-    << : *service-defaults
-    user: '1000:1000'
+    <<: *service-defaults
+    user: "1000:1000"
     volumes:
       - /var/lib/docker-services/volumes/homer:/www/assets:ro
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.homer.rule=Host(`home.arhipov.net`, `u8.lv`)'
-      - 'traefik.http.routers.homer.entrypoints=https'
+      - "traefik.enable=true"
+      - "traefik.http.routers.homer.rule=Host(`home.arhipov.net`, `u8.lv`)"
+      - "traefik.http.routers.homer.entrypoints=https"
   samba:
     image: nikarh/fileserver-samba
     container_name: samba
-    << : *service-defaults
+    <<: *service-defaults
     ports:
       - 137:137/udp # nmbd
       - 138:138/udp # nmbd
@@ -91,9 +91,9 @@ services:
     # Migrated to ubuntu.
     image: atmoz/sftp
     container_name: sftpd
-    << : *service-defaults
+    <<: *service-defaults
     ports:
-      - '2222:22'
+      - "2222:22"
     entrypoint: /run.sh
     volumes:
       # Configs
@@ -108,18 +108,18 @@ services:
   filebrowser:
     image: filebrowser/filebrowser
     container_name: filebrowser
-    << : *service-defaults
+    <<: *service-defaults
     user: 1000:1000
     volumes:
       - /var/data/home:/srv
       - filebrowser-data:/mnt
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.files.loadbalancer.server.port=8080'
-      - 'traefik.http.routers.files.rule=Host(`${DOMAIN}`, `f.u8.lv`)'
-      - 'traefik.http.routers.files.entrypoints=https'
-      - 'traefik.http.routers.files.middlewares=authelia@docker'
-    command: 
+      - "traefik.enable=true"
+      - "traefik.http.services.files.loadbalancer.server.port=8080"
+      - "traefik.http.routers.files.rule=Host(`${DOMAIN}`, `f.u8.lv`)"
+      - "traefik.http.routers.files.entrypoints=https"
+      - "traefik.http.routers.files.middlewares=authelia@docker"
+    command:
       - "--cache-dir=/mnt/data/cache"
       - "-d=/mnt/data/filebrowser.db"
       - "-c=/mnt/data/filebrowser.json"
@@ -127,52 +127,52 @@ services:
   miniserve:
     image: httpd
     container_name: miniserve
-    << : *service-defaults
+    <<: *service-defaults
     volumes:
       - /var/data/shares/tmp/Games:/usr/local/apache2/htdocs:ro
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.miniserve.loadbalancer.server.port=80'
-      - 'traefik.http.routers.miniserve.rule=Host(`miniserve.${DOMAIN}`)'
-      - 'traefik.http.routers.miniserve.entrypoints=https'
+      - "traefik.enable=true"
+      - "traefik.http.services.miniserve.loadbalancer.server.port=80"
+      - "traefik.http.routers.miniserve.rule=Host(`miniserve.${DOMAIN}`)"
+      - "traefik.http.routers.miniserve.entrypoints=https"
       - "traefik.http.routers.miniserve.middlewares=miniserve-auth"
-      - 'traefik.http.middlewares.miniserve-auth.basicauth.users=${MINISERVE_AUTH}'
+      - "traefik.http.middlewares.miniserve-auth.basicauth.users=${MINISERVE_AUTH}"
   syncthing:
     image: lscr.io/linuxserver/syncthing
     container_name: syncthing
-    << : *service-defaults
+    <<: *service-defaults
     ports:
       - 22000:22000/tcp
       - 22000:22000/udp
       - 21027:21027/udp
     environment:
-      << : *arr_env
+      <<: *arr_env
     volumes:
       - syncthing-data:/config
       - /var/data/shares/nikarh:/var/data/shares/nikarh
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.syncthing.loadbalancer.server.port=8384'
-      - 'traefik.http.routers.syncthing.rule=Host(`syncthing.${DOMAIN}`)'
-      - 'traefik.http.routers.syncthing.entrypoints=https'
-      - 'traefik.http.routers.syncthing.middlewares=authelia@docker'
+      - "traefik.enable=true"
+      - "traefik.http.services.syncthing.loadbalancer.server.port=8384"
+      - "traefik.http.routers.syncthing.rule=Host(`syncthing.${DOMAIN}`)"
+      - "traefik.http.routers.syncthing.entrypoints=https"
+      - "traefik.http.routers.syncthing.middlewares=authelia@docker"
   photoprism:
     image: photoprism/photoprism
     container_name: photoprism
-    << : *service-defaults
+    <<: *service-defaults
     environment:
-      << : *arr_env
-      PHOTOPRISM_ORIGINALS_LIMIT: 1000               # File size limit for originals in MB (increase for high-res video)
-      PHOTOPRISM_HTTP_COMPRESSION: "gzip"            # Improves transfer speed and bandwidth utilization (none or gzip)
-      PHOTOPRISM_DEBUG: "false"                      # Run in debug mode (shows additional log messages)
-      PHOTOPRISM_PUBLIC: "true"                      # No authentication required (disables password protection)
+      <<: *arr_env
+      PHOTOPRISM_ORIGINALS_LIMIT: 1000 # File size limit for originals in MB (increase for high-res video)
+      PHOTOPRISM_HTTP_COMPRESSION: "gzip" # Improves transfer speed and bandwidth utilization (none or gzip)
+      PHOTOPRISM_DEBUG: "false" # Run in debug mode (shows additional log messages)
+      PHOTOPRISM_PUBLIC: "true" # No authentication required (disables password protection)
       PHOTOPRISM_SPONSOR: "true"
-      PHOTOPRISM_READONLY: "true"                    # Don't modify originals directory (reduced functionality)
-      PHOTOPRISM_EXPERIMENTAL: "true"                # Enables experimental featuress
-      PHOTOPRISM_UPLOAD_NSFW: "true"                 # Allow uploads that MAY be offensive
-      PHOTOPRISM_DATABASE_DRIVER: "sqlite"           # SQLite is an embedded database that doesn't require a servers
+      PHOTOPRISM_READONLY: "true" # Don't modify originals directory (reduced functionality)
+      PHOTOPRISM_EXPERIMENTAL: "true" # Enables experimental featuress
+      PHOTOPRISM_UPLOAD_NSFW: "true" # Allow uploads that MAY be offensive
+      PHOTOPRISM_DATABASE_DRIVER: "sqlite" # SQLite is an embedded database that doesn't require a servers
       PHOTOPRISM_DATABASE_DSN: "/photoprism/database/db/db.sqlite"
-      PHOTOPRISM_SITE_URL: "https://photos.${DOMAIN}/"  # Public PhotoPrism URL
+      PHOTOPRISM_SITE_URL: "https://photos.${DOMAIN}/" # Public PhotoPrism URL
       PHOTOPRISM_SITE_TITLE: "Photos"
       PHOTOPRISM_SITE_CAPTION: "My photos"
       PHOTOPRISM_SITE_DESCRIPTION: ""
@@ -183,20 +183,20 @@ services:
       - photoprism-storage:/photoprism/storage
       - /var/data/shares/nikarh/Photos:/photoprism/originals:ro
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.photoprism.loadbalancer.server.port=2342'
-      - 'traefik.http.routers.photoprism.rule=Host(`photos.${DOMAIN}`, `p.u8.lv`)'
-      - 'traefik.http.routers.photoprism.entrypoints=https'
-      - 'traefik.http.routers.photoprism.middlewares=authelia@docker'
+      - "traefik.enable=true"
+      - "traefik.http.services.photoprism.loadbalancer.server.port=2342"
+      - "traefik.http.routers.photoprism.rule=Host(`photos.${DOMAIN}`, `p.u8.lv`)"
+      - "traefik.http.routers.photoprism.entrypoints=https"
+      - "traefik.http.routers.photoprism.middlewares=authelia@docker"
   esphome:
     image: esphome/esphome
     container_name: esphome
-    << : *service-defaults
+    <<: *service-defaults
     volumes:
       - esphome-data:/config
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.esphome.loadbalancer.server.port=6052'
-      - 'traefik.http.routers.esphome.rule=Host(`esphome.${DOMAIN}`)'
-      - 'traefik.http.routers.esphome.entrypoints=https'
-      - 'traefik.http.routers.esphome.middlewares=authelia@docker'
+      - "traefik.enable=true"
+      - "traefik.http.services.esphome.loadbalancer.server.port=6052"
+      - "traefik.http.routers.esphome.rule=Host(`esphome.${DOMAIN}`)"
+      - "traefik.http.routers.esphome.entrypoints=https"
+      - "traefik.http.routers.esphome.middlewares=authelia@docker"

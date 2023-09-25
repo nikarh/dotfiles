@@ -5,8 +5,8 @@ alias l='ls -lAh'
 alias df='df -h'
 alias less='less -r'
 
-if type -P exa > /dev/null; then
-    alias ls='exa'
-    alias l='exa -la'
-    alias e='exa -la'
+if type -P eza > /dev/null; then
+    alias ls='eza'
+    alias l='eza -la'
+    alias e='eza -la'
 fi

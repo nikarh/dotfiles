@@ -1,0 +1,3 @@
+[DEFAULT]
+logtarget = STDOUT
+dbfile = /db/fail2ban/fail2ban.sqlite3
