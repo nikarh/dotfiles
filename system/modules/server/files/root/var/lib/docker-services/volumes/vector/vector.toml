@@ -17,7 +17,7 @@ encoding.codec = "text"
 
 [sources.docker-logs]
 type = "docker_logs"
-exclude_containers = ["loki"]
+exclude_containers = ["loki", "grafana"]
 
 [sinks.loki]
 type = "loki"

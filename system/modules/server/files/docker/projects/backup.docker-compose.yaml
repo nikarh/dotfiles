@@ -80,7 +80,7 @@ services:
     command: >
       sh -c '
         rclone -vv sync "/backup" gdrive-rw:/BACKUP/ --exclude ".stignore" --exclude ".stfolder/";
-        inotifywait -qmr -t 0 /backup | while true; do
+        inotifywait -qmr -e modify -e move -e move_self -e close_write -e moved_to -e moved_from -e create -e delete -e delete_self -t 0 /backup | while true; do
           if ! ps -a -o comm | grep -q ^inotifywait$; then
             echo "Intofiywait died!"
             break;
