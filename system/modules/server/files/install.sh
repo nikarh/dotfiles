@@ -24,11 +24,13 @@ sudo chmod 600 /var/lib/docker-services/volumes/sftpd/secrets/ssh*
 sudo mkdir -p /var/smalldata
 sudo mkdir -p /var/data/{shares,home}
 sudo mkdir -p /var/data/home/{backups/data,shield/shared,{nikarh,anastasiia}/{data,shared}}
+sudo mkdir -p /var/data/shares/tmp/Games
 
 # Fix permissions for PAM authentication
 sudo chown files:files /var/data/shares/*
 sudo chown files:files /var/data/home/*/*
 sudo chown files:files /var/smalldata
+sudo chown files:files /var/data/shares/tmp/Games
 sudo chmod 755 /var/data/home/*
 
 # SSH authorized_keys for backups user

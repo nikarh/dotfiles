@@ -129,7 +129,7 @@ services:
     container_name: miniserve
     <<: *service-defaults
     volumes:
-      - /var/data/shares/tmp/Games:/usr/local/apache2/htdocs:ro
+      - /var/smalldata/Games:/usr/local/apache2/htdocs:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.miniserve.loadbalancer.server.port=80"
