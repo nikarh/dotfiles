@@ -32,6 +32,7 @@ services:
     container_name: loki
     <<: *common-service-defaults
     volumes:
+      - /var/lib/docker-services/volumes/loki:/etc/loki:ro
       - loki-data:/loki
   grafana:
     image: grafana/grafana:latest
