@@ -1,18 +1,20 @@
-# vi: ft=sh
+#!/bin/bash
 
 alias ls='ls --color=auto'
 alias l='ls -lAh'
 alias df='df -h'
 alias less='less -r'
-alias http-server='python -m http.server'
-
-alias tetris='docker run --rm -it nikarh/gotromino'
-
-alias dicker='docker'
-alias got='git'
 
 if type -P eza > /dev/null; then
     alias ls='eza'
     alias l='eza -la'
     alias e='eza -la'
 fi
+
+if type -P lsd > /dev/null; then
+    alias ls='lsd'
+    alias l='lsd -la'
+fi
+
+alias zx='zi'
+alias lk='lazygit'

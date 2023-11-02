@@ -10,3 +10,11 @@ if type -P eza > /dev/null; then
     alias l='eza -la'
     alias e='eza -la'
 fi
+
+if type -P lsd > /dev/null; then
+    alias ls='lsd'
+    alias l='lsd -la'
+fi
+
+alias zx='zi'
+alias lk='lazygit'
