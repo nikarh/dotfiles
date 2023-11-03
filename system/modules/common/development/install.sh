@@ -7,6 +7,4 @@ pkg diffutils upx dhex sysstat gdb svgcleaner tokei `# General use` \
     sdl2 glu `# Game dev` \
     cmake ccache cppcheck clang lld lldb `# C++` \
     rustup cargo-make mold `# Rust` \
-    openbsd-netcat ghidra psvita-sdk vita-parse-core-git  `# Vita` \
-
-
+    openbsd-netcat ghidra vitasdk-git vitasdk-packages-git vita-parse-core-git vita3k-bin `# Vita` \

@@ -25,7 +25,7 @@ pkg alacritty xterm-alacritty-symlink \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs \
     qdirstat keepassxc flameshot qbittorrent syncthing \
     libsecret seahorse \
-    telegram-desktop slack-desktop epdfview-gtk3 onlyoffice-bin \
+    telegram-desktop slack-desktop onlyoffice-bin \
     krita inkscape aseprite-git \
     audacious vlc feishin-appimage \
     gparted
