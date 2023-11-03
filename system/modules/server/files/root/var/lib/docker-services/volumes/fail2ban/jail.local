@@ -10,4 +10,4 @@ logpath = %(logs_path)s/sftp.log
 chain   = DOCKER-USER
 mode = aggressive
 maxretry = 2
-bantime = 1800
+bantime = 86400
