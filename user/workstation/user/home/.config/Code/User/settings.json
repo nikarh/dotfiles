@@ -18,7 +18,7 @@
     "files.defaultLanguage": "markdown",
     "telemetry.telemetryLevel": "off",
     "typescript.referencesCodeLens.enabled": true,
-    "workbench.editor.showTabs": false,
+    "workbench.editor.showTabs": "single",
     "workbench.editor.highlightModifiedTabs": true,
     "workbench.tree.indent": 20,
     "[rust]": {
@@ -61,7 +61,6 @@
         "linesBetweenQueries": 2,
     },
     "editor.suggestSelection": "first",
-    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "rust-analyzer.debug.engineSettings": {
     
     },
@@ -72,7 +71,6 @@
     "typescript.updateImportsOnFileMove.enabled": "always",
     "java.jdt.ls.java.home": "/usr/lib/jvm/java-21-openjdk",
     "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx1G -Xms100m -javaagent:\"/home/nikarh/.vscode-oss/extensions/gabrielbb.vscode-lombok-1.0.1/server/lombok.jar\"",
-    "lldb.suppressUpdateNotifications": true,
     "workbench.editor.limit.enabled": true,
     "workbench.editor.limit.value": 1,
     "workbench.editor.limit.perEditorGroup": true,
@@ -116,6 +114,7 @@
         "frametime",
         "fself",
         "Fullscreen",
+        "gabrielbb",
         "gamemoderun",
         "GETFD",
         "GETFL",
@@ -168,6 +167,7 @@
         "rustup",
         "Savana",
         "schemars",
+        "scminput",
         "SETBUF",
         "SETFL",
         "setsockopt",
@@ -197,7 +197,8 @@
         "winecfg",
         "wineserver",
         "winetricks",
-        "yapgeir"
+        "yapgeir",
+        "yzhang"
     ],
     "[typescriptreact]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -216,7 +217,7 @@
     },
     "editor.minimap.enabled": true,
     "grammarly.config.documentDialect": "american",
-    "grammarly.config.suggestions.OxfordComma": true,
+    "grammarly.config.suggestionCategories.oxfordComma": "on",
     "rust-analyzer.rustfmt.overrideCommand": null,
     "editor.guides.bracketPairs": true,
     "yaml.customTags": [
