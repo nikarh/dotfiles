@@ -21,6 +21,7 @@ volumes:
   photoprism-database:
   photoprism-storage:
   esphome-data:
+  switcheroo-db:
 services:
   # Basic monitoring
   netdata:
@@ -137,6 +138,13 @@ services:
       - "traefik.http.routers.miniserve.entrypoints=https"
       - "traefik.http.routers.miniserve.middlewares=miniserve-auth"
       - "traefik.http.middlewares.miniserve-auth.basicauth.users=${MINISERVE_AUTH}"
+  switcheroo:
+    image: nikarh/xcabczxabcz
+    container_name: switcheroo
+    <<: *service-defaults
+    volumes:
+      - switcheroo-db:/db
+      - /var/lib/docker-services/volumes/switcheroo/secrets/.env:/app/.env:ro
   syncthing:
     image: lscr.io/linuxserver/syncthing
     container_name: syncthing
