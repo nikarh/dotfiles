@@ -21,7 +21,7 @@ shopt -u cdable_vars
 trysource /usr/share/fzf/key-bindings.bash
 
 eval "$(starship init bash)"
-eval "$(fnm hook bash)"
+eval "$(fnm env --use-on-cd)"
 eval "$(direnv hook bash)"
 eval "$(zoxide init bash)"
 

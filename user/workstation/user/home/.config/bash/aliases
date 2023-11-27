@@ -6,14 +6,9 @@ alias df='df -h'
 alias less='less -r'
 
 if type -P eza > /dev/null; then
-    alias ls='eza'
-    alias l='eza -la'
-    alias e='eza -la'
-fi
-
-if type -P lsd > /dev/null; then
-    alias ls='lsd'
-    alias l='lsd -la'
+    alias ls='eza --icons'
+    alias l='eza --icons -la'
+    alias e='eza --icons: -la'
 fi
 
 alias zx='zi'
