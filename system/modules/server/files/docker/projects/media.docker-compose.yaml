@@ -114,15 +114,18 @@ services:
     environment:
       DOCKER_MODS: ghcr.io/gabe565/linuxserver-mod-vuetorrent
       <<: *arr_env
+    ports:
+      - 49152:49152/tcp
+      - 49152:49152/udp
     volumes:
       - qbittorrent-unsafe-data:/config
       - /var/data/shares/tmp:/downloads
     labels:
       - "traefik.enable=true"
-      - "traefik.http.services.torrents.loadbalancer.server.port=8080"
-      - "traefik.http.routers.torrents.rule=Host(`torrents-unsafe.${DOMAIN}`)"
-      - "traefik.http.routers.torrents.entrypoints=https"
-      - "traefik.http.routers.torrents.middlewares=authelia@docker"
+      - "traefik.http.services.torrents-unsafe.loadbalancer.server.port=8080"
+      - "traefik.http.routers.torrents-unsafe.rule=Host(`torrents-unsafe.${DOMAIN}`)"
+      - "traefik.http.routers.torrents-unsafe.entrypoints=https"
+      - "traefik.http.routers.torrents-unsafe.middlewares=authelia@docker"
   # Indexer manager
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:develop
