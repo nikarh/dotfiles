@@ -80,6 +80,8 @@ services:
       - SERVER_COUNTRIES=${WIREGUARD_SERVER_COUNTRIES}
       - FIREWALL_VPN_INPUT_PORTS=${WIREGUARD_INPUT_PORTS}
       - HTTPPROXY=on
+    devices:
+      - /dev/net/tun:/dev/net/tun
   socks5:
     image: serjs/go-socks5-proxy
     network_mode: "service:tunnel"
