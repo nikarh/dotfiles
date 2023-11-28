@@ -66,13 +66,29 @@ services:
       # Has it's own auth, does not support any alternative auth or auto-login.
       # TODO: Pass constant authorization header? Does it expire?
       # - 'traefik.http.routers.photoprism.middlewares=authelia@docker'
+  tunnel:
+    image: qmcgaw/gluetun
+    container_name: tunnel
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - VPN_SERVICE_PROVIDER=${WIREGUARD_SERVICE}
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_PRESHARED_KEY=${WIREGUARD_PRESHARED_KEY}
+      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
+      - SERVER_COUNTRIES=${WIREGUARD_SERVER_COUNTRIES}
+      - FIREWALL_VPN_INPUT_PORTS=${WIREGUARD_INPUT_PORTS}
+      - HTTPPROXY=on
+  socks5:
+    image: serjs/go-socks5-proxy
+    network_mode: "service:tunnel"
+    depends_on:
+      - tunnel
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent
     container_name: qbittorrent
     <<: *service-defaults
-    ports:
-      - 49152:49152/tcp
-      - 49152:49152/udp
     environment:
       DOCKER_MODS: ghcr.io/gabe565/linuxserver-mod-vuetorrent
       <<: *arr_env
@@ -85,6 +101,9 @@ services:
       - "traefik.http.routers.torrents.rule=Host(`torrents.${DOMAIN}`)"
       - "traefik.http.routers.torrents.entrypoints=https"
       - "traefik.http.routers.torrents.middlewares=authelia@docker"
+    network_mode: "service:tunnel"
+    depends_on:
+      - tunnel
   # Indexer manager
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:develop
