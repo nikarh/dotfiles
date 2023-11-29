@@ -73,7 +73,7 @@ access_control:
         - internal
     - domain_regex: 
         - '^(traefik|torrents|torrents-unsafe|netdata|readarr|prowlarr|sonarr|radarr|bazarr|jellyseerr|mail|kavita)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
-        - '^(mail)\.u8\.lv$'
+        - '^(mail|r)\.u8\.lv$'
       policy: bypass
       networks:
         - internal

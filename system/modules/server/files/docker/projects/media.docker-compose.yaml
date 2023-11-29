@@ -72,6 +72,14 @@ services:
     container_name: tunnel
     cap_add:
       - NET_ADMIN
+    ports:
+      # Plain-text socks5 proxy
+      - 1080:1080/tcp
+      # Plain-text HTTP Proxy
+      - 8888:8888/tcp
+      # Shadowsocks encrypted prox
+      - 8388:8388/tcp
+      - 8388:8388/udp
     environment:
       - VPN_SERVICE_PROVIDER=${WIREGUARD_SERVICE}
       - VPN_TYPE=wireguard
@@ -81,6 +89,7 @@ services:
       - SERVER_COUNTRIES=${WIREGUARD_SERVER_COUNTRIES}
       - FIREWALL_VPN_INPUT_PORTS=${WIREGUARD_INPUT_PORTS}
       - HTTPPROXY=on
+      - SHADOWSOCKS=on
     devices:
       - /dev/net/tun:/dev/net/tun
   socks5:
