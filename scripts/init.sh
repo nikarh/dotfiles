@@ -1,5 +1,5 @@
 #!/bin/sh
-# bash <(curl -sL https://raw.github.com/nikarh/dotfiles/master/scripts/init.sh)
+# bash <(curl -sL https://raw.github.com/nikarh/dotfiles/main/scripts/init.sh)
 
 HOSTNAME=
 while ! [[ "$HOSTNAME" =~ ^[a-z0-9-]+$ ]]; do
