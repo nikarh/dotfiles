@@ -22,7 +22,7 @@ services:
     command: >
       --requirepass ${IMMICH_REDIS_PASSWORD}
   immich-postgres:
-    image: postgres:14
+    image: tensorchord/pgvecto-rs:pg14-v0.1.11
     container_name: immich-postgres
     environment:
       POSTGRES_DB: immich
