@@ -70,6 +70,7 @@ services:
   tunnel:
     image: qmcgaw/gluetun
     container_name: tunnel
+    <<: *service-defaults
     cap_add:
       - NET_ADMIN
     ports:
@@ -94,6 +95,8 @@ services:
       - /dev/net/tun:/dev/net/tun
   socks5:
     image: serjs/go-socks5-proxy
+    container_name: socks5-proxy
+    <<: *service-defaults
     network_mode: "service:tunnel"
     depends_on:
       - tunnel
