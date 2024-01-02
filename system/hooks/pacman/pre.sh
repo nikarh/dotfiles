@@ -22,8 +22,8 @@ function pkg {
 }
 
 function pkg-local {
-    local package="$(cat "$1/PKGBUILD" | grep pkgname | awk -F'=' '{print $2}')"
-    local current_version="$(cat "$1/PKGBUILD" | grep 'pkgver\|pkgrel' | tr -d '\n' | sed -r 's/pkgver=(.*)pkgrel=(.*)/\1-\2/')"
+    local package="$(cat "$1/PKGBUILD" | grep ^pkgname | awk -F'=' '{print $2}')"
+    local current_version="$(cat "$1/PKGBUILD" | grep '^\(pkgver\|pkgrel\)' | tr -d '\n' | sed -r 's/pkgver=(.*)pkgrel=(.*)/\1-\2/')"
     local installed=$(pacman -Q "$package" 2> /dev/null)
     local installed_version=$(echo $installed | awk '{ print $2 }')
 

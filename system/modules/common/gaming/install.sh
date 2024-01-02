@@ -6,7 +6,7 @@ sudo cp -ufrT "$ROOT/root/" /
 pkg cemu joystickwake gamemode mangohud
 
 pkg-local "$ROOT/pkg/wine-nvcuda"
-pkg-local "$ROOT/pkg/brie"
+pkg-local "$ROOT/pkg/brie-bin"
 
 if [ -n "$ARGS_streaming" ]; then
     # Game streaming
