@@ -6,7 +6,7 @@ sudo cp -ufrT "$ROOT/root/" /
 pkg cemu joystickwake gamemode mangohud
 
 pkg-local "$ROOT/pkg/wine-nvcuda"
-pkg-local "$ROOT/pkg/play.sh"
+pkg-local "$ROOT/pkg/brie"
 
 if [ -n "$ARGS_streaming" ]; then
     # Game streaming
@@ -25,8 +25,8 @@ if [ -n "$ARGS_user" ]; then
 
     SUENV="DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u games)/bus"
 
-    if [[ "$(sudo -u games $SUENV systemctl --user is-enabled play.sh)" != "enabled" ]]; then
-        sudo -u games $SUENV systemctl --user enable --now play.sh
+    if [[ "$(sudo -u games $SUENV systemctl --user is-enabled brie)" != "enabled" ]]; then
+        sudo -u games $SUENV systemctl --user enable --now brie
     fi
 
     if [[ "$(sudo -u games $SUENV systemctl --user is-enabled syncthing)" != "enabled" ]]; then

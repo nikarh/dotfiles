@@ -1,5 +1,5 @@
 User_Alias GAMES_USERS = %games
-Cmnd_Alias PLAY= /usr/bin/play.sh,/usr/bin/winecfg
+Cmnd_Alias PLAY= /usr/bin/play.sh,/usr/bin/briectl,/usr/bin/brie,/usr/bin/winecfg
 
 Defaults:GAMES_USERS env_reset
 Defaults:GAMES_USERS env_keep += DISPLAY
