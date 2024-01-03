@@ -70,7 +70,6 @@ services:
     volumes:
       - mqtt-certs:/etc/ssl/mqtt-certs
       - zigbee2mqtt-data:/app/data
-      - /var/lib/docker-services/volumes/zigbee2mqtt/configuration.yaml:/app/data/configuration.yaml:ro
       - /var/lib/docker-services/volumes/zigbee2mqtt/secret.yaml:/app/data/secret.yaml:ro
       - /dev/serial:/dev/serial
       - /etc/localtime:/etc/localtime:ro
