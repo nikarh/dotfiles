@@ -1,0 +1,127 @@
+[bell]
+color = "#fdf6e3"
+
+[colors.bright]
+black = "#6272a4"
+blue = "#d6acff"
+cyan = "#a4ffff"
+green = "#69ff94"
+magenta = "#ff92df"
+red = "#ff6e6e"
+white = "#f8f8f2"
+yellow = "#ffffa5"
+
+[colors.cursor]
+cursor = "CellForeground"
+text = "CellBackground"
+
+[colors.footer_bar]
+background = "#282a36"
+foreground = "#fdf6e3"
+
+[colors.hints.end]
+background = "#282a36"
+foreground = "#f1fa8c"
+
+[colors.hints.start]
+background = "#f1fa8c"
+foreground = "#282a36"
+
+[colors.line_indicator]
+background = "None"
+foreground = "None"
+
+[colors.normal]
+black = "#21222c"
+blue = "#bd93f9"
+cyan = "#8be9fd"
+green = "#50fa7b"
+magenta = "#ff79c6"
+red = "#ff5555"
+white = "#fdf6e3"
+yellow = "#f1fa8c"
+
+[colors.primary]
+background = "#282a36"
+bright_foreground = "#ffffff"
+foreground = "#fdf6e3"
+
+[colors.search.focused_match]
+background = "#ffb86c"
+foreground = "#44475a"
+
+[colors.search.matches]
+background = "#50fa7b"
+foreground = "#44475a"
+
+[colors.selection]
+background = "#44475a"
+text = "CellForeground"
+
+[colors.vi_mode_cursor]
+cursor = "CellForeground"
+text = "CellBackground"
+
+[env]
+LANG = "en_DK.UTF-8"
+TERM = "xterm-256color"
+
+[font]
+size = 14.0
+
+[font.bold]
+family = "Hack Nerd Font Propo"
+style = "Bold"
+
+[font.italic]
+family = "Hack Nerd Font Propo"
+style = "Italic"
+
+[font.normal]
+family = "Hack Nerd Font Propo"
+
+[[hints.enabled]]
+command = "xdg-open"
+post_processing = true
+regex = "(magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)[^\u0000-\u001F\u007F-<>\"\\s{-}\\^⟨⟩`]+"
+
+[hints.enabled.mouse]
+enabled = true
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "Paste"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mode = "~Vi"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "Insert"
+mods = "Shift"
+
+[mouse]
+hide_when_typing = true
+
+[[mouse.bindings]]
+action = "PasteSelection"
+mouse = "Middle"
+
+[scrolling]
+faux_multiplier = 3
+history = 50000
+multiplier = 3
+
+[selection]
+save_to_clipboard = false
+
+[window]
+dynamic_padding = true
+
+[window.dimensions]
+columns = 80
+lines = 24
