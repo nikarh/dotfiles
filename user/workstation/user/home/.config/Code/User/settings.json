@@ -92,6 +92,7 @@
         "blueprintjs",
         "bools",
         "Borderless",
+        "briectl",
         "bson",
         "bytemuck",
         "bytesize",
@@ -197,6 +198,7 @@
         "nvngx",
         "nvoptix",
         "onoff",
+        "openapi",
         "optlen",
         "optres",
         "outerwilds",
@@ -368,5 +370,8 @@
     "diffEditor.hideUnchangedRegions.enabled": true,
     "[sql]": {
         "editor.defaultFormatter": "mtxr.sqltools"
+    },
+    "[svg]": {
+        "editor.defaultFormatter": "jock.svg"
     },
 }
