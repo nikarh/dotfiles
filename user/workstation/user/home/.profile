@@ -36,3 +36,5 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 
 # https://blog.ando.fyi/posts/diagnosing-an-unsual-wifi-issue/
 export QT_BEARER_POLL_TIMEOUT=-1
+
+export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket

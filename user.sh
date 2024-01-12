@@ -60,7 +60,7 @@ if [[ -z "$USER_PROFILE" ]] || [[ ! -d "user/$USER_PROFILE" ]]; then
 fi
 
 
-if [ ! -f "$HOME/.ssh/id_rsa" ]; then
+if [ ! -f "$HOME/.ssh/id_rsa.pub" ]; then
     echo "Generating ssh key..."
     ssh-keygen -C "$HOSTNAME" -f "$HOME/.ssh/id_rsa" -P "";
 fi
