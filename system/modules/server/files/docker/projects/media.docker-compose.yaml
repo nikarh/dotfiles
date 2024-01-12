@@ -113,7 +113,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.torrents.loadbalancer.server.port=8080"
-      - "traefik.http.routers.torrents.rule=Host(`torrents.${DOMAIN}`)"
+      - "traefik.http.routers.torrents.rule=Host(`torrents.${DOMAIN}`) && !Path(`/sw.js`, `/registerSW.js`)"
       - "traefik.http.routers.torrents.entrypoints=https"
       - "traefik.http.routers.torrents.middlewares=authelia@docker"
     network_mode: "service:tunnel"
@@ -135,7 +135,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.torrents-unsafe.loadbalancer.server.port=8080"
-      - "traefik.http.routers.torrents-unsafe.rule=Host(`torrents-unsafe.${DOMAIN}`)"
+      - "traefik.http.routers.torrents-unsafe.rule=Host(`torrents-unsafe.${DOMAIN}`) && !Path(`/sw.js`, `/registerSW.js`)"
       - "traefik.http.routers.torrents-unsafe.entrypoints=https"
       - "traefik.http.routers.torrents-unsafe.middlewares=authelia@docker"
   # Indexer manager
