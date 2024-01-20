@@ -1,9 +1,7 @@
-default_redirection_url: https://home.arhipov.net
 theme: auto
 
 server:
-  host: 0.0.0.0
-  port: 8080
+  address: tcp://0.0.0.0:8080
 
 log:
   level: debug
@@ -24,9 +22,11 @@ session:
     - domain: home.arhipov.net
       name: authelia_session_arhipovnet
       authelia_url: https://authelia.${DOMAIN}
+      default_redirection_url: https://home.arhipov.net
     - domain: u8.lv
       name: authelia_session_u8lv
       authelia_url: https://authelia-${HOSTNAME}.u8.lv
+      default_redirection_url: https://u8.lv
 
 regulation:
   max_retries: 3
