@@ -141,6 +141,7 @@ assign [class="Chromium"] $ws2
 assign [class="MongoDB Compass"] $ws9
 
 for_window [title="Picture-in-Picture"] sticky enable
+for_window [title="Steam Big Picture Mode"] fullscreen enable
 for_window [class="jetbrains-toolbox"] floating enable
 
 for_window [urgent="latest" class="KeePassXC"] focus
