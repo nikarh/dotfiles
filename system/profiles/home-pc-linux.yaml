@@ -22,6 +22,7 @@ modules:
   - name: common/console-tools
     gui: true
   - name: common/docker
+    enable: docker.socket
   - name: common/gpu-drivers
     drivers: nvidia
   - name: common/plymouth

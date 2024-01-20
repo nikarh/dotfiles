@@ -2,10 +2,10 @@
 
 pkg docker docker-buildx docker-compose
 
-if pacman -Q nvidia > /dev/null 2>&1 || pacman -Q nvidia-open > /dev/null 2>&1; then
+if [[ "$(pacman -Q nvidia nvidia-open nvidia-lts nvidia-dkms 2>/dev/null | wc -l )" -ne 0 ]]; then
     pkg nvidia-container-toolkit
 fi
 
-enable-service docker.service
+enable-service "${ARGS_enable:-docker.service}"
 
 add-user-to-groups docker
