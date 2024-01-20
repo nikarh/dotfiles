@@ -6,5 +6,5 @@ pkg diffutils upx dhex sysstat gdb svgcleaner tokei `# General use` \
     go nvm bash-language-server `# Langs/Platforms` \
     sdl2 glu `# Game dev` \
     cmake ccache cppcheck clang lld lldb `# C++` \
-    rustup cargo-make mold `# Rust` \
+    rustup mold `# Rust` \
     ghidra vitasdk-git vitasdk-packages-git vita-parse-core-git vita3k-bin `# Vita` \
