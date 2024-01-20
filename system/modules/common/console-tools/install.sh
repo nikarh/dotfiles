@@ -4,7 +4,7 @@ pkg zip unzip p7zip unrar \
     man-db man-pages \
     neovim tmux \
     bash-completion starship git-delta grc fzf \
-    lsd zoxide lazygit fd ripgrep bat \
+    eza zoxide lazygit fd ripgrep bat \
     socat bandwhich traceroute \
     parallel lsof usbutils rsync htop iotop \
     wget jq go-yq croc rclone \
