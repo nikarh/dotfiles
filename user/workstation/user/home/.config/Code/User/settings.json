@@ -64,7 +64,7 @@
     "rust-analyzer.debug.engineSettings": {
     
     },
-    "terminal.integrated.gpuAcceleration": "on",
+    "terminal.integrated.gpuAcceleration": "off",
     "terminal.external.linuxExec": "alacritty",
     "terminal.integrated.enablePersistentSessions": false,
     "editor.guides.indentation": true,
@@ -382,5 +382,6 @@
     "[svg]": {
         "editor.defaultFormatter": "jock.svg"
     },
-    "window.zoomLevel": -1,
+    "terminal.integrated.enableImages": true,
+    "terminal.integrated.customGlyphs": false,
 }
