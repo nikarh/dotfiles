@@ -10,5 +10,5 @@ fi
 # Copy all configs to root
 sudo cp -ufrT "$ROOT/root/" /
 
-enable-service cups
+enable-unit cups
 add-user-to-groups lp

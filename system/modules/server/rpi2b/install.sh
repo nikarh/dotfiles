@@ -2,8 +2,8 @@
 
 sudo cp -ufrT "$ROOT/root/" /
 
-enable-service --now systemd-resolved
-enable-service --now systemd-networkd
+enable-unit --now systemd-resolved
+enable-unit --now systemd-networkd
 
 DOCKER_NIC="$(ip --json link | jq -r '([.[].ifname | select(. | startswith("br-"))][0])')"
 sed "s/DOCKER_NIC=.*/DOCKER_NIC=${DOCKER_NIC}/g" "$ROOT/.env.default" > "$ROOT/.env.new"

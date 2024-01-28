@@ -6,6 +6,6 @@ if [[ "$(pacman -Q nvidia nvidia-open nvidia-lts nvidia-dkms 2>/dev/null | wc -l
     pkg nvidia-container-toolkit
 fi
 
-enable-service "${ARGS_enable:-docker.service}"
+enable-unit "${ARGS_enable:-docker.service}"
 
 add-user-to-groups docker

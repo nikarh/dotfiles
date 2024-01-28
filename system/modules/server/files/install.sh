@@ -43,10 +43,10 @@ cat "$ROOT/root/fstab" | sudo tee -a /etc/fstab > /dev/null
 sudo systemctl daemon-reload
 
 # Start services
-enable-service systemd-networkd
-enable-service sshd
-enable-service fancontrol
-enable-service reduce-power-usage
+enable-unit systemd-networkd
+enable-unit sshd
+enable-unit fancontrol
+enable-unit reduce-power-usage
 
 DOCKER_NIC="$(ip --json link | jq -r '([.[].ifname | select(. | startswith("br-"))][0])')"
 sed "s/DOCKER_NIC=.*/DOCKER_NIC=${DOCKER_NIC}/g" "$ROOT/.env.default" > "$ROOT/.env.new"

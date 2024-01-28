@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-function enable-service {
+function enable-unit {
     if [[ "$(systemctl is-enabled "${@: -1}")" == "enabled" ]]; then
         return
     fi
@@ -9,7 +9,7 @@ function enable-service {
 
 }
 
-function disable-service {
+function disable-unit {
     if [[ "$(systemctl is-enabled "${@: -1}")" == "disabled" ]]; then
         return
     fi

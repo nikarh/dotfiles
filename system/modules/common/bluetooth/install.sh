@@ -14,6 +14,6 @@ if ! grep -q '^AutoEnable=true$' /etc/bluetooth/main.conf; then
     sudo sed -i 's/^#AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf;
 fi
 
-enable-service bluetooth.service
+enable-unit bluetooth.service
 create-groups bluetooth
 add-user-to-groups bluetooth

@@ -3,5 +3,5 @@
 # Copy all configs to root
 sudo cp -ufrT "$ROOT/root/" /
 
-enable-service wakeup-disable-GPP0
+enable-unit wakeup-disable-GPP0
 

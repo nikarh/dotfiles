@@ -42,6 +42,6 @@ pkg-local "$ROOT/pkg/micro-locker"
 sudo cp -ufrT "$ROOT/root/" /
 
 # Systemd units
-enable-service autorandr.service
-enable-service lightdm.service
-disable-service getty@tty1.service 
+enable-unit autorandr.service
+enable-unit lightdm.service
+disable-unit getty@tty1.service 

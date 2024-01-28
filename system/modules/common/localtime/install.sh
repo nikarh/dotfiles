@@ -2,4 +2,4 @@
 
 pkg localtime-git
 
-enable-service localtime.service
+enable-unit localtime.service
