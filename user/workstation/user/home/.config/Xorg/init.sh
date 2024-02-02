@@ -28,6 +28,8 @@ picom&
 dunst&
 # Prevent screensaver on gamepad input
 joystickwake&
+# Hide mouse cursor when idle
+unclutter&
 
 # Network-manager tray icon
 nm-applet&

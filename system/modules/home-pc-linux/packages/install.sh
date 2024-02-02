@@ -1,7 +1,6 @@
 #!/bin/bash -e
 
 pkg stressapptest \
-    moonlight-qt busybox flatpak qtqr \
+    moonlight-qt busybox flatpak \
     kicad \
-    virtualbox virtualbox-guest-iso virtualbox-guest-utils \
     \

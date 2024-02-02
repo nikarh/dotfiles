@@ -3,7 +3,9 @@
 # Copy all configs to root
 sudo cp -ufrT "$ROOT/root/" /
 
-pkg cemu joystickwake gamemode mangohud
+pkg yuzu cemu joystickwake gamemode mangohud xpadneo-dkms unclutter
+pkg retroarch retroarch-assets-ozone libretro-picodrive
+
 pkg-local "$ROOT/pkg/brie-bin"
 
 if [ -n "$ARGS_streaming" ]; then
