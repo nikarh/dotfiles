@@ -51,7 +51,7 @@ services:
       - "traefik.http.routers.jellyfin.entrypoints=https"
   # Book UI
   kavita:
-    image: kizaing/kavita
+    image: jvmilazz0/kavita
     container_name: kavita
     <<: *service-defaults
     environment:
