@@ -21,6 +21,7 @@ update = "󰏕"
 disk_drive = "󰋊"
 microphone = "󰍬"
 headphones = "󰋋"
+display = "\uf2d0"
 
 [[block]]
 block = "custom"
@@ -62,6 +63,20 @@ interval = 2
 format = " $text "
 command = "date +\"%a %d %b %R %:::z\""
 
+
+[[block]]
+block = "custom"
+json = true
+command = """
+    echo '{
+        "icon": "display",
+        "text": "'$(autorandr --current)'"
+    }'
+"""
+[[block.click]]
+button = "left"
+cmd = "/usr/bin/autorandr --cycle"
+
 [[block]]
 block = "custom"
 json = true
@@ -69,18 +84,18 @@ persistent = true
 command = """
     (echo change && pactl subscribe) | stdbuf -oL -eL grep -E change\\|source | while read line; do
         pactl -f json list sources \
-        | jq -r '.[] 
-            | select(.name=="'$(pactl get-default-source)'")
-            | (.properties."alsa.card_name")
-                 + " " + (.properties."device.profile.description")
-                 + " " + (.properties."media.name")' \
-        | awk '{$1=$1};1' \
-        | sed 's/Mic In //g' \
-        | jq -R -c '{
-            text: .,
-            icon: "microphone",
-            state: (if . == "" then "idle" elif '$(pactl list source-outputs short | grep -q '[^\\s]' && echo true || echo false)' then "critical" else "info" end)
-        }'
+            | jq -r '.[] 
+                | select(.name=="'$(pactl get-default-source)'")
+                | (.properties."alsa.card_name")
+                    + " " + (.properties."device.profile.description")
+                    + " " + (.properties."media.name")' \
+            | awk '{$1=$1};1' \
+            | sed 's/Mic In //g' \
+            | jq -R -c '{
+                text: .,
+                icon: "microphone",
+                state: (if . == "" then "idle" elif '$(pactl list source-outputs short | grep -q '[^\\s]' && echo true || echo false)' then "critical" else "info" end)
+            }'
     done
 """
 [[block.click]]
@@ -102,7 +117,7 @@ command = """
             | jq -R -c '{
                 text: .,
                 icon: "headphones",
-            state: (if . == "" then "idle" elif '$(pactl list sink-inputs short | grep -q '[^\\s]' && echo true || echo false)' then "critical" else "info" end)
+                state: (if . == "" then "idle" elif '$(pactl list sink-inputs short | grep -q '[^\\s]' && echo true || echo false)' then "critical" else "info" end)
             }'
     done
 """
