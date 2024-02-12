@@ -33,7 +33,7 @@
     # The transparency of the window.  Range: [0; 100].
     # This option will only work if a compositing window manager is
     # present (e.g. xcompmgr, compiz, etc.).
-    transparency = 10
+    transparency = 0
 
     # The height of the entire notification.  If the height is smaller
     # than the font height and padding combined, it will be raised
@@ -43,7 +43,7 @@
     # Draw a line of "separator_height" pixel height between two
     # notifications.
     # Set to 0 to disable.
-    separator_height = 1
+    separator_height = 2
 
     # Padding between text and separator.
     padding = 16
@@ -56,7 +56,7 @@
     frame_width = 1
 
     # Defines color of the frame around the notification window.
-    frame_color = "#151515"
+    frame_color = "#1e1f28"
 
     # Define a color for the separator.
     # possible values are:
@@ -64,7 +64,7 @@
     #  * foreground: use the same color as the foreground;
     #  * frame: use the same color as the frame;
     #  * anything else will be interpreted as a X color.
-    separator_color = auto
+    separator_color = "#1e1f28"
 
     # Sort messages by urgency.
     sort = yes
@@ -201,7 +201,7 @@
     # corners.
     # The radius will be automatically lowered if it exceeds half of the
     # notification height to avoid clipping text and/or icons.
-    corner_radius = 5
+    corner_radius = 12
 
     ### Legacy
     force_xinerama = false
@@ -244,27 +244,24 @@
     # On the US keyboard layout "grave" is normally above TAB and left
     # of "1". Make sure this key actually exists on your keyboard layout,
     # e.g. check output of 'xmodmap -pke'
-    history = ctrl+grave
+    history = ctrl+pause
 
     # Context menu.
-    context = ctrl+shift+period
+    context = ctrl+alt+period
 
 [urgency_low]
-    background = "#282A36"
+    background = "#181820A0"
     foreground = "#f8f8f2"
-    frame_color = "#757783"
     timeout = 10
 
 [urgency_normal]
-    background = "#282A36"
+    background = "#181820A0"
     foreground = "#f8f8f2"
-    frame_color = "#757783"
     timeout = 10
 
 [urgency_critical]
-    background = "#ff5555"
+    background = "#ff5555AA"
     foreground = "#f8f8f2"
-    frame_color = "#ff5555"
     timeout = 0
     icon = "/usr/share/icons/Flat-Remix-Blue-Dark/panel/state-warning.svg"
 

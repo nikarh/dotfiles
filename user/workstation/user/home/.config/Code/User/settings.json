@@ -166,6 +166,7 @@
         "itertools",
         "javaagent",
         "Jellyfin",
+        "jsonwebtoken",
         "kdbg",
         "leechers",
         "leechs",
@@ -225,6 +226,8 @@
         "pthread",
         "qbittorrent",
         "Rasterizer",
+        "rawbson",
+        "Redoc",
         "relocator",
         "reqwest",
         "Resvg",
@@ -264,6 +267,7 @@
         "texcoords",
         "texel",
         "thiserror",
+        "Timelike",
         "Undoable",
         "uninit",
         "Unmemoized",
@@ -311,7 +315,7 @@
     "[json]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "editor.minimap.enabled": true,
+    "editor.minimap.enabled": false,
     "grammarly.config.documentDialect": "american",
     "grammarly.config.suggestionCategories.oxfordComma": "on",
     "rust-analyzer.rustfmt.overrideCommand": null,
