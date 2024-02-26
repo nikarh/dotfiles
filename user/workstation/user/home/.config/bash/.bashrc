@@ -18,12 +18,13 @@ trysource ~/.config/bash/aliases
 trysource ~/.config/bash-sensible/sensible.bash
 shopt -u cdable_vars
 
-trysource /usr/share/fzf/key-bindings.bash
-
 eval "$(starship init bash)"
 eval "$(fnm env --use-on-cd)"
 eval "$(direnv hook bash)"
 eval "$(zoxide init bash)"
+
+trysource /usr/share/bash-preexec/bash-preexec.sh
+eval "$(atuin init bash --disable-up-arrow)"
 
 if type -P fd > /dev/null; then
     FZF_CTRL_T_COMMAND="fd"
