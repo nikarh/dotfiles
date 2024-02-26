@@ -16,13 +16,13 @@ volumes:
       device: "/var/data/shares/nikarh/Backup/immich"
 services:
   immich-redis:
-    image: redis:6.2
+    image: redis:7.2
     container_name: immich-redis
     <<: *service-defaults
     command: >
       --requirepass ${IMMICH_REDIS_PASSWORD}
   immich-postgres:
-    image: tensorchord/pgvecto-rs:pg14-v0.1.11
+    image: tensorchord/pgvecto-rs:pg14-v0.2.0
     container_name: immich-postgres
     environment:
       POSTGRES_DB: immich
