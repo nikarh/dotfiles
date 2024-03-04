@@ -110,8 +110,8 @@ access_control:
         - "group:residents"
     # Personal
     - domain_regex:
-        - '^(syncthing|photos|mail)\.files\.home\.arhipov.net$'
-        - '^(p|mail)\.u8\.lv$'
+        - '^(syncthing|photos|mail|git)\.files\.home\.arhipov.net$'
+        - '^(p|git|mail)\.u8\.lv$'
       policy: one_factor
       subject:
         - "user:nikarh"
