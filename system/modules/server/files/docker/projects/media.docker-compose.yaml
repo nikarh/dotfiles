@@ -23,6 +23,7 @@ volumes:
   bazarr-data:
   readarr-data:
   jellyseerr-data:
+  bitmagnet-db:
 services:
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:10.8.11
@@ -33,7 +34,12 @@ services:
       - "985" # video
     ports:
       - 1900:1900/udp # autodiscovery
+      - 1900:1900/udp # autodiscovery
       - 7359:7359/udp # autodiscovery
+    networks:
+      default: {}
+      macvlan:
+        ipv4_address: 192.168.1.254
     devices:
       - /dev/dri:/dev/dri
     environment:
@@ -46,6 +52,7 @@ services:
       - /var/data/shares/nikarh/Videos:/nikarh/videos
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=default"
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
       - "traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`, `j.u8.lv`)"
       - "traefik.http.routers.jellyfin.entrypoints=https"
@@ -68,7 +75,7 @@ services:
       # TODO: Pass constant authorization header? Does it expire?
       # - 'traefik.http.routers.photoprism.middlewares=authelia@docker'
   tunnel:
-    image: qmcgaw/gluetun
+    image: qmcgaw/gluetun:v3.37.0
     container_name: tunnel
     <<: *service-defaults
     cap_add:
@@ -89,10 +96,14 @@ services:
       - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
       - SERVER_COUNTRIES=${WIREGUARD_SERVER_COUNTRIES}
       - FIREWALL_VPN_INPUT_PORTS=${WIREGUARD_INPUT_PORTS}
+      - FIREWALL_OUTBOUND_SUBNETS=172.31.254.2/32
       - HTTPPROXY=on
       - SHADOWSOCKS=on
     devices:
       - /dev/net/tun:/dev/net/tun
+    # networks:
+      # default:
+      # bitmagnet-postgres:
   socks5:
     image: serjs/go-socks5-proxy
     container_name: socks5-proxy
@@ -119,6 +130,52 @@ services:
     network_mode: "service:tunnel"
     depends_on:
       - tunnel
+  bitmagnet:
+    image: ghcr.io/bitmagnet-io/bitmagnet:latest
+    container_name: bitmagnet
+    <<: *service-defaults
+    environment:
+      POSTGRES_HOST: localhost
+      POSTGRES_PASSWORD: postgres
+    command:
+      - worker
+      - run
+      - --keys=http_server
+      - --keys=queue_server
+      - --keys=dht_crawler
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.bitmagnet.loadbalancer.server.port=3333"
+      - "traefik.http.routers.bitmagnet.rule=Host(`bitmagnet.${DOMAIN}`)"
+      - "traefik.http.routers.bitmagnet.entrypoints=https"
+      - "traefik.http.routers.bitmagnet.middlewares=authelia@docker"
+    network_mode: "service:tunnel"
+    depends_on:
+      bitmagnet-postgres:
+        condition: service_healthy
+      tunnel:
+        condition: service_started
+  bitmagnet-postgres:
+    image: postgres:16-alpine
+    container_name: bitmagnet-postgres
+    <<: *service-defaults
+    volumes:
+      - bitmagnet-db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: bitmagnet
+      PGUSER: postgres
+    shm_size: 1g
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready
+      start_period: 10s
+      interval: 5s
+    # networks:
+      # bitmagnet-postgres:
+        # ipv4_address: 172.31.254.2
+    network_mode: "service:tunnel"
   qbittorrent-unsafe:
     image: lscr.io/linuxserver/qbittorrent
     container_name: qbittorrent-unsafe
@@ -152,6 +209,7 @@ services:
       - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)"
       - "traefik.http.routers.prowlarr.entrypoints=https"
       - "traefik.http.routers.prowlarr.middlewares=authelia@docker"
+  # Cloudflare solver for prowlarr
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
@@ -239,3 +297,17 @@ services:
       # - 'traefik.http.routers.jellyseerr.middlewares=authelia@docker,jellyheaders'
       # - 'traefik.http.middlewares.jellyheaders.headers.customrequestheaders.X-API-Key=MTY4OTIzMjU4NzYxOGY2ZjU5MDRkLWExZTctNDNiMy1iZTgwLWVhZTk5YTIxNjlmNw=='
       # - 'traefik.http.middlewares.jellyheaders.headers.customrequestheaders.X-API-User=2'
+
+networks:
+  bitmagnet-postgres:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.31.254.0/24
+  macvlan:
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: 192.168.1.252/30
