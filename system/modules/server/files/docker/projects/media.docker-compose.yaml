@@ -34,7 +34,12 @@ services:
       - "985" # video
     ports:
       - 1900:1900/udp # autodiscovery
+      - 1900:1900/udp # autodiscovery
       - 7359:7359/udp # autodiscovery
+    networks:
+      macvlan:
+        ipv4_address: 192.168.1.253
+      default: {}
     devices:
       - /dev/dri:/dev/dri
     environment:
@@ -298,3 +303,10 @@ networks:
       driver: default
       config:
         - subnet: 172.31.254.0/24
+  macvlan:
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
