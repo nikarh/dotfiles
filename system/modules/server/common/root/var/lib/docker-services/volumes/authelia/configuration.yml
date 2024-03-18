@@ -72,7 +72,7 @@ access_control:
       networks:
         - internal
     - domain_regex: 
-        - '^(traefik|torrents|torrents-unsafe|netdata|readarr|prowlarr|sonarr|radarr|bazarr|jellyseerr|mail|kavita)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
+        - '^(traefik|torrents|torrents-unsafe|netdata|readarr|prowlarr|sonarr|radarr|bazarr|jellyseerr|bitmagnet|mail|kavita)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
         - '^(mail|r|t)\.u8\.lv$'
       policy: bypass
       networks:
@@ -104,7 +104,7 @@ access_control:
       policy: one_factor
       subject:
         - "group:residents"
-    - domain_regex: '^(torrents|torrents-unsafe|prowlarr|sonarr|radarr|bazarr|readarr|jellyseerr|kavita|immich)\.files\.home\.arhipov\.net$'
+    - domain_regex: '^(torrents|torrents-unsafe|prowlarr|sonarr|radarr|bazarr|readarr|bitmagnet|jellyseerr|kavita|immich)\.files\.home\.arhipov\.net$'
       policy: one_factor
       subject:
         - "group:residents"
