@@ -37,9 +37,9 @@ services:
       - 1900:1900/udp # autodiscovery
       - 7359:7359/udp # autodiscovery
     networks:
-      macvlan:
-        ipv4_address: 192.168.1.253
       default: {}
+      macvlan:
+        ipv4_address: 192.168.1.254
     devices:
       - /dev/dri:/dev/dri
     environment:
@@ -52,6 +52,7 @@ services:
       - /var/data/shares/nikarh/Videos:/nikarh/videos
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=default"
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
       - "traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`, `j.u8.lv`)"
       - "traefik.http.routers.jellyfin.entrypoints=https"
@@ -309,4 +310,4 @@ networks:
       parent: eth0
     ipam:
       config:
-        - subnet: 192.168.1.0/24
+        - subnet: 192.168.1.252/30
