@@ -95,6 +95,7 @@ services:
       - WIREGUARD_PRESHARED_KEY=${WIREGUARD_PRESHARED_KEY}
       - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
       - SERVER_COUNTRIES=${WIREGUARD_SERVER_COUNTRIES}
+      - SERVER_NAMES=${WIREGUARD_SERVER_NAMES}
       - FIREWALL_VPN_INPUT_PORTS=${WIREGUARD_INPUT_PORTS}
       - FIREWALL_OUTBOUND_SUBNETS=172.31.254.2/32
       - HTTPPROXY=on
@@ -130,52 +131,52 @@ services:
     network_mode: "service:tunnel"
     depends_on:
       - tunnel
-  bitmagnet:
-    image: ghcr.io/bitmagnet-io/bitmagnet:latest
-    container_name: bitmagnet
-    <<: *service-defaults
-    environment:
-      POSTGRES_HOST: localhost
-      POSTGRES_PASSWORD: postgres
-    command:
-      - worker
-      - run
-      - --keys=http_server
-      - --keys=queue_server
-      - --keys=dht_crawler
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.bitmagnet.loadbalancer.server.port=3333"
-      - "traefik.http.routers.bitmagnet.rule=Host(`bitmagnet.${DOMAIN}`)"
-      - "traefik.http.routers.bitmagnet.entrypoints=https"
-      - "traefik.http.routers.bitmagnet.middlewares=authelia@docker"
-    network_mode: "service:tunnel"
-    depends_on:
-      bitmagnet-postgres:
-        condition: service_healthy
-      tunnel:
-        condition: service_started
-  bitmagnet-postgres:
-    image: postgres:16-alpine
-    container_name: bitmagnet-postgres
-    <<: *service-defaults
-    volumes:
-      - bitmagnet-db:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: bitmagnet
-      PGUSER: postgres
-    shm_size: 1g
-    healthcheck:
-      test:
-        - CMD-SHELL
-        - pg_isready
-      start_period: 10s
-      interval: 5s
-    # networks:
-      # bitmagnet-postgres:
-        # ipv4_address: 172.31.254.2
-    network_mode: "service:tunnel"
+  # bitmagnet:
+  #   image: ghcr.io/bitmagnet-io/bitmagnet:latest
+  #   container_name: bitmagnet
+  #   <<: *service-defaults
+  #   environment:
+  #     POSTGRES_HOST: localhost
+  #     POSTGRES_PASSWORD: postgres
+  #   command:
+  #     - worker
+  #     - run
+  #     - --keys=http_server
+  #     - --keys=queue_server
+  #     - --keys=dht_crawler
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.services.bitmagnet.loadbalancer.server.port=3333"
+  #     - "traefik.http.routers.bitmagnet.rule=Host(`bitmagnet.${DOMAIN}`)"
+  #     - "traefik.http.routers.bitmagnet.entrypoints=https"
+  #     - "traefik.http.routers.bitmagnet.middlewares=authelia@docker"
+  #   network_mode: "service:tunnel"
+  #   depends_on:
+  #     bitmagnet-postgres:
+  #       condition: service_healthy
+  #     tunnel:
+  #       condition: service_started
+  # bitmagnet-postgres:
+  #   image: postgres:16-alpine
+  #   container_name: bitmagnet-postgres
+  #   <<: *service-defaults
+  #   volumes:
+  #     - bitmagnet-db:/var/lib/postgresql/data
+  #   environment:
+  #     POSTGRES_PASSWORD: postgres
+  #     POSTGRES_DB: bitmagnet
+  #     PGUSER: postgres
+  #   shm_size: 1g
+  #   healthcheck:
+  #     test:
+  #       - CMD-SHELL
+  #       - pg_isready
+  #     start_period: 10s
+  #     interval: 5s
+  #   # networks:
+  #     # bitmagnet-postgres:
+  #       # ipv4_address: 172.31.254.2
+  #   network_mode: "service:tunnel"
   qbittorrent-unsafe:
     image: lscr.io/linuxserver/qbittorrent
     container_name: qbittorrent-unsafe

@@ -9,7 +9,7 @@ modules:
   - name: common/base
     hostname: home-pc-linux
     timezone: Europe/Riga
-    kernel: linux
+    kernel: linux-lts
   - name: common/base-workstation
   - name: common/btrfs
   - name: common/faillock
