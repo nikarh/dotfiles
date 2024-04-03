@@ -73,7 +73,7 @@ services:
       # TODO: Pass constant authorization header? Does it expire?
       # - 'traefik.http.routers.photoprism.middlewares=authelia@docker'
   tunnel:
-    image: qmcgaw/gluetun
+    image: qmcgaw/gluetun:v3.37.0
     container_name: tunnel
     <<: *service-defaults
     cap_add:
