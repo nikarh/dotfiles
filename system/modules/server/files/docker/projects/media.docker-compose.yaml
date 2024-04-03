@@ -1,4 +1,3 @@
-version: "3.8"
 x-arr-env: &arr_env
   PGID: 1000
   PUID: 1000

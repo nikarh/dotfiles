@@ -1,4 +1,3 @@
-version: "3.8"
 x-common-service-defaults: &common-service-defaults
   restart: unless-stopped
   logging:
