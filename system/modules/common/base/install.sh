@@ -8,7 +8,7 @@ pkg base pacman sudo
 
 # Always install these tools
 pkg "$ARGS_kernel" "${ARGS_kernel}-headers" linux-firmware \
-    git git-crypt git-lfs direnv openssh \
+    git git-crypt git-lfs git-cliff direnv openssh \
     systemd-swap earlyoom \
     kernel-modules-hook
 

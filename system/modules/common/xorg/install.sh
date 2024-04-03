@@ -31,7 +31,7 @@ pkg alacritty xterm-alacritty-symlink \
     gparted
 
 # Themes and fonts
-pkg lxappearance-gtk3 qt5ct qt6ct kvantum-theme-arc  \
+pkg lxappearance-gtk3 qt5ct qt6ct kvantum-theme-arc kvantum-qt5 \
     noto-fonts noto-fonts-emoji ttf-ms-win10-auto \
     ttf-dejavu ttf-hack-nerd dracula-gtk-theme ant-dracula-kde-theme ant-dracula-kvantum-theme-git \
     dracula-cursors-git dracula-icons-git
