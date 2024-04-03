@@ -50,7 +50,7 @@ services:
       - /var/data/shares/nikarh/Videos:/nikarh/videos
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=default"
+      - "traefik.docker.network=files_default"
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
       - "traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`, `j.u8.lv`)"
       - "traefik.http.routers.jellyfin.entrypoints=https"
