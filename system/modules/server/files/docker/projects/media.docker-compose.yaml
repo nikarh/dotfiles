@@ -34,7 +34,6 @@ services:
       - "985" # video
     ports:
       - 1900:1900/udp # autodiscovery
-      - 1900:1900/udp # autodiscovery
       - 7359:7359/udp # autodiscovery
     networks:
       default: {}
