@@ -74,7 +74,7 @@ services:
       # TODO: Pass constant authorization header? Does it expire?
       # - 'traefik.http.routers.photoprism.middlewares=authelia@docker'
   tunnel:
-    image: qmcgaw/gluetun:v3.37.0
+    image: qmcgaw/gluetun
     container_name: tunnel
     <<: *service-defaults
     cap_add:
@@ -102,8 +102,8 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     # networks:
-      # default:
-      # bitmagnet-postgres:
+    # default:
+    # bitmagnet-postgres:
   socks5:
     image: serjs/go-socks5-proxy
     container_name: socks5-proxy
