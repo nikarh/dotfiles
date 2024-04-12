@@ -308,6 +308,7 @@
     "vsintellicode",
     "vswp",
     "Watchpoint",
+    "Wilcom",
     "wineboot",
     "winecfg",
     "WINEDLLOVERRIDES",
@@ -413,5 +414,6 @@
     "editor.defaultFormatter": "jock.svg"
   },
   "terminal.integrated.enableImages": true,
-  "terminal.integrated.customGlyphs": false
+  "terminal.integrated.customGlyphs": false,
+  "cmake.options.statusBarVisibility": "compact"
 }

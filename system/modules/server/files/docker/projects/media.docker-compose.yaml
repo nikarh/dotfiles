@@ -73,7 +73,7 @@ services:
       # TODO: Pass constant authorization header? Does it expire?
       # - 'traefik.http.routers.photoprism.middlewares=authelia@docker'
   tunnel:
-    image: qmcgaw/gluetun:v3.37.0
+    image: qmcgaw/gluetun:v3
     container_name: tunnel
     <<: *service-defaults
     cap_add:
@@ -87,15 +87,16 @@ services:
       - 8388:8388/tcp
       - 8388:8388/udp
     environment:
-      - VPN_SERVICE_PROVIDER=${WIREGUARD_SERVICE}
+      - VPN_SERVICE_PROVIDER=custom
       - VPN_TYPE=wireguard
+      - VPN_ENDPOINT_IP=${WIREGUARD_ENDPOINT_IP}
+      - VPN_ENDPOINT_PORT=${WIREGUARD_ENDPOINT_PORT}
+      - WIREGUARD_PUBLIC_KEY=${WIREGUARD_PUBLIC_KEY}
       - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
       - WIREGUARD_PRESHARED_KEY=${WIREGUARD_PRESHARED_KEY}
       - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
-      - SERVER_COUNTRIES=${WIREGUARD_SERVER_COUNTRIES}
-      - SERVER_NAMES=${WIREGUARD_SERVER_NAMES}
       - FIREWALL_VPN_INPUT_PORTS=${WIREGUARD_INPUT_PORTS}
-      - FIREWALL_OUTBOUND_SUBNETS=172.31.254.2/32
+      # - FIREWALL_OUTBOUND_SUBNETS=172.31.254.2/32
       - HTTPPROXY=on
       - SHADOWSOCKS=on
     devices:
