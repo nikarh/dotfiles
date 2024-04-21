@@ -1,2 +1,3 @@
 home/.local/bin/*
 !home/.local/bin/*.sh
+!home/.local/bin/aws

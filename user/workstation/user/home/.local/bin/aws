@@ -1,0 +1,8 @@
+#!/bin/bash
+
+docker run --rm -it --user="$(id -u ${USER}):$(id -g ${USER})" \
+    -e AWS_PROFILE="$AWS_PROFILE" \
+    -e AWS_CONFIG_FILE="/aws/config" \
+    -v "$HOME/.config/aws/config:/aws/config" \
+    -v "$HOME/.aws:/.aws" amazon/aws-cli \
+    $@
