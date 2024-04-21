@@ -27,7 +27,7 @@ pkg alacritty xterm-alacritty-symlink \
     libsecret seahorse \
     telegram-desktop slack-desktop onlyoffice-bin \
     krita inkscape aseprite-git \
-    audacious vlc feishin-appimage \
+    audacious vlc \
     gparted
 
 # Themes and fonts
