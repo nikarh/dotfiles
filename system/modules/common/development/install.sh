@@ -8,4 +8,5 @@ pkg diffutils upx dhex sysstat gdb svgcleaner tokei strace `# General use` \
     cmake ccache cppcheck clang lld lldb `# C++` \
     rustup mold webkit2gtk zig `# Rust` \
     ghidra vitasdk-git vitasdk-packages-git vita-parse-core-git vita3k-bin `# Vita` \
-    kchmviewer git-cliff
+    kchmviewer git-cliff \
+    env-secrets-bin
