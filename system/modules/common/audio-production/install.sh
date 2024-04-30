@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 pkg realtime-privileges rtirq rtkit reaper \
-    yabridge yabridgectl wine-staging winetricks \
+    yabridge yabridgectl winetricks \
     surge-xt vmpk vital-synth tuxguitar
 
 add-user-to-groups \
