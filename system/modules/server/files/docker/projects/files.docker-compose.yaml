@@ -72,7 +72,7 @@ services:
       - /var/lib/docker-services/volumes/homer:/www/assets:ro
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.homer.rule=Host(`home.arhipov.net`, `u8.lv`)"
+      - "traefik.http.routers.homer.rule=Host(`home.arhipov.net`) || Host(`u8.lv`)"
       - "traefik.http.routers.homer.entrypoints=https"
   samba:
     image: nikarh/fileserver-samba
@@ -116,7 +116,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.files.loadbalancer.server.port=8080"
-      - "traefik.http.routers.files.rule=Host(`${DOMAIN}`, `f.u8.lv`)"
+      - "traefik.http.routers.files.rule=Host(`${DOMAIN}`) || Host(`f.u8.lv`)"
       - "traefik.http.routers.files.entrypoints=https"
       - "traefik.http.routers.files.middlewares=authelia@docker"
     command:
@@ -192,7 +192,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.photoprism.loadbalancer.server.port=2342"
-      - "traefik.http.routers.photoprism.rule=Host(`photos.${DOMAIN}`, `p.u8.lv`)"
+      - "traefik.http.routers.photoprism.rule=Host(`photos.${DOMAIN}`) || Host(`p.u8.lv`)"
       - "traefik.http.routers.photoprism.entrypoints=https"
       - "traefik.http.routers.photoprism.middlewares=authelia@docker"
   esphome:

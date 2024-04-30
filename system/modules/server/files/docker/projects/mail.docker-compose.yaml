@@ -54,6 +54,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.roundcube.loadbalancer.server.port=80"
-      - "traefik.http.routers.roundcube.rule=Host(`mail.${DOMAIN}`, `mail.u8.lv`)"
+      - "traefik.http.routers.roundcube.rule=Host(`mail.${DOMAIN}`) || Host(`mail.u8.lv`)"
       - "traefik.http.routers.roundcube.entrypoints=https"
       - "traefik.http.routers.roundcube.middlewares=authelia@docker"

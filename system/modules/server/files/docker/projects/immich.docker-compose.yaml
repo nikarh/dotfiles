@@ -57,7 +57,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.immich.loadbalancer.server.port=8080"
-      - "traefik.http.routers.immich.rule=Host(`immich.${DOMAIN}`, `i.u8.lv`)"
+      - "traefik.http.routers.immich.rule=Host(`immich.${DOMAIN}`) || Host(`i.u8.lv`)"
       - "traefik.http.routers.immich.entrypoints=https"
       - "traefik.http.routers.immich.middlewares=immich-redirect"
       - "traefik.http.middlewares.immich-redirect.redirectregex.regex=^https://i\\.u8\\.lv/(.*)"

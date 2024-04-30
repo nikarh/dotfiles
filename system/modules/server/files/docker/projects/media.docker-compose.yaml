@@ -52,7 +52,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=files_default"
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
-      - "traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`, `j.u8.lv`)"
+      - "traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`) || Host(`j.u8.lv`)"
       - "traefik.http.routers.jellyfin.entrypoints=https"
   # Book UI
   kavita:
@@ -124,7 +124,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.torrents.loadbalancer.server.port=8080"
-      - "traefik.http.routers.torrents.rule=Host(`torrents.${DOMAIN}`) && !Path(`/sw.js`, `/registerSW.js`)"
+      - "traefik.http.routers.torrents.rule=Host(`torrents.${DOMAIN}`) && !Path(`/sw.js`) && !Path(`/registerSW.js`)"
       - "traefik.http.routers.torrents.entrypoints=https"
       - "traefik.http.routers.torrents.middlewares=authelia@docker"
     network_mode: "service:tunnel"
@@ -192,7 +192,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.torrents-unsafe.loadbalancer.server.port=8080"
-      - "traefik.http.routers.torrents-unsafe.rule=Host(`torrents-unsafe.${DOMAIN}`) && !Path(`/sw.js`, `/registerSW.js`)"
+      - "traefik.http.routers.torrents-unsafe.rule=Host(`torrents-unsafe.${DOMAIN}`) && !Path(`/sw.js`) && !Path(`/registerSW.js`)"
       - "traefik.http.routers.torrents-unsafe.entrypoints=https"
       - "traefik.http.routers.torrents-unsafe.middlewares=authelia@docker"
   # Indexer manager

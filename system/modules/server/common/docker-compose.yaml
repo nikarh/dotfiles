@@ -106,7 +106,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.services.authelia.loadbalancer.server.port=8080"
       - "traefik.http.routers.authelia.entrypoints=https"
-      - "traefik.http.routers.authelia.rule=Host(`authelia.${DOMAIN}`, `authelia-${HOSTNAME}.u8.lv`)"
+      - "traefik.http.routers.authelia.rule=Host(`authelia.${DOMAIN}`) || Host(`authelia-${HOSTNAME}.u8.lv`)"
       - "traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true"
       - "traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email"
       - "traefik.http.middlewares.authelia.forwardauth.address=http://authelia:8080/api/authz/forward-auth"
