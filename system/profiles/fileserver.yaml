@@ -9,6 +9,9 @@ modules:
     hostname: files
     timezone: Europe/Riga
     kernel: linux-lts
+  - name: common/zram
+    size: ram / 2
+    algorithm: lzo-rle
   - name: common/base-workstation
   - name: common/bootloader
   - name: common/ucode

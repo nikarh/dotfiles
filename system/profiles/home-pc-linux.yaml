@@ -10,6 +10,9 @@ modules:
     hostname: home-pc-linux
     timezone: Europe/Riga
     kernel: linux-lts
+  - name: common/zram
+    size: ram / 2
+    algorithm: lzo-rle
   - name: common/base-workstation
   - name: common/btrfs
   - name: common/faillock
@@ -48,5 +51,3 @@ modules:
   - name: home-pc-linux/fancontrol
   - name: home-pc-linux/fix-b550m-sleep
   - name: home-pc-linux/packages
-  - name: home-pc-linux/swap
-

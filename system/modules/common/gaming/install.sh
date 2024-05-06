@@ -10,7 +10,7 @@ pkg-local "$ROOT/pkg/brie-bin"
 
 if [ -n "$ARGS_streaming" ]; then
     # Game streaming
-    pkg sunshine
+    pkg sunshine-git
     # CUDA is required for sunshine to encode HEVC 
     pkg cuda
 fi

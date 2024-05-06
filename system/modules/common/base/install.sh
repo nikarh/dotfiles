@@ -9,7 +9,7 @@ pkg base pacman sudo
 # Always install these tools
 pkg "$ARGS_kernel" "${ARGS_kernel}-headers" linux-firmware \
     git git-crypt git-lfs direnv openssh \
-    systemd-swap earlyoom \
+    earlyoom \
     kernel-modules-hook
 
 # Copy all configs to root
@@ -23,7 +23,6 @@ sudo timedatectl set-ntp true
 # Enable units
 enable-unit --now earlyoom
 enable-unit --now systemd-timesyncd
-enable-unit --now systemd-swap
 enable-unit --now linux-modules-cleanup
 
 add-user-to-groups systemd-journal

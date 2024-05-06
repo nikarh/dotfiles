@@ -11,3 +11,6 @@ modules:
   - name: common/docker
   - name: server/common
   - name: server/rpi2b
+  - name: common/zram
+    size: ram / 2
+    algorithm: lzo-rle
