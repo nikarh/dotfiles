@@ -58,7 +58,7 @@ access_control:
       resources:
         - "^/api/public/(share|dl)/*"
         - "^/share/*"
-        - "^/static/(js|css|img|themes|fonts)/*"
+        - "^/static/(js|css|img|themes|fonts|assets)/*"
     - domain_regex: '^(sonarr|radarr|bazarr|readarr)\.files\.home\.arhipov\.net$'
       policy: bypass
       resources:
