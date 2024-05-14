@@ -109,6 +109,7 @@
     "classpath",
     "CLOEXEC",
     "colorspace",
+    "Condvar",
     "consts",
     "Cornsilk",
     "crossterm",
@@ -347,6 +348,7 @@
     "YCCK",
     "yolo",
     "yzhang",
+    "zipfile",
     "zustand",
     "Zval",
     "найдено",
@@ -441,5 +443,6 @@
   "terminal.integrated.enableImages": true,
   "terminal.integrated.customGlyphs": false,
   "cmake.options.statusBarVisibility": "compact",
-  "debug.console.fontFamily": "Hack"
+  "debug.console.fontFamily": "Hack",
+  "svg.preview.mode": "svg"
 }

@@ -6,3 +6,6 @@ pkg realtime-privileges rtirq rtkit reaper \
 
 add-user-to-groups \
     realtime
+
+# Copy all configs to root
+sudo cp -ufrT "$ROOT/root/" /
