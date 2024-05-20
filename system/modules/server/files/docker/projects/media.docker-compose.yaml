@@ -25,7 +25,7 @@ volumes:
   bitmagnet-db:
 services:
   jellyfin:
-    image: lscr.io/linuxserver/jellyfin:10.8.11
+    image: lscr.io/linuxserver/jellyfin:10.9
     container_name: jellyfin
     <<: *service-defaults
     group_add:
