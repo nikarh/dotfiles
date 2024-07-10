@@ -44,6 +44,7 @@ modules:
     gui: true
   - name: common/printer
     gui: true
+  - name: common/camera
   - name: common/development
   - name: common/work
   - name: home-pc-linux/power

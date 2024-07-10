@@ -325,6 +325,7 @@
     "upspeed",
     "Ureq",
     "vcrun",
+    "viewbox",
     "viewtopic",
     "vitacompanion",
     "vitasdk",
@@ -444,5 +445,6 @@
   "terminal.integrated.customGlyphs": false,
   "cmake.options.statusBarVisibility": "compact",
   "debug.console.fontFamily": "Hack",
-  "svg.preview.mode": "svg"
+  "svg.preview.mode": "svg",
+  "github.copilot.editor.enableAutoCompletions": true
 }
