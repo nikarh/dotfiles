@@ -1,0 +1,1 @@
+EARLYOOM_ARGS="-m 50 -s 10 -n --prefer '(node|python3)' --avoid '(^|/)(init|systemd|dockerd)$'"
