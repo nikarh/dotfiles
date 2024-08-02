@@ -6,8 +6,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-xkbcomp xorg-xev xorg-xinput xorg-xrandr xbindkeys xsel xclip xdg-utils \
     xorg-xdpyinfo autorandr arandr brightnessctl autocutsel \
     xdotool \
-    lightdm lightdm-gtk-greeter \
-    libva-vdpau-driver
+    lightdm lightdm-gtk-greeter
 
 if [ -n "$ARGS_pipewire" ]; then
     pkg pipewire-jack

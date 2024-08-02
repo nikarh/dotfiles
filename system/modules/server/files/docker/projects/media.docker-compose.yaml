@@ -176,9 +176,9 @@ services:
   #     # bitmagnet-postgres:
   #       # ipv4_address: 172.31.254.2
   #   network_mode: "service:tunnel"
-  qbittorrent-unsafe:
+  qbittorrent-raw:
     image: lscr.io/linuxserver/qbittorrent
-    container_name: qbittorrent-unsafe
+    container_name: qbittorrent-raw
     <<: *service-defaults
     environment:
       DOCKER_MODS: ghcr.io/gabe565/linuxserver-mod-vuetorrent
@@ -191,10 +191,10 @@ services:
       - /var/data/shares/tmp:/downloads
     labels:
       - "traefik.enable=true"
-      - "traefik.http.services.torrents-unsafe.loadbalancer.server.port=8080"
-      - "traefik.http.routers.torrents-unsafe.rule=Host(`torrents-unsafe.${DOMAIN}`) && !Path(`/sw.js`) && !Path(`/registerSW.js`)"
-      - "traefik.http.routers.torrents-unsafe.entrypoints=https"
-      - "traefik.http.routers.torrents-unsafe.middlewares=authelia@docker"
+      - "traefik.http.services.torrents-raw.loadbalancer.server.port=8080"
+      - "traefik.http.routers.torrents-raw.rule=Host(`torrents-raw.${DOMAIN}`) && !Path(`/sw.js`) && !Path(`/registerSW.js`)"
+      - "traefik.http.routers.torrents-raw.entrypoints=https"
+      - "traefik.http.routers.torrents-raw.middlewares=authelia@docker"
   # Indexer manager
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:develop
