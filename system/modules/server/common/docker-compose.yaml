@@ -74,7 +74,7 @@ services:
       - "traefik.http.routers.api.middlewares=authelia@docker"
       - "traefik.http.routers.api.rule=Host(`traefik.${DOMAIN}`)"
   authelia:
-    image: authelia/authelia:v4.38.0-beta3
+    image: authelia/authelia:4.38.10
     container_name: authelia
     <<: *common-service-defaults
     environment:
