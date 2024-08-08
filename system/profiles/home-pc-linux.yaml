@@ -33,7 +33,6 @@ modules:
     pipewire: true
   - name: common/gaming
     streaming: true
-    user: games
   - name: common/networkmanager
     gui: true
   - name: common/audio

@@ -12,5 +12,5 @@ pkg zip unzip p7zip unrar \
     ranger \
 
 if [ -n "$ARGS_gui" ]; then 
-    pkg ueberzug
+    pkg ueberzugpp
 fi

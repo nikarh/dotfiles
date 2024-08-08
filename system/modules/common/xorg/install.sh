@@ -21,7 +21,7 @@ pkg i3-wm i3status-rust betterlockscreen \
 pkg alacritty xterm-alacritty-symlink \
     eom xarchiver gsimplecal \
     chromium chromium-widevine firefox vdhcoapp-bin torbrowser-launcher \
-    thunar thunar-archive-plugin thunar-volman tumbler gvfs \
+    thunar thunar-archive-plugin thunar-volman tumbler gvfs gvfs-mtp \
     qdirstat keepassxc flameshot qbittorrent syncthing \
     libsecret seahorse \
     telegram-desktop slack-desktop onlyoffice-bin \
@@ -31,7 +31,7 @@ pkg alacritty xterm-alacritty-symlink \
 
 # Themes and fonts
 pkg lxappearance-gtk3 qt5ct qt6ct kvantum-theme-arc kvantum-qt5 \
-    noto-fonts noto-fonts-emoji ttf-ms-win10-auto \
+    noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-ms-win10-auto \
     ttf-dejavu ttf-hack-nerd dracula-gtk-theme kvantum-theme-dracula-git \
     dracula-cursors-git dracula-icons-git
 
