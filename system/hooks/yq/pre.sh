@@ -15,6 +15,8 @@ if [ "$ARCH" == "x86_64" ]; then
     ARCH="amd64"
 elif [ "$ARCH" == "armv7l" ]; then
     ARCH="arm"
+elif [ "$ARCH" == "aarch64" ]; then
+    ARCH="arm64"
 fi
 
 if ! type -P yq > /dev/null && [ ! -f ~/.local/bin/yq ]; then
