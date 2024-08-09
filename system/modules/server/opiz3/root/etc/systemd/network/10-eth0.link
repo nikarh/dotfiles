@@ -1,5 +1,5 @@
 [Match]
-MACAddress=b8:27:eb:f7:54:dc
+MACAddress=02:00:99:ab:f6:54
 
 [Link]
 Description=Ethernet
