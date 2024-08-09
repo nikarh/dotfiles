@@ -32,8 +32,8 @@ fi
 # Verify that user has access to FORWARDED_HOST
 curl -sf \
     -b "$cookie" \
-    -H 'X-Original-Url: '$FORWARDED_HOST'' -H 'X-Forwarded-Method: GET' \
-    "$AUTHELIA_URL/api/verify"
+    -H "X-Original-URL: $FORWARDED_HOST" -H 'X-Original-Method: GET' \
+    "$AUTHELIA_URL/api/authz/auth-request"
 
 echo "Auth verify ok"
 exit 0
