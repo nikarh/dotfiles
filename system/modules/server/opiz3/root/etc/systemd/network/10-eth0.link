@@ -1,0 +1,6 @@
+[Match]
+MACAddress=b8:27:eb:f7:54:dc
+
+[Link]
+Description=Ethernet
+Name=eth0

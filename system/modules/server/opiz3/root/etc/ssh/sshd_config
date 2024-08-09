@@ -1,0 +1,13 @@
+Port 22
+
+PubkeyAuthentication yes
+PasswordAuthentication no
+PermitEmptyPasswords no
+KbdInteractiveAuthentication no
+PermitRootLogin no
+AuthorizedKeysFile	.ssh/authorized_keys
+
+UsePAM yes
+PrintMotd no
+
+Subsystem	sftp	/usr/lib/ssh/sftp-server
