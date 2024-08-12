@@ -2,8 +2,8 @@
 Description=Disable leds
 
 [Service]
-ExecStartPre=/bin/bash -c "echo 0 > /sys/class/leds/green_led/brightness"
-ExecStart=/bin/bash -c "echo 0 > /sys/class/leds/red_led/brightness"
+ExecStartPre=/bin/bash -c "echo none > /sys/class/leds/green_led/trigger"
+ExecStart=/bin/bash -c "echo none > /sys/class/leds/red_led/trigger"
 
 [Install]
 WantedBy=multi-user.target
