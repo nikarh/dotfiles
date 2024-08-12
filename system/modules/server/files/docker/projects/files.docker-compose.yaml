@@ -16,9 +16,6 @@ volumes:
   netdata-cache:
   filebrowser-data:
   syncthing-data:
-  photoprism-import:
-  photoprism-database:
-  photoprism-storage:
   esphome-data:
   switcheroo-db:
 services:
@@ -163,38 +160,6 @@ services:
       - "traefik.http.routers.syncthing.rule=Host(`syncthing.${DOMAIN}`)"
       - "traefik.http.routers.syncthing.entrypoints=https"
       - "traefik.http.routers.syncthing.middlewares=authelia@docker"
-  photoprism:
-    image: photoprism/photoprism
-    container_name: photoprism
-    <<: *service-defaults
-    environment:
-      <<: *arr_env
-      PHOTOPRISM_ORIGINALS_LIMIT: 1000 # File size limit for originals in MB (increase for high-res video)
-      PHOTOPRISM_HTTP_COMPRESSION: "gzip" # Improves transfer speed and bandwidth utilization (none or gzip)
-      PHOTOPRISM_DEBUG: "false" # Run in debug mode (shows additional log messages)
-      PHOTOPRISM_PUBLIC: "true" # No authentication required (disables password protection)
-      PHOTOPRISM_SPONSOR: "true"
-      PHOTOPRISM_READONLY: "true" # Don't modify originals directory (reduced functionality)
-      PHOTOPRISM_EXPERIMENTAL: "true" # Enables experimental featuress
-      PHOTOPRISM_UPLOAD_NSFW: "true" # Allow uploads that MAY be offensive
-      PHOTOPRISM_DATABASE_DRIVER: "sqlite" # SQLite is an embedded database that doesn't require a servers
-      PHOTOPRISM_DATABASE_DSN: "/photoprism/database/db/db.sqlite"
-      PHOTOPRISM_SITE_URL: "https://photos.${DOMAIN}/" # Public PhotoPrism URL
-      PHOTOPRISM_SITE_TITLE: "Photos"
-      PHOTOPRISM_SITE_CAPTION: "My photos"
-      PHOTOPRISM_SITE_DESCRIPTION: ""
-      PHOTOPRISM_SITE_AUTHOR: ""
-    volumes:
-      - photoprism-import:/photoprism/import
-      - photoprism-database:/photoprism/database
-      - photoprism-storage:/photoprism/storage
-      - /var/data/shares/nikarh/Photos:/photoprism/originals:ro
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.photoprism.loadbalancer.server.port=2342"
-      - "traefik.http.routers.photoprism.rule=Host(`photos.${DOMAIN}`) || Host(`p.u8.lv`)"
-      - "traefik.http.routers.photoprism.entrypoints=https"
-      - "traefik.http.routers.photoprism.middlewares=authelia@docker"
   esphome:
     image: esphome/esphome
     container_name: esphome

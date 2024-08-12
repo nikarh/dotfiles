@@ -71,7 +71,7 @@ services:
       - "traefik.http.routers.kavita.entrypoints=https"
       # Has it's own auth, does not support any alternative auth or auto-login.
       # TODO: Pass constant authorization header? Does it expire?
-      # - 'traefik.http.routers.photoprism.middlewares=authelia@docker'
+      # - 'traefik.http.routers.kavita.middlewares=authelia@docker'
   tunnel:
     image: qmcgaw/gluetun:v3
     container_name: tunnel

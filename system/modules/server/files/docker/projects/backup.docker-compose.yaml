@@ -38,7 +38,6 @@ services:
       - qbittorrent-unsafe-data:/volumes/qbittorrent-unsafe-data:ro
       - syncthing-data:/volumes/syncthing-data:ro
       - jellyfin-config:/volumes/jellyfin-data:ro
-      - photoprism-database:/volumes/photoprism-database:ro
       - netdata-lib:/volumes/netdata-lib:ro
       - netdata-cache:/volumes/netdata-cache:ro
       - mail-data:/volumes/mail-data:ro
