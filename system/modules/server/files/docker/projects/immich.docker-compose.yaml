@@ -35,6 +35,8 @@ services:
     image: ghcr.io/imagegenius/immich:latest
     container_name: immich
     <<: *service-defaults
+    devices:
+      - /dev/dri:/dev/dri
     environment:
       - DB_HOSTNAME=immich-postgres
       - DB_PORT=5432
