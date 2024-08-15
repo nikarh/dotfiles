@@ -72,15 +72,17 @@ access_control:
       networks:
         - internal
     - domain_regex: 
-        - '^(traefik|torrents|torrents-raw|netdata|readarr|prowlarr|sonarr|radarr|bazarr|jellyseerr|bitmagnet|mail|kavita)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
-        - '^(mail|r|t)\.u8\.lv$'
+        - '^(traefik|torrents|torrents-raw|netdata|readarr|prowlarr|sonarr|radarr|bazarr|jellyseerr|bitmagnet|mail|kavita|music)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
+        - '^(mail|r|t|u)\.u8\.lv$'
       policy: bypass
       networks:
         - internal
     # Specific configuration
     - domain:
         - media.files.home.arhipov.net
+        - music.files.home.arhipov.net
         - j.u8.lv
+        - u.u8.lv
       policy: one_factor
       subject:
         - "group:media"

@@ -54,6 +54,25 @@ services:
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
       - "traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`) || Host(`j.u8.lv`)"
       - "traefik.http.routers.jellyfin.entrypoints=https"
+  feishin:
+    image: 'ghcr.io/jeffvli/feishin:latest'
+    <<: *service-defaults
+    container_name: feishin
+    environment:
+      SERVER_NAME: jellyfin
+      SERVER_LOCK: true
+      SERVER_TYPE: jellyfin # navidrome also works
+      SERVER_URL: https://media.files.home.arhipov.net
+      PUID: "1000"
+      PGID: "1000"
+      UMASK: "002"
+      TZ: Europe/Riga
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.feishin.loadbalancer.server.port=9180"
+      - "traefik.http.routers.feishin.rule=Host(`music.${DOMAIN}`) || Host(`u.u8.lv`)"
+      - "traefik.http.routers.feishin.entrypoints=https"
+    restart: unless-stopped
   # Book UI
   kavita:
     image: jvmilazz0/kavita
