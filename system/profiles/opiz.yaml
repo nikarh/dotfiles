@@ -1,3 +1,0 @@
-modules:
-  - name: server/common
-  - name: server/opiz

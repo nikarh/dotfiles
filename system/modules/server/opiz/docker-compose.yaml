@@ -1,7 +1,0 @@
-x-service-defaults: &service-defaults
-  restart: unless-stopped
-  logging:
-    driver: "json-file"
-    options:
-      max-size: ${LOG_MAX_SIZE:-200k}
-      max-file: ${LOG_MAX_FILE:-5}

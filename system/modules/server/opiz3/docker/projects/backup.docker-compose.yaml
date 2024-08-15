@@ -15,7 +15,7 @@ services:
     << : *service-defaults
     environment:
       MAXIMUM_BACKUP_NUMBER: 3
-      SFTP_HOST: files
+      SFTP_HOST: files.home.arhipov.net
       SFTP_PORT: 2222
       SFTP_USER: backups
       SFTP_ROOT: /data/${DOMAIN}/
