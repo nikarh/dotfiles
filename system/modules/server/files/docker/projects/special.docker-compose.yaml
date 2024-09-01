@@ -1,0 +1,37 @@
+x-arr-env: &arr_env
+  PGID: 1000
+  PUID: 1000
+  TZ: Europe/Riga
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+  healthcheck:
+    disable: true
+volumes:
+  switcheroo-db:
+services:
+  miniserve:
+    image: httpd
+    container_name: miniserve
+    <<: *service-defaults
+    volumes:
+      - /var/smalldata/Games:/usr/local/apache2/htdocs:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.miniserve.loadbalancer.server.port=80"
+      - "traefik.http.routers.miniserve.rule=Host(`miniserve.${DOMAIN}`)"
+      - "traefik.http.routers.miniserve.entrypoints=https"
+      - "traefik.http.routers.miniserve.middlewares=miniserve-auth"
+      - "traefik.http.middlewares.miniserve-auth.basicauth.users=${MINISERVE_AUTH}"
+  switcheroo:
+    image: nikarh/xcabczxabcz
+    container_name: switcheroo
+    <<: *service-defaults
+    volumes:
+      - switcheroo-db:/db
+      - /var/lib/docker-services/volumes/switcheroo/secrets/.env:/app/.env:ro
+      - "traefik.http.routers.esphome.middlewares=authelia@docker"

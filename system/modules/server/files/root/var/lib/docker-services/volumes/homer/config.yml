@@ -39,7 +39,7 @@ colors:
 
 message:
   style: "is-dark"
-  content: "SFTP is accessible at <a href=\"sftp://files.home.arhipov.net:2222\">files.home.arhipov.net:2222</a>"
+  content: 'SFTP is accessible at <a href="sftp://files.home.arhipov.net:2222">files.home.arhipov.net:2222</a>'
 
 services:
   - name: Devices
@@ -83,6 +83,11 @@ services:
         subtitle: "Traefik dashboard"
         url: "https://traefik.files.home.arhipov.net"
         target: "_blank"
+      - name: "Grafana"
+        icon: "fas fa-chart-line"
+        subtitle: "Grafana"
+        url: "https://grafana.files.home.arhipov.net"
+        target: "_blank"
       - name: "Netdata"
         icon: "fas fa-chart-bar"
         subtitle: "Monitoring"
@@ -103,15 +108,15 @@ services:
         subtitle: "Phone photo backups"
         url: "https://immich.files.home.arhipov.net"
         target: "_blank"
-      - name: "Photoprism"
-        icon: "fas fa-camera-retro"
-        subtitle: "DSLR photos"
-        url: "https://photos.files.home.arhipov.net"
-        target: "_blank"
       - name: "Mail"
         icon: "fas fa-envelope"
         subtitle: "Mail backup"
         url: "https://mail.files.home.arhipov.net"
+        target: "_blank"
+      - name: "Gitea"
+        icon: "fas fa-git"
+        subtitle: "Gitea"
+        url: "https://git.files.home.arhipov.net"
         target: "_blank"
       - name: "ESPHome"
         icon: "fas fa-microchip"
@@ -124,6 +129,11 @@ services:
         icon: "fas fa-film"
         subtitle: "Media streaming"
         url: "https://media.files.home.arhipov.net"
+        target: "_blank"
+      - name: "Music"
+        icon: "fas fa-music"
+        subtitle: "Music streaming"
+        url: "https://feishin.files.home.arhipov.net"
         target: "_blank"
       - name: "Kavita"
         icon: "fas fa-book"

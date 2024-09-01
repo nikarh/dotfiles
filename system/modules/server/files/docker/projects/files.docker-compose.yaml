@@ -17,7 +17,6 @@ volumes:
   filebrowser-data:
   syncthing-data:
   esphome-data:
-  switcheroo-db:
 services:
   # Basic monitoring
   netdata:
@@ -121,26 +120,6 @@ services:
       - "-d=/mnt/data/filebrowser.db"
       - "-c=/mnt/data/filebrowser.json"
       - "-p=8080"
-  miniserve:
-    image: httpd
-    container_name: miniserve
-    <<: *service-defaults
-    volumes:
-      - /var/smalldata/Games:/usr/local/apache2/htdocs:ro
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.miniserve.loadbalancer.server.port=80"
-      - "traefik.http.routers.miniserve.rule=Host(`miniserve.${DOMAIN}`)"
-      - "traefik.http.routers.miniserve.entrypoints=https"
-      - "traefik.http.routers.miniserve.middlewares=miniserve-auth"
-      - "traefik.http.middlewares.miniserve-auth.basicauth.users=${MINISERVE_AUTH}"
-  switcheroo:
-    image: nikarh/xcabczxabcz
-    container_name: switcheroo
-    <<: *service-defaults
-    volumes:
-      - switcheroo-db:/db
-      - /var/lib/docker-services/volumes/switcheroo/secrets/.env:/app/.env:ro
   syncthing:
     image: lscr.io/linuxserver/syncthing
     container_name: syncthing

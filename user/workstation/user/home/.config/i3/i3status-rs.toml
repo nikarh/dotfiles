@@ -114,6 +114,7 @@ command = """
                 | (.properties."alsa.card_name")
                     + " " + (.properties."media.name")' \
             | awk '{$1=$1};1' \
+            | sed 's/USB Audio Class 2.0 //g' \
             | jq -R -c '{
                 text: .,
                 icon: "headphones",
