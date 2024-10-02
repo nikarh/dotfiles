@@ -131,7 +131,7 @@ services:
     depends_on:
       - tunnel
   qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:4.6.7-libtorrentv1
+    image: lscr.io/linuxserver/qbittorrent:libtorrentv1
     container_name: qbittorrent
     <<: *service-defaults
     environment:
@@ -196,7 +196,7 @@ services:
   #       # ipv4_address: 172.31.254.2
   #   network_mode: "service:tunnel"
   qbittorrent-raw:
-    image: lscr.io/linuxserver/qbittorrent:4.6.7-libtorrentv1
+    image: lscr.io/linuxserver/qbittorrent:libtorrentv1
     container_name: qbittorrent-raw
     <<: *service-defaults
     environment:
