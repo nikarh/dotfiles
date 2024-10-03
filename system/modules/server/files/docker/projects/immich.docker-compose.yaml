@@ -20,6 +20,12 @@ services:
     <<: *service-defaults
     command: >
       --requirepass ${IMMICH_REDIS_PASSWORD}
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+        reservations:
+          memory: 20M
   immich-postgres:
     image: tensorchord/pgvecto-rs:pg14-v0.2.0
     container_name: immich-postgres
@@ -31,6 +37,12 @@ services:
     volumes:
       - immich-db-data:/var/lib/postgresql/data
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 100M
   immich:
     image: ghcr.io/imagegenius/immich:latest
     container_name: immich
@@ -68,3 +80,9 @@ services:
       - "traefik.http.middlewares.immich-redirect1.redirectregex.replacement=https://immich.${DOMAIN}/$$1"
       - "traefik.http.middlewares.immich-redirect2.redirectregex.regex=^https://photos.${DOMAIN}/(.*)"
       - "traefik.http.middlewares.immich-redirect2.redirectregex.replacement=https://immich.${DOMAIN}/$$1"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M

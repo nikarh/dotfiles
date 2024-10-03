@@ -21,6 +21,12 @@ services:
       - "traefik.http.routers.libreddit.rule=Host(`r.u8.lv`)"
       - "traefik.http.routers.libreddit.entrypoints=https"
       - "traefik.http.routers.libreddit.middlewares=authelia@docker"
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+        reservations:
+          memory: 50M
   nitter:
     image: ghcr.io/sekai-soft/nitter-self-contained
     container_name: nitter
@@ -52,6 +58,12 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+        reservations:
+          memory: 20M
   nitter-redis:
     image: redis:6-alpine
     container_name: nitter-redis
@@ -69,3 +81,9 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    deploy:
+      resources:
+        limits:
+          memory: 50M
+        reservations:
+          memory: 20M

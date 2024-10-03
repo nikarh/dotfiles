@@ -25,6 +25,12 @@ services:
       - mail-data:/home
     secrets:
       - IMAP_AUTH
+    deploy:
+      resources:
+        limits:
+          memory: 50M
+        reservations:
+          memory: 10M
   dovecot:
     image: dovecot/dovecot
     container_name: dovecot
@@ -42,6 +48,12 @@ services:
         /usr/sbin/dovecot -F;
         rm -rf /var/lib/apt/lists;
       '
+    deploy:
+      resources:
+        limits:
+          memory: 50M
+        reservations:
+          memory: 10M
   roundcube:
     image: roundcube/roundcubemail
     container_name: roundcube
@@ -57,3 +69,9 @@ services:
       - "traefik.http.routers.roundcube.rule=Host(`mail.${DOMAIN}`) || Host(`mail.u8.lv`)"
       - "traefik.http.routers.roundcube.entrypoints=https"
       - "traefik.http.routers.roundcube.middlewares=authelia@docker"
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+        reservations:
+          memory: 100M

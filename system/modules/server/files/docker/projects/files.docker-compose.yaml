@@ -48,6 +48,12 @@ services:
       - "traefik.http.routers.netdata.rule=Host(`netdata.${DOMAIN}`)"
       - "traefik.http.routers.netdata.entrypoints=https"
       - "traefik.http.routers.netdata.middlewares=authelia@docker"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
   # This is required at least for esphome
   mdns-repeater:
     image: angelnu/mdns_repeater
@@ -57,6 +63,12 @@ services:
     environment:
       - hostNIC=eth0
       - dockerNIC=${DOCKER_NIC}
+    deploy:
+      resources:
+        limits:
+          memory: 10M
+        reservations:
+          memory: 10M
   # Homer is served from GH pages on the outside world,
   # but we also serve it from here for internal access.
   homer:
@@ -70,6 +82,12 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.homer.rule=Host(`home.arhipov.net`) || Host(`u8.lv`)"
       - "traefik.http.routers.homer.entrypoints=https"
+    deploy:
+      resources:
+        limits:
+          memory: 10M
+        reservations:
+          memory: 10M
   samba:
     image: nikarh/fileserver-samba
     container_name: samba
@@ -82,6 +100,12 @@ services:
     volumes:
       - /var/lib/docker-services/volumes/samba/create-shares.sh:/scripts/create-shares.sh:ro
       - /var/data/home:/home
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+        reservations:
+          memory: 20M
   sftpd:
     # On 2023.03.15 alpine version started freezing on connection.
     # Migrated to ubuntu.
@@ -101,6 +125,12 @@ services:
       - /var/lib/docker-services/volumes/sftpd/pam-sshd:/etc/pam.d/sshd:ro
       # Data
       - /var/data/home:/home
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+        reservations:
+          memory: 50M
   filebrowser:
     image: filebrowser/filebrowser
     container_name: filebrowser
@@ -120,6 +150,13 @@ services:
       - "-d=/mnt/data/filebrowser.db"
       - "-c=/mnt/data/filebrowser.json"
       - "-p=8080"
+    deploy:
+      resources:
+        limits:
+          # For making archives in-place
+          memory: 5G
+        reservations:
+          memory: 20M
   syncthing:
     image: lscr.io/linuxserver/syncthing
     container_name: syncthing
@@ -139,6 +176,12 @@ services:
       - "traefik.http.routers.syncthing.rule=Host(`syncthing.${DOMAIN}`)"
       - "traefik.http.routers.syncthing.entrypoints=https"
       - "traefik.http.routers.syncthing.middlewares=authelia@docker"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 300M
   esphome:
     image: esphome/esphome
     container_name: esphome
@@ -151,3 +194,9 @@ services:
       - "traefik.http.routers.esphome.rule=Host(`esphome.${DOMAIN}`)"
       - "traefik.http.routers.esphome.entrypoints=https"
       - "traefik.http.routers.esphome.middlewares=authelia@docker"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 50M

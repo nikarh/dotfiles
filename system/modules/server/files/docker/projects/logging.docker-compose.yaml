@@ -26,6 +26,12 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - /var/lib/docker-services/volumes/vector:/etc/vector
       - vector-logs:/out
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+        reservations:
+          memory: 150M
   loki:
     image: grafana/loki:latest
     container_name: loki
@@ -33,6 +39,12 @@ services:
     volumes:
       - /var/lib/docker-services/volumes/loki:/etc/loki:ro
       - loki-data:/loki
+    deploy:
+      resources:
+        limits:
+          memory: 600M
+        reservations:
+          memory: 300M
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -71,6 +83,12 @@ services:
           editable: false
         EOF
         /run.sh
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 100M
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
@@ -89,6 +107,12 @@ services:
       LOGROTATE_SIZE: "10M"
     volumes:
       - vector-logs:/logs
+    deploy:
+      resources:
+        limits:
+          memory: 40M
+        reservations:
+          memory: 10M
   init-fail2ban-volume:
     image: alpine
     command: >
@@ -114,6 +138,12 @@ services:
       - /var/lib/docker-services/volumes/fail2ban/fail2ban.local:/config/fail2ban/fail2ban.local:ro
       - vector-logs:/remotelogs:ro
       - fail2ban-db:/db
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+        reservations:
+          memory: 50M
     depends_on:
       init-fail2ban-volume:
         condition: service_completed_successfully

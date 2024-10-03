@@ -54,6 +54,12 @@ services:
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
       - "traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`) || Host(`j.u8.lv`)"
       - "traefik.http.routers.jellyfin.entrypoints=https"
+    deploy:
+      resources:
+        limits:
+          memory: 20G # Should be enough for transcoding
+        reservations:
+          memory: 1G
   feishin:
     image: 'ghcr.io/jeffvli/feishin:latest'
     <<: *service-defaults
@@ -73,6 +79,12 @@ services:
       - "traefik.http.routers.feishin.rule=Host(`music.${DOMAIN}`) || Host(`u.u8.lv`)"
       - "traefik.http.routers.feishin.entrypoints=https"
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+        reservations:
+          memory: 20M
   # Book UI
   kavita:
     image: jvmilazz0/kavita
@@ -91,6 +103,12 @@ services:
       # Has it's own auth, does not support any alternative auth or auto-login.
       # TODO: Pass constant authorization header? Does it expire?
       # - 'traefik.http.routers.kavita.middlewares=authelia@docker'
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 256M
   tunnel:
     image: qmcgaw/gluetun:v3
     container_name: tunnel
@@ -120,6 +138,12 @@ services:
       - SHADOWSOCKS=on
     devices:
       - /dev/net/tun:/dev/net/tun
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 300M
     # networks:
     # default:
     # bitmagnet-postgres:
@@ -130,6 +154,12 @@ services:
     network_mode: "service:tunnel"
     depends_on:
       - tunnel
+    deploy:
+      resources:
+        limits:
+          memory: 20M
+        reservations:
+          memory: 10M
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:libtorrentv1
     container_name: qbittorrent
@@ -149,6 +179,12 @@ services:
     network_mode: "service:tunnel"
     depends_on:
       - tunnel
+    deploy:
+      resources:
+        limits:
+          memory: 5G
+        reservations:
+          memory: 1G
   # bitmagnet:
   #   image: ghcr.io/bitmagnet-io/bitmagnet:latest
   #   container_name: bitmagnet
@@ -214,6 +250,12 @@ services:
       - "traefik.http.routers.torrents-raw.rule=Host(`torrents-raw.${DOMAIN}`) && !Path(`/sw.js`) && !Path(`/registerSW.js`)"
       - "traefik.http.routers.torrents-raw.entrypoints=https"
       - "traefik.http.routers.torrents-raw.middlewares=authelia@docker"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 128M
   # Indexer manager
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:develop
@@ -228,6 +270,12 @@ services:
       - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)"
       - "traefik.http.routers.prowlarr.entrypoints=https"
       - "traefik.http.routers.prowlarr.middlewares=authelia@docker"
+    deploy:
+      resources:
+        limits:
+          memory: 400M
+        reservations:
+          memory: 200M
   # Cloudflare solver for prowlarr
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -238,6 +286,12 @@ services:
       LOG_LEVEL: info
       LOG_HTML: "false"
       CAPTCHA_SOLVER: none
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 300M
   # Movie manager
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -253,6 +307,12 @@ services:
       - "traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)"
       - "traefik.http.routers.radarr.entrypoints=https"
       - "traefik.http.routers.radarr.middlewares=authelia@docker"
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 160M
   # Show manager
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -268,6 +328,12 @@ services:
       - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)"
       - "traefik.http.routers.sonarr.entrypoints=https"
       - "traefik.http.routers.sonarr.middlewares=authelia@docker"
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 250M
   # Subtitle manager
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
@@ -283,6 +349,12 @@ services:
       - "traefik.http.routers.bazarr.rule=Host(`bazarr.${DOMAIN}`)"
       - "traefik.http.routers.bazarr.entrypoints=https"
       - "traefik.http.routers.bazarr.middlewares=authelia@docker"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
   # Book manager
   readarr:
     image: hotio/readarr:testing
@@ -298,6 +370,12 @@ services:
       - "traefik.http.routers.readarr.rule=Host(`readarr.${DOMAIN}`)"
       - "traefik.http.routers.readarr.entrypoints=https"
       - "traefik.http.routers.readarr.middlewares=authelia@docker"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 150M
   # Movie/show request manager
   jellyseerr:
     image: fallenbagel/jellyseerr:develop
@@ -312,10 +390,12 @@ services:
       - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
       - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.${DOMAIN}`)"
       - "traefik.http.routers.jellyseerr.entrypoints=https"
-      # We leverage authelia, autologin here until https://github.com/Fallenbagel/jellyseerr/pull/184 is merged
-      # - 'traefik.http.routers.jellyseerr.middlewares=authelia@docker,jellyheaders'
-      # - 'traefik.http.middlewares.jellyheaders.headers.customrequestheaders.X-API-Key=MTY4OTIzMjU4NzYxOGY2ZjU5MDRkLWExZTctNDNiMy1iZTgwLWVhZTk5YTIxNjlmNw=='
-      # - 'traefik.http.middlewares.jellyheaders.headers.customrequestheaders.X-API-User=2'
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
 
 networks:
   bitmagnet-postgres:

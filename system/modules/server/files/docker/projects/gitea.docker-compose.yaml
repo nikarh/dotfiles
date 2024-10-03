@@ -22,6 +22,12 @@ services:
       - gitea-data:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 250M
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.gitea.loadbalancer.server.port=3000"

@@ -20,6 +20,12 @@ services:
       PROXIED: false
     secrets:
       - CF_TOKEN
+    deploy:
+      resources:
+        limits:
+          memory: 15M
+        reservations:
+          memory: 10M
   ddns-u8-lv:
     image: oznu/cloudflare-ddns:latest
     container_name: ddns-u8-lv
@@ -31,3 +37,9 @@ services:
       PROXIED: true
     secrets:
       - CF_TOKEN
+    deploy:
+      resources:
+        limits:
+          memory: 15M
+        reservations:
+          memory: 10M

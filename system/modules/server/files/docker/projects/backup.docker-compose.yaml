@@ -46,6 +46,12 @@ services:
       - switcheroo-db:/volumes/switcheroo-db:ro
     secrets:
       - SSH_KEY
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 300M
 
   # Backup gdrive documents to home server
   gdrive-backup-from:
@@ -64,6 +70,12 @@ services:
           sleep 1h;
         done
       '
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+        reservations:
+          memory: 20M
   # Backup home server documents to gdrive
   gdrive-backup-to:
     image: nikarh/fileserver-rclone
@@ -91,3 +103,9 @@ services:
           rclone -vv sync "/backup" gdrive-rw:/BACKUP/ --exclude ".stignore" --exclude ".stfolder/";
         done
       '
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+        reservations:
+          memory: 20M
