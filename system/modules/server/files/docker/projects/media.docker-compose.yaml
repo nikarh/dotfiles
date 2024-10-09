@@ -12,6 +12,12 @@ x-service-defaults: &service-defaults
   healthcheck:
     disable: true
 volumes:
+  jellyfin-transcodes:
+    driver: local
+    driver_opts:
+      type: none
+      device: /var/cache/jellyfin/transcodes
+      o: bind
   jellyfin-config:
   kavita-data:
   qbittorrent-data:
@@ -45,6 +51,7 @@ services:
       JELLYFIN_PublishedServerUrl: https://media.${DOMAIN}
     volumes:
       - jellyfin-config:/config
+      - jellyfin-transcodes:/config/cache/transcodes
       - /var/data/shares/tmp:/media:ro
       - /var/data/shares/nikarh/Music:/music
       - /var/data/shares/nikarh/Videos:/nikarh/videos

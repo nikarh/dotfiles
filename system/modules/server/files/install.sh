@@ -20,6 +20,13 @@ sudo cp -ufrT "$ROOT/root/var/" /var
 # TODO: Move to init container?
 sudo chmod 600 /var/lib/docker-services/volumes/sftpd/secrets/ssh*
 
+# Create jellyfin transcode cache subvolume limited to 20gb
+sudo mkdir -p /var/cache/jellyfin
+sudo btrfs subvolume create /var/cache/jellyfin/transcodes 2> /dev/null || true
+sudo btrfs quota enable /var/cache/jellyfin/transcodes
+sudo btrfs qgroup limit 20G /var/cache/jellyfin/transcodes
+sudo chown files:files /var/cache/jellyfin/transcodes
+
 # Append bind mounts
 sudo mkdir -p /var/smalldata
 sudo mkdir -p /var/data/{shares,home}
