@@ -7,7 +7,17 @@ ingester_client:
   grpc_client_config:
     max_send_msg_size: 33554432
 
+compactor:
+  working_directory: /loki/compactor
+  compaction_interval: 10m
+  retention_enabled: true
+  retention_delete_delay: 2h
+  retention_delete_worker_count: 5
+  delete_request_store: filesystem
+  deletion_mode: filter-only
+
 limits_config:
+  retention_period: 1440h
   max_entries_limit_per_query: 50000
   max_cache_freshness_per_query: 10m
   reject_old_samples: true
@@ -38,4 +48,4 @@ schema_config:
         period: 24h
 
 analytics:
- reporting_enabled: false
+  reporting_enabled: false
