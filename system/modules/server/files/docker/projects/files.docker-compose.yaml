@@ -125,6 +125,7 @@ services:
       - /var/lib/docker-services/volumes/sftpd/pam-sshd:/etc/pam.d/sshd:ro
       # Data
       - /var/data/home:/home
+      - /var/data/shares/nikarh/Syncthing/My Music/NT Shared:/home/nt
     deploy:
       resources:
         limits:
