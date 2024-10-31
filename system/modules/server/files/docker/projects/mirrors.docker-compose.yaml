@@ -11,16 +11,16 @@ volumes:
   nitter-data:
   nitter-redis-data:
 services:
-  libreddit:
-    image: nikarh/fileserver-libreddit
-    container_name: libreddit
+  redlib:
+    image: quay.io/redlib/redlib:latest
+    container_name: redlib
     <<: *service-defaults
     labels:
       - "traefik.enable=true"
-      - "traefik.http.services.libreddit.loadbalancer.server.port=8080"
-      - "traefik.http.routers.libreddit.rule=Host(`r.u8.lv`)"
-      - "traefik.http.routers.libreddit.entrypoints=https"
-      - "traefik.http.routers.libreddit.middlewares=authelia@docker"
+      - "traefik.http.services.redlib.loadbalancer.server.port=8080"
+      - "traefik.http.routers.redlib.rule=Host(`r.u8.lv`)"
+      - "traefik.http.routers.redlib.entrypoints=https"
+      - "traefik.http.routers.redlib.middlewares=authelia@docker"
     deploy:
       resources:
         limits:
