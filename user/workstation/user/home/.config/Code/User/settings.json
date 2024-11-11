@@ -208,6 +208,7 @@
     "MANGOHUD",
     "maximizable",
     "MEMBLOCK",
+    "Metadatas",
     "middlewares",
     "millihertz",
     "minimizable",
@@ -264,6 +265,8 @@
     "Redactions",
     "Redoc",
     "relocator",
+    "Renderable",
+    "Renderpass",
     "replacen",
     "repr",
     "reqwest",
@@ -326,6 +329,7 @@
     "upspeed",
     "Ureq",
     "vcrun",
+    "Vertice",
     "viewbox",
     "viewtopic",
     "vitacompanion",
@@ -344,6 +348,7 @@
     "WINEPREFIX",
     "wineserver",
     "winetricks",
+    "Wireframe",
     "witcher",
     "Xunit",
     "yapgeir",
@@ -435,7 +440,6 @@
   "[scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "diffEditor.hideUnchangedRegions.enabled": true,
   "[sql]": {
     "editor.defaultFormatter": "mtxr.sqltools"
   },
@@ -447,5 +451,25 @@
   "cmake.options.statusBarVisibility": "compact",
   "debug.console.fontFamily": "Hack",
   "svg.preview.mode": "svg",
-  "github.copilot.editor.enableAutoCompletions": true
+  "github.copilot.editor.enableAutoCompletions": true,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.js",
+    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+    "*.jsx": "${capture}.js",
+    "*.tsx": "${capture}.ts",
+    "tsconfig.json": "tsconfig.*.json",
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb",
+    "pubspec.yaml": "pubspec.lock,pubspec_overrides.yaml,.packages,.flutter-plugins,.flutter-plugins-dependencies,.metadata",
+    "*.dart": "${capture}.g.dart",
+    "Cargo.toml": "Cargo.lock",
+    "*.sqlite": "${capture}.${extname}-*",
+    "*.db": "${capture}.${extname}-*",
+    "*.sqlite3": "${capture}.${extname}-*",
+    "*.db3": "${capture}.${extname}-*",
+    "*.sdb": "${capture}.${extname}-*",
+    "*.s3db": "${capture}.${extname}-*"
+  },
+  "javascript.updateImportsOnFileMove.enabled": "never",
+  "workbench.iconTheme": "material-icon-theme",
+  "window.titleBarStyle": "custom"
 }

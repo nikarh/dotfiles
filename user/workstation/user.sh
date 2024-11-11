@@ -23,7 +23,7 @@ file-get https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
     ~/.config/nvim/autoload/plug.vim | prepend '  '
 
 section "Updating vim plugins..."
-nvim +PlugClean! +PlugUpdate +qa > /dev/null 2>&1
+nvim +PlugClean! +PlugUpdate +qa
 
 section "Setting default gtk terminal to alacritty..."
 gsettings set org.gnome.desktop.default-applications.terminal exec alacritty
@@ -33,72 +33,66 @@ gsettings set org.gnome.desktop.interface font-name "Noto Sans 12"
 section "Setting xdg defaults..."
 xdg-mime default thunar.desktop inode/directory
 
-ln -sfT ~/.config/Code ~/.config/Code\ -\ OSS
-
 section "Installing vscode extensions..."
 install-code-extensions \
-    Rubymaniac.vscode-direnv \
-    PKief.material-icon-theme zhuangtongfa.material-theme \
-    k--kato.intellij-idea-keybindings 2gua.rainbow-brackets \
-    ms-vscode.cpptools ms-vscode.cmake-tools \
-    rust-lang.rust-analyzer tamasfe.even-better-toml \
-    mtxr.sqltools mtxr.sqltools-driver-pg \
-    fwcd.kotlin \
-    redhat.vscode-yaml \
-    fallenwood.vimL \
-    golang.go \
-    mechatroner.rainbow-csv \
-    yzhang.markdown-all-in-one \
-    mads-hartmann.bash-ide-vscode \
-    bmewburn.vscode-intelephense-client \
-    naumovs.color-highlight \
-    chrislajoie.vscode-modelines \
-    usernamehw.errorlens \
-    buenon.scratchpads anweber.vscode-httpyac \
+    alexisvt.flutter-snippets \
+    anweber.vscode-httpyac \
     bradlc.vscode-tailwindcss \
-    circledev.glsl-canvas \
-    emilast.LogFileHighlighter \
+    buenon.scratchpads \
+    chrislajoie.vscode-modelines \
+    dart-code.dart-code \
+    dart-code.flutter \
+    emilast.logfilehighlighter \
     esbenp.prettier-vscode \
-    GitHub.copilot \
-    github.vscode-github-actions \
-    Gruntfuggly.todo-tree \
-    IronGeek.vscode-env \
-    JScearcy.rust-doc-viewer \
+    formulahendry.dotnet-test-explorer \
+    github.copilot \
+    github.copilot-chat \
+    irongeek.vscode-env \
+    jock.svg \
+    k--kato.intellij-idea-keybindings \
+    localizely.flutter-intl \
+    mads-hartmann.bash-ide-vscode \
+    mechatroner.rainbow-csv \
+    mikhail-arkhipov.armassemblyeditor \
     ms-azuretools.vscode-docker \
+    ms-dotnettools.csdevkit \
+    ms-dotnettools.csharp \
     ms-dotnettools.vscode-dotnet-runtime \
-    ms-kubernetes-tools.kind-vscode \
     ms-kubernetes-tools.vscode-kubernetes-tools \
+    ms-python.black-formatter \
+    ms-python.debugpy \
+    ms-python.python \
+    ms-python.vscode-pylance \
+    ms-vscode-remote.remote-containers \
+    ms-vscode.cmake-tools \
+    ms-vscode.cpptools \
     ms-vscode.cpptools-extension-pack \
     ms-vscode.cpptools-themes \
     ms-vscode.makefile-tools \
-    ms-vscode.remote-explorer \
-    ms-vscode-remote.remote-containers \
-    ms-vscode-remote.remote-ssh \
-    ms-vscode-remote.remote-ssh-edit \
     ms-vscode.test-adapter-converter \
-    ms-vsliveshare.vsliveshare \
-    naco-siren.gradle-language \
-    Orta.vscode-jest \
-    paulheg.image-diff \
+    mtxr.sqltools \
+    mtxr.sqltools-driver-pg \
+    naumovs.color-highlight \
+    orta.vscode-jest \
+    pkief.material-icon-theme \
+    qufiwefefwoyn.inline-sql-syntax \
+    qwtel.sqlite-viewer \
     raczzalan.webgl-glsl-editor \
-    redhat.java \
     redhat.vscode-xml \
-    richardwillis.vscode-gradle-extension-pack \
-    sandipchitale.vscode-kubernetes-edit-kubeconfig \
+    redhat.vscode-yaml \
+    rubymaniac.vscode-direnv \
+    rust-lang.rust-analyzer \
     sandipchitale.vscode-kubernetes-helm-extension-pack \
-    sandipchitale.vscode-kubernetes-helm-extras \
-    shengchen.vscode-checkstyle \
     streetsidesoftware.code-spell-checker \
-    tomoki1207.pdf \
-    vscjava.vscode-gradle \
-    vscjava.vscode-java-debug \
-    vscjava.vscode-java-dependency \
-    vscjava.vscode-java-pack \
-    vscjava.vscode-java-test \
-    vscjava.vscode-lombok \
-    vscjava.vscode-maven \
+    tamasfe.even-better-toml \
+    tauri-apps.tauri-vscode \
+    usernamehw.errorlens \
+    vadimcn.vscode-lldbb \
     waderyan.gitblame \
+    wcrichton.flowistry \
     wgsl-analyzer.wgsl-analyzer \
+    yzhang.markdown-all-in-one \
+    zhuangtongfa.material-theme \
     znck.grammarly \
     | prepend '  '
 

@@ -9,7 +9,7 @@ modules:
   - name: common/base
     hostname: home-pc-linux
     timezone: Europe/Riga
-    kernel: linux-lts
+    kernel: linux
   - name: common/zram
     size: ram / 2
     algorithm: lzo-rle
