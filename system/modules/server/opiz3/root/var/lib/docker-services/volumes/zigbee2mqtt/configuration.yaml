@@ -11,6 +11,7 @@ mqtt:
 
 serial:
   port: /dev/ttyUSB0
+  adapter: zstack
 
 advanced:
   network_key: '!secret network_key'
