@@ -11,7 +11,7 @@ mqtt:
 
 serial:
   port: /dev/ttyUSB0
-  adapter: zstack
+  adapter: ember
 
 advanced:
   network_key: '!secret network_key'
