@@ -31,6 +31,7 @@ export NVM_DIR="${XDG_STATE_HOME}/nvm"
 
 export AWS_CONFIG_FILE="~/.config/aws/config"
 
+export GTK_THEME=Dracula:dark
 export QT_QPA_PLATFORMTHEME=qt5ct
 export _JAVA_AWT_WM_NONREPARENTING=1
 

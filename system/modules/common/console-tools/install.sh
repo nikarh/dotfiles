@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-pkg zip unzip p7zip unrar \
+pkg zip unzip 7zip unrar \
     man-db man-pages \
     neovim tmux \
     bash-completion starship git-delta grc fzf bash-preexec atuin \

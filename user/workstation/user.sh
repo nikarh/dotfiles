@@ -11,7 +11,7 @@ cp -frsTv "$ROOT/user/home/" ~ | prepend '  '
 source "$ROOT/user/home/.profile"
 
 systemctl enable --user syncthing
-systemctl enable --user sunshine
+systemctl enable --user sunshine || true
 systemctl enable --user ssh-agent
 
 section "Downloading random stuff from the internet..."

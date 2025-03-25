@@ -40,5 +40,8 @@ pasystray&
 # Screenshot daemon
 flameshot&
 
+# Touchpad gestures
+touchegg&
+
 # https://github.com/i3/i3/issues/5186
 systemctl start --user sunshine

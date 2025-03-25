@@ -36,7 +36,6 @@
   "C_Cpp.clang_format_fallbackStyle": "LLVM",
   "cmake.configureOnOpen": true,
   "editor.mouseWheelZoom": true,
-  "workbench.colorTheme": "One Dark Pro Darker",
   "rust-analyzer.linkedProjects": [],
   "security.workspace.trust.untrustedFiles": "open",
   "kotlin.compiler.jvm.target": "16",
@@ -475,5 +474,6 @@
   },
   "javascript.updateImportsOnFileMove.enabled": "never",
   "workbench.iconTheme": "material-icon-theme",
-  "window.titleBarStyle": "custom"
+  "window.titleBarStyle": "custom",
+  "workbench.colorTheme": "One Dark Pro Darker"
 }

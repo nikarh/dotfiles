@@ -1,0 +1,11 @@
+
+[Unit]
+Description=Disable fan before sleep and re-enable after wake
+Before=sleep.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c '/usr/bin/echo level 0 > /proc/acpi/ibm/fan'
+
+[Install]
+WantedBy=sleep.target

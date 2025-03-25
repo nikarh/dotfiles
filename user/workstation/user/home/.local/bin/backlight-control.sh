@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2155
 
-PERCENTAGES="10 25 50"
+PERCENTAGES="1 5 10 25 50 70 90 100"
 
 MIN=1
 MAX=$(brightnessctl m)

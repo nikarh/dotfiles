@@ -6,15 +6,15 @@ source ./functions.sh
 
 function icon-name {
     if [[ $1 == "mute" ]]; then
-        echo "audio-volume-muted";
+        echo "audio-$2-muted";
     elif [[ $1 -eq 0 ]]; then
-        echo "audio-volume-muted";
+        echo "audio-$2-muted";
     elif [[ $1 -lt 35 ]]; then
-        echo "audio-volume-low";
+        echo "audio-$2-low";
     elif [[ $1 -lt 70 ]]; then
-        echo "audio-volume-medium";
+        echo "audio-$2-medium";
     else
-        echo "audio-volume-high";
+        echo "audio-$2-high";
     fi
 }
 
@@ -23,7 +23,7 @@ function raise {
     local volume=$(pamixer --get-volume)
     local postfix=$([[ "$(pamixer --get-mute)" == "true" ]] && echo " (muted)")
 
-    ICON=$(icon-name "$volume") \
+    ICON=$(icon-name "$volume" volume) \
     SUMMARY="Volume $volume%$postfix" \
         notify 
 }
@@ -33,7 +33,7 @@ function lower {
     local volume=$(pamixer --get-volume)
     local postfix=$([[ "$(pamixer --get-mute)" == "true" ]] && echo " (muted)")
 
-    ICON=$(icon-name "$volume") \
+    ICON=$(icon-name "$volume" volume) \
     SUMMARY="Volume $volume%$postfix" \
         notify
 }
@@ -46,8 +46,23 @@ function toggle-mute {
         SUMMARY="Audio muted" \
             notify
     else
-        ICON=$(icon-name "$volume") \
+        ICON=$(icon-name "$volume" volume) \
         SUMMARY="Audio unmuted ($volume%)" \
+            notify
+    fi
+}
+
+
+function toggle-mic-mute {
+    pamixer --default-source -t
+    local volume=$(pamixer --default-source --get-volume)
+    if [[ "$(pamixer --default-source --get-mute)" == "true" ]]; then
+        ICON=audio-input-microphone-muted \
+        SUMMARY="Microphone muted" \
+            notify
+    else
+        ICON=$(icon-name "$volume" input-microphone) \
+        SUMMARY="Microphone unmuted ($volume%)" \
             notify
     fi
 }
@@ -59,4 +74,6 @@ case "$1" in
         lower;;
     mute|toggle)
         toggle-mute;;
+    mic-mute)
+        toggle-mic-mute;;
 esac

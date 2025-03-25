@@ -1,0 +1,49 @@
+hooks:
+  - pacman
+  - initrd
+  - groups
+  - systemd
+  - reboot-indicator
+modules:
+  - name: common/yay
+  - name: common/base
+    hostname: gravity-laptop
+    timezone: Europe/Riga
+    kernel: linux
+  - name: common/zram
+    size: ram / 2
+    algorithm: lzo-rle
+  - name: common/base-workstation
+  - name: common/btrfs
+  - name: common/faillock
+    conf: |
+      deny = 15
+      unlock_time = 60
+  - name: common/bootloader
+  - name: common/ucode
+  - name: common/console-font
+  - name: common/console-tools
+    gui: true
+  - name: common/docker
+    enable: docker.socket
+  - name: common/gpu-drivers
+    drivers: intel
+  - name: common/plymouth
+  - name: common/xorg
+    pipewire: true
+  - name: common/networkmanager
+    gui: true
+  - name: common/audio
+    gui: true
+  - name: common/windows
+  - name: common/audio-production
+  - name: common/bluetooth
+    gui: true
+  - name: common/printer
+    gui: true
+  - name: common/camera
+  - name: common/development
+  - name: common/work
+  - name: lenovo-laptop/fingerprint
+  - name: lenovo-laptop/sleep
+  - name: lenovo-laptop/audio
