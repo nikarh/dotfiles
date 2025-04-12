@@ -72,13 +72,11 @@ if grep -q "nvidia" <<< "$GPU_DRIVER"; then
 fi
 
 if grep -q "nouveau" <<< "$GPU_DRIVER"; then
-    sudo rm -f /etc/modprobe.d/block_nouveau.conf
-
     add-module-to-initrd nouveau
+
     sudo ln -sf /etc/modprobe.d/nouveau.conf.avail /etc/modprobe.d/nouveau.conf
     install-xorg-conf empty
 else 
     remove-module-from-initrd nouveau
-    sudo ln -sf /etc/modprobe.d/block_nouveau.conf.avail /etc/modprobe.d/block_nouveau.conf
     sudo rm -f /etc/modprobe.d/nouveau.conf
 fi

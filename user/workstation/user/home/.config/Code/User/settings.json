@@ -21,6 +21,9 @@
   "workbench.editor.showTabs": "single",
   "workbench.editor.highlightModifiedTabs": true,
   "workbench.tree.indent": 20,
+  "workbench.editorAssociations": {
+    "*.svg": "default"
+  },
   "[rust]": {
     "editor.defaultFormatter": "rust-lang.rust-analyzer",
     "editor.formatOnSave": false
@@ -81,7 +84,6 @@
     "Appender",
     "argb",
     "argh",
-    "Arhipov",
     "armv",
     "Aseprite",
     "asyncify",
@@ -96,18 +98,22 @@
     "briectl",
     "browsertest",
     "bson",
+    "btreemap",
     "bytemuck",
     "bytesize",
     "bytestring",
     "cabextract",
     "callout",
     "canonicalize",
+    "careset",
     "cbindgen",
     "cdef",
     "CDRAM",
+    "Chacha",
     "chrono",
     "classpath",
     "CLOEXEC",
+    "colorarea",
     "colorspace",
     "Condvar",
     "consts",
@@ -153,6 +159,7 @@
     "firstfactor",
     "flate",
     "flatpak",
+    "fontdb",
     "Framebuffer",
     "frametime",
     "fself",
@@ -201,9 +208,6 @@
     "libwebp",
     "localstack",
     "Luma",
-    "Lumo",
-    "lumoc",
-    "lumos",
     "mainfile",
     "MANGOHUD",
     "maximizable",
@@ -222,8 +226,6 @@
     "newlibeabihf",
     "nextest",
     "NEXTFRAME",
-    "nikarh",
-    "Nikolay",
     "NONBLOCK",
     "nonblocking",
     "nonbw",
@@ -304,6 +306,7 @@
     "struct",
     "Substreamer",
     "suppaftp",
+    "svgs",
     "syscall",
     "syscalls",
     "SYSROOT",
@@ -357,9 +360,7 @@
     "yzhang",
     "zipfile",
     "zustand",
-    "Zval",
-    "найдено",
-    "поиска"
+    "Zval"
   ],
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -368,6 +369,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
+  
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[yaml]": {
@@ -444,7 +446,7 @@
     "editor.defaultFormatter": "mtxr.sqltools"
   },
   "[svg]": {
-    "editor.defaultFormatter": "jock.svg"
+    "editor.defaultFormatter": "redhat.vscode-xml"
   },
   "terminal.integrated.enableImages": true,
   "terminal.integrated.customGlyphs": false,
