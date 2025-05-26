@@ -63,7 +63,7 @@
   },
   "editor.suggestSelection": "first",
   "rust-analyzer.debug.engineSettings": {},
-  "terminal.integrated.gpuAcceleration": "off",
+  "terminal.integrated.gpuAcceleration": "on",
   "terminal.external.linuxExec": "alacritty",
   "terminal.integrated.enablePersistentSessions": false,
   "editor.guides.indentation": true,
@@ -224,6 +224,7 @@
     "nalgebra",
     "newlib",
     "newlibeabihf",
+    "newtype",
     "nextest",
     "NEXTFRAME",
     "nikarh",
@@ -305,6 +306,7 @@
     "sqltools",
     "steamgriddb",
     "struct",
+    "subschemas",
     "Substreamer",
     "suppaftp",
     "svgs",
@@ -437,9 +439,6 @@
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[markdown]": {
-    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
-  },
   "[scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -454,7 +453,6 @@
   "cmake.options.statusBarVisibility": "compact",
   "debug.console.fontFamily": "Hack",
   "svg.preview.mode": "svg",
-  "github.copilot.editor.enableAutoCompletions": true,
   "explorer.fileNesting.patterns": {
     "*.ts": "${capture}.js",
     "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
@@ -475,5 +473,6 @@
   "javascript.updateImportsOnFileMove.enabled": "never",
   "workbench.iconTheme": "material-icon-theme",
   "window.titleBarStyle": "custom",
-  "workbench.colorTheme": "One Dark Pro Darker"
+  "workbench.colorTheme": "One Dark Pro Night Flat",
+  "indentRainbow.indicatorStyle": "light"
 }

@@ -7,3 +7,4 @@ sudo systemctl daemon-reload
 
 enable-unit fan-sleep
 enable-unit fan-wakeup
+enable-unit wakeup-disable

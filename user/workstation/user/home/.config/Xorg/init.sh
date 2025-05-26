@@ -4,16 +4,18 @@ set -x
 
 autorandr --change --default default
 
-# Synchronize xorg copy-paste buffers
+# Synchronize Xorg copy-paste buffers
 autocutsel -fork
 # Load cursor size, dpi, hinting
 xrdb -all -load ~/.config/Xorg/.Xresources
 
-# Set keybaord/mouse settings
+# Reset keyboard/mouse settings
 ~/.local/bin/init-input-devices.sh
-# Set keybaord/mouse settings when USB device plugged
+# Reset keyboard/mouse settings when USB device plugged
 ~/.local/bin/udev-monitor -s usb -e ~/.local/bin/init-input-devices.sh&
-# Listen to xeyboard layout changes
+# Reset keyboard/mouse settings when Bluetooth devices are plugged
+~/.local/bin/udev-monitor -s bluetooth -e ~/.local/bin/init-input-devices.sh&
+# Listen to keyboard layout changes
 ~/.local/bin/xkb-switch-dbus.sh&
 
 # Lock on dbus session lock singal

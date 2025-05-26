@@ -43,7 +43,6 @@ modules:
     gui: true
   - name: common/camera
   - name: common/development
-  - name: common/work
   - name: lenovo-laptop/fingerprint
   - name: lenovo-laptop/sleep
   - name: lenovo-laptop/audio

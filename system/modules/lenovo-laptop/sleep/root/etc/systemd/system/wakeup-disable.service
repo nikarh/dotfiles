@@ -1,0 +1,18 @@
+[Unit]
+Description=Disable unnecessary wakeup triggers
+
+[Service]
+ExecStartPre=/bin/bash -c "echo LID >> /proc/acpi/wakeup"
+ExecStartPre=/bin/bash -c "echo TRP2 >> /proc/acpi/wakeup"
+ExecStartPre=/bin/bash -c "echo TRP0 >> /proc/acpi/wakeup"
+ExecStartPre=/bin/bash -c "echo TDM0 >> /proc/acpi/wakeup"
+ExecStartPre=/bin/bash -c "echo TDM1 >> /proc/acpi/wakeup"
+ExecStartPre=/bin/bash -c "echo TXHC >> /proc/acpi/wakeup"
+ExecStartPre=/bin/bash -c "echo RP11 >> /proc/acpi/wakeup"
+ExecStartPre=/bin/bash -c "echo RP09 >> /proc/acpi/wakeup"
+ExecStartPre=/bin/bash -c "echo RP01 >> /proc/acpi/wakeup"
+ExecStartPre=/bin/bash -c "echo XHCI >> /proc/acpi/wakeup"
+ExecStart=/bin/bash -c "echo GLAN >> /proc/acpi/wakeup"
+
+[Install]
+WantedBy=multi-user.target
