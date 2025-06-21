@@ -147,6 +147,7 @@ services:
       - "traefik.http.routers.files.entrypoints=https"
       - "traefik.http.routers.files.middlewares=authelia@docker"
     command:
+      - "filebrowser"
       - "--cache-dir=/mnt/data/cache"
       - "-d=/mnt/data/filebrowser.db"
       - "-c=/mnt/data/filebrowser.json"
