@@ -51,7 +51,7 @@ bindsym XF86TouchpadToggle exec "~/.local/bin/toggle-touchpad.sh"
 bindsym Print exec "flameshot gui"
 bindsym Control+Print exec "flameshot screen"
 
-bindsym $mod+Shift+q kill
+bindsym $mod+Shift+q exec --no-startup-id "~/.local/bin/close-window.sh"
 bindsym $mod+Return exec "LANG=en alacritty -t Terminal"
 bindsym $mod+c exec --no-startup-id "rofi -combi-modi window,drun -show combi -modi combi"
 bindsym $mod+x exec --no-startup-id "MODE_SWITCHER=true rofi -show run -terminal alacritty -font"

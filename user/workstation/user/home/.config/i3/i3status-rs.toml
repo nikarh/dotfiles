@@ -84,6 +84,8 @@ command = """
                     + " " + (.properties."device.profile.description")
                     + " " + (.properties."media.name")' \
             | awk '{$1=$1};1' \
+            | sed 's/Mic In 1L M Series Mic In 1L output/1L/g' \
+            | sed 's/Mic In 2R M Series Mic In 2R output/2R/g' \
             | sed 's/Mic In //g' \
             | sed 's/sof-hda-dsp Digital Microphone/lap/g' \
             | jq -R -c '{
@@ -126,6 +128,7 @@ cmd = "/home/nikarh/.local/bin/padevice.sh out"
 block = "battery"
 format = " $icon $percentage {$time_remaining.dur(hms:true, min_unit:m) |}"
 driver = "sysfs"
+if_command = "ls /sys/class/power_supply | grep -q BAT"
 missing_format = ""
 
 [[block]]
