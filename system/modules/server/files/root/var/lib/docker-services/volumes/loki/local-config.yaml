@@ -14,7 +14,7 @@ compactor:
   retention_delete_delay: 2h
   retention_delete_worker_count: 5
   delete_request_store: filesystem
-  deletion_mode: filter-only
+  # deletion_mode: filter-only
 
 limits_config:
   retention_period: 1440h
