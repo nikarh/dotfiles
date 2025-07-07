@@ -14,10 +14,10 @@ LID_STATE=$(cat "$LID_STATE_FILE" | awk '{print $2}')
 
 echo "Current lid state: $LID_STATE"
 
-# If lid is open, force sleep
-if [ "$LID_STATE" = "open" ]; then
-    echo "Lid is open - forcing laptop back to sleep"
+# If lid is closed, force sleep
+if [ "$LID_STATE" = "closed" ]; then
+    echo "Lid is closed - forcing laptop back to sleep"
     systemctl suspend
 else
-    echo "Lid is closed - allowing normal wakeup"
-fi
+    echo "Lid is open - allowing normal wakeup"
+fi 
