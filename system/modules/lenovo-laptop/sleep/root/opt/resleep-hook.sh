@@ -20,4 +20,4 @@ if [ "$LID_STATE" = "closed" ]; then
     systemctl suspend
 else
     echo "Lid is open - allowing normal wakeup"
-fi 
+fi
