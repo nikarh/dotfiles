@@ -1,5 +1,5 @@
 [Unit]
-Description=Resleep hook - force sleep if lid is open after wakeup
+Description=Resleep hook - force sleep if lid is closed after wakeup
 After=suspend.target
 
 [Service]
@@ -7,4 +7,4 @@ Type=oneshot
 ExecStart=/opt/resleep-hook.sh
 
 [Install]
-WantedBy=suspend.target 
+WantedBy=suspend.target

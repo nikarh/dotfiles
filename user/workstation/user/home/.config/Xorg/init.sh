@@ -18,6 +18,9 @@ xrdb -all -load ~/.config/Xorg/.Xresources
 # Listen to keyboard layout changes
 ~/.local/bin/xkb-switch-dbus.sh&
 
+# Listen to dbus events for screen setup/lid changes and run autorandr
+~/.local/bin/autorandr-dbus-monitor.sh&
+
 # Lock on dbus session lock singal
 ON_SUSPEND="betterlockscreen -l dim" \
 ON_LOCK="betterlockscreen -l dim" \
