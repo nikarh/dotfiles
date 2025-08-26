@@ -38,7 +38,7 @@ jobs:
           unzip -qq homer.zip -d homer
           cp ./system/modules/server/files/root/var/lib/docker-services/volumes/homer/config.yml ./homer/assets/config.yml
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           # Upload entire repository
           path: 'homer'
