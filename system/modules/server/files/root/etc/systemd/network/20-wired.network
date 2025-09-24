@@ -5,4 +5,4 @@ Name=eth0
 
 [Network]
 DHCP=yes
-IPForward=yes
+IPv4Forwarding=yes
