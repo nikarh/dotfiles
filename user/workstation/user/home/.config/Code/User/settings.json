@@ -429,7 +429,7 @@
     "markdown": false,
     "scminput": false
   },
-  "files.insertFinalNewline": true,
+  "files.insertFinalNewline": false,
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -474,5 +474,6 @@
   "workbench.iconTheme": "material-icon-theme",
   "window.titleBarStyle": "custom",
   "workbench.colorTheme": "One Dark Pro Night Flat",
-  "indentRainbow.indicatorStyle": "light"
+  "indentRainbow.indicatorStyle": "light",
+  "docker.extension.enableComposeLanguageServer": false
 }

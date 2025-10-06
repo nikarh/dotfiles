@@ -5,11 +5,17 @@ x-service-defaults: &service-defaults
     options:
       max-size: ${LOG_MAX_SIZE:-200k}
       max-file: ${LOG_MAX_FILE:-5}
+secrets:
+  EUFY_USERNAME:
+    file: ./docker/secrets/eufy_username
+  EUFY_PASSWORD:
+    file: ./docker/secrets/eufy_password
 volumes:
   mqtt-certs:
   mosquitto-data:
   zigbee2mqtt-data:
   hass-data:
+  eufy-data:
 services:
   init-mqtt-certs:
     image: alpine
@@ -113,6 +119,24 @@ services:
         condition: service_completed_successfully
       init-mqtt-certs:
         condition: service_completed_successfully
+  eufy:
+    image: bropat/eufy-security-ws:latest
+    container_name: eufy-security-ws
+    << : *service-defaults
+    secrets:
+      - EUFY_USERNAME
+      - EUFY_PASSWORD
+    environment:
+      - USERNAME_FILE=/run/secrets/EUFY_USERNAME
+      - PASSWORD_FILE=/run/secrets/EUFY_PASSWORD
+      - COUNTRY=LV
+      - TRUSTED_DEVICE_NAME=rpi2b
+      - EVENT_DURATION_SECONDS=10
+      - POLLING_INTERVAL_MINUTES=10
+      - ACCEPT_INVITATIONS=false
+    volumes:
+      - eufy-data:/data
+
   mdns-repeater:
     image: angelnu/mdns_repeater
     container_name: mdns-repeater
