@@ -48,6 +48,10 @@ access_control:
       networks:
         - 172.0.0.0/8
         - 192.168.1.0/24
+    - name: iot
+      networks:
+        - 192.168.1.25/32
+        - 192.168.1.19/32
   default_policy: deny
   rules:
     # Bypass
@@ -77,6 +81,11 @@ access_control:
       policy: bypass
       networks:
         - internal
+    - domain:
+        - bambu-spaghetti.files.home.arhipov.net
+      policy: bypass
+      networks:
+        - iot
     # Specific configuration
     - domain:
         - media.files.home.arhipov.net

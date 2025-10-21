@@ -1,0 +1,28 @@
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+
+services:
+  ha_bambu_lab_p1_spaghetti_detection:
+    image: nikarh/ha_bambu_lab_p1_spaghetti_detection_standalone:1.4
+    container_name: ha_bambu_lab_p1_spaghetti_detection
+    <<: *service-defaults
+    environment:
+      - TZ=Europe/Riga
+      - ML_API_TOKEN=${OBICO_API_SECRET}
+    deploy:
+      resources:
+        limits:
+          memory: 5G
+        reservations:
+          memory: 4G
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.spaghetti.loadbalancer.server.port=3333"
+      - "traefik.http.routers.spaghetti.rule=Host(`bambu-spaghetti.${DOMAIN}`)"
+      - "traefik.http.routers.spaghetti.entrypoints=https"
+      - "traefik.http.routers.spaghetti.middlewares=authelia@docker"
