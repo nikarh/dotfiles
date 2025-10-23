@@ -26,3 +26,22 @@ services:
       - "traefik.http.routers.spaghetti.rule=Host(`bambu-spaghetti.${DOMAIN}`)"
       - "traefik.http.routers.spaghetti.entrypoints=https"
       - "traefik.http.routers.spaghetti.middlewares=authelia@docker"
+  a9-cam-reverse:
+    image: nikarh/a9-cam-reverse:latest
+    container_name: a9-cam-reverse
+    network_mode: "host"
+    <<: *service-defaults
+    volumes:
+      - /var/lib/docker-services/volumes/a9-cam-reverse/config.yaml:/cam-reverse/config.yaml:ro
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 250M
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.cam-reverse.loadbalancer.server.url=http://172.17.0.1:5012"
+      - "traefik.http.routers.cam-reverse.rule=Host(`cam.${DOMAIN}`)"
+      - "traefik.http.routers.cam-reverse.entrypoints=https"
+      - "traefik.http.routers.cam-reverse.middlewares=authelia@docker"

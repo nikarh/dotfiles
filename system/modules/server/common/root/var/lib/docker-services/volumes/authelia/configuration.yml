@@ -76,7 +76,7 @@ access_control:
       networks:
         - internal
     - domain_regex: 
-        - '^(traefik|torrents|torrents-raw|netdata|readarr|prowlarr|sonarr|radarr|bazarr|jellyseerr|bitmagnet|mail|kavita|music)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
+        - '^(cam|traefik|torrents|torrents-raw|netdata|readarr|prowlarr|sonarr|radarr|bazarr|jellyseerr|bitmagnet|mail|kavita|music)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
         - '^(mail|r|t|u)\.u8\.lv$'
       policy: bypass
       networks:
@@ -105,7 +105,7 @@ access_control:
       subject:
         - "group:admins"
     # Residential
-    - domain_regex: '^(hass|zigbee2mqtt|esphome)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
+    - domain_regex: '^(cam|hass|zigbee2mqtt|esphome)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
       policy: one_factor
       subject:
         - "group:residents"
