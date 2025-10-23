@@ -1,0 +1,11 @@
+http_server:
+  port: 5012 # Docker vlan
+
+logging:
+  level: debug
+  use_color: false
+
+discovery_ips:
+  - 192.168.1.209
+  # Broadcast address
+  - 192.168.1.255
