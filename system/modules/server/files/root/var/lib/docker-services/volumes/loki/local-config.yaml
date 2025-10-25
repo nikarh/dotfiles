@@ -14,14 +14,14 @@ compactor:
   retention_delete_delay: 2h
   retention_delete_worker_count: 5
   delete_request_store: filesystem
-  # deletion_mode: filter-only
 
 limits_config:
-  retention_period: 1440h
+  retention_period: 336h
   max_entries_limit_per_query: 50000
   max_cache_freshness_per_query: 10m
   reject_old_samples: true
   reject_old_samples_max_age: 168h
+  deletion_mode: filter-and-delete
 
 query_scheduler:
   max_outstanding_requests_per_tenant: 2048

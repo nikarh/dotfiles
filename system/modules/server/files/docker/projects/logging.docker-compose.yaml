@@ -123,7 +123,8 @@ services:
     volumes:
       - fail2ban-db:/db
   fail2ban:
-    image: lscr.io/linuxserver/fail2ban:latest
+    image: lscr.io/linuxserver/fail2ban:1.1.0-r2-ls19
+
     container_name: fail2ban
     <<: *common-service-defaults
     cap_add:
@@ -132,7 +133,7 @@ services:
     network_mode: host
     environment:
       <<: *common_env
-      VERBOSITY: -vvv
+      VERBOSITY: -v
     volumes:
       - /var/lib/docker-services/volumes/fail2ban/jail.local:/config/fail2ban/jail.local:ro
       - /var/lib/docker-services/volumes/fail2ban/fail2ban.local:/config/fail2ban/fail2ban.local:ro
