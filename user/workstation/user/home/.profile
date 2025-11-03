@@ -27,7 +27,6 @@ export GOPATH="${XDG_CACHE_HOME}/go"
 
 export RUSTUP_HOME="${XDG_STATE_HOME}/rustup"
 export CARGO_HOME="${XDG_STATE_HOME}/cargo"
-export NVM_DIR="${XDG_STATE_HOME}/nvm"
 
 export AWS_CONFIG_FILE="~/.config/aws/config"
 

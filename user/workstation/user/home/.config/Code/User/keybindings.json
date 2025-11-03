@@ -14,12 +14,6 @@
         "command": "workbench.action.quickOpenPreviousEditor"
     },
     {
-        "key": "ctrl+enter",
-        "command": "sqltools.executeCurrentQuery",
-        "when": "editorTextFocus"
-    },
-
-    {
         "key": "alt+1",
         "command": "-workbench.action.focusFirstEditorGroup"
     },
@@ -65,5 +59,19 @@
         "key": "ctrl+v",
         "command": "-filesExplorer.paste",
         "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceReadonly && !inputFocus"
+    },
+    {
+        "key": "ctrl+enter",
+        "command": "pgsql.runQuery",
+        "when": "editorTextFocus && editorLangId == 'sql'"
+    },
+    {
+        "key": "shift+enter",
+        "command": "-pgsql.runQuery",
+        "when": "editorTextFocus && editorLangId == 'sql'"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "composerMode.agent"
     }
 ]

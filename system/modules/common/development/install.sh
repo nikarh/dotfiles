@@ -3,7 +3,7 @@
 pkg diffutils upx dhex sysstat gdb svgcleaner tokei strace `# General use` \
     code code-marketplace code-features `# IDE` \
     dive helm `# devops` \
-    go fnm-bin bun-bin bash-language-server `# Langs/Platforms` \
+    mise bash-language-server `# Langs/Platforms` \
     sdl2 glu `# Game dev` \
     cmake ccache cppcheck clang lld lldb `# C++` \
     rustup mold wild webkit2gtk zig `# Rust` \

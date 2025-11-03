@@ -19,7 +19,8 @@ trysource ~/.config/bash-sensible/sensible.bash
 shopt -u cdable_vars
 
 eval "$(starship init bash)"
-eval "$(fnm env --use-on-cd)"
+eval "$(mise activate bash)"
+
 eval "$(direnv hook bash)"
 eval "$(zoxide init bash)"
 
