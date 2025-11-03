@@ -20,17 +20,17 @@ pkg i3-wm i3status-rust betterlockscreen \
 # glib hardcodes terminals https://github.com/GNOME/glib/blob/main/gio/gdesktopappinfo.c#L2692
 pkg alacritty xterm-alacritty-symlink \
     eom xarchiver gsimplecal \
-    chromium chromium-widevine firefox vdhcoapp-bin torbrowser-launcher \
+    chromium chromium-widevine firefox `#vdhcoapp-bin` torbrowser-launcher \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs gvfs-mtp \
     qdirstat keepassxc flameshot qbittorrent syncthing \
     libsecret seahorse \
     telegram-desktop slack-desktop onlyoffice-bin \
-    krita inkscape aseprite-git \
+    krita inkscape \
     audacious vlc \
     gparted
 
 # Themes and fonts
-pkg lxappearance-gtk3 qt5ct qt6ct kvantum-theme-arc kvantum-qt5 \
+pkg lxappearance qt5ct qt6ct kvantum-theme-arc kvantum-qt5 \
     noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-ms-win10-auto \
     ttf-dejavu ttf-hack-nerd dracula-gtk-theme \
     dracula-cursors-git dracula-icons-git

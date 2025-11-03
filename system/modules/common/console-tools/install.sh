@@ -9,7 +9,7 @@ pkg zip unzip 7zip unrar \
     parallel lsof usbutils rsync htop iotop \
     wget jq go-yq croc rclone \
     rdfind \
-    ranger \
+    yazi \
 
 if [ -n "$ARGS_gui" ]; then 
     pkg ueberzugpp

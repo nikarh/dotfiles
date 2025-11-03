@@ -2,7 +2,7 @@
 
 pkg realtime-privileges rtirq rtkit reaper sws \
     yabridge yabridgectl winetricks \
-    surge-xt vmpk tuxguitar
+    surge-xt vmpk
 
 add-user-to-groups \
     realtime
