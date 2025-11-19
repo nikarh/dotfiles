@@ -6,6 +6,10 @@ logging:
   use_color: false
 
 discovery_ips:
+  - 192.168.1.129
   - 192.168.1.209
   # Broadcast address
   - 192.168.1.255
+
+blacklisted_ips:
+  - 192.168.1.235
