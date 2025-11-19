@@ -172,7 +172,7 @@ services:
     container_name: qbittorrent
     <<: *service-defaults
     environment:
-      DOCKER_MODS: ghcr.io/gabe565/linuxserver-mod-vuetorrent
+      DOCKER_MODS: ghcr.io/vuetorrent/vuetorrent-lsio-mod
       <<: *arr_env
     volumes:
       - qbittorrent-data:/config
@@ -243,7 +243,7 @@ services:
     container_name: qbittorrent-raw
     <<: *service-defaults
     environment:
-      DOCKER_MODS: ghcr.io/gabe565/linuxserver-mod-vuetorrent
+      DOCKER_MODS: ghcr.io/vuetorrent/vuetorrent-lsio-mod
       <<: *arr_env
     ports:
       - 49152:49152/tcp
