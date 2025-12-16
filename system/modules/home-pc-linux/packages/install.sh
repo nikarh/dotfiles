@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-pkg stressapptest \
-    moonlight-qt busybox flatpak flatseal \
-    kicad \
-    \
+pkg moonlight-qt busybox flatpak flatseal kicad \
+    cursor-bin \
+    downgrade \
+    quickemu-git

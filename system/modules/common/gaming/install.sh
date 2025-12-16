@@ -3,14 +3,14 @@
 # Copy all configs to root
 sudo cp -ufrT "$ROOT/root/" /
 
-pkg cemu joystickwake gamemode mangohud xpadneo-dkms ntsync-dkms unclutter
+pkg cemu joystickwake gamemode mangohud xpadneo-dkms unclutter
 pkg retroarch retroarch-assets-ozone libretro-picodrive
 
 pkg-local "$ROOT/pkg/brie-bin"
 
 if [ -n "$ARGS_streaming" ]; then
     # Game streaming
-    pkg sunshine-git
+    pkg sunshine
     # CUDA is required for sunshine to encode HEVC 
     pkg cuda
 fi

@@ -24,7 +24,7 @@ pkg alacritty xterm-alacritty-symlink \
     thunar thunar-archive-plugin thunar-volman tumbler gvfs gvfs-mtp \
     qdirstat keepassxc flameshot qbittorrent syncthing \
     libsecret seahorse \
-    telegram-desktop slack-desktop onlyoffice-bin \
+    telegram-desktop onlyoffice-bin \
     krita inkscape \
     audacious vlc \
     gparted
@@ -33,7 +33,7 @@ pkg alacritty xterm-alacritty-symlink \
 pkg lxappearance qt5ct qt6ct kvantum-theme-arc kvantum-qt5 \
     noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-ms-win10-auto \
     ttf-dejavu ttf-hack-nerd dracula-gtk-theme \
-    dracula-cursors-git dracula-icons-git
+    dracula-cursors-git #dracula-icons-git
 
 pkg-local "$ROOT/pkg/micro-locker"
 

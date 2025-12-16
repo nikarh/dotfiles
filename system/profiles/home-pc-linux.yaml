@@ -46,6 +46,7 @@ modules:
   - name: common/camera
   - name: common/development
     game: true
+    cad: true
   - name: home-pc-linux/power
   - name: home-pc-linux/android
   - name: home-pc-linux/fancontrol

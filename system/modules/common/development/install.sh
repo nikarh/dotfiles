@@ -12,8 +12,13 @@ pkg diffutils upx dhex sysstat gdb svgcleaner tokei strace `# General use` \
 
 
 if [ -n "$ARGS_game" ]; then
-    pkg diffutils sdl2 glu `# Game dev` \
-        ghidra vitasdk-git vitasdk-packages-git vita-parse-core-git vita3k-bin `# Vita` \
-        kchmviewer \
-        aseprite-git
+    pkg diffutils sdl2 glu aseprite-git
+fi
+
+if [ -n "$ARGS_vita" ]; then
+    pkg ghidra vitasdk-git vitasdk-packages-git vita-parse-core-git vita3k-bin
+fi
+
+if [ -n "$ARGS_cad" ]; then
+    pkg freecad openscad-bosl2-git openscad-git
 fi
