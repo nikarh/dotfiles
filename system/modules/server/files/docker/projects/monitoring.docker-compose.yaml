@@ -14,6 +14,8 @@ volumes:
   fail2ban-db:
   loki-data:
   grafana-data:
+  scrutiny-config:
+  scrutiny-influxdb:
 services:
   vector:
     image: timberio/vector:latest-alpine
@@ -148,3 +150,31 @@ services:
     depends_on:
       init-fail2ban-volume:
         condition: service_completed_successfully
+  scrutiny:
+    image: ghcr.io/analogj/scrutiny:master-omnibus
+    container_name: scrutiny
+    <<: *common-service-defaults
+    cap_add:
+      - SYS_RAWIO
+    devices:
+      - /dev/sda:/dev/sda
+      - /dev/sdb:/dev/sdb
+      - /dev/sdc:/dev/sdc
+      - /dev/sdd:/dev/sdd
+      - /dev/sde:/dev/sde
+    volumes:
+      - scrutiny-config:/opt/scrutiny/config
+      - scrutiny-influxdb:/opt/scrutiny/influxdb
+      - /run/udev:/run/udev:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.scrutiny.loadbalancer.server.port=8080"
+      - "traefik.http.routers.scrutiny.rule=Host(`disks.${DOMAIN}`)"
+      - "traefik.http.routers.scrutiny.entrypoints=https"
+      - "traefik.http.routers.scrutiny.middlewares=authelia@docker"
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 100M

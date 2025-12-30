@@ -100,7 +100,7 @@ access_control:
       subject:
         - "group:samba"
     # Administrative
-    - domain_regex: '^(traefik|netdata|grafana)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
+    - domain_regex: '^(disks|traefik|netdata|grafana)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
       policy: one_factor
       subject:
         - "group:admins"
