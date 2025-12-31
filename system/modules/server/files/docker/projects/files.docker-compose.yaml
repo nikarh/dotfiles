@@ -42,6 +42,7 @@ services:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /etc/os-release:/host/etc/os-release:ro
+      - /dev/disk/by-id:/host/dev/by-id:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.netdata.loadbalancer.server.port=19999"
