@@ -43,12 +43,16 @@ services:
       - /sys:/host/sys:ro
       - /etc/os-release:/host/etc/os-release:ro
       - /dev/disk/by-id:/host/dev/by-id:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.netdata.loadbalancer.server.port=19999"
       - "traefik.http.routers.netdata.rule=Host(`netdata.${DOMAIN}`)"
       - "traefik.http.routers.netdata.entrypoints=https"
-      - "traefik.http.routers.netdata.middlewares=authelia@docker"
+      - "traefik.http.routers.netdata.middlewares=authelia@docker,netdata-redirect@docker"
+      - "traefik.http.middlewares.netdata-redirect.redirectregex.regex=^/$"
+      - "traefik.http.middlewares.netdata-redirect.redirectregex.replacement=/v3/"
+      - "traefik.http.middlewares.netdata-redirect.redirectregex.permanent=true"
     deploy:
       resources:
         limits:
