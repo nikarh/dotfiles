@@ -21,7 +21,7 @@ exec hash dbus-update-activation-environment 2>/dev/null && dbus-update-activati
 
 exec waybar
 exec swayidle -w before-sleep 'swaylock'
-exec wl-paste -t text --watch clipman store
+# exec wl-paste -t text --watch clipman store
 exec dunst
 exec flameshot
 exec nm-applet --indicator
@@ -47,12 +47,12 @@ set $mod Mod4
 font pango:Noto Sans 9
 
 # class                 border  backgr. text    indicator child_border
-client.focused          #202B33 #30404D #F5F8FA #0E5A8A   #202B33
-client.focused_inactive #202B33 #293742 #BFCCD6 #484e50   #202B33
-client.unfocused        #10161A #182026 #8A9BA8 #182026   #10161A
-client.urgent           #2f343a #E1E8ED #394B59 #E1E8ED   #E1E8ED
-client.placeholder      #182026 #182026 #F5F8FA #182026   #182026
-client.background       #F5F8FA
+client.focused          #44475A #44475A #F8F8F2 #44475A   #44475A
+client.focused_inactive #44475A #44475A #F8F8F2 #44475A   #44475A
+client.unfocused        #303240 #303240 #BFBFBF #303240   #303240
+client.urgent           #44475A #44475A #F8F8F2 #44475A   #44475A
+client.placeholder      #282A36 #282A36 #F8F8F2 #282A36   #282A36
+client.background       #F8F8F2
 
 focus_follows_mouse no
 focus_on_window_activation focus
@@ -135,6 +135,8 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
+for_window [app_id="flameshot"] border pixel 0, floating enable, fullscreen disable, move absolute position 0 0
+
 assign [instance="Main Terminal"] $ws2
 assign [class="Navigator"] $ws2
 assign [class="firefox"] $ws2
@@ -171,8 +173,11 @@ assign [class="Blueman-manager"] $ws7
 assign [class="pavucontrol"] $ws7
 assign [class="Pavucontrol"] $ws7
 assign [instance="^open.spotify.com.*"] $ws7
+assign [class="Audacious"] $ws7
 assign [instance="zoom"] $ws8
 assign [class="Chromium"] $ws2
+assign [class="MongoDB Compass"] $ws9
+assign [class="pritunl"] $ws9
 
 for_window [class="jetbrains-toolbox"] floating enable
 
@@ -200,9 +205,9 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
-bindsym $mod+Shift+c reload
-bindsym $mod+Shift+r restart
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+c swaymsg reload
+bindsym $mod+Shift+r swaymsg restart
+bindsym $mod+Shift+e exec "swaynag -t warning -m 'End session?' -B 'Yes, exit' 'swaymsg exit'"
 
 bindsym $mod+r mode "resize"
 
@@ -223,6 +228,23 @@ mode "resize" {
 }
 
 bar {
-        mode invisible
-        hidden_state hide
+        tray_output primary
+        position top
+        font pango:Hack Nerd Font Propo 18
+        status_command i3status-rs ~/.config/sway/i3status-rs.toml
+        strip_workspace_numbers yes
+        tray_padding 1px
+        workspace_min_width 60 px
+
+        colors {
+                background #282A36
+                statusline #F8F8F2
+                separator  #44475A
+
+                focused_workspace  #44475A #44475A #F8F8F2
+                active_workspace   #282A36 #44475A #F8F8F2
+                inactive_workspace #282A36 #282A36 #BFBFBF
+                urgent_workspace   #F8F8F2 #F8F8F2 #44475A
+                binding_mode       #F8F8F2 #F8F8F2 #44475A
+        }
 }

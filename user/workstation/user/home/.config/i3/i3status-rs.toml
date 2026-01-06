@@ -32,13 +32,6 @@ command = """Z
 [block.theme_overrides]
 idle_fg = "#CED9E0"
 
-# [[block]]
-# block = "pacman"
-# format = " $icon $pacman.eng(w:1)/$aur.eng(w:1) "
-# format_up_to_date = ""
-# interval = 3600
-# aur_command = "yay -Qua"
-
 [[block]]
 block = "docker"
 interval = 2
@@ -140,7 +133,6 @@ command = "date +\"%a %d %b %R %:::z\""
 [[block]]
 block = "custom_dbus"
 path = "/CurrentKeyboardLayout"
-
 [[block.click]]
 button = "left"
 cmd = "xkb-switch -n"

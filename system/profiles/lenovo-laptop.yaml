@@ -30,7 +30,7 @@ modules:
     drivers: intel
   - name: common/plymouth
   - name: common/xorg
-    pipewire: true
+  - name: common/gui
   - name: common/networkmanager
     gui: true
   - name: common/audio

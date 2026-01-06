@@ -8,39 +8,11 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xdotool \
     lightdm lightdm-gtk-greeter
 
-if [ -n "$ARGS_pipewire" ]; then
-    pkg pipewire-jack
-fi
+# WM
+pkg i3-wm xkb-switch betterlockscreen
 
-pkg i3-wm i3status-rust betterlockscreen \
-    xkb-switch picom \
-    dunst rofi rofi-calc rofi-emoji
-
-# GUI applications
-# glib hardcodes terminals https://github.com/GNOME/glib/blob/main/gio/gdesktopappinfo.c#L2692
-pkg alacritty xterm-alacritty-symlink \
-    eom xarchiver gsimplecal \
-    chromium chromium-widevine firefox `#vdhcoapp-bin` torbrowser-launcher \
-    thunar thunar-archive-plugin thunar-volman tumbler gvfs gvfs-mtp \
-    qdirstat keepassxc flameshot qbittorrent syncthing \
-    libsecret seahorse \
-    telegram-desktop onlyoffice-bin \
-    krita inkscape \
-    audacious vlc \
-    gparted
-
-# Themes and fonts
-pkg lxappearance qt5ct qt6ct kvantum-theme-arc kvantum-qt5 \
-    noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-ms-win10-auto \
-    ttf-dejavu ttf-hack-nerd dracula-gtk-theme \
-    dracula-cursors-git #dracula-icons-git
-
-pkg-local "$ROOT/pkg/micro-locker"
-
-# Copy all configs to root
+# Copy config
 sudo cp -ufrT "$ROOT/root/" /
 
-# Systemd units
-enable-unit autorandr.service
 enable-unit lightdm.service
-disable-unit getty@tty1.service 
+enable-unit autorandr.service

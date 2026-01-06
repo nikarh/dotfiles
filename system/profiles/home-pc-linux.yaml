@@ -30,7 +30,8 @@ modules:
     drivers: nvidia
   - name: common/plymouth
   - name: common/xorg
-    pipewire: true
+  - name: common/gui
+  - name: common/wayland
   - name: common/gaming
     streaming: true
   - name: common/networkmanager
