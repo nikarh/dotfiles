@@ -11,7 +11,6 @@ export XDG_CONFIG_HOME=~/.config/
 export XDG_CACHE_HOME=~/.cache/
 export XDG_DATA_HOME=~/.local/share/
 export XDG_STATE_HOME=~/.local/share/
-# For Surge presets
 export XDG_DOCUMETNS_DIR=~/.local/share/
 
 export INPUTRC=~/.config/bash/inputrc
@@ -30,11 +29,29 @@ export CARGO_HOME="${XDG_STATE_HOME}/cargo"
 
 export AWS_CONFIG_FILE="~/.config/aws/config"
 
-export GTK_THEME=Dracula:dark
-export QT_QPA_PLATFORMTHEME=qt5ct
-export _JAVA_AWT_WM_NONREPARENTING=1
+#export GTK_THEME=Dracula:dark
+#export QT_QPA_PLATFORMTHEME=qt5ct
+#export _JAVA_AWT_WM_NONREPARENTING=1
 
+#export QT_BEARER_POLL_TIMEOUT=-1
+
+export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
+
+
+if [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
+  export XDG_CURRENT_DESKTOP=sway
+  export QT_QPA_PLATFORM="wayland;xcb"
+fi
+
+export QT_QPA_PLATFORMTHEME=qt5ct
 # https://blog.ando.fyi/posts/diagnosing-an-unsual-wifi-issue/
 export QT_BEARER_POLL_TIMEOUT=-1
 
-export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
+export GTK_THEME=Dracula:dark
+export GTK_ICON_THEME=Dracula
+
+export XCURSOR_THEME=Dracula-cursor
+export XCURSOR_SIZE=24
+
+export _JAVA_AWT_WM_NONREPARENTING=1
+

@@ -20,7 +20,7 @@ case $1 in
     ;;
 esac
 
-if test -t 0; then
+if test -t 0  && [ "$2" != "rofi" ]; then
   SELECTED_COLOR="\033[1;32m"
   FAINT_COLOR="\033[2m"
   ENDCOLOR="\033[0m"
@@ -30,6 +30,7 @@ else
   FAINT_COLOR='<span foreground=\"gray\">'
   ENDCOLOR='</span>'
   DMENU="rofi -dmenu -markup-rows -i -no-custom -p $PROMPT"
+  pkill -x rofi; 
 fi
 
 CURRENT="$(pactl $SELECTED_CMD)"

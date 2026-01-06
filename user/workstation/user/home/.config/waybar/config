@@ -1,78 +1,139 @@
-
 {
-    "height": 35,
-    "modules-left": ["sway/workspaces"],
-    "modules-center": [],
-    "modules-right": [
-        "pulseaudio",
-        "disk", 
-        "memory",
-        "battery",
-        "clock",
-        "keyboard-state", 
-        "sway/language",
-        "tray"
-    ],
-    // Modules configuration
-    "sway/workspaces": {
-        "all-outputs": true,
-        "format": "{name}"
+  "height": 35,
+  "reload_style_on_change": true,
+  "modules-left": [
+    "sway/workspaces"
+  ],
+  "modules-center": [],
+  "modules-right": [
+    "custom/docker",
+    "custom/div",
+    "disk",
+    "custom/div",
+    "memory",
+    "custom/div",
+    "custom/pa-input",
+    "custom/div",
+    "custom/pa-output",
+    "pulseaudio",
+    "battery",
+    "custom/div",
+    "clock",
+    "custom/div",
+    "keyboard-state", 
+    "sway/language",
+    "tray"
+  ],
+  "sway/workspaces": {
+    "all-outputs": true,
+    "format": "{name}"
+  },
+
+  "custom/docker": {
+    "exec": "docker ps -a --format json | jq -rs '\"\\(map(select(.State==\"running\")) | length)/\\(length)\"'",
+		"format": " {text}",
+		"tooltip": false
+	},
+  "pulseaudio": {
+    "format": "<span size='small'>{volume:3}%</span>",
+    "format-muted": "",
+    "format-source": " {volume:2}%",
+    "format-source-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "󰋎",
+      "headset": "󰋎",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": [
+        "",
+        "",
+        ""
+      ]
     },
-    "keyboard-state": {
-        "numlock": false,
-        "capslock": true,
-        "format": "{icon}",
-        "format-icons": {
-            "locked": "",
-            "unlocked": ""
-        }
+    "on-click": "pavucontrol",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+  },
+  "disk": {
+    "format": "󰋊 {specific_free:0.0f}<span size='small' color='#73869499'>GiB</span>",
+    "unit": "GiB",
+    "on-click": "thunar",
+    "on-click-right": "qdirstat"
+  },
+  "memory": {
+    "format": " {avail:0.0f}<span size='small' color='#73869499'>GiB</span>"
+  },
+  "clock": {
+    "tooltip-format": "<big>{:%Y %B}</big>\n\n<tt>{calendar}</tt>",
+    "format": "{:%a %d %b %R %z}",
+    "calendar": {
+      "mode"          : "year",
+      "mode-mon-col"  : 3,
+      "weeks-pos"     : "right",
+      "on-scroll"     : 1,
+      "format": {
+        "months":     "<span color='#ffead3'><b>{}</b></span>",
+        "days":       "<span color='#ecc6d9'><b>{}</b></span>",
+        "weeks":      "<span color='#99ffdd'><b>W{}</b></span>",
+        "weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
+        "today":      "<span color='#ff6699'><b><u>{}</u></b></span>"
+      }
     },
-    "tray": {
-        "icon-size": 24,
-        "spacing": 0
-    },
-    "clock": {
-        "tooltip-format": "<big>{:%Y %B}</big>\n\n<tt>{calendar}</tt>",
-        "format": "{:%a %d %b %R %z}"
-    },
-    "disk": {
-        "format": "🖴 {free}",
-        "on-click": "thunar",
-        "on-click-right": "qdirstat"
-    },
-    "memory": {
-        "format": " {avail:0.1f} GB"
-    },
-    "battery": {
-        "interval": 2,
-        "states": {
-            "good": 95,
-            "warning": 30,
-            "critical": 20
-        },
-        "format": "{capacity}% {icon}",
-        "format-charging": "{capacity}% ",
-        "format-plugged": "{capacity}% ",
-        "format-alt": "{time} {icon}",
-        "format-icons": ["", "", "", "", ""]
-    },
-    "pulseaudio": {
-        // "scroll-step": 1, // %, can be a float
-        "format": "{volume}% {icon} {format_source}",
-        "format-bluetooth": "{volume}% {icon} {format_source}",
-        "format-bluetooth-muted": " {icon} {format_source}",
-        "format-muted": " {format_source}",
-        "format-source": "{volume}% ",
-        "format-source-muted": "",
-        "format-icons": {
-            "headphone": "",
-            "hands-free": "",
-            "headset": "",
-            "phone": "",
-            "portable": "",
-            "car": "",
-            "default": ["", "", ""]
-        },
-        "on-click": "pavucontrol"
+    "actions":  {
+      "on-click-right": "mode",
+      "on-scroll-up": "shift_up",
+      "on-scroll-down": "shift_down"
     }
+  },
+  "keyboard-state": {
+    "numlock": false,
+    "capslock": true,
+    "format": "{icon}",
+    "format-icons": {
+      "locked": "",
+      "unlocked": ""
+    }
+  },
+  "tray": {
+    "icon-size": 22,
+    "spacing": 6,
+    "show-passive-items": true
+  },
+  "battery": {
+    "interval": 2,
+    "states": {
+      "good": 95,
+      "warning": 30,
+      "critical": 20
+    },
+    "format": "{capacity}% {icon}",
+    "format-charging": "{capacity}% ",
+    "format-plugged": "{capacity}% ",
+    "format-alt": "{time} {icon}",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  "sway/language": {
+    "on-click": "swaymsg input type:keyboard xkb_switch_layout next"
+  },
+  "custom/pa-input": {
+    "exec": "~/.config/waybar/pa-input.sh",
+    "on-click": "padevice.sh in rofi",
+    "return-type": "json"
+	},
+  "custom/pa-output": {
+    "exec": "~/.config/waybar/pa-output.sh",
+    "on-click": "padevice.sh out rofi",
+    "return-type": "json"
+	},
+  "custom/div": {
+		"format": "",
+		"tooltip": false
+	}
 }

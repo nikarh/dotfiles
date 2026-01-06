@@ -1,0 +1,10 @@
+[terminal]
+#vt = "next"
+vt = 1
+
+# The default session, also known as the greeter.
+[default_session]
+command = "cage -s -- regreet 2> /dev/null"
+#command = "agreety --cmd "
+user = "greeter"
+wayland = true

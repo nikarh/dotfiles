@@ -28,9 +28,10 @@ modules:
     enable: docker.socket
   - name: common/gpu-drivers
     drivers: nvidia
-  - name: common/plymouth
-  - name: common/xorg
-    pipewire: true
+  - name: common/graphics/plymouth
+  - name: common/graphics/wayland
+  - name: common/graphics/greetd
+  - name: common/graphics/gui
   - name: common/gaming
     streaming: true
   - name: common/networkmanager

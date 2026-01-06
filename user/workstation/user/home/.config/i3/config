@@ -9,7 +9,7 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
-exec i3-msg 'exec ~/.config/Xorg/init.sh'
+exec ~/.config/Xorg/init.sh
 
 # Start terminal at first workspace
 exec i3-msg 'workspace '$ws1'; exec /usr/bin/alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session -A -s main'
@@ -25,7 +25,6 @@ client.focused_inactive #44475A #44475A #F8F8F2 #44475A   #44475A
 client.unfocused        #303240 #303240 #BFBFBF #303240   #303240
 client.urgent           #44475A #44475A #F8F8F2 #44475A   #44475A
 client.placeholder      #282A36 #282A36 #F8F8F2 #282A36   #282A36
-
 client.background       #F8F8F2
 
 focus_follows_mouse no

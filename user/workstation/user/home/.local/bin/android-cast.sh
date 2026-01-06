@@ -24,5 +24,10 @@ if [[ -z "$SELECTED_DEVICE" ]]; then
     exit 0
 fi
 
-scrcpy -s "$SELECTED_DEVICE" # --crop 1280:720:100:200
+SIZE=$(adb -s "$SELECTED_DEVICE" shell dumpsys display | grep -m1 -o '[0-9]\+ x [0-9]\+' | head -n 1 | tr -d ' ')
+W=${SIZE%x*}
+H=${SIZE#*x}
+HALF_W=$((W / 2))
 
+#scrcpy -s "$SELECTED_DEVICE" # --crop 1280:720:100:200
+scrcpy -s "$SELECTED_DEVICE" --crop=${HALF_W}:${H}:0:0
