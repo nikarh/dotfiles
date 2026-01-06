@@ -23,7 +23,7 @@ pkg lxappearance \
     noto-fonts noto-fonts-emoji noto-fonts-cjk \
     ttf-dejavu ttf-hack-nerd \
     ttf-ms-win10-auto \
-    dracula-gtk-theme dracula-cursors-git # dracula-icons-git
+    dracula-gtk-theme dracula-cursors-git dracula-icons-theme
 
 # Lock screen on dbus events
 pkg-local "$ROOT/pkg/micro-locker"

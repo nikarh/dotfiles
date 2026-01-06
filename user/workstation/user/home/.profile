@@ -38,3 +38,5 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 export QT_BEARER_POLL_TIMEOUT=-1
 
 export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
+
+~/.config/sway/import-gsettings.sh

@@ -1,51 +1,39 @@
 ignore-empty-password
-font=Noto
-
-clock
-timestr=%R
-datestr=%a, %e of %B
-
-screenshots
-
-fade-in=0.2
-
-effect-blur=30x2
-effect-greyscale
-effect-scale=0.1
-
-indicator
-indicator-radius=240
-indicator-thickness=20
+show-failed-attempts
 indicator-caps-lock
+indicator-idle-visible
 
-key-hl-color=880033
+color=aa11aa11
+# image=/usr/share/backgrounds/wallpaper.png
 
-separator-color=00000000
+font=Noto Sans
 
-inside-color=00000099
-inside-clear-color=ffd20400
-inside-caps-lock-color=009ddc00
-inside-ver-color=d9d8d800
-inside-wrong-color=ee2e2400
+# indicator-x-position=100
+# indicator-y-position=-100
 
-ring-color=231f20D9
-ring-clear-color=231f20D9
-ring-caps-lock-color=231f20D9
-ring-ver-color=231f20D9
-ring-wrong-color=231f20D9
+layout-text-color=ffffff44
+layout-bg-color=00000000
 
-line-color=00000000
-line-clear-color=ffd204FF
-line-caps-lock-color=009ddcFF
-line-ver-color=d9d8d8FF
-line-wrong-color=ee2e24FF
+ring-color=80977D55
+ring-clear-color=9E966655
+ring-caps-lock-color=8C605755
+ring-ver-color=667E9E55
+ring-wrong-color=7B2E2E55
 
-text-clear-color=ffd20400
-text-ver-color=d9d8d800
-text-wrong-color=ee2e2400
+line-color=80977D
+line-clear-color=9E9666
+line-caps-lock-color=8C6057
+line-ver-color=667E9E
+line-wrong-color=7B2E2E
 
-bs-hl-color=ee2e24FF
-caps-lock-key-hl-color=ffd204FF
-caps-lock-bs-hl-color=ee2e24FF
-disable-caps-lock-text
-text-caps-lock-color=009ddc
+inside-color=80977D99
+inside-clear-color=9E966699
+inside-caps-lock-color=8C605799
+inside-ver-color=667E9E99
+inside-wrong-color=7B2E2E99
+
+key-hl-color=80977D
+bs-hl-color=7B2E2E
+separator-color=FFFFFF00
+
+line-uses-inside

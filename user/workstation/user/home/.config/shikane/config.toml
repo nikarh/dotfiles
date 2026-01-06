@@ -1,0 +1,12 @@
+[[profile]]
+name = "3k"
+exec = [
+    "notify-send shikane \"Profile $SHIKANE_PROFILE_NAME has been applied\"",
+]
+[[profile.output]]
+# search for a matching serial number and model by full text comparison
+search = ["m=AG271QG"]
+enable = true
+mode = "2560x1440@165"
+position = "0,0"
+scale = 1
