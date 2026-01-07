@@ -100,9 +100,9 @@ default_floating_border pixel 1
 
 bindsym $mod+Shift+q kill
 bindsym $mod+Return exec "LANG=en alacritty -t Terminal"
-bindsym $mod+c exec --no-startup-id "rofi -combi-modi window,drun -show combi -modi combi"
-bindsym $mod+x exec --no-startup-id "MODE_SWITCHER=true rofi -show run -terminal alacritty -font"
-bindsym $mod+g exec --no-startup-id "rofi -modi emoji -show emoji"
+bindsym $mod+c exec --no-startup-id "pkill -x rofi; rofi combi-modi window,drun -show combi -modi combi"
+bindsym $mod+x exec --no-startup-id "pkill -x rofi; MODE_SWITCHER=true rofi -show run -terminal alacritty -font"
+bindsym $mod+g exec --no-startup-id "pkill -x rofi; rofi -modi emoji -show emoji"
 
 # change focus
 bindsym $mod+h focus left
@@ -197,10 +197,19 @@ mode "resize" {
 }
 
 bar {
+        swaybar_command waybar
+    
         # swaybar_command sw_swaybar
-        tray_output primary
+
+        tray_output *
+        tray_padding 10 px
+        icon_theme "Dracula"
+
         position top
+
         font pango:Hack Nerd Font Propo 18
+
+        # font Hack Nerd Font Propo:size=24
         # font monospace:size=16
         status_command i3status-rs ~/.config/sway/i3status-rs.toml
         strip_workspace_numbers yes
