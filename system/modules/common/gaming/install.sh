@@ -3,8 +3,8 @@
 # Copy all configs to root
 sudo cp -ufrT "$ROOT/root/" /
 
-pkg cemu joystickwake gamemode mangohud xpadneo-dkms unclutter
-pkg retroarch retroarch-assets-ozone libretro-picodrive
+pkg joystickwake gamemode mangohud xpadneo-dkms unclutter gamescope
+pkg cemu retroarch retroarch-assets-ozone libretro-picodrive
 
 pkg-local "$ROOT/pkg/brie-bin"
 

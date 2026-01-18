@@ -15,28 +15,19 @@ export XDG_DOCUMETNS_DIR=~/.local/share/
 
 export INPUTRC=~/.config/bash/inputrc
 
+export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
+
 export GNUPGHOME="${XDG_CONFIG_HOME}/gnupg"
 export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npmrc"
 export ANDROID_USER_HOME="${XDG_CONFIG_HOME}/android"
+export AWS_CONFIG_FILE="${XDG_CONFIG_HOME}/aws/config"
 
 export __GL_SHADER_DISK_CACHE_PATH="${XDG_CACHE_HOME}/nvidia"
 export LESSHISTFILE="${XDG_CACHE_HOME}/lesshst"
 export GRADLE_USER_HOME="${XDG_CACHE_HOME}/gradle"
 export GOPATH="${XDG_CACHE_HOME}/go"
-
 export RUSTUP_HOME="${XDG_STATE_HOME}/rustup"
 export CARGO_HOME="${XDG_STATE_HOME}/cargo"
-
-export AWS_CONFIG_FILE="~/.config/aws/config"
-
-#export GTK_THEME=Dracula:dark
-#export QT_QPA_PLATFORMTHEME=qt5ct
-#export _JAVA_AWT_WM_NONREPARENTING=1
-
-#export QT_BEARER_POLL_TIMEOUT=-1
-
-export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
-
 
 if [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
   export XDG_CURRENT_DESKTOP=sway
