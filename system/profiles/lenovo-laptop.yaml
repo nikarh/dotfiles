@@ -32,6 +32,8 @@ modules:
   - name: common/graphics/xorg
   - name: common/graphics/lightdm
   - name: common/graphics/gui
+  - name: common/graphics/flatpak
+  - name: common/graphics/voxtype
   - name: common/networkmanager
     gui: true
   - name: common/audio
@@ -47,3 +49,4 @@ modules:
   - name: lenovo-laptop/fingerprint
   - name: lenovo-laptop/sleep
   - name: lenovo-laptop/audio
+  - name: lenovo-laptop/packages

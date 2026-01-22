@@ -6,7 +6,7 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xdotool
 
 # WM
-pkg i3-wm xkb-switch betterlockscreen
+pkg i3-wm xkb-switch betterlockscreen picom
 
 # Copy config
 sudo cp -ufrT "$ROOT/root/" /

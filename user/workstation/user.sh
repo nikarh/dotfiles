@@ -13,6 +13,7 @@ source "$ROOT/user/home/.profile"
 systemctl enable --user syncthing
 systemctl enable --user sunshine || true
 systemctl enable --user ssh-agent
+systemctl enable --user voxtype || true
 
 section "Downloading random stuff from the internet..."
 git-get https://github.com/mrzool/bash-sensible.git \

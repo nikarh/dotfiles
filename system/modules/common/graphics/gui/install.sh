@@ -25,6 +25,8 @@ pkg lxappearance \
     ttf-ms-win10-auto \
     dracula-gtk-theme dracula-cursors-git dracula-icons-git
 
+pkg openscad-git openscad-bosl2-git
+
 # Lock screen on dbus events
 pkg-local "$ROOT/pkg/micro-locker"
 

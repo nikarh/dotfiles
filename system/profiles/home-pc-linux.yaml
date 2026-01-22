@@ -32,6 +32,8 @@ modules:
   - name: common/graphics/wayland
   - name: common/graphics/greetd
   - name: common/graphics/gui
+  - name: common/graphics/flatpak
+  - name: common/graphics/voxtype
   - name: common/gaming
     streaming: true
   - name: common/networkmanager

@@ -10,6 +10,9 @@ pkg zip unzip 7zip unrar \
     wget jq go-yq croc rclone \
     rdfind \
     yazi \
+    iperf3 \
+    smartmontools
+
 
 if [ -n "$ARGS_gui" ]; then 
     pkg ueberzugpp

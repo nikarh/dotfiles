@@ -1,0 +1,2 @@
+pkg `#voxtype` \
+    dotool-git
