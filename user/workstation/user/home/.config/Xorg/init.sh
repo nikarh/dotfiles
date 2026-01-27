@@ -12,9 +12,7 @@ xrdb -all -load ~/.config/Xorg/.Xresources
 # Reset keyboard/mouse settings
 ~/.local/bin/init-input-devices.sh
 # Reset keyboard/mouse settings when USB device plugged
-~/.local/bin/udev-monitor -s usb -e ~/.local/bin/init-input-devices.sh&
-# Reset keyboard/mouse settings when Bluetooth devices are plugged
-~/.local/bin/udev-monitor -s bluetooth -e ~/.local/bin/init-input-devices.sh&
+~/.local/bin/xorg-on-input-hierarchy-change ~/.local/bin/init-input-devices.sh&
 # Listen to keyboard layout changes
 ~/.local/bin/xkb-switch-dbus.sh&
 
