@@ -23,7 +23,7 @@ volumes:
   authelia-data:
 services:
   watchtower:
-    image: containrrr/watchtower
+    image: nickfedor/watchtower
     container_name: watchtower
     <<: *common-service-defaults
     environment:
