@@ -93,24 +93,24 @@ services:
           memory: 10M
         reservations:
           memory: 10M
-  samba:
-    image: nikarh/fileserver-samba
-    container_name: samba
-    <<: *service-defaults
-    ports:
-      - 137:137/udp # nmbd
-      - 138:138/udp # nmbd
-      - 139:139 # smb over netbios
-      - 445:445 # smb over tcp
-    volumes:
-      - /var/lib/docker-services/volumes/samba/create-shares.sh:/scripts/create-shares.sh:ro
-      - /var/data/home:/home
-    deploy:
-      resources:
-        limits:
-          memory: 200M
-        reservations:
-          memory: 20M
+  # samba:
+  #   image: nikarh/fileserver-samba
+  #   container_name: samba
+  #   <<: *service-defaults
+  #   ports:
+  #     - 137:137/udp # nmbd
+  #     - 138:138/udp # nmbd
+  #     - 139:139 # smb over netbios
+  #     - 445:445 # smb over tcp
+  #   volumes:
+  #     - /var/lib/docker-services/volumes/samba/create-shares.sh:/scripts/create-shares.sh:ro
+  #     - /var/data/home:/home
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 200M
+  #       reservations:
+  #         memory: 20M
   sftpd:
     # On 2023.03.15 alpine version started freezing on connection.
     # Migrated to ubuntu.
