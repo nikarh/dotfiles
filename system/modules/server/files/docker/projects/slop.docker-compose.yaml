@@ -1,0 +1,32 @@
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+  healthcheck:
+    disable: true
+
+services:
+  happy-server:
+    image: nikarh/happy:latest
+    container_name: happy
+    <<: *service-defaults
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.scrutiny.loadbalancer.server.port=8080"
+      - "traefik.http.routers.scrutiny.rule=Host(`slop.${DOMAIN}`)"
+      - "traefik.http.routers.scrutiny.entrypoints=https"
+      - "traefik.http.routers.scrutiny.middlewares=authelia@docker"
+    deploy:
+      resources:
+        limits:
+          memory: 10G
+        reservations:
+          memory: 2G

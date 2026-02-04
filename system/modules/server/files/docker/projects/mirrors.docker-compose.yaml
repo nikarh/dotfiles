@@ -7,9 +7,6 @@ x-service-defaults: &service-defaults
       max-file: ${LOG_MAX_FILE:-5}
   healthcheck:
     disable: true
-volumes:
-  nitter-data:
-  nitter-redis-data:
 services:
   redlib:
     # image: quay.io/redlib/redlib:latest
@@ -28,63 +25,3 @@ services:
           memory: 100M
         reservations:
           memory: 50M
-  nitter:
-    image: ghcr.io/sekai-soft/nitter-self-contained
-    container_name: nitter
-    <<: *service-defaults
-    volumes:
-      - nitter-data:/nitter-data
-    depends_on:
-      nitter-redis:
-        condition: service_healthy
-    environment:
-      - NITTER_ACCOUNTS_FILE=/nitter-data/guest_accounts.json
-      - REDIS_HOST=nitter-redis
-      - DISABLE_REDIS=1
-      - DISABLE_NGINX=1
-    env_file:
-      - ./docker/secrets/nitter.env
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.nitter.loadbalancer.server.port=8080"
-      - "traefik.http.routers.nitter.rule=Host(`t.u8.lv`)"
-      - "traefik.http.routers.nitter.entrypoints=https"
-      - "traefik.http.routers.nitter.middlewares=authelia@docker"
-    healthcheck:
-      test: wget -nv --tries=1 --spider http://127.0.0.1:8080 || exit 1
-      interval: 5s
-      timeout: 5s
-      retries: 12
-    security_opt:
-      - no-new-privileges:true
-    cap_drop:
-      - ALL
-    deploy:
-      resources:
-        limits:
-          memory: 100M
-        reservations:
-          memory: 20M
-  nitter-redis:
-    image: redis:6-alpine
-    container_name: nitter-redis
-    <<: *service-defaults
-    command: redis-server --save 60 1 --loglevel warning
-    volumes:
-      - nitter-redis-data:/data
-    user: "999:1000"
-    healthcheck:
-      test: redis-cli ping
-      interval: 5s
-      timeout: 5s
-      retries: 12
-    security_opt:
-      - no-new-privileges:true
-    cap_drop:
-      - ALL
-    deploy:
-      resources:
-        limits:
-          memory: 50M
-        reservations:
-          memory: 20M
