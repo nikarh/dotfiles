@@ -29,8 +29,8 @@ modules:
   - name: common/gpu-drivers
     drivers: intel
   - name: common/graphics/plymouth
-  - name: common/graphics/xorg
-  - name: common/graphics/lightdm
+  - name: common/graphics/wayland
+  - name: common/graphics/greetd
   - name: common/graphics/gui
   - name: common/graphics/flatpak
   - name: common/graphics/voxtype

@@ -10,3 +10,46 @@ enable = true
 mode = "2560x1440@165"
 position = "0,0"
 scale = 1
+
+[[profile]]
+name = "wurk"
+
+[[profile.output]]
+enable = true
+search = ["m=0x1434", "s=", "v=China Star Optoelectronics Technology Co., Ltd"]
+mode = "2560x1600@60.001Hz"
+position = "0,657"
+scale = 1.3984375
+transform = "normal"
+adaptive_sync = false
+
+[[profile.output]]
+enable = true
+search = ["m=DELL P2725QE", "s=CYYSS94", "v=Dell Inc."]
+mode = "3840x2160@59.997Hz"
+position = "5029,0"
+scale = 1.19921875
+transform = "normal"
+adaptive_sync = false
+
+[[profile.output]]
+enable = true
+search = ["m=DELL U2723QE", "s=2N0L7P3", "v=Dell Inc."]
+mode = "3840x2160@59.997Hz"
+position = "1829,0"
+scale = 1.19921875
+transform = "normal"
+adaptive_sync = false
+
+[[profile]]
+name = "lap"
+
+[[profile.output]]
+enable = true
+search = ["m=0x1434", "s=", "v=China Star Optoelectronics Technology Co., Ltd"]
+mode = "2560x1600@60.001Hz"
+position = "0,0"
+scale = 1.19921875
+transform = "normal"
+adaptive_sync = false
+

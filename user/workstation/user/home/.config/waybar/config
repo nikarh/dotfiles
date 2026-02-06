@@ -25,7 +25,7 @@
     "tray"
   ],
   "sway/workspaces": {
-    "all-outputs": true,
+    "all-outputs": false,
     "format": "{name}"
   },
 

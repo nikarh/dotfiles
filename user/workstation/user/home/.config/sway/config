@@ -42,7 +42,7 @@ exec hash dbus-update-activation-environment 2>/dev/null && dbus-update-activati
     DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway
 
 # exec waybar
-exec shikane # autorandr
+exec shikane
 exec swayidle -w before-sleep 'swaylock' # autolock
 exec dunst # notifications
 exec wl-clip-persist --clipboard both # clipboard outlives app
@@ -60,6 +60,8 @@ exec alacritty -t "Main terminal" -e systemd-run --scope --user tmux new-session
 
 # Unclutter
 seat seat0 hide_cursor 3000
+
+seat seat0 xcursor_theme Dracula-cursors 32
 
 output "*" bg "/usr/share/backgrounds/wallpaper.png" fit
 
