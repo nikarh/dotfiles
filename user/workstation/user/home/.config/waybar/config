@@ -20,7 +20,7 @@
     "custom/div",
     "clock",
     "custom/div",
-    "keyboard-state", 
+    //"keyboard-state", 
     "sway/language",
     "tray"
   ],
@@ -120,15 +120,16 @@
     ]
   },
   "sway/language": {
+    //"format": "{flag}",
     "on-click": "swaymsg input type:keyboard xkb_switch_layout next"
   },
   "custom/pa-input": {
-    "exec": "~/.config/waybar/pa-input.sh",
+    "exec": "~/.local/bin/pwtool source",
     "on-click": "padevice.sh in rofi",
     "return-type": "json"
 	},
   "custom/pa-output": {
-    "exec": "~/.config/waybar/pa-output.sh",
+    "exec": "~/.local/bin/pwtool sink",
     "on-click": "padevice.sh out rofi",
     "return-type": "json"
 	},

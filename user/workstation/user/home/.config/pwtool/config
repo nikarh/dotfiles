@@ -1,0 +1,9 @@
+[sink]
+"M Series Headphone + Monitor Out" = "M2"
+"Starship/Matisse HD Audio Controller Pro" = "PC"
+"GA102 High Definition Audio Controller Digital Stereo (HDMI)" = "Screen"
+
+[source]
+"M Series Mic In 1L" = "M2 L"
+"M Series Mic In R" = "M2 R"
+"sof-hda-dsp Digital Microphone" = "lap"

@@ -67,26 +67,7 @@ format = " $icon $mem_avail "
 block = "custom"
 json = true
 persistent = true
-command = """
-    (echo change && pactl subscribe) | stdbuf -oL -eL grep -E change\\|source | while read line; do
-        pactl -f json list sources \
-            | jq -r '.[] 
-                | select(.name=="'$(pactl get-default-source)'")
-                | (.properties."alsa.card_name")
-                    + " " + (.properties."device.profile.description")
-                    + " " + (.properties."media.name")' \
-            | awk '{$1=$1};1' \
-            | sed 's/Mic In 1L M Series Mic In 1L output/1L/g' \
-            | sed 's/Mic In 2R M Series Mic In 2R output/2R/g' \
-            | sed 's/Mic In //g' \
-            | sed 's/sof-hda-dsp Digital Microphone/lap/g' \
-            | jq -R -c '{
-                text: .,
-                icon: "microphone",
-                state: (if . == "" then "idle" elif '$(pactl list source-outputs short | grep -q '[^\\s]' && echo true || echo false)' then "critical" else "info" end)
-            }'
-    done
-"""
+command = "~/.local/bin/pwtool --i3statusrc source"
 [[block.click]]
 button = "left"
 cmd = "/home/nikarh/.local/bin/padevice.sh in"
@@ -95,23 +76,7 @@ cmd = "/home/nikarh/.local/bin/padevice.sh in"
 block = "custom"
 json = true
 persistent = true
-command = """
-    (echo change && pactl subscribe) | stdbuf -oL -eL grep -E change\\|sink | while read line; do
-        pactl -f json list sinks \
-            | jq -r '.[] 
-                | select(.name=="'$(pactl get-default-sink)'")
-                | (.properties."alsa.card_name")
-                    + " " + (.properties."media.name")' \
-            | awk '{$1=$1};1' \
-            | sed 's/USB Audio Class 2.0 //g' \
-            | sed 's/sof-hda-dsp/lap/g' \
-            | jq -R -c '{
-                text: .,
-                icon: "headphones",
-                state: (if . == "" then "idle" elif '$(pactl list sink-inputs short | grep -q '[^\\s]' && echo true || echo false)' then "critical" else "info" end)
-            }'
-    done
-"""
+command = "~/.local/bin/pwtool --i3statusrc sink"
 [[block.click]]
 button = "left"
 cmd = "/home/nikarh/.local/bin/padevice.sh out"
