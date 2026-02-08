@@ -27,4 +27,4 @@ services:
         limits:
           memory: 100M
         reservations:
-          memory:
+          memory: 50M

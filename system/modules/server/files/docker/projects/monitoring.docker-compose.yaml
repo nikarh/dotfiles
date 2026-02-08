@@ -97,24 +97,6 @@ services:
       - "traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN}`)"
       - "traefik.http.routers.grafana.entrypoints=https"
       - "traefik.http.routers.grafana.middlewares=authelia@docker"
-  logrotate:
-    image: linkyard/logrotate
-    container_name: logrotate
-    <<: *common-service-defaults
-    environment:
-      LOGROTATE_FILE_PATTERN: "*.log"
-      LOGROTATE_ROTATE: "0"
-      LOGROTATE_TRUNCATE: "copytruncate"
-      LOGROTATE_CRON: "*/5 0 0 0 0"
-      LOGROTATE_SIZE: "10M"
-    volumes:
-      - vector-logs:/logs
-    deploy:
-      resources:
-        limits:
-          memory: 40M
-        reservations:
-          memory: 10M
   init-fail2ban-volume:
     image: alpine
     command: >

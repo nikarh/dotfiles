@@ -11,6 +11,12 @@ x-service-defaults: &service-defaults
       max-file: ${LOG_MAX_FILE:-5}
   healthcheck:
     disable: true
+x-hardened: &hardened
+  <<: *service-defaults
+  user: "1000:1000"
+  read_only: true
+  security_opt:
+    - "no-new-privileges=true"
 volumes:
   jellyfin-transcodes:
     driver: local
@@ -31,9 +37,9 @@ volumes:
   bitmagnet-db:
 services:
   jellyfin:
-    image: lscr.io/linuxserver/jellyfin:10.11.5
+    image: jellyfin/jellyfin:10.11
     container_name: jellyfin
-    <<: *service-defaults
+    <<: *hardened
     group_add:
       - "989" # render
       - "985" # video
@@ -51,10 +57,10 @@ services:
       JELLYFIN_PublishedServerUrl: https://media.${DOMAIN}
     volumes:
       - jellyfin-config:/config
-      - jellyfin-transcodes:/config/cache/transcodes
+      - jellyfin-transcodes:/cache
       - /var/data/shares/tmp:/media:ro
-      - /var/data/shares/nikarh/Music:/music
-      - /var/data/shares/nikarh/Videos:/nikarh/videos
+      - /var/data/shares/nikarh/Music:/music:ro
+      - /var/data/shares/nikarh/Videos:/nikarh/videos:ro
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=files_default"
