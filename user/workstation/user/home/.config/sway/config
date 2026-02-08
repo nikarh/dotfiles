@@ -40,16 +40,10 @@ exec systemctl --user import-environment \
 exec hash dbus-update-activation-environment 2>/dev/null && dbus-update-activation-environment --systemd \
     DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway
 
-<<<<<<< Updated upstream
-# exec waybar
-exec shikane
-=======
-exec waybar
 exec shikane # autorandr
->>>>>>> Stashed changes
 exec swayidle -w before-sleep 'swaylock' # autolock
 exec dunst # notifications
-exec wl-clip-persist --clipboard both # clipboard outlives app
+exec wl-clip-persist --clipboard regular # clipboard outlives app
 exec joystickwake # dont lock when playing with gamepad
 exec systemctl start --user xdg-desktop-portal-wlr # screen sharing
 
