@@ -37,9 +37,9 @@ volumes:
   bitmagnet-db:
 services:
   jellyfin:
-    image: jellyfin/jellyfin:10.11
+    image: lscr.io/linuxserver/jellyfin:10.11.5
     container_name: jellyfin
-    <<: *hardened
+    <<: *service-defaults
     group_add:
       - "989" # render
       - "985" # video
@@ -57,7 +57,7 @@ services:
       JELLYFIN_PublishedServerUrl: https://media.${DOMAIN}
     volumes:
       - jellyfin-config:/config
-      - jellyfin-transcodes:/cache
+      - jellyfin-transcodes:/config/cache/transcodes
       - /var/data/shares/tmp:/media:ro
       - /var/data/shares/nikarh/Music:/music:ro
       - /var/data/shares/nikarh/Videos:/nikarh/videos:ro
