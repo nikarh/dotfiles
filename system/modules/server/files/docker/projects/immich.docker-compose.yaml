@@ -29,6 +29,7 @@ services:
   immich-postgres:
     image: tensorchord/pgvecto-rs:pg14-v0.2.0
     container_name: immich-postgres
+    <<: *service-defaults
     environment:
       POSTGRES_DB: immich
       POSTGRES_USER: immich

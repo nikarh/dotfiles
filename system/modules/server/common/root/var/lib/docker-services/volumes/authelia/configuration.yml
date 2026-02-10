@@ -71,7 +71,7 @@ access_control:
       policy: bypass
       networks:
         - internal
-    - domain_regex: '^(esphome|zigbee2mqtt)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
+    - domain_regex: '^(notes|esphome|zigbee2mqtt)\.(files|(o|r|)pi)\.home\.arhipov\.net$'
       policy: bypass
       networks:
         - internal

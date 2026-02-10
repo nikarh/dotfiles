@@ -1,0 +1,86 @@
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+volumes:
+  outline-storage-data:
+  outline-database-data:
+services:
+  outline:
+    image: docker.getoutline.com/outlinewiki/outline:latest
+    container_name: outline
+    <<: *service-defaults
+    depends_on:
+      - outline-postgres
+      - outline-redis
+    volumes:
+      - outline-storage-data:/var/lib/outline/data
+    environment:
+      - NODE_ENV=production
+      - TELEMETRY=false
+      
+      - URL=https://notes.${DOMAIN}
+      - PORT=3000
+      - FORCE_HTTPS=false
+      
+      - DATABASE_URL=postgres://outline:${OUTLINE_DB_PASSWORD}@outline-postgres:5432/outline
+      - REDIS_URL=redis://default:${OUTLINE_REDIS_PASSWORD}@outline-redis:6379
+      - PGSSLMODE=disable
+      
+      # Keys
+      - SECRET_KEY=${OUTLINE_SECRET_KEY}
+      - UTILS_SECRET=${OUTLINE_UTILS_SECRET}
+      
+      - FILE_STORAGE_BACKEND=local
+      - FILE_STORAGE_LOCAL_ROOT_DIR=/var/lib/outline/data
+      - FILE_STORAGE_UPLOAD_MAX_SIZE=26214400
+
+      # OIDC Configuration
+      - OIDC_CLIENT_ID=${OUTLINE_OIDC_CLIENT_ID}
+      - OIDC_CLIENT_SECRET=${OUTLINE_OIDC_CLIENT_SECRET}
+      - OIDC_AUTH_URI=https://authelia.files.home.arhipov.net/api/oidc/authorization
+      - OIDC_TOKEN_URI=https://authelia.files.home.arhipov.net/api/oidc/token
+      - OIDC_USERINFO_URI=https://authelia.files.home.arhipov.net/api/oidc/userinfo
+      - OIDC_SCOPES=openid profile email
+      - OIDC_USERNAME_CLAIM=preferred_username
+      - OIDC_DISPLAY_NAME=Authelia
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.outline.loadbalancer.server.port=3000"
+      - "traefik.http.routers.outline.rule=Host(`notes.${DOMAIN}`) || Host(`notes.u8.lv`) "
+      - "traefik.http.routers.outline.entrypoints=https"
+      - "traefik.http.routers.outline.middlewares=outline-redirect"
+      - "traefik.http.middlewares.outline-redirect.redirectregex.regex=^https://notes\\.u8\\.lv/(.*)"
+      - "traefik.http.middlewares.outline-redirect.redirectregex.replacement=https://notes.${DOMAIN}/$$1"
+  outline-redis:
+    image: redis
+    container_name: outline-redis
+    <<: *service-defaults
+    command: >
+      --requirepass ${OUTLINE_REDIS_PASSWORD}
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+        reservations:
+          memory: 20M
+
+  outline-postgres:
+    image: postgres:16
+    container_name: outline-postgres
+    <<: *service-defaults
+    volumes:
+      - outline-database-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: 'outline'
+      POSTGRES_PASSWORD: ${OUTLINE_DB_PASSWORD}
+      POSTGRES_DB: 'outline'
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 100M

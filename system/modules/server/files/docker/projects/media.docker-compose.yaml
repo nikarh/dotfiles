@@ -59,7 +59,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=files_default"
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
-      - "traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`) || Host(`j.u8.lv`)"
+      - "traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`) || Host(`j.u8.lv`) || Host(`media.u8.lv`)"
       - "traefik.http.routers.jellyfin.entrypoints=https"
     deploy:
       resources:
@@ -68,7 +68,7 @@ services:
         reservations:
           memory: 1G
   feishin:
-    image: 'ghcr.io/jeffvli/feishin:latest'
+    image: "ghcr.io/jeffvli/feishin:latest"
     <<: *service-defaults
     container_name: feishin
     environment:
@@ -83,7 +83,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.feishin.loadbalancer.server.port=9180"
-      - "traefik.http.routers.feishin.rule=Host(`music.${DOMAIN}`) || Host(`u.u8.lv`)"
+      - "traefik.http.routers.feishin.rule=Host(`music.${DOMAIN}`) || Host(`u.u8.lv`) || Host(`music.u8.lv`)"
       - "traefik.http.routers.feishin.entrypoints=https"
     restart: unless-stopped
     deploy:
@@ -105,7 +105,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.kavita.loadbalancer.server.port=5000"
-      - "traefik.http.routers.kavita.rule=Host(`kavita.${DOMAIN}`)"
+      - "traefik.http.routers.kavita.rule=Host(`kavita.${DOMAIN}`) || Host(`books.u8.lv`)"
       - "traefik.http.routers.kavita.entrypoints=https"
       # Has it's own auth, does not support any alternative auth or auto-login.
       # TODO: Pass constant authorization header? Does it expire?
@@ -397,7 +397,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
-      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.${DOMAIN}`)"
+      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.${DOMAIN}`) || Host(`see.u8.lv`)"
       - "traefik.http.routers.jellyseerr.entrypoints=https"
     deploy:
       resources:

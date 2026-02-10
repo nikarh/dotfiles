@@ -44,6 +44,10 @@ services:
       - roundcube-db:/volumes/roundcube-db:ro
       - immich-db-data:/volumes/immich-db-data:ro
       - switcheroo-db:/volumes/switcheroo-db:ro
+      - fail2ban-db:/volumes/fail2ban-db:ro
+      - scrutiny-config:/volumes/scrutiny-config:ro
+      - scrutiny-influxdb:/volumes/scrutiny-influxdb:ro
+      - grafana-data:/volumes/grafana-data:ro
     secrets:
       - SSH_KEY
     deploy:
