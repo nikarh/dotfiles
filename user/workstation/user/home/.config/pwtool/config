@@ -2,8 +2,12 @@
 "M Series Headphone + Monitor Out" = "M2"
 "Starship/Matisse HD Audio Controller Pro" = "PC"
 "GA102 High Definition Audio Controller Digital Stereo (HDMI)" = "Screen"
+"Meteor Lake-P HD Audio Controller Speaker" = "lap"
 
 [source]
 "M Series Mic In 1L" = "M2 L"
 "M Series Mic In R" = "M2 R"
 "sof-hda-dsp Digital Microphone" = "lap"
+"Meteor Lake-P HD Audio Controller Digital Microphone" = "lap"
+"Meteor Lake-P HD Audio Controller Stereo Microphone" = "lap s"
+
