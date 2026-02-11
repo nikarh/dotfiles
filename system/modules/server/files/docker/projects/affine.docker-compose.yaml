@@ -11,6 +11,13 @@ x-service-defaults: &service-defaults
   <<: *defaults
   restart: unless-stopped
 
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - NET_RAW
+
 volumes:
   affine-data:
   affine-config:
@@ -79,11 +86,14 @@ services:
         reservations:
           memory: 100M
   affine-redis:
-    image: redis
+    image: valkey/valkey:alpine
     container_name: affine-redis
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: "999:999"
     command: >
-      --requirepass ${AFFINE_REDIS_PASSWORD}
+      --requirepass ${AFFINE_REDIS_PASSWORD} --save "" --appendonly no
+    tmpfs:
+      - /data:noexec,size=10M
     deploy:
       resources:
         limits:
@@ -93,9 +103,13 @@ services:
   affine-postgres:
     image: pgvector/pgvector:pg16
     container_name: affine-postgres
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: "999:999"
     volumes:
       - affine-db-data:/var/lib/postgresql/data
+    tmpfs:
+      - /tmp:noexec,size=1G # Large queries
+      - /var/run/postgresql:noexec,size=1M # Socket
     environment:
       POSTGRES_USER: affine
       POSTGRES_PASSWORD: ${AFFINE_DB_PASSWORD}

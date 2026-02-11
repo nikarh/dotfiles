@@ -1,7 +1,3 @@
-x-arr-env: &arr_env
-  PGID: 1000
-  PUID: 1000
-  TZ: Europe/Riga
 x-service-defaults: &service-defaults
   restart: unless-stopped
   logging:
@@ -11,18 +7,31 @@ x-service-defaults: &service-defaults
       max-file: ${LOG_MAX_FILE:-5}
   healthcheck:
     disable: true
+
 volumes:
   switcheroo-db:
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - NET_RAW
+
 services:
   miniserve:
-    image: httpd
+    image: httpd:alpine
     container_name: miniserve
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: "10000:10000"
     volumes:
+      - /var/lib/docker-services/volumes/miniserve/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
       - /var/smalldata/Games:/usr/local/apache2/htdocs:ro
+    tmpfs:
+      - /run/httpd
     labels:
       - "traefik.enable=true"
-      - "traefik.http.services.miniserve.loadbalancer.server.port=80"
+      - "traefik.http.services.miniserve.loadbalancer.server.port=8080"
       - "traefik.http.routers.miniserve.rule=Host(`miniserve.${DOMAIN}`)"
       - "traefik.http.routers.miniserve.entrypoints=https"
       - "traefik.http.routers.miniserve.middlewares=miniserve-auth"
@@ -36,10 +45,11 @@ services:
   switcheroo:
     image: nikarh/xcabczxabcz
     container_name: switcheroo
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: "10000:10000"
     volumes:
-      - switcheroo-db:/db
-      - /var/lib/docker-services/volumes/switcheroo/secrets/.env:/app/.env:ro
+      - switcheroo-db:/data:rw
+      - /var/lib/docker-services/volumes/switcheroo/secrets/.env:/.env:ro
     deploy:
       resources:
         limits:

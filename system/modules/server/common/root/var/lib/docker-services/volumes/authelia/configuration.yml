@@ -126,7 +126,7 @@ access_control:
         - "group:residents"
     # Personal
     - domain_regex:
-        - '^(affine|syncthing|photos|mail|git)\.files\.home\.arhipov.net$'
+        - '^(syncthing|photos|mail|git)\.files\.home\.arhipov.net$'
         - '^(p|git|mail)\.u8\.lv$'
       policy: one_factor
       subject:

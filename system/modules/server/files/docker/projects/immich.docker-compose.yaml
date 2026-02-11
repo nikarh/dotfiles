@@ -5,6 +5,16 @@ x-service-defaults: &service-defaults
     options:
       max-size: ${LOG_MAX_SIZE:-200k}
       max-file: ${LOG_MAX_FILE:-5}
+  networks:
+    - immich_net
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - NET_RAW
+
 volumes:
   immich-db-data:
   immich-data:
@@ -13,13 +23,28 @@ volumes:
       type: "none"
       o: "bind"
       device: "/var/data/shares/nikarh/Backup/immich"
+
 services:
+  # immich-init-volumes:
+  #   image: alpine
+  #   <<: [*service-defaults, *hardened]
+  #   cap_drop: ["ALL"]
+  #   cap_add: ["CHOWN"]
+  #   volumes:
+  #     immich-db-data:/volumes/immich-db-data
+  #   command: >
+  #     sh -c '
+  #       chown 10000:10000 /volumes/immich-db-data; touch /volumes/immich-db-data/.keep-volume-initialized
+  #     '
   immich-redis:
-    image: redis:7.2
+    image: valkey/valkey:alpine
     container_name: immich-redis
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: "999:999"
     command: >
-      --requirepass ${IMMICH_REDIS_PASSWORD}
+      --requirepass ${IMMICH_REDIS_PASSWORD} --save "" --appendonly no
+    tmpfs:
+      - /data:size=10M
     deploy:
       resources:
         limits:
@@ -27,17 +52,24 @@ services:
         reservations:
           memory: 20M
   immich-postgres:
-    image: tensorchord/pgvecto-rs:pg14-v0.2.0
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.5.3-pgvector0.8.1
     container_name: immich-postgres
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: "999:999"
     environment:
       POSTGRES_DB: immich
       POSTGRES_USER: immich
       POSTGRES_PASSWORD: ${IMMICH_DB_PASSWORD}
-      PG_DATA: /var/lib/postgresql/data
+      POSTGRES_INITDB_ARGS: '--data-checksums'
     volumes:
       - immich-db-data:/var/lib/postgresql/data
+    tmpfs:
+      - /tmp:noexec,size=1G # Large queries
+      - /var/run/postgresql:noexec,size=1M # Socket
+      - /etc/postgresql:noexec,size=1M # Overwrites config on startup
+      - /var/lib/postgresql:noexec,size=1M # Needs to chown the data folder
     restart: always
+    shm_size: 256M
     deploy:
       resources:
         limits:
@@ -81,9 +113,16 @@ services:
       - "traefik.http.middlewares.immich-redirect1.redirectregex.replacement=https://immich.${DOMAIN}/$$1"
       - "traefik.http.middlewares.immich-redirect2.redirectregex.regex=^https://photos.${DOMAIN}/(.*)"
       - "traefik.http.middlewares.immich-redirect2.redirectregex.replacement=https://immich.${DOMAIN}/$$1"
+      - "traefik.docker.network=immich_net"
     deploy:
       resources:
         limits:
           memory: 2G
         reservations:
           memory: 512M
+networks:
+  immich_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.32/28

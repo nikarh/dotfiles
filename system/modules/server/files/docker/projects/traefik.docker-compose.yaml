@@ -25,6 +25,8 @@ services:
     networks:
       - files_default
       - affine_net
+      - outline_net
+      - immich_net
     secrets:
       - CF_TOKEN
     environment:
@@ -46,3 +48,5 @@ networks:
   files_default:
     external: true
   affine_net: {}
+  outline_net: {}
+  immich_net: {}
