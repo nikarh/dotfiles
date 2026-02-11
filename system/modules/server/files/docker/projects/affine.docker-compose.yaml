@@ -1,0 +1,115 @@
+x-defaults: &defaults
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+  networks:
+    - affine_net
+
+x-service-defaults: &service-defaults
+  <<: *defaults
+  restart: unless-stopped
+
+volumes:
+  affine-data:
+  affine-config:
+  affine-db-data:
+
+x-affine-env: &affine-env
+  REDIS_SERVER_HOST: affine-redis
+  REDIS_SERVER_PASSWORD: ${AFFINE_REDIS_PASSWORD}
+  DATABASE_URL: postgresql://affine:${AFFINE_DB_PASSWORD}@affine-postgres:5432/affine
+  AFFINE_INDEXER_ENABLED: false
+  AFFINE_SERVER_EXTERNAL_URL: https://affine.files.home.arhipov.net
+
+services:
+  affine:
+    image: ghcr.io/toeverything/affine:stable
+    container_name: affine
+    <<: *service-defaults
+    depends_on:
+      affine-redis:
+        condition: service_started
+      affine-postgres:
+        condition: service_started
+      affine-migration:
+        condition: service_completed_successfully
+    volumes:
+      - affine-data:/root/.affine/storage
+      - affine-config:/root/.affine/config
+    environment:
+      <<: *affine-env
+    networks:
+      - affine_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.affine.loadbalancer.server.port=3010"
+      - "traefik.http.routers.affine.rule=Host(`affine.${DOMAIN}`)"
+      - "traefik.http.routers.affine.entrypoints=https"
+      - "traefik.http.routers.affine.middlewares=authelia@docker"
+      - "traefik.docker.network=affine_net"
+    deploy:
+      resources:
+        limits:
+          memory: 5G
+        reservations:
+          memory: 1G
+  affine-migration:
+    image: ghcr.io/toeverything/affine:stable
+    container_name: affine_migration_job
+    <<: *defaults
+    volumes:
+      - affine-data:/root/.affine/storage
+      - affine-config:/root/.affine/config
+    command: ["sh", "-c", "node ./scripts/self-host-predeploy.js"]
+    env_file:
+      - .env
+    environment:
+      <<: *affine-env
+    depends_on:
+      affine-postgres:
+        condition: service_started
+      affine-redis:
+        condition: service_started
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 100M
+  affine-redis:
+    image: redis
+    container_name: affine-redis
+    <<: *service-defaults
+    command: >
+      --requirepass ${AFFINE_REDIS_PASSWORD}
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+        reservations:
+          memory: 20M
+  affine-postgres:
+    image: pgvector/pgvector:pg16
+    container_name: affine-postgres
+    <<: *service-defaults
+    volumes:
+      - affine-db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: affine
+      POSTGRES_PASSWORD: ${AFFINE_DB_PASSWORD}
+      POSTGRES_DB: affine
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 100M
+networks:
+  affine_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/28

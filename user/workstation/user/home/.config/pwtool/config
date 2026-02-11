@@ -10,4 +10,8 @@
 "sof-hda-dsp Digital Microphone" = "lap"
 "Meteor Lake-P HD Audio Controller Digital Microphone" = "lap"
 "Meteor Lake-P HD Audio Controller Stereo Microphone" = "lap s"
+"Starship/Matisse HD Audio Controller Pro" = "PC"
+"Monitor of Starship/Matisse HD Audio Controller Pro" = "MON PC"
+"Starship/Matisse HD Audio Controller Pro 2" = "PC2"
+"Monitor of Starship/Matisse HD Audio Controller Pro 2" = "MON PC2"
 

@@ -19,7 +19,6 @@ secrets:
   AUTHELIA_OIDC_ISSUER_PRIVATE_KEY:
     file: ../common/docker/secrets/authelia/oidc_issuer_private_key
 volumes:
-  traefik-data:
   authelia-data:
 services:
   watchtower:
@@ -64,33 +63,6 @@ services:
           memory: 100M
         reservations:
           memory: 50M
-  traefik:
-    image: traefik
-    container_name: traefik
-    <<: *common-service-defaults
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - traefik-data:/data
-      - /var/lib/docker-services/volumes/traefik:/etc/traefik:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    secrets:
-      - CF_TOKEN
-    environment:
-      CF_DNS_API_TOKEN_FILE: /run/secrets/CF_TOKEN
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.api.entrypoints=https"
-      - "traefik.http.routers.api.service=api@internal"
-      - "traefik.http.routers.api.middlewares=authelia@docker"
-      - "traefik.http.routers.api.rule=Host(`traefik.${DOMAIN}`)"
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-        reservations:
-          memory: 128M
   authelia:
     image: authelia/authelia:4.38.10
     container_name: authelia

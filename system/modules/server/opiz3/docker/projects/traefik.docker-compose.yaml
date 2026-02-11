@@ -1,0 +1,40 @@
+x-common-service-defaults: &common-service-defaults
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+secrets:
+  CF_TOKEN:
+    file: ../common/docker/secrets/cf_token
+volumes:
+  traefik-data:
+services:
+  traefik:
+    image: traefik
+    container_name: traefik
+    <<: *common-service-defaults
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - traefik-data:/data
+      - /var/lib/docker-services/volumes/traefik:/etc/traefik:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    secrets:
+      - CF_TOKEN
+    environment:
+      CF_DNS_API_TOKEN_FILE: /run/secrets/CF_TOKEN
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.entrypoints=https"
+      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.api.middlewares=authelia@docker"
+      - "traefik.http.routers.api.rule=Host(`traefik.${DOMAIN}`)"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M

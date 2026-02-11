@@ -245,6 +245,7 @@
     "nostack",
     "nvapi",
     "nvcuda",
+    "nvme",
     "nvngx",
     "nvoptix",
     "onoff",
