@@ -7,12 +7,11 @@ x-common-service-defaults: &common-service-defaults
       max-file: ${LOG_MAX_FILE:-5}
 
 x-hardened: &hardened
-  read_only: true
+  # read_only: true
   security_opt:
     - no-new-privileges:true
   cap_drop:
     - NET_RAW
-
 
 secrets:
   CF_TOKEN:
@@ -27,8 +26,10 @@ secrets:
     file: ../common/docker/secrets/authelia/oidc_hmac
   AUTHELIA_OIDC_ISSUER_PRIVATE_KEY:
     file: ../common/docker/secrets/authelia/oidc_issuer_private_key
+
 volumes:
   authelia-data:
+
 services:
   watchtower:
     image: nickfedor/watchtower
@@ -73,13 +74,12 @@ services:
         reservations:
           memory: 50M
   authelia:
-    image: authelia/authelia:4.38.10
+    image: authelia/authelia:4.39.7
     container_name: authelia
-    <<: *common-service-defaults
+    <<: [*common-service-defaults, *hardened]
+    user: "1000:1000"
     environment:
-      PUID: 1000
-      PGID: 1000
-      AUTHELIA_JWT_SECRET_FILE: /run/secrets/AUTHELIA_JWT_SECRET
+      AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE: /run/secrets/AUTHELIA_JWT_SECRET
       AUTHELIA_SESSION_SECRET_FILE: /run/secrets/AUTHELIA_SESSION_SECRET
       AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/AUTHELIA_STORAGE_ENCRYPTION_KEY
       AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE: /run/secrets/AUTHELIA_OIDC_HMAC
@@ -92,7 +92,7 @@ services:
       - "--config=/etc/authelia/secrets/configuration.oidc.yml"
       - "--config.experimental.filters=expand-env"
     volumes:
-      # /config is chowned, so volume has right permissions
+      # authelia-data is chowned, so volume has right permissions
       - authelia-data:/config/data:rw
       - /var/lib/docker-services/volumes/authelia:/etc/authelia:ro
     secrets:
