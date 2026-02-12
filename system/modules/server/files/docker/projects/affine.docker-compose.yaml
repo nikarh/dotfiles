@@ -55,7 +55,6 @@ services:
       - "traefik.http.services.affine.loadbalancer.server.port=3010"
       - "traefik.http.routers.affine.rule=Host(`affine.${DOMAIN}`)"
       - "traefik.http.routers.affine.entrypoints=https"
-      - "traefik.http.routers.affine.middlewares=authelia@docker"
       - "traefik.docker.network=affine_net"
     deploy:
       resources:

@@ -12,53 +12,10 @@ x-service-defaults: &service-defaults
   healthcheck:
     disable: true
 volumes:
-  netdata-lib:
-  netdata-cache:
   filebrowser-data:
   syncthing-data:
   esphome-data:
 services:
-  # Basic monitoring
-  netdata:
-    image: netdata/netdata
-    container_name: netdata
-    hostname: netdata
-    <<: *service-defaults
-    cap_add:
-      - SYS_PTRACE
-    security_opt:
-      - apparmor:unconfined
-    environment:
-      DISABLE_TELEMETRY: 1
-      DOCKER_USR: 1000
-      DOCKER_GRP: 1000
-    volumes:
-      - netdata-lib:/var/lib/netdata
-      - netdata-cache:/var/cache/netdata
-      - /var/lib/docker-services/volumes/netdata/netdata.conf:/etc/netdata/netdata.conf:ro
-      - /var/lib/docker-services/volumes/netdata/cloud.conf:/var/lib/netdata/cloud.d/cloud.conf:ro
-      - /etc/passwd:/host/etc/passwd:ro
-      - /etc/group:/host/etc/group:ro
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /etc/os-release:/host/etc/os-release:ro
-      - /dev/disk/by-id:/host/dev/by-id:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.netdata.loadbalancer.server.port=19999"
-      - "traefik.http.routers.netdata.rule=Host(`netdata.${DOMAIN}`)"
-      - "traefik.http.routers.netdata.entrypoints=https"
-      - "traefik.http.routers.netdata.middlewares=authelia@docker,netdata-redirect@docker"
-      - "traefik.http.middlewares.netdata-redirect.redirectregex.regex=^/$"
-      - "traefik.http.middlewares.netdata-redirect.redirectregex.replacement=/v3/"
-      - "traefik.http.middlewares.netdata-redirect.redirectregex.permanent=true"
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-        reservations:
-          memory: 512M
   # This is required at least for esphome
   mdns-repeater:
     image: angelnu/mdns_repeater

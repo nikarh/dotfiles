@@ -21,13 +21,24 @@ sinks:
     path: /out/sftp.log
     encoding:
       codec: text
-  loki:
-    type: loki
+  # loki:
+  #   type: loki
+  #   inputs: ["docker-logs"]
+  #   endpoint: http://loki:3100/
+  #   labels:
+  #     datasource: docker
+  #     container_name: "{{ .container_name }}"
+  #   out_of_order_action: rewrite_timestamp
+  #   encoding:
+  #     codec: json
+  victorialogs:
+    type: elasticsearch
     inputs: ["docker-logs"]
-    endpoint: http://loki:3100/
-    labels:
-      datasource: docker
-      container_name: "{{ .container_name }}"
-    out_of_order_action: rewrite_timestamp
-    encoding:
-      codec: json
+    endpoints: ["http://victoria-logs:9428/insert/elasticsearch/"] 
+    mode: "bulk"
+    api_version: "v8" 
+    compression: "gzip"
+    query:
+      _msg_field: "message"
+      _time_field: "timestamp"
+      _stream_fields: "container_name,source_type,stream"
