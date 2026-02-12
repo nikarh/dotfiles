@@ -15,10 +15,10 @@ x-hardened: &hardened
   cap_drop:
     - NET_RAW
 
-
 volumes:
   outline-storage-data:
   outline-database-data:
+
 services:
   outline:
     image: docker.getoutline.com/outlinewiki/outline:latest

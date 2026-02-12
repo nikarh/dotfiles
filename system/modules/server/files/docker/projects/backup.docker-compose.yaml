@@ -5,6 +5,16 @@ x-service-defaults: &service-defaults
     options:
       max-size: ${LOG_MAX_SIZE:-200k}
       max-file: ${LOG_MAX_FILE:-5}
+  networks:
+    - backup_net
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - NET_RAW
+
 secrets:
   SSH_KEY:
     file: ../common/docker/secrets/backup_rsa
@@ -14,7 +24,7 @@ services:
   volume-backup:
     image: nikarh/fileserver-sftpd-backup
     container_name: volume-backup
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
     environment:
       MAXIMUM_BACKUP_NUMBER: 3
       SFTP_HOST: files
@@ -48,6 +58,12 @@ services:
       - scrutiny-config:/volumes/scrutiny-config:ro
       - scrutiny-influxdb:/volumes/scrutiny-influxdb:ro
       - grafana-data:/volumes/grafana-data:ro
+      - affine-data:/volumes/affine-data:ro
+      - affine-config:/volumes/affine-config:ro
+      - affine-db-data:/volumes/affine-db-data:ro
+      - affine-db-data:/volumes/affine-db-data:ro
+      - outline-storage-data:/volumes/outline-storage-data:ro
+      - outline-database-data:/volumes/outline-database-data:ro
     secrets:
       - SSH_KEY
     deploy:
@@ -61,7 +77,7 @@ services:
   gdrive-backup-from:
     image: nikarh/fileserver-rclone
     container_name: gdrive-backup-from
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
     user: 911:1000
     entrypoint: ""
     volumes:
@@ -84,7 +100,7 @@ services:
   gdrive-backup-to:
     image: nikarh/fileserver-rclone
     container_name: gdrive-backup-to
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
     user: 911:1000
     entrypoint: ""
     volumes:
@@ -113,3 +129,9 @@ services:
           memory: 200M
         reservations:
           memory: 20M
+networks:
+  backup_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.64/28
