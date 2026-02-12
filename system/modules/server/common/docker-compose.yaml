@@ -10,7 +10,6 @@ x-service-defaults: &service-defaults
   restart: unless-stopped
 
 x-hardened: &hardened
-  # read_only: true
   security_opt:
     - no-new-privileges:true
   cap_drop:
@@ -32,6 +31,7 @@ secrets:
 
 volumes:
   authelia-data:
+  socket-proxy.run:
 
 services:
   authelia-init-volumes:
@@ -46,6 +46,19 @@ services:
       sh -c '
         chown 1000:1000 /volumes/authelia-data; touch /volumes/authelia-data/.keep-volume-initialized;
       '
+  docker-socket-proxy:
+    image: "11notes/socket-proxy:2.1.6"
+    container_name: docker-socket-proxy
+    <<: [*service-defaults]
+    read_only: true
+    user: "0:972"
+    environment:
+      TZ: "Europe/Riga"
+    networks:
+      - ultra_isolated_net
+    volumes:
+      - "/var/run/docker.sock:/run/docker.sock:ro"
+      - "socket-proxy.run:/run/proxy"
   watchtower:
     image: nickfedor/watchtower
     container_name: watchtower
@@ -62,11 +75,11 @@ services:
         reservations:
           memory: 20M
   traefik-cloudflare-companion:
-    image: tiredofit/traefik-cloudflare-companion:${TRAEFIK_CLOUDFLARE_VERSION:-latest}
+    image: ghcr.io/nikarh/docker-traefik-cloudflare-gompanion:main
     container_name: traefik-cloudflare-companion
     <<: *service-defaults
     environment:
-      CONTAINER_ENABLE_MONITORING: "false"
+      LOG_LEVEL: "VERBOSE"
       TARGET_DOMAIN: homenet.u8.lv
       DOMAIN1: arhipov.net
       DOMAIN1_ZONE_ID: 8f927f276e4b3481aba03ee4d29a9ef9
@@ -76,12 +89,17 @@ services:
       DOMAIN2_ZONE_ID: a7a5b30ac9c981dc8d845ef0e398e939
       DOMAIN2_TARGET_DOMAIN: homenet.u8.lv
       DOMAIN2_PROXIED: "true"
-      TRAEFIK_EXCLUDED_HOST1: u8\.lv
-      TRAEFIK_EXCLUDED_HOST2: home\.arhipov\.net
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      ENABLE_DOCKER_POLL: false
+      ENABLE_TRAEFIK_POLL: true
+      TRAEFIK_POLL_URL: https://traefik.files.home.arhipov.net
+      TRAEFIK_EXCLUDED_HOST1: ^u8\.lv$
+      TRAEFIK_EXCLUDED_HOST2: ^home\.arhipov\.net$
     secrets:
       - CF_TOKEN
+    depends_on:
+      docker-socket-proxy:
+        condition: "service_healthy"
+        restart: true
     deploy:
       resources:
         limits:
@@ -136,6 +154,17 @@ services:
           memory: 100M
 
 networks:
+  ultra_isolated_net:
+    driver: bridge
+    # Block Internet and LAN access
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.20.1.0/24
+    driver_opts:
+      # Block inter-container communication
+      com.docker.network.bridge.enable_icc: "false"
+      com.docker.network.bridge.name: "br-ultra-iso"
   authelia_net:
     driver: bridge
     ipam:
