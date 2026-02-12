@@ -1,16 +1,15 @@
-x-arr-env: &arr_env
-  PGID: 1000
-  PUID: 1000
-  TZ: Europe/Riga
 x-service-defaults: &service-defaults
   restart: unless-stopped
-  logging:
-    driver: "json-file"
-    options:
-      max-size: ${LOG_MAX_SIZE:-200k}
-      max-file: ${LOG_MAX_FILE:-5}
   healthcheck:
     disable: true
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
 volumes:
   jellyfin-transcodes:
     driver: local
@@ -19,9 +18,11 @@ volumes:
       device: /var/cache/jellyfin/transcodes
       o: bind
   jellyfin-config:
+  jellyfin-cache:
   kavita-data:
   qbittorrent-data:
   qbittorrent-unsafe-data:
+  qbittorrent-vuetorrent:
   prowlarr-data:
   radarr-data:
   sonarr-data:
@@ -30,37 +31,68 @@ volumes:
   jellyseerr-data:
   bitmagnet-db:
 services:
+  init-vuetorrent:
+    image: alpine/curl
+    container_name: init-vuetorrent
+    <<: [*hardened]
+    user: "1000:1000"
+    volumes:
+      - qbittorrent-vuetorrent:/vuetorrent
+    tmpfs:
+      - /tmp:noexec,size=10M
+    command: >
+      /bin/sh -c '
+        apk add --no-cache unzip
+        curl -fsSL -L "https://github.com/VueTorrent/VueTorrent/releases/latest/download/vuetorrent.zip" -o /tmp/vuetorrent.zip
+        rm -rf /vuetorrent/* 2>/dev/null
+        unzip -q /tmp/vuetorrent.zip -d /
+      '
+    networks:
+      - isolated_net
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 20M
+        reservations:
+          memory: 10M
   jellyfin:
-    image: lscr.io/linuxserver/jellyfin:10.11.5
+    image: jellyfin/jellyfin:10.11
     container_name: jellyfin
-    <<: *service-defaults
-    group_add:
-      - "989" # render
-      - "985" # video
+    <<: [*service-defaults, *hardened]
+    user: "1000:1000"
+    group_add: ["989", "985"] # render, video
     ports:
       - 1900:1900/udp # autodiscovery
       - 7359:7359/udp # autodiscovery
     networks:
-      default: {}
-      macvlan:
-        ipv4_address: 192.168.1.254
+      media_net: {}
+      # macvlan: { ipv4_address: 192.168.1.254 }
     devices:
       - /dev/dri:/dev/dri
     environment:
-      <<: *arr_env
       JELLYFIN_PublishedServerUrl: https://media.${DOMAIN}
     volumes:
       - jellyfin-config:/config
+      - jellyfin-cache:/cache
       - jellyfin-transcodes:/config/cache/transcodes
+      - /var/lib/docker-services/volumes/jellyfin/logging.json:/config/config/logging.json:ro
       - /var/data/shares/tmp:/media:ro
       - /var/data/shares/nikarh/Music:/music
       - /var/data/shares/nikarh/Videos:/nikarh/videos
+    tmpfs:
+      - /tmp:noexec,size=50M,uid=1000,gid=1000
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=files_default"
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
       - "traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`) || Host(`j.u8.lv`) || Host(`media.u8.lv`)"
       - "traefik.http.routers.jellyfin.entrypoints=https"
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:
@@ -69,34 +101,38 @@ services:
           memory: 1G
   feishin:
     image: "ghcr.io/jeffvli/feishin:latest"
-    <<: *service-defaults
     container_name: feishin
+    <<: [*service-defaults, *hardened]
+    read_only: false
+    user: "65534:65534"
+    entrypoint: ""
     environment:
-      SERVER_NAME: jellyfin
-      SERVER_LOCK: true
-      SERVER_TYPE: jellyfin # navidrome also works
-      SERVER_URL: https://media.files.home.arhipov.net
-      PUID: "1000"
-      PGID: "1000"
-      UMASK: "002"
       TZ: Europe/Riga
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.feishin.loadbalancer.server.port=9180"
       - "traefik.http.routers.feishin.rule=Host(`music.${DOMAIN}`) || Host(`u.u8.lv`) || Host(`music.u8.lv`)"
       - "traefik.http.routers.feishin.entrypoints=https"
-    restart: unless-stopped
+    volumes:
+      - /var/lib/docker-services/volumes/feishin/ng.conf:/etc/nginx/conf.d/ng.conf:ro
+      - /var/lib/docker-services/volumes/feishin/settings.js:/usr/share/nginx/html/settings.js:ro
+    tmpfs:
+      - /var/cache/nginx:noexec,size=50M,uid=65534,gid=65534
+      - /run:noexec,size=1M,uid=65534,gid=65534
+    networks:
+      - media_net
     deploy:
       resources:
         limits:
-          memory: 100M
+          memory: 50M
         reservations:
           memory: 20M
   # Book UI
   kavita:
     image: jvmilazz0/kavita
     container_name: kavita
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: "65534:65534"
     environment:
       TZ: Europe/Riga
     volumes:
@@ -107,21 +143,27 @@ services:
       - "traefik.http.services.kavita.loadbalancer.server.port=5000"
       - "traefik.http.routers.kavita.rule=Host(`kavita.${DOMAIN}`) || Host(`books.u8.lv`)"
       - "traefik.http.routers.kavita.entrypoints=https"
-      # Has it's own auth, does not support any alternative auth or auto-login.
-      # TODO: Pass constant authorization header? Does it expire?
-      # - 'traefik.http.routers.kavita.middlewares=authelia@docker'
+    networks:
+      - media_net
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:
-          memory: 500M
+          memory: 1G
         reservations:
           memory: 256M
   tunnel:
     image: qmcgaw/gluetun:v3
     container_name: tunnel
-    <<: *service-defaults
-    cap_add:
-      - NET_ADMIN
+    <<: [*service-defaults, *hardened]
+    read_only: false
+    healthcheck:
+      disable: false
+    security_opt:
+      - no-new-privileges:true
+    cap_add: ["NET_ADMIN", "NET_RAW"]
     ports:
       # Plain-text socks5 proxy
       - 1080:1080/tcp
@@ -133,31 +175,31 @@ services:
     environment:
       - VPN_SERVICE_PROVIDER=custom
       - VPN_TYPE=wireguard
-      - VPN_ENDPOINT_IP=${WIREGUARD_ENDPOINT_IP}
-      - VPN_ENDPOINT_PORT=${WIREGUARD_ENDPOINT_PORT}
+      - WIREGUARD_ENDPOINT_IP=${WIREGUARD_ENDPOINT_IP}
+      - WIREGUARD_ENDPOINT_PORT=${WIREGUARD_ENDPOINT_PORT}
       - WIREGUARD_PUBLIC_KEY=${WIREGUARD_PUBLIC_KEY}
       - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
       - WIREGUARD_PRESHARED_KEY=${WIREGUARD_PRESHARED_KEY}
       - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
       - FIREWALL_VPN_INPUT_PORTS=${WIREGUARD_INPUT_PORTS}
-      # - FIREWALL_OUTBOUND_SUBNETS=172.31.254.2/32
       - HTTPPROXY=on
       - SHADOWSOCKS=on
     devices:
       - /dev/net/tun:/dev/net/tun
+    tmpfs:
+      - /tmp:noexec,size=10M
+    networks:
+      - media_net
     deploy:
       resources:
         limits:
           memory: 1G
         reservations:
           memory: 300M
-    # networks:
-    # default:
-    # bitmagnet-postgres:
   socks5:
     image: serjs/go-socks5-proxy
     container_name: socks5-proxy
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
     network_mode: "service:tunnel"
     depends_on:
       - tunnel
@@ -170,15 +212,21 @@ services:
         reservations:
           memory: 10M
   qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:libtorrentv1
+    image: lscr.io/linuxserver/qbittorrent
     container_name: qbittorrent
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: "1000:1000"
     environment:
-      DOCKER_MODS: ghcr.io/vuetorrent/vuetorrent-lsio-mod
-      <<: *arr_env
+      HOME: /config
+      TZ: Europe/Riga
+    entrypoint: ""
+    command: ["/usr/bin/qbittorrent-nox", "--webui-port=8080"]
     volumes:
-      - qbittorrent-data:/config
+      - qbittorrent-data:/config/qBittorrent
       - /var/data/shares/tmp:/downloads
+      - qbittorrent-vuetorrent:/vuetorrent
+    tmpfs:
+      - /config/.cache:noexec,size=10M,uid=1000,gid=1000
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.torrents.loadbalancer.server.port=8080"
@@ -187,13 +235,252 @@ services:
       - "traefik.http.routers.torrents.middlewares=authelia@docker"
     network_mode: "service:tunnel"
     depends_on:
-      - tunnel
+      tunnel:
+        condition: service_healthy
+      init-volumes:
+        condition: service_completed_successfully
+      init-vuetorrent:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:
           memory: 5G
         reservations:
           memory: 1G
+  qbittorrent-raw:
+    image: lscr.io/linuxserver/qbittorrent
+    container_name: qbittorrent-raw
+    <<: [*service-defaults, *hardened]
+    user: "1000:1000"
+    environment:
+      HOME: /config
+      TZ: Europe/Riga
+    entrypoint: ""
+    command: ["/usr/bin/qbittorrent-nox", "--webui-port=8080"]
+    ports:
+      - 49152:49152/tcp
+      - 49152:49152/udp
+    volumes:
+      - qbittorrent-unsafe-data:/config/qBittorrent
+      - /var/data/shares/tmp:/downloads
+      - qbittorrent-vuetorrent:/vuetorrent
+    tmpfs:
+      - /config/.cache:noexec,size=10M,uid=1000,gid=1000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.torrents-raw.loadbalancer.server.port=8080"
+      - "traefik.http.routers.torrents-raw.rule=Host(`torrents-raw.${DOMAIN}`) && !Path(`/sw.js`) && !Path(`/registerSW.js`)"
+      - "traefik.http.routers.torrents-raw.entrypoints=https"
+      - "traefik.http.routers.torrents-raw.middlewares=authelia@docker"
+    networks:
+      - media_net
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
+      init-vuetorrent:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 128M
+  # Cloudflare solver for prowlarr
+  # NOTE: Impossible to run on readonly fs
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    <<: [*service-defaults, *hardened]
+    read_only: false
+    environment:
+      LOG_LEVEL: info
+      LOG_HTML: "false"
+      CAPTCHA_SOLVER: none
+    networks:
+      - media_net
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 300M
+  # Indexer manager
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:develop
+    container_name: prowlarr
+    <<: [*service-defaults, *hardened]
+    user: "1000:1000"
+    entrypoint: ""
+    command: ["/app/prowlarr/bin/Prowlarr", "-nobrowser",  "-data=/config"]
+    environment:
+      TZ: Europe/Riga
+    volumes:
+      - prowlarr-data:/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)"
+      - "traefik.http.routers.prowlarr.entrypoints=https"
+      - "traefik.http.routers.prowlarr.middlewares=authelia@docker"
+    networks:
+      - media_net
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 400M
+        reservations:
+          memory: 200M
+  # Movie manager
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    <<: [*service-defaults, *hardened]
+    user: "1000:1000"
+    entrypoint: ""
+    command: ["/app/radarr/bin/Radarr", "-nobrowser",  "-data=/config"]
+    environment:
+      TZ: Europe/Riga
+    volumes:
+      - radarr-data:/config
+      - /var/data/shares/tmp:/downloads
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)"
+      - "traefik.http.routers.radarr.entrypoints=https"
+      - "traefik.http.routers.radarr.middlewares=authelia@docker"
+    networks:
+      - media_net
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 160M
+  # Show manager
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    <<: [*service-defaults, *hardened]
+    user: "1000:1000"
+    entrypoint: ""
+    command: ["/app/sonarr/bin/Sonarr", "-nobrowser",  "-data=/config"]
+    environment:
+      TZ: Europe/Riga
+    volumes:
+      - sonarr-data:/config
+      - /var/data/shares/tmp:/downloads
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)"
+      - "traefik.http.routers.sonarr.entrypoints=https"
+      - "traefik.http.routers.sonarr.middlewares=authelia@docker"
+    networks:
+      - media_net
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 250M
+  # Subtitle manager
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    <<: [*service-defaults, *hardened]
+    user: "1000:1000"
+    entrypoint: ""
+    command: ["python3", "/app/bazarr/bin/bazarr.py", "--no-update", "--config", "/config"]
+    environment:
+      TZ: Europe/Riga
+    volumes:
+      - bazarr-data:/config
+      - /var/data/shares/tmp:/downloads
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.${DOMAIN}`)"
+      - "traefik.http.routers.bazarr.entrypoints=https"
+      - "traefik.http.routers.bazarr.middlewares=authelia@docker"
+    networks:
+      - media_net
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+  # Book manager
+  readarr:
+    image: ghcr.io/pennydreadful/bookshelf:hardcover
+    container_name: readarr
+    <<: [*service-defaults, *hardened]
+    user: "1000:1000"
+    entrypoint: ""
+    command: ["/app/readarr/bin/Readarr", "-nobrowser",  "-data=/config"]
+    environment:
+      TZ: Europe/Riga
+      PGID: 1000
+      PUID: 1000
+    volumes:
+      - readarr-data:/config
+      - /var/data/shares/tmp:/downloads
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.readarr.loadbalancer.server.port=8787"
+      - "traefik.http.routers.readarr.rule=Host(`readarr.${DOMAIN}`)"
+      - "traefik.http.routers.readarr.entrypoints=https"
+      - "traefik.http.routers.readarr.middlewares=authelia@docker"
+    networks:
+      - media_net
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 150M
+  # Movie/show request manager
+  seerr:
+    image: ghcr.io/seerr-team/seerr:develop
+    container_name: seerr
+    <<: [*service-defaults, *hardened]
+    user: "65534:65534"
+    environment:
+      TZ: Europe/Riga
+    volumes:
+      - jellyseerr-data:/app/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.seerr.loadbalancer.server.port=5055"
+      - "traefik.http.routers.seerr.rule=Host(`see.${DOMAIN}`) || Host(`see.u8.lv`)"
+      - "traefik.http.routers.seerr.entrypoints=https"
+    networks:
+      - media_net
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
   # bitmagnet:
   #   image: ghcr.io/bitmagnet-io/bitmagnet:latest
   #   container_name: bitmagnet
@@ -219,6 +506,9 @@ services:
   #       condition: service_healthy
   #     tunnel:
   #       condition: service_started
+  #   networks:
+  #     default:
+  #     bitmagnet-postgres:
   # bitmagnet-postgres:
   #   image: postgres:16-alpine
   #   container_name: bitmagnet-postgres
@@ -240,173 +530,13 @@ services:
   #     # bitmagnet-postgres:
   #       # ipv4_address: 172.31.254.2
   #   network_mode: "service:tunnel"
-  qbittorrent-raw:
-    image: lscr.io/linuxserver/qbittorrent:libtorrentv1
-    container_name: qbittorrent-raw
-    <<: *service-defaults
-    environment:
-      DOCKER_MODS: ghcr.io/vuetorrent/vuetorrent-lsio-mod
-      <<: *arr_env
-    ports:
-      - 49152:49152/tcp
-      - 49152:49152/udp
-    volumes:
-      - qbittorrent-unsafe-data:/config
-      - /var/data/shares/tmp:/downloads
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.torrents-raw.loadbalancer.server.port=8080"
-      - "traefik.http.routers.torrents-raw.rule=Host(`torrents-raw.${DOMAIN}`) && !Path(`/sw.js`) && !Path(`/registerSW.js`)"
-      - "traefik.http.routers.torrents-raw.entrypoints=https"
-      - "traefik.http.routers.torrents-raw.middlewares=authelia@docker"
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-        reservations:
-          memory: 128M
-  # Indexer manager
-  prowlarr:
-    image: lscr.io/linuxserver/prowlarr:develop
-    container_name: prowlarr
-    <<: *service-defaults
-    environment: *arr_env
-    volumes:
-      - prowlarr-data:/config
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
-      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)"
-      - "traefik.http.routers.prowlarr.entrypoints=https"
-      - "traefik.http.routers.prowlarr.middlewares=authelia@docker"
-    deploy:
-      resources:
-        limits:
-          memory: 400M
-        reservations:
-          memory: 200M
-  # Cloudflare solver for prowlarr
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
-    <<: *service-defaults
-    environment:
-      <<: *arr_env
-      LOG_LEVEL: info
-      LOG_HTML: "false"
-      CAPTCHA_SOLVER: none
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-        reservations:
-          memory: 300M
-  # Movie manager
-  radarr:
-    image: lscr.io/linuxserver/radarr:latest
-    container_name: radarr
-    <<: *service-defaults
-    environment: *arr_env
-    volumes:
-      - radarr-data:/config
-      - /var/data/shares/tmp:/downloads
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
-      - "traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)"
-      - "traefik.http.routers.radarr.entrypoints=https"
-      - "traefik.http.routers.radarr.middlewares=authelia@docker"
-    deploy:
-      resources:
-        limits:
-          memory: 500M
-        reservations:
-          memory: 160M
-  # Show manager
-  sonarr:
-    image: lscr.io/linuxserver/sonarr:latest
-    container_name: sonarr
-    <<: *service-defaults
-    environment: *arr_env
-    volumes:
-      - sonarr-data:/config
-      - /var/data/shares/tmp:/downloads
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
-      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)"
-      - "traefik.http.routers.sonarr.entrypoints=https"
-      - "traefik.http.routers.sonarr.middlewares=authelia@docker"
-    deploy:
-      resources:
-        limits:
-          memory: 500M
-        reservations:
-          memory: 250M
-  # Subtitle manager
-  bazarr:
-    image: lscr.io/linuxserver/bazarr:latest
-    container_name: bazarr
-    <<: *service-defaults
-    environment: *arr_env
-    volumes:
-      - bazarr-data:/config
-      - /var/data/shares/tmp:/downloads
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
-      - "traefik.http.routers.bazarr.rule=Host(`bazarr.${DOMAIN}`)"
-      - "traefik.http.routers.bazarr.entrypoints=https"
-      - "traefik.http.routers.bazarr.middlewares=authelia@docker"
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 256M
-  # Book manager
-  readarr:
-    image: hotio/readarr:testing
-    container_name: readarr
-    <<: *service-defaults
-    environment: *arr_env
-    volumes:
-      - readarr-data:/config
-      - /var/data/shares/tmp:/downloads
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.readarr.loadbalancer.server.port=8787"
-      - "traefik.http.routers.readarr.rule=Host(`readarr.${DOMAIN}`)"
-      - "traefik.http.routers.readarr.entrypoints=https"
-      - "traefik.http.routers.readarr.middlewares=authelia@docker"
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 150M
-  # Movie/show request manager
-  jellyseerr:
-    image: fallenbagel/jellyseerr:develop
-    container_name: jellyseerr
-    <<: *service-defaults
-    environment:
-      TZ: Europe/Riga
-    volumes:
-      - jellyseerr-data:/app/config
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
-      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.${DOMAIN}`) || Host(`see.u8.lv`)"
-      - "traefik.http.routers.jellyseerr.entrypoints=https"
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 256M
 
 networks:
+  media_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.160/27 # 32 IP addresses
   bitmagnet-postgres:
     ipam:
       driver: default

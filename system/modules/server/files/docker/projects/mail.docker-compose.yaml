@@ -1,31 +1,38 @@
 x-service-defaults: &service-defaults
   restart: unless-stopped
-  logging:
-    driver: "json-file"
-    options:
-      max-size: ${LOG_MAX_SIZE:-200k}
-      max-file: ${LOG_MAX_FILE:-5}
-  healthcheck:
-    disable: true
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
 secrets:
   IMAP_AUTH:
     file: ./docker/secrets/imap.env
+
 volumes:
   authelia-pam:
   mail-data:
   roundcube-db:
+
 services:
+  # TODO: Check logs for grafana
   imapsync:
     image: nikarh/fileserver-imapsync
     container_name: imapsync
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: 1000:1000
+    read_only: false
     environment:
       USERNAME: nikarh
-    user: 1000:1000
     volumes:
       - mail-data:/home
     secrets:
       - IMAP_AUTH
+    networks:
+      - isolated_net
     deploy:
       resources:
         limits:
@@ -33,41 +40,67 @@ services:
         reservations:
           memory: 10M
   dovecot:
-    image: dovecot/dovecot:2.3
+    image: dovecot/dovecot
     container_name: dovecot
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: "1000:1000"
     volumes:
       - mail-data:/home
-      - authelia-pam:/auth
-      - /var/lib/docker-services/volumes/dovecot/dovecot.conf:/etc/dovecot/dovecot.conf
+      - authelia-pam:/auth:ro
+      - /var/lib/docker-services/volumes/dovecot/dovecot2.4.conf:/etc/dovecot/dovecot.conf
       - /var/lib/docker-services/volumes/dovecot/pam-dovecot:/etc/pam.d/dovecot:ro
+    tmpfs:
+      - /run:noexec,size=10M
+      - /tmp:noexec,size=10M
+    networks:
+      - mail_net
+    depends_on:
+      authelia-pam-download:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:
           memory: 50M
         reservations:
           memory: 10M
-    depends_on:
-      init-authelia-pam:
-        condition: service_completed_successfully
+  # TOOD: find a non-php alternative with more sane docker image that can be read-only
   roundcube:
-    image: roundcube/roundcubemail
+    image: roundcube/roundcubemail:latest-nonroot
     container_name: roundcube
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    read_only: false
+    user: "65534:65534"
     environment:
       ROUNDCUBEMAIL_DEFAULT_HOST: dovecot
+      ROUNDCUBEMAIL_DEFAULT_PORT: 31143
       ROUNDCUBEMAIL_DB_TYPE: sqlite
     volumes:
       - roundcube-db:/var/roundcube/db
+    tmpfs:
+      - /tmp:noexec,rw,size=10M,uid=65534,gid=65534
+      - /var/www/html,rw,size=100M,uid=65534,gid=65534 # /var/www/html/bin needs to be exec
     labels:
       - "traefik.enable=true"
-      - "traefik.http.services.roundcube.loadbalancer.server.port=80"
+      - "traefik.http.services.roundcube.loadbalancer.server.port=8000"
       - "traefik.http.routers.roundcube.rule=Host(`mail.${DOMAIN}`) || Host(`mail.u8.lv`)"
       - "traefik.http.routers.roundcube.entrypoints=https"
       - "traefik.http.routers.roundcube.middlewares=authelia@docker"
+    networks:
+      - mail_net
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:
           memory: 300M
         reservations:
           memory: 100M
+
+networks:
+  mail_net:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.20.0.192/28

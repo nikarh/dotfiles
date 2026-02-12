@@ -1,0 +1,75 @@
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
+
+services:
+  # Ensure volumes have correct ownership
+  init-volumes:
+    image: alpine
+    container_name: init-volumes
+    <<: [*hardened]
+    cap_add: ["CHOWN", "DAC_OVERRIDE"]
+    volumes:
+      - authelia-data:/volumes/authelia-data
+      - affine-data:/volumes/affine-data
+      - affine-config:/volumes/affine-config
+      - immich-model-cache:/volumes/immich-model-cache
+      - victoria-logs-data:/volumes/victoria-logs-data
+      - traefik-data:/volumes/traefik-data
+      - fail2ban-db:/volumes/fail2ban-db
+      - vector-logs:/volumes/vector-logs
+      - grafana-data:/volumes/grafana-data
+      - syncthing-data:/volumes/syncthing-data
+      - esphome-data:/volumes/esphome-data
+      - esphome-cache:/volumes/esphome-data
+      - kavita-data:/volumes/kavita-data
+      - jellyseerr-data:/volumes/jellyseerr-data
+      - jellyfin-config:/volumes/jellyfin-config
+      - jellyfin-cache:/volumes/jellyfin-cache
+      - qbittorrent-unsafe-data:/volumes/qbittorrent-unsafe-data
+      - qbittorrent-data:/volumes/qbittorrent-data
+      - qbittorrent-vuetorrent:/volumes/qbittorrent-vuetorrent
+      - roundcube-db:/volumes/roundcube-db
+      - sonarr-data:/volumes/sonarr-data
+      - radarr-data:/volumes/radarr-data
+      - bazarr-data:/volumes/bazarr-data
+      - readarr-data:/volumes/readarr-data
+      - prowlarr-data:/volumes/prowlarr-data
+      #- crowdsec-config:/volumes/crowdsec-config
+      #- crowdsec-data:/volumes/crowdsec-data
+      #- crowdsec-secrets:/volumes/crowdsec-secrets
+    command: >
+      sh -c '
+        chown 1000:1000 /volumes/authelia-data; touch /volumes/authelia-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/affine-data; touch /volumes/affine-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/affine-config; touch /volumes/affine-config/.keep-volume-initialized;
+        chown 911:911 /volumes/immich-model-cache; touch /volumes/immich-model-cache/.keep-volume-initialized;
+        chown 1000:1000 /volumes/victoria-logs-data; touch /volumes/victoria-logs-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/fail2ban-db; touch /volumes/fail2ban-db/.keep-volume-initialized;
+        chown 65534:65534 /volumes/traefik-data; touch /volumes/traefik-data/.keep-volume-initialized;
+        chown 65534:65534 /volumes/traefik-data; touch /volumes/traefik-data/.keep-volume-initialized;
+        chown 65534:65534 /volumes/vector-logs; touch /volumes/vector-logs/.keep-volume-initialized;
+        chown 65534:65534 /volumes/grafana-data; touch /volumes/grafana-data/.keep-volume-initialized;
+        chown 65534:65534 /volumes/esphome-data; touch /volumes/esphome-data/.keep-volume-initialized;
+        chown 65534:65534 /volumes/esphome-cache; touch /volumes/esphome-cache/.keep-volume-initialized;
+        chown 65534:65534 /volumes/kavita-data; touch /volumes/kavita-data/.keep-volume-initialized;
+        chown 65534:65534 /volumes/jellyseerr-data; touch /volumes/jellyseerr-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/jellyfin-config; touch /volumes/jellyfin-config/.keep-volume-initialized;
+        chown 1000:1000 /volumes/jellyfin-cache; touch /volumes/jellyfin-cache/.keep-volume-initialized;
+        chown 1000:1000 /volumes/syncthing-data; touch /volumes/syncthing-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/qbittorrent-unsafe-data; touch /volumes/qbittorrent-unsafe-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/qbittorrent-data; touch /volumes/qbittorrent-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/qbittorrent-vuetorrent; touch /volumes/qbittorrent-vuetorrent/.keep-volume-initialized;
+        chown -R 65534:65534 /volumes/roundcube-db; touch /volumes/roundcube-db/.keep-volume-initialized;
+        chown -R 65534:65534 /volumes/roundcube-db; touch /volumes/roundcube-db/.keep-volume-initialized;
+        chown 1000:1000 /volumes/sonarr-data; touch /volumes/sonarr-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/radarr-data; touch /volumes/radarr-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/bazarr-data; touch /volumes/bazarr-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/readarr-data; touch /volumes/readarr-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/prowlarr-data; touch /volumes/prowlarr-data/.keep-volume-initialized;
+      '
+    network_mode: none

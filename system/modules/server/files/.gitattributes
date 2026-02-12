@@ -1,4 +1,4 @@
 **/rclone.conf filter=git-crypt diff=git-crypt
 **/secrets/** filter=git-crypt diff=git-crypt
 **/nitter/guest_accounts.json filter=git-crypt diff=git-crypt
-.env.default filter=git-crypt diff=git-crypt
+.env filter=git-crypt diff=git-crypt

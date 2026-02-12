@@ -1,21 +1,23 @@
 x-service-defaults: &service-defaults
   restart: unless-stopped
-  logging:
-    driver: "json-file"
-    options:
-      max-size: ${LOG_MAX_SIZE:-200k}
-      max-file: ${LOG_MAX_FILE:-5}
   healthcheck:
     disable: true
-volumes:
-  nitter-data:
-  nitter-redis-data:
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
 services:
   redlib:
     # image: quay.io/redlib/redlib:latest
     image: ghcr.io/cycneuramus/containers@sha256:4b607fd58f2c170d9bbf073bfedbe570c5b6f29c7e72b3a2285e86d5c7f98af9
     container_name: redlib
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    networks:
+      - mirrors_net
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.redlib.loadbalancer.server.port=8080"
@@ -28,3 +30,10 @@ services:
           memory: 100M
         reservations:
           memory: 50M
+
+networks:
+  mirrors_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.80/28

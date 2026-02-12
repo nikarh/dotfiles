@@ -1,10 +1,13 @@
-x-common-service-defaults: &common-service-defaults
+x-service-defaults: &service-defaults
   restart: unless-stopped
-  logging:
-    driver: "json-file"
-    options:
-      max-size: ${LOG_MAX_SIZE:-200k}
-      max-file: ${LOG_MAX_FILE:-5}
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
 secrets:
   CF_TOKEN:
     file: ../common/docker/secrets/cf_token
@@ -18,30 +21,73 @@ secrets:
     file: ../common/docker/secrets/authelia/oidc_hmac
   AUTHELIA_OIDC_ISSUER_PRIVATE_KEY:
     file: ../common/docker/secrets/authelia/oidc_issuer_private_key
+
 volumes:
-  authelia-data:
+  authelia-data: # 1000:1000
+  authelia-pam:
+  socket-proxy.run:
+
 services:
+  # Download authelia-pam.so into a volume for use by other containers
+  # TODO: run as nobody
+  authelia-pam-download:
+    image: alpine/curl
+    container_name: authelia-pam-download
+    <<: [*hardened]
+    volumes:
+      - authelia-pam:/auth:rw
+    environment:
+      VERSION: "0.1.6"
+    command: >
+      sh -c '
+        set -x -e;
+        cd /auth;
+        curl -L -O "https://github.com/nikarh/authelia-pam/releases/download/v$$VERSION/authelia-pam-$(uname -m)-unknown-linux-musl-v$$VERSION-rustls.tar.gz"
+        tar -zxvf authelia-pam-$(uname -m)-unknown-linux-musl-v$$VERSION-rustls.tar.gz;
+        rm *.tar.gz;
+      '
+    networks:
+      - isolated_net
+  # Read-only docker.sock proxy
+  docker-socket-proxy:
+    image: "11notes/socket-proxy:2.1.6"
+    container_name: docker-socket-proxy
+    <<: [*service-defaults, *hardened]
+    cap_add: ["CHOWN", "SETGID", "SETUID", "DAC_OVERRIDE"]
+    user: "0:972"
+    environment:
+      TZ: "Europe/Riga"
+      SOCKET_PROXY_UID: "65534"
+      SOCKET_PROXY_GID: "65534"
+    networks:
+      - ultra_isolated_net
+    volumes:
+      - "/var/run/docker.sock:/run/docker.sock:ro"
+      - "socket-proxy.run:/run/proxy"
+  # Auto-update containers.
   watchtower:
     image: nickfedor/watchtower
     container_name: watchtower
-    <<: *common-service-defaults
+    <<: [*service-defaults, *hardened]
     environment:
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_SCHEDULE: "0 42 4 * * *"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
+    network_mode: none
     deploy:
       resources:
         limits:
           memory: 100M
         reservations:
           memory: 20M
+  # Re-implementation in scratch container
   traefik-cloudflare-companion:
-    image: tiredofit/traefik-cloudflare-companion:${TRAEFIK_CLOUDFLARE_VERSION:-latest}
+    image: ghcr.io/nikarh/docker-traefik-cloudflare-gompanion:main
     container_name: traefik-cloudflare-companion
-    <<: *common-service-defaults
+    <<: [*service-defaults, *hardened]
     environment:
-      CONTAINER_ENABLE_MONITORING: "false"
+      LOG_LEVEL: "INFO"
       TARGET_DOMAIN: homenet.u8.lv
       DOMAIN1: arhipov.net
       DOMAIN1_ZONE_ID: 8f927f276e4b3481aba03ee4d29a9ef9
@@ -51,12 +97,19 @@ services:
       DOMAIN2_ZONE_ID: a7a5b30ac9c981dc8d845ef0e398e939
       DOMAIN2_TARGET_DOMAIN: homenet.u8.lv
       DOMAIN2_PROXIED: "true"
-      TRAEFIK_EXCLUDED_HOST1: u8\.lv
-      TRAEFIK_EXCLUDED_HOST2: home\.arhipov\.net
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      ENABLE_DOCKER_POLL: false
+      ENABLE_TRAEFIK_POLL: true
+      TRAEFIK_POLL_URL: https://traefik.files.home.arhipov.net
+      TRAEFIK_EXCLUDED_HOST1: ^u8\.lv$
+      TRAEFIK_EXCLUDED_HOST2: ^home\.arhipov\.net$
     secrets:
       - CF_TOKEN
+    networks:
+      - isolated_net
+    depends_on:
+      docker-socket-proxy:
+        condition: "service_healthy"
+        restart: true
     deploy:
       resources:
         limits:
@@ -64,13 +117,15 @@ services:
         reservations:
           memory: 50M
   authelia:
-    image: authelia/authelia:4.38.10
+    image: authelia/authelia:4.39.7
     container_name: authelia
-    <<: *common-service-defaults
+    <<: [*service-defaults, *hardened]
+    read_only: false # TODO: fix
+    networks:
+      - authelia_net
+    user: "1000:1000"
     environment:
-      PUID: 1000
-      PGID: 1000
-      AUTHELIA_JWT_SECRET_FILE: /run/secrets/AUTHELIA_JWT_SECRET
+      AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE: /run/secrets/AUTHELIA_JWT_SECRET
       AUTHELIA_SESSION_SECRET_FILE: /run/secrets/AUTHELIA_SESSION_SECRET
       AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/AUTHELIA_STORAGE_ENCRYPTION_KEY
       AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE: /run/secrets/AUTHELIA_OIDC_HMAC
@@ -83,7 +138,6 @@ services:
       - "--config=/etc/authelia/secrets/configuration.oidc.yml"
       - "--config.experimental.filters=expand-env"
     volumes:
-      # /config is chowned, so volume has right permissions
       - authelia-data:/config/data:rw
       - /var/lib/docker-services/volumes/authelia:/etc/authelia:ro
     secrets:
@@ -100,9 +154,39 @@ services:
       - "traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true"
       - "traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email"
       - "traefik.http.middlewares.authelia.forwardauth.address=http://authelia:8080/api/authz/forward-auth"
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:
           memory: 200M
         reservations:
           memory: 100M
+
+networks:
+  # No internet/LAN access, no inter-container communication
+  ultra_isolated_net:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.20.1.0/24
+    driver_opts:
+      com.docker.network.bridge.enable_icc: "false"
+      com.docker.network.bridge.name: "br-ultra-iso"
+  # No inter-container communication
+  isolated_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.2.0/24
+    driver_opts:
+      com.docker.network.bridge.enable_icc: "false"
+      com.docker.network.bridge.name: "br-iso"
+  authelia_net:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.20.0.48/28

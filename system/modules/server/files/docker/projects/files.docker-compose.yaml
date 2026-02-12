@@ -2,91 +2,38 @@ x-arr-env: &arr_env
   PGID: 1000
   PUID: 1000
   TZ: Europe/Riga
+
 x-service-defaults: &service-defaults
   restart: unless-stopped
-  logging:
-    driver: "json-file"
-    options:
-      max-size: ${LOG_MAX_SIZE:-200k}
-      max-file: ${LOG_MAX_FILE:-5}
   healthcheck:
     disable: true
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
 volumes:
-  netdata-lib:
-  netdata-cache:
   filebrowser-data:
   syncthing-data:
-  esphome-data:
+
 services:
-  # Basic monitoring
-  netdata:
-    image: netdata/netdata
-    container_name: netdata
-    hostname: netdata
-    <<: *service-defaults
-    cap_add:
-      - SYS_PTRACE
-    security_opt:
-      - apparmor:unconfined
-    environment:
-      DISABLE_TELEMETRY: 1
-      DOCKER_USR: 1000
-      DOCKER_GRP: 1000
-    volumes:
-      - netdata-lib:/var/lib/netdata
-      - netdata-cache:/var/cache/netdata
-      - /var/lib/docker-services/volumes/netdata/netdata.conf:/etc/netdata/netdata.conf:ro
-      - /var/lib/docker-services/volumes/netdata/cloud.conf:/var/lib/netdata/cloud.d/cloud.conf:ro
-      - /etc/passwd:/host/etc/passwd:ro
-      - /etc/group:/host/etc/group:ro
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /etc/os-release:/host/etc/os-release:ro
-      - /dev/disk/by-id:/host/dev/by-id:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.netdata.loadbalancer.server.port=19999"
-      - "traefik.http.routers.netdata.rule=Host(`netdata.${DOMAIN}`)"
-      - "traefik.http.routers.netdata.entrypoints=https"
-      - "traefik.http.routers.netdata.middlewares=authelia@docker,netdata-redirect@docker"
-      - "traefik.http.middlewares.netdata-redirect.redirectregex.regex=^/$"
-      - "traefik.http.middlewares.netdata-redirect.redirectregex.replacement=/v3/"
-      - "traefik.http.middlewares.netdata-redirect.redirectregex.permanent=true"
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-        reservations:
-          memory: 512M
-  # This is required at least for esphome
-  mdns-repeater:
-    image: angelnu/mdns_repeater
-    container_name: mdns-repeater
-    <<: *service-defaults
-    network_mode: host
-    environment:
-      - hostNIC=eth0
-      - dockerNIC=${DOCKER_NIC}
-    deploy:
-      resources:
-        limits:
-          memory: 10M
-        reservations:
-          memory: 10M
-  # Homer is served from GH pages on the outside world,
-  # but we also serve it from here for internal access.
+  # Also served via GH pages outside of NAT
   homer:
     image: b4bz/homer
     container_name: homer
-    <<: *service-defaults
-    user: "1000:1000"
+    <<: [*service-defaults, *hardened]
+    user: "65534:65534"
     volumes:
       - /var/lib/docker-services/volumes/homer:/www/assets:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.homer.rule=Host(`home.arhipov.net`) || Host(`u8.lv`)"
       - "traefik.http.routers.homer.entrypoints=https"
+    networks:
+      - files_net
     deploy:
       resources:
         limits:
@@ -96,7 +43,7 @@ services:
   # samba:
   #   image: nikarh/fileserver-samba
   #   container_name: samba
-  #   <<: *service-defaults
+  #   <<: [*service-defaults, *hardened]
   #   ports:
   #     - 137:137/udp # nmbd
   #     - 138:138/udp # nmbd
@@ -105,6 +52,8 @@ services:
   #   volumes:
   #     - /var/lib/docker-services/volumes/samba/create-shares.sh:/scripts/create-shares.sh:ro
   #     - /var/data/home:/home
+  #   networks:
+  #     - isolated_net
   #   deploy:
   #     resources:
   #       limits:
@@ -116,7 +65,18 @@ services:
     # Migrated to ubuntu.
     image: atmoz/sftp
     container_name: sftpd
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    read_only: false
+    cap_add:
+      [
+        "SETGID",
+        "SETUID",
+        "CHOWN",
+        "FOWNER",
+        "DAC_OVERRIDE",
+        "SYS_CHROOT",
+        "KILL",
+      ]
     ports:
       - "2222:22"
     entrypoint: /run.sh
@@ -131,6 +91,8 @@ services:
       # Data
       - /var/data/home:/home
       - /var/data/shares/nikarh/Syncthing/My Music/NT Shared:/home/nt
+    networks:
+      - files_net
     deploy:
       resources:
         limits:
@@ -140,7 +102,7 @@ services:
   filebrowser:
     image: filebrowser/filebrowser
     container_name: filebrowser
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
     user: 1000:1000
     volumes:
       - /var/data/home:/srv
@@ -156,17 +118,19 @@ services:
       - "-d=/mnt/data/filebrowser.db"
       - "-c=/mnt/data/filebrowser.json"
       - "-p=8080"
+    networks:
+      - files_net
     deploy:
       resources:
         limits:
-          # For making archives in-place
-          memory: 5G
+          memory: 5G # For making archives in-place
         reservations:
           memory: 20M
   syncthing:
-    image: lscr.io/linuxserver/syncthing
+    image: syncthing/syncthing:latest
     container_name: syncthing
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: "1000:1000"
     ports:
       - 22000:22000/tcp
       - 22000:22000/udp
@@ -174,7 +138,7 @@ services:
     environment:
       <<: *arr_env
     volumes:
-      - syncthing-data:/config
+      - syncthing-data:/var/syncthing/config
       - /var/data/shares/nikarh:/var/data/shares/nikarh
     labels:
       - "traefik.enable=true"
@@ -182,27 +146,21 @@ services:
       - "traefik.http.routers.syncthing.rule=Host(`syncthing.${DOMAIN}`)"
       - "traefik.http.routers.syncthing.entrypoints=https"
       - "traefik.http.routers.syncthing.middlewares=authelia@docker"
+    networks:
+      - isolated_net
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:
           memory: 1G
         reservations:
           memory: 300M
-  esphome:
-    image: esphome/esphome
-    container_name: esphome
-    <<: *service-defaults
-    volumes:
-      - esphome-data:/config
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.esphome.loadbalancer.server.port=6052"
-      - "traefik.http.routers.esphome.rule=Host(`esphome.${DOMAIN}`)"
-      - "traefik.http.routers.esphome.entrypoints=https"
-      - "traefik.http.routers.esphome.middlewares=authelia@docker"
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-        reservations:
-          memory: 50M
+
+networks:
+  files_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.128/28

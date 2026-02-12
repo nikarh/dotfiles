@@ -1,0 +1,166 @@
+x-defaults: &defaults
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+
+x-service-defaults: &service-defaults
+  <<: [*defaults]
+  restart: unless-stopped
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - NET_RAW
+
+volumes:
+  crowdsec-secrets:
+  crowdsec-config:
+  crowdsec-data:
+
+services:
+  # Agent + Local API
+  crowdsec:
+    <<: [*service-defaults, *hardened]
+    image: crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+    user: "65534:65534"
+    environment:
+      COLLECTIONS: "crowdsecurity/traefik crowdsecurity/sshd crowdsecurity/linux"
+      DOCKER_HOST: "unix:///var/run/proxy/docker.sock"
+      TZ: "Europe/Riga"
+    networks:
+      crowdsec_net:
+        ipv4_address: 172.20.0.114
+    volumes:
+      - /var/lib/docker-services/volumes/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml:ro
+      - crowdsec-config:/etc/crowdsec
+      - crowdsec-data:/var/lib/crowdsec/data
+      - socket-proxy.run:/var/run/proxy:ro
+    tmpfs:
+      - /tmp:noexec,size=32M
+    depends_on:
+      docker-socket-proxy:
+        condition: service_healthy
+        restart: true
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  # Init secrets
+  crowdsec-bootstrap:
+    <<: [*defaults, *hardened]
+    image: crowdsecurity/crowdsec:latest
+    container_name: crowdsec-bootstrap
+    user: "65534:65534"
+    cap_drop:
+      - NET_RAW
+      - CHOWN
+    environment:
+      TZ: "Europe/Riga"
+    entrypoint: ""
+    command: >
+      sh -ec '
+        echo Waiting for cs to start;
+        # wait for crowdsec to be ready
+        until cscli version >/dev/null 2>&1; do sleep 0.1; done
+
+        echo Creating secrets;
+        # create bouncer keys if files do not exist
+        if [ ! -f /run/crowdsec-secrets/traefik_bouncer_key ]; then
+          cscli bouncers add traefik-bouncer -o raw > /run/crowdsec-secrets/traefik_bouncer_key
+        fi
+
+        if [ ! -f /run/crowdsec-secrets/firewall_bouncer_key ]; then
+          cscli bouncers add firewall-bouncer -o raw > /run/crowdsec-secrets/firewall_bouncer_key
+        fi
+
+        echo Changing mode;
+        chmod 0400 /run/crowdsec-secrets/*_key
+      '
+    volumes:
+      - crowdsec-config:/etc/crowdsec:rw
+      - crowdsec-data:/var/lib/crowdsec:rw
+      - crowdsec-secrets:/run/crowdsec-secrets:rw
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
+      crowdsec:
+        condition: service_started
+
+  # The Traefik Bouncer (HTTP Layer)
+  traefik-bouncer:
+    <<: [*service-defaults, *hardened]
+    image: fbonalair/traefik-crowdsec-bouncer:latest
+    container_name: crowdsec-traefik-bouncer
+    user: "65534:65534"
+    cap_drop:
+      - NET_RAW
+      - CHOWN
+    environment:
+      CROWDSEC_AGENT_HOST: "crowdsec:8080"
+      CROWDSEC_BOUNCER_API_KEY_FILE: /run/crowdsec-secrets/traefik_bouncer_key
+    volumes:
+      - crowdsec-secrets:/run/crowdsec-secrets:ro
+    depends_on:
+      crowdsec:
+        condition: "service_started"
+      crowdsec-bootstrap:
+        condition: service_completed_successfully
+    networks:
+      crowdsec_net:
+        ipv4_address: 172.20.0.115
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 32M
+  crowdsec-firewall-bouncer:
+    image: ghcr.io/shgew/cs-firewall-bouncer-docker:latest
+    container_name: crowdsec-firewall-bouncer
+    <<: [*service-defaults]
+    network_mode: host
+    user: 65534:65534
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      API_URL: 172.20.0.113:8080
+    volumes:
+      - /var/lib/docker-services/volumes/crowdsec/crowdsec-firewall-bouncer.yaml:/config/crowdsec-firewall-bouncer.yaml:ro
+      - /etc/localtime:/etc/localtime:ro
+      - crowdsec-secrets:/run/crowdsec-secrets:ro
+    tmpfs:
+      - /tmp:noexec,size=5M
+    entrypoint: ["/bin/sh", "-lc"]
+    command: |
+      APIKEY="$(cat /run/crowdsec-secrets/firewall_bouncer_key)" /entrypoint.sh
+    depends_on:
+      crowdsec:
+        condition: "service_started"
+      crowdsec-bootstrap:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 32M
+
+networks:
+  crowdsec_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.112/28

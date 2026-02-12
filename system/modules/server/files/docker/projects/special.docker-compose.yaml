@@ -1,29 +1,23 @@
 x-service-defaults: &service-defaults
   restart: unless-stopped
-  logging:
-    driver: "json-file"
-    options:
-      max-size: ${LOG_MAX_SIZE:-200k}
-      max-file: ${LOG_MAX_FILE:-5}
-  healthcheck:
-    disable: true
-
-volumes:
-  switcheroo-db:
 
 x-hardened: &hardened
   read_only: true
   security_opt:
     - no-new-privileges:true
   cap_drop:
-    - NET_RAW
+    - ALL
+
+volumes:
+  switcheroo-db:
 
 services:
+  # TODO: replace apache with something simpler and move into a subnet
   miniserve:
     image: httpd:alpine
     container_name: miniserve
     <<: [*service-defaults, *hardened]
-    user: "10000:10000"
+    user: "65534:65534"
     volumes:
       - /var/lib/docker-services/volumes/miniserve/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
       - /var/smalldata/Games:/usr/local/apache2/htdocs:ro
@@ -36,12 +30,16 @@ services:
       - "traefik.http.routers.miniserve.entrypoints=https"
       - "traefik.http.routers.miniserve.middlewares=miniserve-auth"
       - "traefik.http.middlewares.miniserve-auth.basicauth.users=${MINISERVE_AUTH}"
+    networks:
+      - switcheroo_net
     deploy:
       resources:
         limits:
           memory: 512M
         reservations:
           memory: 32M
+  # TODO: move to semi/isolated subnet (need to comm with qbit via traefik and to internet)
+  # TODO: bridge with qbit to omit traefik+authelia
   switcheroo:
     image: nikarh/xcabczxabcz
     container_name: switcheroo
@@ -50,9 +48,18 @@ services:
     volumes:
       - switcheroo-db:/data:rw
       - /var/lib/docker-services/volumes/switcheroo/secrets/.env:/.env:ro
+    networks:
+      - switcheroo_net
     deploy:
       resources:
         limits:
           memory: 100M
         reservations:
           memory: 50M
+
+networks:
+  switcheroo_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.208/28

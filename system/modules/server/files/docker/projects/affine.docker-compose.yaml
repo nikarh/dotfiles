@@ -1,14 +1,4 @@
-x-defaults: &defaults
-  logging:
-    driver: "json-file"
-    options:
-      max-size: ${LOG_MAX_SIZE:-200k}
-      max-file: ${LOG_MAX_FILE:-5}
-  networks:
-    - affine_net
-
 x-service-defaults: &service-defaults
-  <<: *defaults
   restart: unless-stopped
 
 x-hardened: &hardened
@@ -16,11 +6,11 @@ x-hardened: &hardened
   security_opt:
     - no-new-privileges:true
   cap_drop:
-    - NET_RAW
+    - ALL
 
 volumes:
-  affine-data:
-  affine-config:
+  affine-data: # 1000:1000
+  affine-config: # 1000:1000
   affine-db-data:
 
 x-affine-env: &affine-env
@@ -34,7 +24,8 @@ services:
   affine:
     image: ghcr.io/toeverything/affine:stable
     container_name: affine
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: "1000:1000"
     depends_on:
       affine-redis:
         condition: service_started
@@ -42,9 +33,13 @@ services:
         condition: service_started
       affine-migration:
         condition: service_completed_successfully
+      init-volumes:
+        condition: service_completed_successfully
     volumes:
-      - affine-data:/root/.affine/storage
-      - affine-config:/root/.affine/config
+      - affine-data:/home/node/.affine/storage
+      - affine-config:/home/node/.affine/config
+    tmpfs:
+      - /app/src:noexec,size=100M,uid=1000,gid=1000
     environment:
       <<: *affine-env
     networks:
@@ -54,7 +49,6 @@ services:
       - "traefik.http.services.affine.loadbalancer.server.port=3010"
       - "traefik.http.routers.affine.rule=Host(`affine.${DOMAIN}`)"
       - "traefik.http.routers.affine.entrypoints=https"
-      - "traefik.http.routers.affine.middlewares=authelia@docker"
       - "traefik.docker.network=affine_net"
     deploy:
       resources:
@@ -64,21 +58,27 @@ services:
           memory: 1G
   affine-migration:
     image: ghcr.io/toeverything/affine:stable
-    container_name: affine_migration_job
-    <<: *defaults
+    container_name: affine-db-migration-job
+    <<: [*hardened]
+    user: "1000:1000"
     volumes:
-      - affine-data:/root/.affine/storage
-      - affine-config:/root/.affine/config
+      - affine-config:/home/node/.affine/config
+    tmpfs:
+      - /tmp:noexec,size=10M
     command: ["sh", "-c", "node ./scripts/self-host-predeploy.js"]
-    env_file:
-      - .env
     environment:
       <<: *affine-env
+      YARN_CACHE_FOLDER: /tmp/.yarn-cache
+      YARN_PREFIX: /tmp/.yarn-global
+    networks:
+      - affine_net
     depends_on:
       affine-postgres:
         condition: service_started
       affine-redis:
         condition: service_started
+      init-volumes:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:
@@ -94,6 +94,8 @@ services:
       --requirepass ${AFFINE_REDIS_PASSWORD} --save "" --appendonly no
     tmpfs:
       - /data:noexec,size=10M
+    networks:
+      - affine_net
     deploy:
       resources:
         limits:
@@ -115,15 +117,19 @@ services:
       POSTGRES_PASSWORD: ${AFFINE_DB_PASSWORD}
       POSTGRES_DB: affine
       POSTGRES_INITDB_ARGS: "--data-checksums"
+    networks:
+      - affine_net
     deploy:
       resources:
         limits:
           memory: 1G
         reservations:
           memory: 100M
+
 networks:
   affine_net:
     driver: bridge
+    internal: true
     ipam:
       config:
         - subnet: 172.20.0.0/28

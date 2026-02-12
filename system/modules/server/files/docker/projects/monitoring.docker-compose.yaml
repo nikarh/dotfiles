@@ -2,57 +2,134 @@ x-common-env: &common_env
   PGID: 1000
   PUID: 1000
   TZ: Europe/Riga
-x-common-service-defaults: &common-service-defaults
+
+x-service-defaults: &service-defaults
   restart: unless-stopped
-  logging:
-    driver: "json-file"
-    options:
-      max-size: ${LOG_MAX_SIZE:-200k}
-      max-file: ${LOG_MAX_FILE:-5}
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
 volumes:
+  netdata-lib:
+  netdata-cache:
   vector-logs:
   fail2ban-db:
-  loki-data:
+  victoria-logs-data: # 1000:1000
   grafana-data:
   scrutiny-config:
   scrutiny-influxdb:
 services:
+  # Basic monitoring
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: netdata
+    <<: [*service-defaults]
+    cap_add: ["SYS_PTRACE"]
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      DISABLE_TELEMETRY: 1
+      DOCKER_HOST: /run/proxy/docker.sock
+    volumes:
+      - netdata-lib:/var/lib/netdata
+      - netdata-cache:/var/cache/netdata
+      - /var/lib/docker-services/volumes/netdata/netdata.conf:/etc/netdata/netdata.conf:ro
+      - /var/lib/docker-services/volumes/netdata/cloud.conf:/var/lib/netdata/cloud.d/cloud.conf:ro
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /dev/disk/by-id:/host/dev/by-id:ro
+      - "socket-proxy.run:/run/proxy"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.netdata.loadbalancer.server.port=19999"
+      - "traefik.http.routers.netdata.rule=Host(`netdata.${DOMAIN}`)"
+      - "traefik.http.routers.netdata.entrypoints=https"
+      - "traefik.http.routers.netdata.middlewares=authelia@docker,netdata-redirect@docker"
+      - "traefik.http.middlewares.netdata-redirect.redirectregex.regex=^/$"
+      - "traefik.http.middlewares.netdata-redirect.redirectregex.replacement=/v3/"
+      - "traefik.http.middlewares.netdata-redirect.redirectregex.permanent=true"
+    depends_on:
+      docker-socket-proxy:
+        condition: "service_healthy"
+        restart: true
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
   vector:
     image: timberio/vector:latest-alpine
     container_name: vector
-    <<: *common-service-defaults
+    <<: [*service-defaults, *hardened]
+    user: "65534:65534"
+    networks:
+      - monitoring_net
     environment:
-      VECTOR_OPENSSL_LEGACY_PROVIDER: "false"
       TZ: Europe/Riga
+      DOCKER_HOST: /run/proxy/docker.sock
+      VECTOR_OPENSSL_LEGACY_PROVIDER: "false"
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "socket-proxy.run:/run/proxy"
       - /var/lib/docker-services/volumes/vector:/etc/vector
       - vector-logs:/out
+    depends_on:
+      docker-socket-proxy:
+        condition: "service_healthy"
+        restart: true
+      init-volumes:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:
           memory: 300M
         reservations:
           memory: 150M
-  loki:
-    image: grafana/loki:latest
-    container_name: loki
-    <<: *common-service-defaults
+  victoria-logs:
+    image: victoriametrics/victoria-logs:latest
+    container_name: victoria-logs
+    <<: [*service-defaults, *hardened]
+    user: "1000:1000"
+    networks:
+      - monitoring_net
     volumes:
-      - /var/lib/docker-services/volumes/loki:/etc/loki:ro
-      - loki-data:/loki
+      - victoria-logs-data:/victoria-logs-data
+    command: -storageDataPath=/victoria-logs-data -retentionPeriod=1y
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.vlogs.loadbalancer.server.port=9428"
+      - "traefik.http.routers.vlogs.rule=Host(`logs.${DOMAIN}`)"
+      - "traefik.http.routers.vlogs.entrypoints=https"
+      - "traefik.http.routers.vlogs.middlewares=authelia@docker,vlogs-root-redirect"
+      - "traefik.http.middlewares.vlogs-root-redirect.redirectregex.regex=^https?://logs.${DOMAIN}/?$$"
+      - "traefik.http.middlewares.vlogs-root-redirect.redirectregex.replacement=https://logs.${DOMAIN}/select/vmui/"
     deploy:
       resources:
         limits:
-          memory: 600M
+          memory: 500M
         reservations:
-          memory: 300M
+          memory: 128M
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
-    <<: *common-service-defaults
-    user: "1000"
+    <<: [*service-defaults, *hardened]
+    user: "65534:65534"
+    networks:
+      - monitoring_net
     environment:
+      # Needs internet access to download th plugin
+      GF_INSTALL_PLUGINS: "victoriametrics-logs-datasource"
       GF_PATHS_PROVISIONING: /etc/grafana/provisioning
       GF_AUTH_ANONYMOUS_ENABLED: "false"
       GF_AUTH_DISABLE_LOGIN_FORM: "true"
@@ -66,73 +143,28 @@ services:
       GF_AUTH_PROXY_AUTO_SIGN_UP: "true"
     volumes:
       - grafana-data:/var/lib/grafana
-    entrypoint:
-      - sh
-      - -euc
-      - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        datasources:
-        - name: Loki
-          type: loki
-          access: proxy
-          orgId: 1
-          url: http://loki:3100
-          basicAuth: false
-          isDefault: true
-          version: 1
-          editable: false
-        EOF
-        /run.sh
+      - /var/lib/docker-services/volumes/grafana/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
     deploy:
       resources:
         limits:
           memory: 500M
         reservations:
           memory: 100M
+    tmpfs: /tmp:noexec,size=100M
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
       - "traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN}`)"
       - "traefik.http.routers.grafana.entrypoints=https"
       - "traefik.http.routers.grafana.middlewares=authelia@docker"
-  logrotate:
-    image: linkyard/logrotate
-    container_name: logrotate
-    <<: *common-service-defaults
-    environment:
-      LOGROTATE_FILE_PATTERN: "*.log"
-      LOGROTATE_ROTATE: "0"
-      LOGROTATE_TRUNCATE: "copytruncate"
-      LOGROTATE_CRON: "*/5 0 0 0 0"
-      LOGROTATE_SIZE: "10M"
-    volumes:
-      - vector-logs:/logs
-    deploy:
-      resources:
-        limits:
-          memory: 40M
-        reservations:
-          memory: 10M
-  init-fail2ban-volume:
-    image: alpine
-    command: >
-      sh -c "
-        mkdir -p /db/fail2ban;
-        chown 1000:1000 /db/fail2ban;
-      "
-    volumes:
-      - fail2ban-db:/db
   fail2ban:
     image: lscr.io/linuxserver/fail2ban:1.1.0-r2-ls19
-
     container_name: fail2ban
-    <<: *common-service-defaults
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
+    <<: [*service-defaults]
+    cap_add: ["NET_ADMIN", "NET_RAW"]
     network_mode: host
+    security_opt:
+    - no-new-privileges:true
     environment:
       <<: *common_env
       VERBOSITY: -v
@@ -148,24 +180,29 @@ services:
         reservations:
           memory: 50M
     depends_on:
-      init-fail2ban-volume:
+      init-volumes:
         condition: service_completed_successfully
   scrutiny:
     image: ghcr.io/analogj/scrutiny:master-omnibus
     container_name: scrutiny
-    <<: *common-service-defaults
+    <<: [*service-defaults, *hardened]
+    networks:
+      - monitoring_net
     cap_add:
       - SYS_RAWIO
     devices:
-      - /dev/sda:/dev/sda
-      - /dev/sdb:/dev/sdb
-      - /dev/sdc:/dev/sdc
-      - /dev/sdd:/dev/sdd
-      - /dev/sde:/dev/sde
+      - /dev/sda:/dev/sda:ro
+      - /dev/sdb:/dev/sdb:ro
+      - /dev/sdc:/dev/sdc:ro
+      - /dev/sdd:/dev/sdd:ro
+      - /dev/sde:/dev/sde:ro
     volumes:
       - scrutiny-config:/opt/scrutiny/config
       - scrutiny-influxdb:/opt/scrutiny/influxdb
       - /run/udev:/run/udev:ro
+    tmpfs:
+      - /run:exec,size=10M
+      - /tmp:size=10M
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.scrutiny.loadbalancer.server.port=8080"
@@ -178,3 +215,11 @@ services:
           memory: 500M
         reservations:
           memory: 100M
+
+networks:
+  ultra_isolated_net: {}
+  monitoring_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.96/28

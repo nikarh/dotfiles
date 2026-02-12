@@ -73,5 +73,20 @@
     {
         "key": "ctrl+i",
         "command": "composerMode.agent"
+    },
+    {
+        "key": "ctrl+[Slash]",
+        "command": "-editor.toggleFold",
+        "when": "editorFocus && foldingEnabled"
+    },
+    {
+        "key": "ctrl+[Slash]",
+        "command": "editor.action.commentLine",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+[IntlBackslash]",
+        "command": "-editor.action.commentLine",
+        "when": "editorTextFocus && !editorReadonly"
     }
 ]

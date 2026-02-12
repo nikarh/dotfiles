@@ -1,14 +1,4 @@
-x-defaults: &defaults
-  logging:
-    driver: "json-file"
-    options:
-      max-size: ${LOG_MAX_SIZE:-200k}
-      max-file: ${LOG_MAX_FILE:-5}
-  networks:
-    - immich_net
-
 x-service-defaults: &service-defaults
-  <<: [*defaults]
   restart: unless-stopped
 
 x-hardened: &hardened
@@ -16,11 +6,11 @@ x-hardened: &hardened
   security_opt:
     - no-new-privileges:true
   cap_drop:
-    - NET_RAW
+    - ALL
 
 volumes:
   immich-db-data:
-  immich-model-cache:
+  immich-model-cache: # Requires 911:911
   immich-data:
     driver: local
     driver_opts:
@@ -29,18 +19,6 @@ volumes:
       device: "/var/data/shares/nikarh/Backup/immich"
 
 services:
-  immich-init-volumes:
-    image: alpine
-    container_name: immich-init-volumes
-    <<: [*defaults, *hardened]
-    cap_drop: ["ALL"]
-    cap_add: ["CHOWN", "DAC_OVERRIDE"]
-    volumes:
-      - immich-model-cache:/volumes/immich-model-cache
-    command: >
-      sh -c '
-        chown 911:911 /volumes/immich-model-cache; touch /volumes/immich-model-cache/.keep-volume-initialized;
-      '
   immich-redis:
     image: valkey/valkey:alpine
     container_name: immich-redis
@@ -50,6 +28,8 @@ services:
       --requirepass ${IMMICH_REDIS_PASSWORD} --save "" --appendonly no
     tmpfs:
       - /data:size=10M
+    networks:
+      - immich_net
     deploy:
       resources:
         limits:
@@ -75,6 +55,8 @@ services:
       - /var/lib/postgresql:noexec,size=1M # Needs to chown the data folder
     restart: always
     shm_size: 256M
+    networks:
+      - immich_net
     deploy:
       resources:
         limits:
@@ -84,8 +66,9 @@ services:
   immich:
     image: ghcr.io/immich-app/immich-server:release
     container_name: immich
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
     user: "911:911"
+    group_add: ["989", "985"] # render, video
     devices:
       - /dev/dri:/dev/dri
     environment:
@@ -119,6 +102,8 @@ services:
       - "traefik.http.middlewares.immich-redirect2.redirectregex.regex=^https://photos.${DOMAIN}/(.*)"
       - "traefik.http.middlewares.immich-redirect2.redirectregex.replacement=https://immich.${DOMAIN}/$$1"
       - "traefik.docker.network=immich_net"
+    networks:
+      - immich_net
     deploy:
       resources:
         limits:
@@ -129,8 +114,9 @@ services:
     container_name: immich-machine-learning
     # Use OpenVINO image for Intel J5040 GPU acceleration
     image: ghcr.io/immich-app/immich-machine-learning:release-openvino
-    <<: [*service-defaults]
+    <<: [*service-defaults, *hardened]
     user: "911:911"
+    group_add: ["989", "985"] # render, video
     devices:
       - /dev/dri:/dev/dri
     volumes:
@@ -140,8 +126,10 @@ services:
     tmpfs:
       - /tmp:size=100M
     depends_on:
-      immich-init-volumes:
+      init-volumes:
         condition: service_completed_successfully
+    networks:
+      - immich_net
     deploy:
       resources:
         limits:
@@ -151,6 +139,7 @@ services:
 networks:
   immich_net:
     driver: bridge
+    internal: true
     ipam:
       config:
         - subnet: 172.20.0.32/28

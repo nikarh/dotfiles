@@ -1,0 +1,20 @@
+update_frequency: 10s
+log_mode: stdout
+mode: iptables
+api_url: ${API_URL}
+api_key: ${API_KEY}
+disable_ipv6: true
+deny_action: DROP
+deny_log: false
+supported_decisions_types:
+  - ban
+blacklists_ipv4: crowdsec-blacklists
+ipset_type: nethash
+iptables_chains:
+  - INPUT
+iptables_add_rule_comments: true
+
+# packet filter
+pf:
+  # an empty string disables the anchor
+  anchor_name: ""

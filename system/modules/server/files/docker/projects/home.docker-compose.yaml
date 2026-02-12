@@ -1,0 +1,92 @@
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
+volumes:
+  esphome-data:
+  esphome-cache:
+
+services:
+  # Required for esphome discovery
+  mdns-repeater:
+    image: angelnu/mdns_repeater
+    container_name: mdns-repeater
+    <<: [*service-defaults, *hardened]
+    user: 65534:65534
+    network_mode: host
+    environment:
+      - hostNIC=eth0
+      - dockerNIC=br-home
+    deploy:
+      resources:
+        limits:
+          memory: 10M
+        reservations:
+          memory: 10M
+  bambu-spaghetti-detection:
+    image: nikarh/ha_bambu_lab_p1_spaghetti_detection_standalone:1.4
+    container_name: bambu-spaghetti-detection
+    <<: [*service-defaults, *hardened]
+    user: "65534:65534"
+    environment:
+      TZ: Europe/Riga
+      ML_API_TOKEN: ${OBICO_API_SECRET}
+    tmpfs:
+      - /tmp:noexec,size=32M
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.spaghetti.loadbalancer.server.port=3333"
+      - "traefik.http.routers.spaghetti.rule=Host(`bambu-spaghetti.${DOMAIN}`)"
+      - "traefik.http.routers.spaghetti.entrypoints=https"
+      - "traefik.http.routers.spaghetti.middlewares=authelia@docker"
+    networks:
+      - home_net
+    deploy:
+      resources:
+        limits:
+          memory: 5G
+        reservations:
+          memory: 4G
+  esphome:
+    # https://github.com/esphome/esphome/issues/13170
+    image: docker.io/ptr727/esphome-nonroot:latest
+    container_name: esphome
+    <<: [*service-defaults, *hardened]
+    user: 65534:65534
+    environment:
+      TZ: Europe/Riga
+    volumes:
+      - esphome-data:/config
+      - esphome-cache:/cache
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.esphome.loadbalancer.server.port=6052"
+      - "traefik.http.routers.esphome.rule=Host(`esphome.${DOMAIN}`)"
+      - "traefik.http.routers.esphome.entrypoints=https"
+      - "traefik.http.routers.esphome.middlewares=authelia@docker"
+    networks:
+      - home_net
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 50M
+
+networks:
+  home_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.144/28
+    driver_opts:
+      com.docker.network.bridge.name: "br-home"
