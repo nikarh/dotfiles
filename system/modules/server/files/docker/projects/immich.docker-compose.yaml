@@ -1,5 +1,4 @@
-x-service-defaults: &service-defaults
-  restart: unless-stopped
+x-defaults: &defaults
   logging:
     driver: "json-file"
     options:
@@ -7,6 +6,10 @@ x-service-defaults: &service-defaults
       max-file: ${LOG_MAX_FILE:-5}
   networks:
     - immich_net
+
+x-service-defaults: &service-defaults
+  <<: [*defaults]
+  restart: unless-stopped
 
 x-hardened: &hardened
   read_only: true
@@ -17,6 +20,7 @@ x-hardened: &hardened
 
 volumes:
   immich-db-data:
+  immich-model-cache:
   immich-data:
     driver: local
     driver_opts:
@@ -25,17 +29,18 @@ volumes:
       device: "/var/data/shares/nikarh/Backup/immich"
 
 services:
-  # immich-init-volumes:
-  #   image: alpine
-  #   <<: [*service-defaults, *hardened]
-  #   cap_drop: ["ALL"]
-  #   cap_add: ["CHOWN"]
-  #   volumes:
-  #     immich-db-data:/volumes/immich-db-data
-  #   command: >
-  #     sh -c '
-  #       chown 10000:10000 /volumes/immich-db-data; touch /volumes/immich-db-data/.keep-volume-initialized
-  #     '
+  immich-init-volumes:
+    image: alpine
+    container_name: immich-init-volumes
+    <<: [*defaults, *hardened]
+    cap_drop: ["ALL"]
+    cap_add: ["CHOWN", "DAC_OVERRIDE"]
+    volumes:
+      - immich-model-cache:/volumes/immich-model-cache
+    command: >
+      sh -c '
+        chown 911:911 /volumes/immich-model-cache; touch /volumes/immich-model-cache/.keep-volume-initialized;
+      '
   immich-redis:
     image: valkey/valkey:alpine
     container_name: immich-redis
@@ -77,9 +82,10 @@ services:
         reservations:
           memory: 100M
   immich:
-    image: ghcr.io/imagegenius/immich:latest
+    image: ghcr.io/immich-app/immich-server:release
     container_name: immich
     <<: *service-defaults
+    user: "911:911"
     devices:
       - /dev/dri:/dev/dri
     environment:
@@ -92,10 +98,9 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=${IMMICH_REDIS_PASSWORD}
       - JWT_SECRET=${IMMICH_JWT_SECRET}
-      - DISABLE_MACHINE_LEARNING=true
       - TZ=Europe/Riga
     volumes:
-      - immich-data:/photos
+      - immich-data:/data
     depends_on:
       immich-postgres:
         condition: service_started
@@ -103,7 +108,7 @@ services:
         condition: service_started
     labels:
       - "traefik.enable=true"
-      - "traefik.http.services.immich.loadbalancer.server.port=8080"
+      - "traefik.http.services.immich.loadbalancer.server.port=2283"
       - "traefik.http.routers.immich.rule=Host(`immich.${DOMAIN}`) || Host(`photos.${DOMAIN}`) || Host(`i.u8.lv`) || Host(`p.u8.lv`)"
       - "traefik.http.routers.immich.entrypoints=https"
       - "traefik.http.routers.immich.middlewares=immich-redirect,immich-redirect1,immich-redirect2"
@@ -118,6 +123,29 @@ services:
       resources:
         limits:
           memory: 2G
+        reservations:
+          memory: 512M
+  immich-machine-learning:
+    container_name: immich-machine-learning
+    # Use OpenVINO image for Intel J5040 GPU acceleration
+    image: ghcr.io/immich-app/immich-machine-learning:release-openvino
+    <<: [*service-defaults]
+    user: "911:911"
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - immich-model-cache:/cache
+    environment:
+      MPLCONFIGDIR: "/cache/.mplconfig"
+    tmpfs:
+      - /tmp:size=100M
+    depends_on:
+      immich-init-volumes:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 4G
         reservations:
           memory: 512M
 networks:
