@@ -105,7 +105,6 @@ services:
 networks:
   outline_net:
     driver: bridge
-    internal: true
     ipam:
       config:
         - subnet: 172.20.0.16/28

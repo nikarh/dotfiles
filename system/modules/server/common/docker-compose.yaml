@@ -1,10 +1,13 @@
-x-common-service-defaults: &common-service-defaults
-  restart: unless-stopped
+x-defaults: &defaults
   logging:
     driver: "json-file"
     options:
       max-size: ${LOG_MAX_SIZE:-200k}
       max-file: ${LOG_MAX_FILE:-5}
+
+x-service-defaults: &service-defaults
+  <<: [*defaults]
+  restart: unless-stopped
 
 x-hardened: &hardened
   # read_only: true
@@ -31,10 +34,22 @@ volumes:
   authelia-data:
 
 services:
+  authelia-init-volumes:
+    image: alpine
+    container_name: authelia-init-volumes
+    <<: [*defaults, *hardened]
+    cap_drop: ["ALL"]
+    cap_add: ["CHOWN", "DAC_OVERRIDE"]
+    volumes:
+      - authelia-data:/volumes/authelia-data
+    command: >
+      sh -c '
+        chown 1000:1000 /volumes/authelia-data; touch /volumes/authelia-data/.keep-volume-initialized;
+      '
   watchtower:
     image: nickfedor/watchtower
     container_name: watchtower
-    <<: *common-service-defaults
+    <<: *service-defaults
     environment:
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_SCHEDULE: "0 42 4 * * *"
@@ -49,7 +64,7 @@ services:
   traefik-cloudflare-companion:
     image: tiredofit/traefik-cloudflare-companion:${TRAEFIK_CLOUDFLARE_VERSION:-latest}
     container_name: traefik-cloudflare-companion
-    <<: *common-service-defaults
+    <<: *service-defaults
     environment:
       CONTAINER_ENABLE_MONITORING: "false"
       TARGET_DOMAIN: homenet.u8.lv
@@ -76,7 +91,9 @@ services:
   authelia:
     image: authelia/authelia:4.39.7
     container_name: authelia
-    <<: [*common-service-defaults, *hardened]
+    <<: [*service-defaults, *hardened]
+    networks:
+      - authelia_net
     user: "1000:1000"
     environment:
       AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE: /run/secrets/AUTHELIA_JWT_SECRET
@@ -92,7 +109,6 @@ services:
       - "--config=/etc/authelia/secrets/configuration.oidc.yml"
       - "--config.experimental.filters=expand-env"
     volumes:
-      # authelia-data is chowned, so volume has right permissions
       - authelia-data:/config/data:rw
       - /var/lib/docker-services/volumes/authelia:/etc/authelia:ro
     secrets:
@@ -109,9 +125,19 @@ services:
       - "traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true"
       - "traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email"
       - "traefik.http.middlewares.authelia.forwardauth.address=http://authelia:8080/api/authz/forward-auth"
+    depends_on:
+      authelia-init-volumes:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:
           memory: 200M
         reservations:
           memory: 100M
+
+networks:
+  authelia_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.48/28

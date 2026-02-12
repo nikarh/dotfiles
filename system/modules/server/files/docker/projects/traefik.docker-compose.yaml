@@ -27,6 +27,7 @@ services:
       - affine_net
       - outline_net
       - immich_net
+      - authelia_net
     secrets:
       - CF_TOKEN
     environment:
@@ -50,3 +51,4 @@ networks:
   affine_net: {}
   outline_net: {}
   immich_net: {}
+  authelia_net: {}
