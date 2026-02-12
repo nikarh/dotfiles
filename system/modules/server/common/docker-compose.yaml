@@ -5,6 +5,15 @@ x-common-service-defaults: &common-service-defaults
     options:
       max-size: ${LOG_MAX_SIZE:-200k}
       max-file: ${LOG_MAX_FILE:-5}
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - NET_RAW
+
+
 secrets:
   CF_TOKEN:
     file: ../common/docker/secrets/cf_token
