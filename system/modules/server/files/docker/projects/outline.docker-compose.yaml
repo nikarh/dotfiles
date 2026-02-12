@@ -20,6 +20,7 @@ volumes:
   outline-database-data:
 
 services:
+  # TODO: harden and run rootless
   outline:
     image: docker.getoutline.com/outlinewiki/outline:latest
     container_name: outline

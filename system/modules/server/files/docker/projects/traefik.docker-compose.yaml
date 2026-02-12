@@ -28,6 +28,7 @@ services:
       - outline_net
       - immich_net
       - authelia_net
+      - mirrors_net
     secrets:
       - CF_TOKEN
     environment:

@@ -7,15 +7,24 @@ x-service-defaults: &service-defaults
       max-file: ${LOG_MAX_FILE:-5}
   healthcheck:
     disable: true
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - NET_RAW
+
 volumes:
   nitter-data:
   nitter-redis-data:
+
 services:
   redlib:
     # image: quay.io/redlib/redlib:latest
     image: ghcr.io/cycneuramus/containers@sha256:4b607fd58f2c170d9bbf073bfedbe570c5b6f29c7e72b3a2285e86d5c7f98af9
     container_name: redlib
     <<: *service-defaults
+    networks:
+      - mirrors_net
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.redlib.loadbalancer.server.port=8080"
@@ -28,3 +37,10 @@ services:
           memory: 100M
         reservations:
           memory: 50M
+
+networks:
+  mirrors_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.80/28
