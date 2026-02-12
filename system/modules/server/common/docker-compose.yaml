@@ -31,9 +31,11 @@ secrets:
 
 volumes:
   authelia-data:
+  authelia-pam:
   socket-proxy.run:
 
 services:
+  # Ensure volumes have correct ownership
   authelia-init-volumes:
     image: alpine
     container_name: authelia-init-volumes
@@ -46,6 +48,25 @@ services:
       sh -c '
         chown 1000:1000 /volumes/authelia-data; touch /volumes/authelia-data/.keep-volume-initialized;
       '
+  # Download authelia-pam.so into a volume for use by other containers
+  authelia-pam-download:
+    image: alpine/curl
+    container_name: authelia-pam-download
+    <<: [*defaults, *hardened]
+    cap_drop: ["ALL"]
+    volumes:
+      - authelia-pam:/auth:rw
+    environment:
+      VERSION: "0.1.6"
+    command: >
+      sh -c '
+        set -x -e;
+        cd /auth;
+        curl -L -O "https://github.com/nikarh/authelia-pam/releases/download/v$$VERSION/authelia-pam-$(uname -m)-unknown-linux-musl-v$$VERSION-rustls.tar.gz"
+        tar -zxvf authelia-pam-$(uname -m)-unknown-linux-musl-v$$VERSION-rustls.tar.gz;
+        rm *.tar.gz;
+      '
+  # Read-only docker.sock proxy
   docker-socket-proxy:
     image: "11notes/socket-proxy:2.1.6"
     container_name: docker-socket-proxy
@@ -59,6 +80,8 @@ services:
     volumes:
       - "/var/run/docker.sock:/run/docker.sock:ro"
       - "socket-proxy.run:/run/proxy"
+  # Auto-update containers.
+  # TODO: restrict access?
   watchtower:
     image: nickfedor/watchtower
     container_name: watchtower
@@ -74,6 +97,7 @@ services:
           memory: 100M
         reservations:
           memory: 20M
+  # Re-implementation in scratch container
   traefik-cloudflare-companion:
     image: ghcr.io/nikarh/docker-traefik-cloudflare-gompanion:main
     container_name: traefik-cloudflare-companion
@@ -96,6 +120,8 @@ services:
       TRAEFIK_EXCLUDED_HOST2: ^home\.arhipov\.net$
     secrets:
       - CF_TOKEN
+    networks:
+      - isolated_net
     depends_on:
       docker-socket-proxy:
         condition: "service_healthy"
@@ -154,17 +180,25 @@ services:
           memory: 100M
 
 networks:
+  # No internet/LAN access, no inter-container communication 
   ultra_isolated_net:
     driver: bridge
-    # Block Internet and LAN access
     internal: true
     ipam:
       config:
         - subnet: 172.20.1.0/24
     driver_opts:
-      # Block inter-container communication
       com.docker.network.bridge.enable_icc: "false"
       com.docker.network.bridge.name: "br-ultra-iso"
+  # No inter-container communication
+  isolated_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.2.0/24
+    driver_opts:
+      com.docker.network.bridge.enable_icc: "false"
+      com.docker.network.bridge.name: "br-iso"
   authelia_net:
     driver: bridge
     ipam:

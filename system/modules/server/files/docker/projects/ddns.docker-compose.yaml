@@ -1,23 +1,33 @@
-x-common-service-defaults: &common-service-defaults
+x-common-service-defaults: &service-defaults
   restart: unless-stopped
   logging:
     driver: "json-file"
     options:
       max-size: ${LOG_MAX_SIZE:-200k}
       max-file: ${LOG_MAX_FILE:-5}
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  user: "1000:1000"
+  networks:
+    - isolated_net
+
 secrets:
   CF_TOKEN:
     file: ../common/docker/secrets/cf_token
+
 services:
-  ddns-arhipov-net:
-    image: oznu/cloudflare-ddns:latest
-    container_name: ddns-arhipov-net
-    <<: *common-service-defaults
+  ddns:
+    image: favonia/cloudflare-ddns:latest
+    container_name: ddns
+    <<: *service-defaults
     environment:
-      API_KEY_FILE: /run/secrets/CF_TOKEN
-      ZONE: arhipov.net
-      SUBDOMAIN: homenet
-      PROXIED: false
+      CLOUDFLARE_API_TOKEN_FILE: /run/secrets/CF_TOKEN
+      DOMAINS: homenet.arhipov.net,homenet.u8.lv
+      IP6_PROVIDER: none
+      PROXIED: is(homenet.u8.lv)
     secrets:
       - CF_TOKEN
     deploy:
@@ -26,20 +36,6 @@ services:
           memory: 15M
         reservations:
           memory: 10M
-  ddns-u8-lv:
-    image: oznu/cloudflare-ddns:latest
-    container_name: ddns-u8-lv
-    <<: *common-service-defaults
-    environment:
-      API_KEY_FILE: /run/secrets/CF_TOKEN
-      ZONE: u8.lv
-      SUBDOMAIN: homenet
-      PROXIED: true
-    secrets:
-      - CF_TOKEN
-    deploy:
-      resources:
-        limits:
-          memory: 15M
-        reservations:
-          memory: 10M
+
+networks:
+  isolated_net: {}

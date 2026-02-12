@@ -8,6 +8,8 @@ services:
       - authelia-pam:/auth:rw
     environment:
       VERSION: "0.1.6"
+    cap_drop: ["ALL"]
+    cap_add: ["CHOWN", "DAC_OVERRIDE"]
     command: >
       sh -c '
         set -x -e;
