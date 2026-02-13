@@ -44,6 +44,7 @@ services:
         reservations:
           memory: 32M
   # TODO: move to semi/isolated subnet (need to comm with qbit)
+  # TODO: bridge with qbit to omit traefik+authelia
   switcheroo:
     image: nikarh/xcabczxabcz
     container_name: switcheroo

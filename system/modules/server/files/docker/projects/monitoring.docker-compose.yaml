@@ -109,6 +109,14 @@ services:
     depends_on:
       init-volumes:
         condition: service_completed_successfully
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.vlogs.loadbalancer.server.port=9428"
+      - "traefik.http.routers.vlogs.rule=Host(`logs.${DOMAIN}`)"
+      - "traefik.http.routers.vlogs.entrypoints=https"
+      - "traefik.http.routers.vlogs.middlewares=authelia@docker,vlogs-root-redirect"
+      - "traefik.http.middlewares.vlogs-root-redirect.redirectregex.regex=^https?://logs.${DOMAIN}/?$$"
+      - "traefik.http.middlewares.vlogs-root-redirect.redirectregex.replacement=https://logs.${DOMAIN}/select/vmui/"
     deploy:
       resources:
         limits:
@@ -153,26 +161,6 @@ services:
       - "traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN}`)"
       - "traefik.http.routers.grafana.entrypoints=https"
       - "traefik.http.routers.grafana.middlewares=authelia@docker"
-  logrotate:
-    image: linkyard/logrotate
-    container_name: logrotate
-    <<: [*service-defaults, *hardened]
-    networks:
-      - ultra_isolated_net
-    environment:
-      LOGROTATE_FILE_PATTERN: "*.log"
-      LOGROTATE_ROTATE: "0"
-      LOGROTATE_TRUNCATE: "copytruncate"
-      LOGROTATE_CRON: "*/5 0 0 0 0"
-      LOGROTATE_SIZE: "10M"
-    volumes:
-      - vector-logs:/logs
-    deploy:
-      resources:
-        limits:
-          memory: 40M
-        reservations:
-          memory: 10M
   fail2ban:
     image: lscr.io/linuxserver/fail2ban:1.1.0-r2-ls19
     container_name: fail2ban

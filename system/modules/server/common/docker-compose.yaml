@@ -92,7 +92,7 @@ services:
     container_name: traefik-cloudflare-companion
     <<: *service-defaults
     environment:
-      LOG_LEVEL: "VERBOSE"
+      LOG_LEVEL: "INFO"
       TARGET_DOMAIN: homenet.u8.lv
       DOMAIN1: arhipov.net
       DOMAIN1_ZONE_ID: 8f927f276e4b3481aba03ee4d29a9ef9
