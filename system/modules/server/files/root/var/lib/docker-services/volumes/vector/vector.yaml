@@ -12,7 +12,7 @@ transforms:
   sftp-parsed:
     type: remap
     inputs: ["sftp-logs"]
-    source: '.message, err = format_timestamp(.timestamp, "%b %d %H:%M:%S", "Europe/Riga") + " files sshd: " + .message'
+    source: '.message, _ = format_timestamp(.timestamp, "%b %d %H:%M:%S", "Europe/Riga") + " files sshd: " + .message'
 
 sinks:
   sftp-file:
@@ -21,22 +21,12 @@ sinks:
     path: /out/sftp.log
     encoding:
       codec: text
-  # loki:
-  #   type: loki
-  #   inputs: ["docker-logs"]
-  #   endpoint: http://loki:3100/
-  #   labels:
-  #     datasource: docker
-  #     container_name: "{{ .container_name }}"
-  #   out_of_order_action: rewrite_timestamp
-  #   encoding:
-  #     codec: json
   victorialogs:
     type: elasticsearch
     inputs: ["docker-logs"]
-    endpoints: ["http://victoria-logs:9428/insert/elasticsearch/"] 
+    endpoints: ["http://victoria-logs:9428/insert/elasticsearch/"]
     mode: "bulk"
-    api_version: "v8" 
+    api_version: "v8"
     compression: "gzip"
     query:
       _msg_field: "message"

@@ -73,15 +73,23 @@ services:
     image: timberio/vector:latest-alpine
     container_name: vector
     <<: [*service-defaults, *hardened]
+    user: "65534:65534"
     networks:
       - monitoring_net
     environment:
-      VECTOR_OPENSSL_LEGACY_PROVIDER: "false"
       TZ: Europe/Riga
+      DOCKER_HOST: /run/proxy/docker.sock
+      VECTOR_OPENSSL_LEGACY_PROVIDER: "false"
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "socket-proxy.run:/run/proxy"
       - /var/lib/docker-services/volumes/vector:/etc/vector
       - vector-logs:/out
+    depends_on:
+      docker-socket-proxy:
+        condition: "service_healthy"
+        restart: true
+      init-volumes:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:
