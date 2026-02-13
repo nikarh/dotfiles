@@ -23,7 +23,6 @@ volumes:
   netdata-cache:
   vector-logs:
   fail2ban-db:
-  loki-data:
   victoria-logs-data:
   grafana-data:
   scrutiny-config:
@@ -100,19 +99,6 @@ services:
           memory: 300M
         reservations:
           memory: 150M
-  loki:
-    image: grafana/loki:latest
-    container_name: loki
-    <<: *service-defaults
-    volumes:
-      - /var/lib/docker-services/volumes/loki:/etc/loki:ro
-      - loki-data:/loki
-    deploy:
-      resources:
-        limits:
-          memory: 600M
-        reservations:
-          memory: 300M
   victoria-logs:
     image: victoriametrics/victoria-logs:latest
     container_name: victoria-logs
@@ -158,14 +144,6 @@ services:
         cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
         apiVersion: 1
         datasources:
-        - name: Loki
-          type: loki
-          access: proxy
-          orgId: 1
-          url: http://loki:3100
-          basicAuth: false
-          version: 1
-          editable: false
         - name: VictoriaLogs1
           type: victoriametrics-logs-datasource
           access: proxy

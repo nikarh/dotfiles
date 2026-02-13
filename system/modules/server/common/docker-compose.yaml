@@ -201,6 +201,7 @@ networks:
       com.docker.network.bridge.name: "br-iso"
   authelia_net:
     driver: bridge
+    internal: true
     ipam:
       config:
         - subnet: 172.20.0.48/28

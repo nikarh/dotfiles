@@ -24,6 +24,7 @@ services:
     image: traefik
     container_name: traefik
     <<: [*common-service-defaults, *hardened]
+    user: "1000:1000"
     ports:
       - 80:80
       - 443:443
@@ -51,6 +52,8 @@ services:
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=authelia@docker"
       - "traefik.http.routers.api.rule=Host(`traefik.${DOMAIN}`)"
+    sysctls:
+      net.ipv4.ip_unprivileged_port_start: 80
     deploy:
       resources:
         limits:
