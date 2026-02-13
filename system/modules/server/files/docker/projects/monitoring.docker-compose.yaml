@@ -72,7 +72,7 @@ services:
   vector:
     image: timberio/vector:latest-alpine
     container_name: vector
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
     networks:
       - monitoring_net
     environment:
@@ -110,11 +110,12 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
     networks:
       - monitoring_net
     user: "1000"
     environment:
+      # Needs internet access to download th plugin
       GF_INSTALL_PLUGINS: "victoriametrics-logs-datasource"
       GF_PATHS_PROVISIONING: /etc/grafana/provisioning
       GF_AUTH_ANONYMOUS_ENABLED: "false"
@@ -129,31 +130,15 @@ services:
       GF_AUTH_PROXY_AUTO_SIGN_UP: "true"
     volumes:
       - grafana-data:/var/lib/grafana
-    entrypoint:
-      - sh
-      - -euc
-      - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        datasources:
-        - name: VictoriaLogs1
-          type: victoriametrics-logs-datasource
-          access: proxy
-          orgId: 1
-          url: http://victoria-logs:9428
-          basicAuth: false
-          isDefault: true
-          version: 1
-          editable: false
-        EOF
-        /run.sh
+      - /var/lib/docker-services/volumes/grafana/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
     deploy:
       resources:
         limits:
           memory: 500M
         reservations:
           memory: 100M
+    tmpfs:
+      /tmp:noexec,size=100M
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
@@ -163,7 +148,7 @@ services:
   logrotate:
     image: linkyard/logrotate
     container_name: logrotate
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
     networks:
       - ultra_isolated_net
     environment:
@@ -180,15 +165,6 @@ services:
           memory: 40M
         reservations:
           memory: 10M
-  init-fail2ban-volume:
-    image: alpine
-    command: >
-      sh -c "
-        mkdir -p /db/fail2ban;
-        chown 1000:1000 /db/fail2ban;
-      "
-    volumes:
-      - fail2ban-db:/db
   fail2ban:
     image: lscr.io/linuxserver/fail2ban:1.1.0-r2-ls19
     container_name: fail2ban
@@ -212,12 +188,12 @@ services:
         reservations:
           memory: 50M
     depends_on:
-      init-fail2ban-volume:
+      init-volumes:
         condition: service_completed_successfully
   scrutiny:
     image: ghcr.io/analogj/scrutiny:master-omnibus
     container_name: scrutiny
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
     networks:
       - monitoring_net
     cap_add:
@@ -232,6 +208,9 @@ services:
       - scrutiny-config:/opt/scrutiny/config
       - scrutiny-influxdb:/opt/scrutiny/influxdb
       - /run/udev:/run/udev:ro
+    tmpfs:
+      - /run:exec,size=10M
+      - /tmp:size=10M
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.scrutiny.loadbalancer.server.port=8080"
@@ -249,7 +228,6 @@ networks:
   ultra_isolated_net: {}
   monitoring_net:
     driver: bridge
-    internal: true
     ipam:
       config:
         - subnet: 172.20.0.96/28

@@ -49,7 +49,7 @@ services:
       - affine-data:/home/node/.affine/storage
       - affine-config:/home/node/.affine/config
     tmpfs:
-      - /app/src:noexec,size=10M
+      - /app/src:noexec,size=100M,uid=1000,gid=1000
     environment:
       <<: *affine-env
     networks:

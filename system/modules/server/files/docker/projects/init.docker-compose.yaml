@@ -26,6 +26,7 @@ services:
       - immich-model-cache:/volumes/immich-model-cache
       - victoria-logs-data:/volumes/victoria-logs-data
       - traefik-data:/volumes/traefik-data
+      - fail2ban-db:/volumes/fail2ban-db
     command: >
       sh -c '
         chown 1000:1000 /volumes/authelia-data; touch /volumes/authelia-data/.keep-volume-initialized;
@@ -34,4 +35,5 @@ services:
         chown 911:911 /volumes/immich-model-cache; touch /volumes/immich-model-cache/.keep-volume-initialized;
         chown 1000:1000 /volumes/victoria-logs-data; touch /volumes/victoria-logs-data/.keep-volume-initialized;
         chown 65534:65534 /volumes/traefik-data; touch /volumes/traefik-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/fail2ban-db; touch /volumes/fail2ban-db/.keep-volume-initialized;
       '

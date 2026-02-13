@@ -24,7 +24,7 @@ services:
     image: httpd:alpine
     container_name: miniserve
     <<: [*service-defaults, *hardened]
-    user: "10000:10000"
+    user: "65534:65534"
     volumes:
       - /var/lib/docker-services/volumes/miniserve/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
       - /var/smalldata/Games:/usr/local/apache2/htdocs:ro
