@@ -19,8 +19,8 @@ x-hardened: &hardened
     - NET_RAW
 
 volumes:
-  affine-data:
-  affine-config:
+  affine-data: # 1000:1000
+  affine-config: # 1000:1000
   affine-db-data:
 
 x-affine-env: &affine-env
@@ -31,20 +31,6 @@ x-affine-env: &affine-env
   AFFINE_SERVER_EXTERNAL_URL: https://affine.files.home.arhipov.net
 
 services:
-  affine-init-volumes:
-    image: alpine
-    container_name: affine-init-volumes
-    <<: [*defaults, *hardened]
-    cap_drop: ["ALL"]
-    cap_add: ["CHOWN", "DAC_OVERRIDE"]
-    volumes:
-      - affine-data:/volumes/affine-data
-      - affine-config:/volumes/affine-config
-    command: >
-      sh -c '
-        chown 1000:1000 /volumes/affine-data; touch /volumes/affine-data/.keep-volume-initialized;
-        chown 1000:1000 /volumes/affine-config; touch /volumes/affine-config/.keep-volume-initialized;
-      '
   affine:
     image: ghcr.io/toeverything/affine:stable
     container_name: affine
@@ -56,6 +42,8 @@ services:
       affine-postgres:
         condition: service_started
       affine-migration:
+        condition: service_completed_successfully
+      init-volumes:
         condition: service_completed_successfully
     volumes:
       - affine-data:/home/node/.affine/storage
@@ -99,6 +87,8 @@ services:
         condition: service_started
       affine-redis:
         condition: service_started
+      init-volumes:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:

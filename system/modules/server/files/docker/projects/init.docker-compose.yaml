@@ -1,0 +1,37 @@
+x-defaults: &defaults
+  logging:
+    driver: "json-file"
+    options:
+      max-size: ${LOG_MAX_SIZE:-200k}
+      max-file: ${LOG_MAX_FILE:-5}
+
+x-hardened: &hardened
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - NET_RAW
+
+services:
+  # Ensure volumes have correct ownership
+  init-volumes:
+    image: alpine
+    container_name: init-volumes
+    <<: [*defaults, *hardened]
+    cap_drop: ["ALL"]
+    cap_add: ["CHOWN", "DAC_OVERRIDE"]
+    volumes:
+      - authelia-data:/volumes/authelia-data
+      - affine-data:/volumes/affine-data
+      - affine-config:/volumes/affine-config
+      - immich-model-cache:/volumes/immich-model-cache
+      - victoria-logs-data:/volumes/victoria-logs-data
+      - traefik-data:/volumes/traefik-data
+    command: >
+      sh -c '
+        chown 1000:1000 /volumes/authelia-data; touch /volumes/authelia-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/affine-data; touch /volumes/affine-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/affine-config; touch /volumes/affine-config/.keep-volume-initialized;
+        chown 911:911 /volumes/immich-model-cache; touch /volumes/immich-model-cache/.keep-volume-initialized;
+        chown 1000:1000 /volumes/victoria-logs-data; touch /volumes/victoria-logs-data/.keep-volume-initialized;
+        chown 65534:65534 /volumes/traefik-data; touch /volumes/traefik-data/.keep-volume-initialized;
+      '

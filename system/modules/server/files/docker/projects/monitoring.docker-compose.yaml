@@ -23,24 +23,11 @@ volumes:
   netdata-cache:
   vector-logs:
   fail2ban-db:
-  victoria-logs-data:
+  victoria-logs-data: # 1000:1000
   grafana-data:
   scrutiny-config:
   scrutiny-influxdb:
 services:
-  # Ensure volumes have correct ownership
-  monitoring-init-volumes:
-    image: alpine
-    container_name: monitoring-init-volumes
-    <<: [*defaults, *hardened]
-    cap_drop: ["ALL"]
-    cap_add: ["CHOWN", "DAC_OVERRIDE"]
-    volumes:
-      - victoria-logs-data:/volumes/victoria-logs-data
-    command: >
-      sh -c '
-        chown 1000:1000 /volumes/victoria-logs-data; touch /volumes/victoria-logs-data/.keep-volume-initialized;
-      '
   # Basic monitoring
   netdata:
     image: netdata/netdata
@@ -86,6 +73,8 @@ services:
     image: timberio/vector:latest-alpine
     container_name: vector
     <<: *service-defaults
+    networks:
+      - monitoring_net
     environment:
       VECTOR_OPENSSL_LEGACY_PROVIDER: "false"
       TZ: Europe/Riga
@@ -103,12 +92,14 @@ services:
     image: victoriametrics/victoria-logs:latest
     container_name: victoria-logs
     <<: [*service-defaults, *hardened]
+    networks:
+      - monitoring_net
     user: "1000:1000"
     volumes:
       - victoria-logs-data:/victoria-logs-data
     command: -storageDataPath=/victoria-logs-data -retentionPeriod=1y
     depends_on:
-      monitoring-init-volumes:
+      init-volumes:
         condition: service_completed_successfully
     deploy:
       resources:
@@ -120,6 +111,8 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     <<: *service-defaults
+    networks:
+      - monitoring_net
     user: "1000"
     environment:
       GF_INSTALL_PLUGINS: "victoriametrics-logs-datasource"
@@ -171,6 +164,8 @@ services:
     image: linkyard/logrotate
     container_name: logrotate
     <<: *service-defaults
+    networks:
+      - ultra_isolated_net
     environment:
       LOGROTATE_FILE_PATTERN: "*.log"
       LOGROTATE_ROTATE: "0"
@@ -223,6 +218,8 @@ services:
     image: ghcr.io/analogj/scrutiny:master-omnibus
     container_name: scrutiny
     <<: *service-defaults
+    networks:
+      - monitoring_net
     cap_add:
       - SYS_RAWIO
     devices:
@@ -247,3 +244,12 @@ services:
           memory: 500M
         reservations:
           memory: 100M
+
+networks:
+  ultra_isolated_net: {}
+  monitoring_net:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.20.0.96/28

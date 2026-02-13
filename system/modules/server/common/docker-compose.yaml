@@ -30,24 +30,11 @@ secrets:
     file: ../common/docker/secrets/authelia/oidc_issuer_private_key
 
 volumes:
-  authelia-data:
+  authelia-data: # 1000:1000
   authelia-pam:
   socket-proxy.run:
 
 services:
-  # Ensure volumes have correct ownership
-  authelia-init-volumes:
-    image: alpine
-    container_name: authelia-init-volumes
-    <<: [*defaults, *hardened]
-    cap_drop: ["ALL"]
-    cap_add: ["CHOWN", "DAC_OVERRIDE"]
-    volumes:
-      - authelia-data:/volumes/authelia-data
-    command: >
-      sh -c '
-        chown 1000:1000 /volumes/authelia-data; touch /volumes/authelia-data/.keep-volume-initialized;
-      '
   # Download authelia-pam.so into a volume for use by other containers
   authelia-pam-download:
     image: alpine/curl
@@ -75,6 +62,8 @@ services:
     user: "0:972"
     environment:
       TZ: "Europe/Riga"
+      SOCKET_PROXY_UID: "65534"
+      SOCKET_PROXY_GID: "65534"
     networks:
       - ultra_isolated_net
     volumes:
@@ -170,7 +159,7 @@ services:
       - "traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email"
       - "traefik.http.middlewares.authelia.forwardauth.address=http://authelia:8080/api/authz/forward-auth"
     depends_on:
-      authelia-init-volumes:
+      init-volumes:
         condition: service_completed_successfully
     deploy:
       resources:

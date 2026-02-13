@@ -18,13 +18,12 @@ x-hardened: &hardened
   cap_drop:
     - NET_RAW
 
-
 services:
   traefik:
     image: traefik
     container_name: traefik
     <<: [*common-service-defaults, *hardened]
-    user: "1000:1000"
+    user: "65534:65534"
     ports:
       - 80:80
       - 443:443
@@ -42,6 +41,7 @@ services:
         aliases: ["authelia.${DOMAIN}"]
       authelia_net:
       mirrors_net:
+      monitoring_net:
     secrets:
       - CF_TOKEN
     environment:
@@ -54,6 +54,9 @@ services:
       - "traefik.http.routers.api.rule=Host(`traefik.${DOMAIN}`)"
     sysctls:
       net.ipv4.ip_unprivileged_port_start: 80
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:
@@ -68,3 +71,4 @@ networks:
   outline_net: {}
   immich_net: {}
   authelia_net: {}
+  monitoring_net: {}

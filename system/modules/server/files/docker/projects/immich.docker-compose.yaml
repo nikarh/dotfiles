@@ -20,7 +20,7 @@ x-hardened: &hardened
 
 volumes:
   immich-db-data:
-  immich-model-cache:
+  immich-model-cache: # Requires 911:911
   immich-data:
     driver: local
     driver_opts:
@@ -29,18 +29,6 @@ volumes:
       device: "/var/data/shares/nikarh/Backup/immich"
 
 services:
-  immich-init-volumes:
-    image: alpine
-    container_name: immich-init-volumes
-    <<: [*defaults, *hardened]
-    cap_drop: ["ALL"]
-    cap_add: ["CHOWN", "DAC_OVERRIDE"]
-    volumes:
-      - immich-model-cache:/volumes/immich-model-cache
-    command: >
-      sh -c '
-        chown 911:911 /volumes/immich-model-cache; touch /volumes/immich-model-cache/.keep-volume-initialized;
-      '
   immich-redis:
     image: valkey/valkey:alpine
     container_name: immich-redis
@@ -140,7 +128,7 @@ services:
     tmpfs:
       - /tmp:size=100M
     depends_on:
-      immich-init-volumes:
+      init-volumes:
         condition: service_completed_successfully
     deploy:
       resources:
