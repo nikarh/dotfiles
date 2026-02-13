@@ -10,25 +10,37 @@ secrets:
     file: ../common/docker/secrets/cf_token
 volumes:
   traefik-data:
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - NET_RAW
+
+
 services:
   traefik:
     image: traefik
     container_name: traefik
-    <<: *common-service-defaults
+    <<: [*common-service-defaults, *hardened]
     ports:
       - 80:80
       - 443:443
     volumes:
       - traefik-data:/data
       - /var/lib/docker-services/volumes/traefik:/etc/traefik:ro
-      - /var/run/docker.sock:/var/run/docker.sock
+      - "socket-proxy.run:/run/proxy"
     networks:
-      - files_default
-      - affine_net
-      - outline_net
-      - immich_net
-      - authelia_net
-      - mirrors_net
+      files_default:
+      affine_net:
+        aliases: ["authelia.${DOMAIN}"]
+      outline_net:
+        aliases: ["authelia.${DOMAIN}"]
+      immich_net:
+        aliases: ["authelia.${DOMAIN}"]
+      authelia_net:
+      mirrors_net:
     secrets:
       - CF_TOKEN
     environment:

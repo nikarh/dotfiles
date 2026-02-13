@@ -218,7 +218,6 @@ services:
       - fail2ban-db:/db
   fail2ban:
     image: lscr.io/linuxserver/fail2ban:1.1.0-r2-ls19
-
     container_name: fail2ban
     <<: *service-defaults
     cap_add:

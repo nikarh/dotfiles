@@ -4,6 +4,7 @@ providers:
   docker:
     watch: true
     exposedByDefault: false
+    endpoint: unix:///var/run/proxy/docker.sock
   file:
     directory: /etc/traefik/dynamic/
     watch: true

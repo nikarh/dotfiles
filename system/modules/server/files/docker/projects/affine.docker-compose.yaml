@@ -31,11 +31,25 @@ x-affine-env: &affine-env
   AFFINE_SERVER_EXTERNAL_URL: https://affine.files.home.arhipov.net
 
 services:
-  # TODO: harden and rootless
+  affine-init-volumes:
+    image: alpine
+    container_name: affine-init-volumes
+    <<: [*defaults, *hardened]
+    cap_drop: ["ALL"]
+    cap_add: ["CHOWN", "DAC_OVERRIDE"]
+    volumes:
+      - affine-data:/volumes/affine-data
+      - affine-config:/volumes/affine-config
+    command: >
+      sh -c '
+        chown 1000:1000 /volumes/affine-data; touch /volumes/affine-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/affine-config; touch /volumes/affine-config/.keep-volume-initialized;
+      '
   affine:
     image: ghcr.io/toeverything/affine:stable
     container_name: affine
-    <<: *service-defaults
+    <<: [*defaults, *hardened]
+    user: "1000:1000"
     depends_on:
       affine-redis:
         condition: service_started
@@ -44,8 +58,10 @@ services:
       affine-migration:
         condition: service_completed_successfully
     volumes:
-      - affine-data:/root/.affine/storage
-      - affine-config:/root/.affine/config
+      - affine-data:/home/node/.affine/storage
+      - affine-config:/home/node/.affine/config
+    tmpfs:
+      - /app/src:noexec,size=10M
     environment:
       <<: *affine-env
     networks:
@@ -64,16 +80,20 @@ services:
           memory: 1G
   affine-migration:
     image: ghcr.io/toeverything/affine:stable
-    container_name: affine_migration_job
-    <<: *defaults
+    container_name: affine-db-migration-job
+    <<: [*defaults, *hardened]
+    user: "1000:1000"
     volumes:
-      - affine-data:/root/.affine/storage
-      - affine-config:/root/.affine/config
+      - affine-config:/home/node/.affine/config
+    tmpfs:
+      - /tmp:noexec,size=10M
     command: ["sh", "-c", "node ./scripts/self-host-predeploy.js"]
-    env_file:
-      - .env
     environment:
       <<: *affine-env
+      YARN_CACHE_FOLDER: /tmp/.yarn-cache
+      YARN_PREFIX: /tmp/.yarn-global
+    networks:
+      - affine_net
     depends_on:
       affine-postgres:
         condition: service_started
@@ -125,6 +145,7 @@ services:
 networks:
   affine_net:
     driver: bridge
+    internal: true
     ipam:
       config:
         - subnet: 172.20.0.0/28

@@ -20,11 +20,10 @@ volumes:
   outline-database-data:
 
 services:
-  # TODO: harden and run rootless
   outline:
     image: docker.getoutline.com/outlinewiki/outline:latest
     container_name: outline
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
     depends_on:
       - outline-postgres
       - outline-redis
@@ -106,6 +105,7 @@ services:
 networks:
   outline_net:
     driver: bridge
+    internal: true
     ipam:
       config:
         - subnet: 172.20.0.16/28
