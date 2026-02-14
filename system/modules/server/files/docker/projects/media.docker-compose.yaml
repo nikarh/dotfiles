@@ -77,15 +77,16 @@ services:
           memory: 1G
   feishin:
     image: "ghcr.io/jeffvli/feishin:latest"
-    <<: *service-defaults
     container_name: feishin
+    <<: [*service-defaults, *hardened]
+    read_only: false
+    user: "65534:65534"
     environment:
       SERVER_NAME: jellyfin
       SERVER_LOCK: true
       SERVER_TYPE: jellyfin # navidrome also works
       SERVER_URL: https://media.files.home.arhipov.net
-      PUID: "1000"
-      PGID: "1000"
+      ANALYTICS_DISABLED: true
       UMASK: "002"
       TZ: Europe/Riga
     labels:
@@ -93,7 +94,9 @@ services:
       - "traefik.http.services.feishin.loadbalancer.server.port=9180"
       - "traefik.http.routers.feishin.rule=Host(`music.${DOMAIN}`) || Host(`u.u8.lv`) || Host(`music.u8.lv`)"
       - "traefik.http.routers.feishin.entrypoints=https"
-    restart: unless-stopped
+    tmpfs:
+      - /var/cache/nginx:noexec,size=50M,uid=65534,gid=65534
+      - /run:noexec,size=1M,uid=65534,gid=65534
     deploy:
       resources:
         limits:
