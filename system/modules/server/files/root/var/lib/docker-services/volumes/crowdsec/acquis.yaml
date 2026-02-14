@@ -1,0 +1,13 @@
+# Read Traefik logs from the traefik container
+source: docker
+container_name:
+  - traefik
+labels:
+  type: traefik
+---
+# Read SFTP logs from the sftp container
+source: docker
+container_name:
+  - sftp
+labels:
+  type: sshd
