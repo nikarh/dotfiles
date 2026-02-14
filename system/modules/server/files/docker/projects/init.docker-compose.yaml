@@ -30,6 +30,8 @@ services:
       - vector-logs:/volumes/vector-logs
       - grafana-data:/volumes/grafana-data
       - syncthing-data:/volumes/syncthing-data
+      - esphome-data:/volumes/esphome-data
+      - esphome-cache:/volumes/esphome-data
       #- crowdsec-config:/volumes/crowdsec-config
       #- crowdsec-data:/volumes/crowdsec-data
       #- crowdsec-secrets:/volumes/crowdsec-secrets
@@ -44,5 +46,7 @@ services:
         chown 65534:65534 /volumes/traefik-data; touch /volumes/traefik-data/.keep-volume-initialized;
         chown 65534:65534 /volumes/vector-logs; touch /volumes/vector-logs/.keep-volume-initialized;
         chown 65534:65534 /volumes/grafana-data; touch /volumes/grafana-data/.keep-volume-initialized;
+        chown 65534:65534 /volumes/esphome-data; touch /volumes/esphome-data/.keep-volume-initialized;
+        chown 65534:65534 /volumes/esphome-cache; touch /volumes/esphome-cache/.keep-volume-initialized;
         chown 1000:1000 /volumes/syncthing-data; touch /volumes/syncthing-data/.keep-volume-initialized;
       '
