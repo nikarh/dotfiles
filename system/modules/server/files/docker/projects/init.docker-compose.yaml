@@ -6,6 +6,7 @@ x-defaults: &defaults
       max-file: ${LOG_MAX_FILE:-5}
 
 x-hardened: &hardened
+  read_only: true
   security_opt:
     - no-new-privileges:true
   cap_drop:
@@ -32,6 +33,7 @@ services:
       - syncthing-data:/volumes/syncthing-data
       - esphome-data:/volumes/esphome-data
       - esphome-cache:/volumes/esphome-data
+      - kavita-data:/volumes/kavita-data
       #- crowdsec-config:/volumes/crowdsec-config
       #- crowdsec-data:/volumes/crowdsec-data
       #- crowdsec-secrets:/volumes/crowdsec-secrets
@@ -48,5 +50,6 @@ services:
         chown 65534:65534 /volumes/grafana-data; touch /volumes/grafana-data/.keep-volume-initialized;
         chown 65534:65534 /volumes/esphome-data; touch /volumes/esphome-data/.keep-volume-initialized;
         chown 65534:65534 /volumes/esphome-cache; touch /volumes/esphome-cache/.keep-volume-initialized;
+        chown 65534:65534 /volumes/kavita-data; touch /volumes/kavita-data/.keep-volume-initialized;
         chown 1000:1000 /volumes/syncthing-data; touch /volumes/syncthing-data/.keep-volume-initialized;
       '

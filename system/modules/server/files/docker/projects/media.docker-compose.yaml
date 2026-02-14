@@ -11,6 +11,14 @@ x-service-defaults: &service-defaults
       max-file: ${LOG_MAX_FILE:-5}
   healthcheck:
     disable: true
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - NET_RAW
+
 volumes:
   jellyfin-transcodes:
     driver: local
@@ -96,7 +104,8 @@ services:
   kavita:
     image: jvmilazz0/kavita
     container_name: kavita
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: "65534:65534"
     environment:
       TZ: Europe/Riga
     volumes:
@@ -107,13 +116,15 @@ services:
       - "traefik.http.services.kavita.loadbalancer.server.port=5000"
       - "traefik.http.routers.kavita.rule=Host(`kavita.${DOMAIN}`) || Host(`books.u8.lv`)"
       - "traefik.http.routers.kavita.entrypoints=https"
-      # Has it's own auth, does not support any alternative auth or auto-login.
-      # TODO: Pass constant authorization header? Does it expire?
-      # - 'traefik.http.routers.kavita.middlewares=authelia@docker'
+    networks:
+      - media_net
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:
-          memory: 500M
+          memory: 1G
         reservations:
           memory: 256M
   tunnel:
@@ -407,6 +418,11 @@ services:
           memory: 256M
 
 networks:
+  media_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.160/28
   bitmagnet-postgres:
     ipam:
       driver: default

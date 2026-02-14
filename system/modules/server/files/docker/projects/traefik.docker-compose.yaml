@@ -44,6 +44,8 @@ services:
       monitoring_net:
       files_net:
       esphome_net:
+      media_net:
+        aliases: ["authelia.${DOMAIN}"]
     secrets:
       - CF_TOKEN
     environment:
@@ -79,3 +81,4 @@ networks:
   monitoring_net: {}
   files_net: {}
   esphome_net: {}
+  media_net: {}
