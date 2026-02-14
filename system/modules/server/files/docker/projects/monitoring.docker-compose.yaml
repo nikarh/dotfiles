@@ -127,9 +127,9 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     <<: [*service-defaults, *hardened]
+    user: "65534:65534"
     networks:
       - monitoring_net
-    user: "1000"
     environment:
       # Needs internet access to download th plugin
       GF_INSTALL_PLUGINS: "victoriametrics-logs-datasource"

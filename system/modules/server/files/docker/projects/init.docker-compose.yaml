@@ -28,6 +28,7 @@ services:
       - traefik-data:/volumes/traefik-data
       - fail2ban-db:/volumes/fail2ban-db
       - vector-logs:/volumes/vector-logs
+      - grafana-data:/volumes/grafana-data
     command: >
       sh -c '
         chown 1000:1000 /volumes/authelia-data; touch /volumes/authelia-data/.keep-volume-initialized;
@@ -38,4 +39,5 @@ services:
         chown 65534:65534 /volumes/traefik-data; touch /volumes/traefik-data/.keep-volume-initialized;
         chown 1000:1000 /volumes/fail2ban-db; touch /volumes/fail2ban-db/.keep-volume-initialized;
         chown 65534:65534 /volumes/vector-logs; touch /volumes/vector-logs/.keep-volume-initialized;
+        chown 65534:65534 /volumes/grafana-data; touch /volumes/grafana-data/.keep-volume-initialized;
       '
