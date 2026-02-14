@@ -28,11 +28,12 @@ services:
   mdns-repeater:
     image: angelnu/mdns_repeater
     container_name: mdns-repeater
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: 65534:65534
     network_mode: host
     environment:
       - hostNIC=eth0
-      - dockerNIC=${DOCKER_NIC}
+      - dockerNIC=br-esphome
     deploy:
       resources:
         limits:
@@ -44,7 +45,7 @@ services:
   homer:
     image: b4bz/homer
     container_name: homer
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
     user: "1000:1000"
     volumes:
       - /var/lib/docker-services/volumes/homer:/www/assets:ro
@@ -52,6 +53,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.homer.rule=Host(`home.arhipov.net`) || Host(`u8.lv`)"
       - "traefik.http.routers.homer.entrypoints=https"
+    networks:
+      - files_net
     deploy:
       resources:
         limits:
@@ -96,6 +99,8 @@ services:
       # Data
       - /var/data/home:/home
       - /var/data/shares/nikarh/Syncthing/My Music/NT Shared:/home/nt
+    networks:
+      - isolated_net
     deploy:
       resources:
         limits:
@@ -121,6 +126,8 @@ services:
       - "-d=/mnt/data/filebrowser.db"
       - "-c=/mnt/data/filebrowser.json"
       - "-p=8080"
+    networks:
+      - files_net
     deploy:
       resources:
         limits:
@@ -148,6 +155,8 @@ services:
       - "traefik.http.routers.syncthing.rule=Host(`syncthing.${DOMAIN}`)"
       - "traefik.http.routers.syncthing.entrypoints=https"
       - "traefik.http.routers.syncthing.middlewares=authelia@docker"
+    networks:
+      - isolated_net
     deploy:
       resources:
         limits:
@@ -157,7 +166,7 @@ services:
   esphome:
     image: esphome/esphome
     container_name: esphome
-    <<: *service-defaults
+    <<: [*service-defaults, *hardened]
     volumes:
       - esphome-data:/config
     labels:
@@ -166,9 +175,25 @@ services:
       - "traefik.http.routers.esphome.rule=Host(`esphome.${DOMAIN}`)"
       - "traefik.http.routers.esphome.entrypoints=https"
       - "traefik.http.routers.esphome.middlewares=authelia@docker"
+    networks:
+      - esphome_net
     deploy:
       resources:
         limits:
           memory: 2G
         reservations:
           memory: 50M
+
+networks:
+  files_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.128/28
+  esphome_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.144/28
+    driver_opts:
+      com.docker.network.bridge.name: "br-esphome"

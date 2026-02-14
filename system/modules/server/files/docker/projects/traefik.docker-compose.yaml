@@ -42,6 +42,8 @@ services:
       authelia_net:
       mirrors_net:
       monitoring_net:
+      files_net:
+      esphome_net:
     secrets:
       - CF_TOKEN
     environment:
@@ -75,3 +77,5 @@ networks:
   immich_net: {}
   authelia_net: {}
   monitoring_net: {}
+  files_net: {}
+  esphome_net: {}
