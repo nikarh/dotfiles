@@ -336,6 +336,7 @@
     "SETFL",
     "setsockopt",
     "sftpd",
+    "SFTPGO",
     "shellexpand",
     "Smol",
     "sockaddr",

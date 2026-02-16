@@ -18,6 +18,7 @@ x-hardened: &hardened
 volumes:
   filebrowser-data:
   syncthing-data:
+  sftpgo-data:
 
 services:
   # Also served via GH pages outside of NAT
@@ -97,6 +98,47 @@ services:
       resources:
         limits:
           memory: 100M
+        reservations:
+          memory: 50M
+  sftpgo:
+    image: drakkan/sftpgo:latest
+    container_name: sftpgo
+    <<: [*service-defaults, *hardened]
+    user: "1000:1000"
+    ports:
+      - "2022:2022"
+    environment:
+      TZ: Europe/Riga
+      SFTPGO_DATA_PROVIDER__DRIVER: sqlite
+      SFTPGO_DATA_PROVIDER__NAME: /var/lib/sftpgo/sftpgo.db
+      SFTPGO_HTTPD__BINDINGS__0__PORT: 8080
+      SFTPGO_SFTPD__BINDINGS__0__PORT: 2022
+      SFTPGO_HTTPD__BINDINGS__0__OIDC__CLIENT_ID: ${SFTPGO_OIDC_CLIENT_ID:-}
+      SFTPGO_HTTPD__BINDINGS__0__OIDC__CLIENT_SECRET: ${SFTPGO_OIDC_CLIENT_SECRET:-}
+      SFTPGO_HTTPD__BINDINGS__0__OIDC__CONFIG_URL: https://authelia.${DOMAIN}
+      SFTPGO_HTTPD__BINDINGS__0__OIDC__REDIRECT_BASE_URL: https://sftp.${DOMAIN}
+      SFTPGO_HTTPD__BINDINGS__0__OIDC__SCOPES: openid,profile,email,sftpgo
+      SFTPGO_HTTPD__BINDINGS__0__OIDC__USERNAME_FIELD: preferred_username
+      SFTPGO_HTTPD__BINDINGS__0__OIDC__ROLE_FIELD: sftpgo_role
+      SFTPGO_DEFAULT_ADMIN_USERNAME: ${SFTPGO_DEFAULT_ADMIN_USERNAME:-}
+      SFTPGO_DEFAULT_ADMIN_PASSWORD: ${SFTPGO_DEFAULT_ADMIN_PASSWORD:-}
+    volumes:
+      - sftpgo-data:/var/lib/sftpgo
+      - /var/data/home:/srv/sftpgo/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.sftpgo.loadbalancer.server.port=8080"
+      - "traefik.http.routers.sftpgo.rule=Host(`sftp.${DOMAIN}`)"
+      - "traefik.http.routers.sftpgo.entrypoints=https"
+      - "traefik.http.routers.sftpgo.middlewares=authelia@docker"
+    tmpfs:
+      - /tmp:noexec,size=20M,uid=1000,gid=1000
+    networks:
+      - files_net
+    deploy:
+      resources:
+        limits:
+          memory: 500M
         reservations:
           memory: 50M
   filebrowser:
