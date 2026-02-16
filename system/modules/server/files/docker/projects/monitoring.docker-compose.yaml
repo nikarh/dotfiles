@@ -164,7 +164,7 @@ services:
     cap_add: ["NET_ADMIN", "NET_RAW"]
     network_mode: host
     security_opt:
-    - no-new-privileges:true
+      - no-new-privileges:true
     environment:
       <<: *common_env
       VERBOSITY: -v
@@ -188,8 +188,7 @@ services:
     <<: [*service-defaults, *hardened]
     networks:
       - monitoring_net
-    cap_add:
-      - SYS_RAWIO
+    cap_add: ["DAC_OVERRIDE", "SYS_RAWIO"]
     devices:
       - /dev/sda:/dev/sda:ro
       - /dev/sdb:/dev/sdb:ro
