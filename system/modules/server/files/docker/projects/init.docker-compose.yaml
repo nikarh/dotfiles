@@ -39,6 +39,7 @@ services:
       - readarr-data:/volumes/readarr-data
       - prowlarr-data:/volumes/prowlarr-data
       - healthmon-data:/volumes/healthmon-data
+      - sftpgo-data:/volumes/sftpgo-data
       #- crowdsec-config:/volumes/crowdsec-config
       #- crowdsec-data:/volumes/crowdsec-data
       #- crowdsec-secrets:/volumes/crowdsec-secrets
@@ -70,6 +71,7 @@ services:
         chown 1000:1000 /volumes/readarr-data; touch /volumes/readarr-data/.keep-volume-initialized;
         chown 1000:1000 /volumes/prowlarr-data; touch /volumes/prowlarr-data/.keep-volume-initialized;
         chown -R 65534:65534 /volumes/healthmon-data; touch /volumes/healthmon-data/.keep-volume-initialized;
+        chown 1000:1000 /volumes/sftpgo-data; touch /volumes/sftpgo-data/.keep-volume-initialized;
       '
     network_mode: none
     labels:
