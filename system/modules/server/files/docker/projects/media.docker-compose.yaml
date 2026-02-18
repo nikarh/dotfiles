@@ -187,7 +187,7 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     tmpfs:
-      - /tmp:noexec,size=10M
+      - /tmp/gluetun:size=2M
     networks:
       - media_net
     deploy:
@@ -296,6 +296,7 @@ services:
       LOG_LEVEL: info
       LOG_HTML: "false"
       CAPTCHA_SOLVER: none
+      TZ: Europe/Riga
     networks:
       - media_net
     deploy:
