@@ -85,6 +85,8 @@ services:
           memory: 1G
         reservations:
           memory: 100M
+    labels:
+      - healthmon.role=task
   affine-redis:
     image: valkey/valkey:alpine
     container_name: affine-redis

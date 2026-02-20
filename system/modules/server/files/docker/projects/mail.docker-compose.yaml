@@ -43,6 +43,7 @@ services:
     image: dovecot/dovecot
     container_name: dovecot
     <<: [*service-defaults, *hardened]
+    cap_add: [SYS_CHROOT]
     user: "1000:1000"
     volumes:
       - mail-data:/home

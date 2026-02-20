@@ -22,6 +22,7 @@ volumes:
   grafana-data:
   scrutiny-config:
   scrutiny-influxdb:
+  healthmon-data:
 services:
   # Basic monitoring
   netdata:
@@ -214,7 +215,36 @@ services:
           memory: 500M
         reservations:
           memory: 100M
-
+  healthmon:
+    image: ghcr.io/nikarh/healthmon:dev
+    container_name: healthmon
+    <<: [*service-defaults, *hardened]
+    environment:
+      HM_DB_PATH: /data/healthmon.db
+      HM_TG_ENABLED: false
+      TZ: Europe/Riga
+    user: "65534:65534"
+    volumes:
+      - healthmon-data:/data
+      - "socket-proxy.run:/var/run"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.healthmon.loadbalancer.server.port=8080"
+      - "traefik.http.routers.healthmon.rule=Host(`healthmon.${DOMAIN}`)"
+      - "traefik.http.routers.healthmon.entrypoints=https"
+      - "traefik.http.routers.healthmon.middlewares=authelia@docker"
+    depends_on:
+      docker-socket-proxy:
+        condition: "service_healthy"
+        restart: true
+      init-volumes:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+        reservations:
+          memory: 10M
 networks:
   ultra_isolated_net: {}
   monitoring_net:

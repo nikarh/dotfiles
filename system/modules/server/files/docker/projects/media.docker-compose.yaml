@@ -58,6 +58,8 @@ services:
           memory: 20M
         reservations:
           memory: 10M
+    labels:
+      - healthmon.role=task
   jellyfin:
     image: jellyfin/jellyfin:10.11
     container_name: jellyfin

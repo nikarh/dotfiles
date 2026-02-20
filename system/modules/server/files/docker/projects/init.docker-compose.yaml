@@ -39,6 +39,7 @@ services:
       - bazarr-data:/volumes/bazarr-data
       - readarr-data:/volumes/readarr-data
       - prowlarr-data:/volumes/prowlarr-data
+      - healthmon-data:/volumes/healthmon-data
       #- crowdsec-config:/volumes/crowdsec-config
       #- crowdsec-data:/volumes/crowdsec-data
       #- crowdsec-secrets:/volumes/crowdsec-secrets
@@ -65,11 +66,13 @@ services:
         chown 1000:1000 /volumes/qbittorrent-data; touch /volumes/qbittorrent-data/.keep-volume-initialized;
         chown 1000:1000 /volumes/qbittorrent-vuetorrent; touch /volumes/qbittorrent-vuetorrent/.keep-volume-initialized;
         chown -R 65534:65534 /volumes/roundcube-db; touch /volumes/roundcube-db/.keep-volume-initialized;
-        chown -R 65534:65534 /volumes/roundcube-db; touch /volumes/roundcube-db/.keep-volume-initialized;
         chown 1000:1000 /volumes/sonarr-data; touch /volumes/sonarr-data/.keep-volume-initialized;
         chown 1000:1000 /volumes/radarr-data; touch /volumes/radarr-data/.keep-volume-initialized;
         chown 1000:1000 /volumes/bazarr-data; touch /volumes/bazarr-data/.keep-volume-initialized;
         chown 1000:1000 /volumes/readarr-data; touch /volumes/readarr-data/.keep-volume-initialized;
         chown 1000:1000 /volumes/prowlarr-data; touch /volumes/prowlarr-data/.keep-volume-initialized;
+        chown -R 65534:65534 /volumes/healthmon-data; touch /volumes/healthmon-data/.keep-volume-initialized;
       '
     network_mode: none
+    labels:
+      - healthmon.role=task

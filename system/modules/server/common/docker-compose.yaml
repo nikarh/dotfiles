@@ -34,6 +34,7 @@ services:
     image: alpine/curl
     container_name: authelia-pam-download
     <<: [*hardened]
+    cap_add: [CHOWN]
     volumes:
       - authelia-pam:/auth:rw
     environment:
@@ -45,9 +46,12 @@ services:
         curl -L -O "https://github.com/nikarh/authelia-pam/releases/download/v$$VERSION/authelia-pam-$(uname -m)-unknown-linux-musl-v$$VERSION-rustls.tar.gz"
         tar -zxvf authelia-pam-$(uname -m)-unknown-linux-musl-v$$VERSION-rustls.tar.gz;
         rm *.tar.gz;
+        chown 1000:1000 /auth/*
       '
     networks:
       - isolated_net
+    labels:
+      - healthmon.role=task
   # Read-only docker.sock proxy
   docker-socket-proxy:
     image: "11notes/socket-proxy:2.1.6"
