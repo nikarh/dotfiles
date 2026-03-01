@@ -27,7 +27,7 @@ services:
     command: >
       --requirepass ${IMMICH_REDIS_PASSWORD} --save "" --appendonly no
     tmpfs:
-      - /data:size=10M
+      - /data:noexec,size=10M,uid=999,gid=999
     networks:
       - immich_net
     deploy:

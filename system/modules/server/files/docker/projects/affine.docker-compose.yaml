@@ -95,7 +95,7 @@ services:
     command: >
       --requirepass ${AFFINE_REDIS_PASSWORD} --save "" --appendonly no
     tmpfs:
-      - /data:noexec,size=10M
+      - /data:noexec,size=10M,uid=999,gid=999
     networks:
       - affine_net
     deploy:
