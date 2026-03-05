@@ -178,6 +178,7 @@ bindsym $mod+Shift+r reload
 bindsym $mod+Shift+e exec "swaynag -t warning -m 'End session?' -B 'Yes, exit' 'swaymsg exit'"
 
 bindsym $mod+r mode "resize"
+bindsym $mod+Shift+Delete exec swaylock
 
 mode "resize" {
         bindsym h resize shrink width 10 px or 10 ppt

@@ -1,0 +1,24 @@
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
+
+services:
+  # Ensure volumes have correct ownership
+  init-volumes:
+    image: alpine
+    container_name: init-volumes
+    <<: [*hardened]
+    cap_add: ["CHOWN", "DAC_OVERRIDE"]
+    volumes:
+      - authelia-data:/volumes/authelia-data
+    command: >
+      sh -c '
+        chown 1000:1000 /volumes/authelia-data; touch /volumes/authelia-data/.keep-volume-initialized;
+      '
+    network_mode: none
+    labels:
+      - healthmon.role=task
