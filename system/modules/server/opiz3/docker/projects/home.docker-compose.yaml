@@ -1,24 +1,32 @@
 x-service-defaults: &service-defaults
   restart: unless-stopped
-  logging:
-    driver: "json-file"
-    options:
-      max-size: ${LOG_MAX_SIZE:-200k}
-      max-file: ${LOG_MAX_FILE:-5}
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
 secrets:
   EUFY_USERNAME:
     file: ./docker/secrets/eufy_username
   EUFY_PASSWORD:
     file: ./docker/secrets/eufy_password
+
 volumes:
   mqtt-certs:
   mosquitto-data:
   zigbee2mqtt-data:
   hass-data:
   eufy-data:
+
 services:
   init-mqtt-certs:
     image: alpine
+    container_name: init-mqtt-certs
+    <<: [*hardened]
+    read_only: false
     command: >
       sh -c "
         apk add --no-cache openssl;
@@ -36,59 +44,18 @@ services:
     volumes:
       - mqtt-certs:/certs
       - /var/lib/docker-services/volumes/init-mqtt-certs:/cfg:ro
-  mqtt:
-    image: eclipse-mosquitto:2.0.15
-    container_name: mqtt
     networks:
-      default:
-        aliases:
-          - mqtt.home.arhipov.net
-    << : *service-defaults
-    ports:
-      - '8883:8883'
-    command: >
-      sh -c "
-        mkdir -p /mosquitto/tls/
-        cp /mosquitto/tls-orig/* /mosquitto/tls/;
-        chown 1883:1883 /mosquitto/tls/*;
-
-        cp /mosquitto/config/users.conf /mosquitto/users.conf
-        chown mosquitto:mosquitto /mosquitto/users.conf
-        chmod 660 /mosquitto/users.conf;
-        /usr/bin/mosquitto_passwd -U /mosquitto/users.conf;
-   
-        /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf;
-      "
-    volumes:
-      - mosquitto-data:/mosquitto/data
-      - mqtt-certs:/mosquitto/tls-orig:ro
-      - /var/lib/docker-services/volumes/mosquitto:/mosquitto/config:ro
-    depends_on:
-      init-mqtt-certs:
-        condition: service_completed_successfully
-  zigbee2mqtt:
-    image: koenkk/zigbee2mqtt
-    container_name: zigbee2mqtt
-    << : *service-defaults
-    devices:
-      - /dev/ttyUSB0:/dev/ttyUSB0
-    volumes:
-      - mqtt-certs:/etc/ssl/mqtt-certs
-      - zigbee2mqtt-data:/app/data
-      - /var/lib/docker-services/volumes/zigbee2mqtt/secret.yaml:/app/data/secret.yaml:ro
-      - /dev/serial:/dev/serial
-      - /etc/localtime:/etc/localtime:ro
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.zigbee2mqtt.loadbalancer.server.port=8080'
-      - 'traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.${DOMAIN}`)'
-      - 'traefik.http.routers.zigbee2mqtt.entrypoints=https'
-      - 'traefik.http.routers.zigbee2mqtt.middlewares=authelia@docker'
-    depends_on:
-      mqtt:
-        condition: service_started
+      - isolated_net
+    deploy:
+      resources:
+        limits:
+          memory: 50M
+        reservations:
+          memory: 10M
   init-hass-volume:
     image: alpine
+    container_name: init-gass-volume
+    <<: [*hardened]
     command: >
       sh -c "
         if [ -z \"$$(ls -A /hass)\" ]; then
@@ -98,10 +65,86 @@ services:
     volumes:
       - /var/lib/docker-services/volumes/init-hass:/init-hass:ro
       - hass-data:/hass
+    network_mode: none
+    deploy:
+      resources:
+        limits:
+          memory: 50M
+        reservations:
+          memory: 10M
+  mqtt:
+    image: eclipse-mosquitto:2.1.2-alpine
+    container_name: mqtt
+    <<: [*service-defaults, *hardened]
+    cap_add: ["CHOWN", "SETGID", "SETUID", "DAC_OVERRIDE"]
+    ports:
+      - "8883:8883"
+    command: >
+      sh -c "
+        mkdir -p /mosquitto-tmp/tls/;
+        cp /mosquitto/tls-orig/* /mosquitto-tmp/tls/;
+
+        cp /mosquitto/config/users.conf /mosquitto-tmp/users.conf;
+        chmod 660 /mosquitto-tmp/users.conf;
+        /usr/bin/mosquitto_passwd -U /mosquitto-tmp/users.conf;
+
+        chown -R mosquitto:mosquitto /mosquitto-tmp;
+        /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf;
+      "
+    volumes:
+      - mosquitto-data:/mosquitto/data
+      - mqtt-certs:/mosquitto/tls-orig:ro
+      - /var/lib/docker-services/volumes/mosquitto:/mosquitto/config:ro
+    tmpfs:
+      - /mosquitto-tmp:size=10M,uid=1883,gid=1883,rw
+      - /tmp:size=10M,uid=1883,gid=1883,rw
+    depends_on:
+      init-mqtt-certs:
+        condition: service_completed_successfully
+    networks:
+      pi_net:
+        aliases:
+          - mqtt.home.arhipov.net
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+        reservations:
+          memory: 10M
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt
+    container_name: zigbee2mqtt
+    <<: [*service-defaults, *hardened]
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    volumes:
+      - /dev/serial:/dev/serial
+      - mqtt-certs:/etc/ssl/mqtt-certs:ro
+      - zigbee2mqtt-data:/app/data
+      - /var/lib/docker-services/volumes/zigbee2mqtt/secret.yaml:/app/data/secret.yaml:ro
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.zigbee2mqtt.loadbalancer.server.port=8080"
+      - "traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.${DOMAIN}`)"
+      - "traefik.http.routers.zigbee2mqtt.entrypoints=https"
+      - "traefik.http.routers.zigbee2mqtt.middlewares=authelia@docker"
+    depends_on:
+      mqtt:
+        condition: service_started
+    networks:
+      - pi_net
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+        reservations:
+          memory: 100M
   hass:
     image: homeassistant/home-assistant:stable
     container_name: hass
-    << : *service-defaults
+    <<: [*service-defaults, *hardened]
+    read_only: false
     ports:
       # Apple HomeKit
       - 21063:21063
@@ -110,19 +153,27 @@ services:
       - hass-data:/config
       - /etc/localtime:/etc/localtime:ro
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.services.hass.loadbalancer.server.port=8080'
-      - 'traefik.http.routers.hass.rule=Host(`hass.${DOMAIN}`) || Host(`h.u8.lv`)'
-      - 'traefik.http.routers.hass.entrypoints=https'
+      - "traefik.enable=true"
+      - "traefik.http.services.hass.loadbalancer.server.port=8080"
+      - "traefik.http.routers.hass.rule=Host(`hass.${DOMAIN}`) || Host(`h.u8.lv`)"
+      - "traefik.http.routers.hass.entrypoints=https"
+    networks:
+      - pi_net
     depends_on:
       init-hass-volume:
         condition: service_completed_successfully
       init-mqtt-certs:
         condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+        reservations:
+          memory: 500M
   eufy:
     image: bropat/eufy-security-ws:latest
     container_name: eufy-security-ws
-    << : *service-defaults
+    <<: [*service-defaults, *hardened]
     secrets:
       - EUFY_USERNAME
       - EUFY_PASSWORD
@@ -136,12 +187,36 @@ services:
       - ACCEPT_INVITATIONS=false
     volumes:
       - eufy-data:/data
+    networks:
+      - pi_net
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+        reservations:
+          memory: 50M
 
   mdns-repeater:
     image: angelnu/mdns_repeater
     container_name: mdns-repeater
-    << : *service-defaults
+    <<: [*service-defaults, *hardened]
+    user: 65534:65534
     network_mode: host
     environment:
-    - hostNIC=eth0
-    - dockerNIC=${DOCKER_NIC}
+      - hostNIC=eth0
+      - dockerNIC=br-home
+    deploy:
+      resources:
+        limits:
+          memory: 10M
+        reservations:
+          memory: 10M
+
+networks:
+  pi_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/27
+    driver_opts:
+      com.docker.network.bridge.name: "br-home"

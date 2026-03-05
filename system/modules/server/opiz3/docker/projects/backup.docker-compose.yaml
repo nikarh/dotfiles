@@ -1,10 +1,13 @@
 x-service-defaults: &service-defaults
   restart: unless-stopped
-  logging:
-    driver: "json-file"
-    options:
-      max-size: ${LOG_MAX_SIZE:-200k}
-      max-file: ${LOG_MAX_FILE:-5}
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
 secrets:
   SSH_KEY:
     file: ../common/docker/secrets/backup_rsa
@@ -12,7 +15,7 @@ services:
   backup: &backup
     image: nikarh/fileserver-sftpd-backup
     container_name: backup
-    << : *service-defaults
+    <<: [*service-defaults, *hardened]
     environment:
       MAXIMUM_BACKUP_NUMBER: 3
       SFTP_HOST: files.home.arhipov.net
@@ -29,8 +32,17 @@ services:
       - authelia-data:/volumes/authelia-data:ro
     secrets:
       - SSH_KEY
+    networks:
+      - isolated_net
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 40M
   restore:
     <<: *backup
+    cap_add: ["CHOWN", "SETGID", "SETUID", "DAC_OVERRIDE"]
     restart: on-failure:1
     profiles: 
       - restore

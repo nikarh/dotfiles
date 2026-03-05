@@ -58,7 +58,7 @@ services:
     container_name: docker-socket-proxy
     <<: [*service-defaults, *hardened]
     cap_add: ["CHOWN", "SETGID", "SETUID", "DAC_OVERRIDE"]
-    user: "0:972"
+    user: ${DOCKER_USER}
     environment:
       TZ: "Europe/Riga"
       SOCKET_PROXY_UID: "65534"
@@ -68,6 +68,12 @@ services:
     volumes:
       - "/var/run/docker.sock:/run/docker.sock:ro"
       - "socket-proxy.run:/run/proxy"
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+        reservations:
+          memory: 20M
   # Auto-update containers.
   watchtower:
     image: nickfedor/watchtower
@@ -103,9 +109,10 @@ services:
       DOMAIN2_PROXIED: "true"
       ENABLE_DOCKER_POLL: false
       ENABLE_TRAEFIK_POLL: true
-      TRAEFIK_POLL_URL: https://traefik.files.home.arhipov.net
+      TRAEFIK_POLL_URL: https://traefik.${DOMAIN}
       TRAEFIK_EXCLUDED_HOST1: ^u8\.lv$
       TRAEFIK_EXCLUDED_HOST2: ^home\.arhipov\.net$
+      CF_TOKEN_FILE: /run/secrets/CF_TOKEN
     secrets:
       - CF_TOKEN
     networks:
@@ -117,9 +124,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 100M
-        reservations:
           memory: 50M
+        reservations:
+          memory: 20M
   authelia:
     image: authelia/authelia:4.39.7
     container_name: authelia
@@ -164,9 +171,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 200M
-        reservations:
           memory: 100M
+        reservations:
+          memory: 60M
 
 networks:
   # No internet/LAN access, no inter-container communication

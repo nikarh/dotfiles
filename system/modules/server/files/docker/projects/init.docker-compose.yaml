@@ -5,7 +5,6 @@ x-hardened: &hardened
   cap_drop:
     - ALL
 
-
 services:
   # Ensure volumes have correct ownership
   init-volumes:
@@ -51,7 +50,6 @@ services:
         chown 911:911 /volumes/immich-model-cache; touch /volumes/immich-model-cache/.keep-volume-initialized;
         chown 1000:1000 /volumes/victoria-logs-data; touch /volumes/victoria-logs-data/.keep-volume-initialized;
         chown 1000:1000 /volumes/fail2ban-db; touch /volumes/fail2ban-db/.keep-volume-initialized;
-        chown 65534:65534 /volumes/traefik-data; touch /volumes/traefik-data/.keep-volume-initialized;
         chown 65534:65534 /volumes/traefik-data; touch /volumes/traefik-data/.keep-volume-initialized;
         chown 65534:65534 /volumes/vector-logs; touch /volumes/vector-logs/.keep-volume-initialized;
         chown 65534:65534 /volumes/grafana-data; touch /volumes/grafana-data/.keep-volume-initialized;

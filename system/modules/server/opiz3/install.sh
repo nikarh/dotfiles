@@ -5,13 +5,6 @@ sudo cp -ufrT "$ROOT/root/" /
 enable-unit --now systemd-resolved
 enable-unit --now systemd-networkd
 
-DOCKER_NIC="$(ip --json link | jq -r '([.[].ifname | select(. | startswith("br-"))][0])')"
-sed "s/DOCKER_NIC=.*/DOCKER_NIC=${DOCKER_NIC}/g" "$ROOT/.env.default" > "$ROOT/.env.new"
-if ! diff -q "$ROOT/.env.new" "$ROOT/.env" > /dev/null 2>&1; then
-    echo "Moving env"
-    mv "$ROOT/.env.new" "$ROOT/.env"
-fi
-
 if [[ "$RESTORE" == "true" ]]; then
     docker-compose \
         --project-directory="$ROOT" \
