@@ -59,4 +59,9 @@ docker-compose \
     --project-directory="$ROOT" \
     --env-file="$ROOT/.env" \
     $(find "$ROOT/docker/projects" -name '*.docker-compose.yaml' -exec echo -f {} \;) \
+    pull
+docker-compose \
+    --project-directory="$ROOT" \
+    --env-file="$ROOT/.env" \
+    $(find "$ROOT/docker/projects" -name '*.docker-compose.yaml' -exec echo -f {} \;) \
     up -d
