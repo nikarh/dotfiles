@@ -191,6 +191,7 @@
     "Hasher",
     "hcfy",
     "healthcheck",
+    "healthmon",
     "hecs",
     "heliconia",
     "HKEY",
@@ -410,6 +411,7 @@
     "YCCK",
     "yolo",
     "yzhang",
+    "zeroclaw",
     "zipfile",
     "zustand",
     "Zval"

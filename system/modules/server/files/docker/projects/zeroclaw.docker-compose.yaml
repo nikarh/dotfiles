@@ -1,0 +1,52 @@
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+
+x-hardened: &hardened
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
+volumes:
+  zeroclaw-data:
+
+services:
+  zeroclaw:
+    image: ghcr.io/zeroclaw-labs/zeroclaw:latest
+    container_name: zeroclaw
+    <<: [*service-defaults, *hardened]
+    user: "65534:65534"
+    environment:
+      PROVIDER: "openai-codex"
+      ZEROCLAW_ALLOW_PUBLIC_BIND: "true"
+      ZEROCLAW_GATEWAY_PORT: "8080"
+      ZEROCLAW_GATEWAY_REQUIRE_PAIRING: "false"
+      ZEROCLAW_WORKSPACE: "/zeroclaw-data/workspace"
+      HOME: "/zeroclaw-data"
+    volumes:
+      - zeroclaw-data:/zeroclaw-data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.zeroclaw.loadbalancer.server.port=8080"
+      - "traefik.http.routers.zeroclaw.rule=Host(`ai.u8.lv`) || Host(`zeroclaw.${DOMAIN}`)"
+      - "traefik.http.routers.zeroclaw.entrypoints=https"
+      - "traefik.http.routers.zeroclaw.middlewares=authelia@docker"
+    networks:
+      - zeroclaw_net
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+
+networks:
+  zeroclaw_net:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.20.0.224/28

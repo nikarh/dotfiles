@@ -50,6 +50,7 @@ services:
         aliases: ["authelia.${DOMAIN}"]
       switcheroo_net:
         aliases: ["torrents.${DOMAIN}"]
+      zeroclaw_net:
     secrets:
       - CF_TOKEN
     environment:
