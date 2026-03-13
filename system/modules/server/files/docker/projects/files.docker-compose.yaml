@@ -147,7 +147,7 @@ services:
       - "traefik.http.routers.syncthing.entrypoints=https"
       - "traefik.http.routers.syncthing.middlewares=authelia@docker"
     networks:
-      - isolated_net
+      - files_net
     depends_on:
       init-volumes:
         condition: service_completed_successfully
