@@ -19,16 +19,13 @@ pkg alacritty xterm-alacritty-symlink \
 # Themes and fonts
 pkg lxappearance \
     qt5ct qt6ct \
-    kvantum-theme-arc kvantum-qt5 \
+    kvantum-theme-arc `# seems this is a goner` \
+    kvantum-qt5 \
     noto-fonts noto-fonts-emoji noto-fonts-cjk \
     ttf-dejavu ttf-hack-nerd \
-    ttf-ms-win10-auto \
     dracula-gtk-theme dracula-cursors-git dracula-icons-git
 
 pkg openscad-git openscad-bosl2-git
-
-# Lock screen on dbus events
-pkg-local "$ROOT/pkg/micro-locker"
 
 # Copy config
 sudo cp -ufrT "$ROOT/root/" /

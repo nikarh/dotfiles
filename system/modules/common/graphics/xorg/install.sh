@@ -5,6 +5,9 @@ pkg xorg-server xorg-server-common xorg-server-xephyr xf86-video-vesa \
     xorg-xdpyinfo autorandr arandr brightnessctl autocutsel \
     xdotool
 
+# Lock screen on dbus events
+pkg micro-locker xorg-on-input-hierarchy-change
+
 # WM
 pkg i3-wm xkb-switch betterlockscreen picom
 

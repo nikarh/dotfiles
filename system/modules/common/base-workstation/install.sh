@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-pkg pacman-contrib asp \
+pkg pacman-contrib \
     base-devel \
     inotify-tools
 

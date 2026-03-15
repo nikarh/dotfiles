@@ -3,6 +3,5 @@ pkg sway swayidle swaybg swaylock \
     nwg-displays shikane \
     xdg-desktop-portal-wlr \
     xdg-desktop-portal-gtk \
-    wl-clip-persist wl-clipboard
-
-pkg-local "$ROOT/pkg/sway-nvidia-session"
+    wl-clip-persist wl-clipboard \
+    sway-nvidia-session

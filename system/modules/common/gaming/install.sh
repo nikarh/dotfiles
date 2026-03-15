@@ -6,7 +6,7 @@ sudo cp -ufrT "$ROOT/root/" /
 pkg joystickwake gamemode mangohud xpadneo-dkms unclutter gamescope
 pkg cemu retroarch retroarch-assets-ozone libretro-picodrive
 
-pkg-local "$ROOT/pkg/brie-bin"
+pkg brie-bin
 
 if [ -n "$ARGS_streaming" ]; then
     # Game streaming
