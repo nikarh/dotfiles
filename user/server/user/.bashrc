@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+export HISTFILE=~/.cache/.bash_history
+
 export EDITOR="nvim"
 export VISUAL="nvim"
 
@@ -17,15 +20,14 @@ trysource ~/.config/bash/aliases
 trysource ~/.config/bash-sensible/sensible.bash
 shopt -u cdable_vars
 
-trysource ~/.fzf.bash
-trysource /usr/share/fzf/key-bindings.bash
-
 eval "$(starship init bash)"
+
+eval "$(direnv hook bash)"
 eval "$(zoxide init bash)"
 
-if type -P direnv > /dev/null; then
-    eval "$(direnv hook bash)"
-fi
+trysource /usr/share/bash-preexec/bash-preexec.sh
+eval "$(atuin init bash --disable-up-arrow)"
+
 
 if type -P fd > /dev/null; then
     FZF_CTRL_T_COMMAND="fd"
