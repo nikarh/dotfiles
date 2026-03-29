@@ -100,7 +100,7 @@ services:
         limits:
           memory: 20G # Should be enough for transcoding
         reservations:
-          memory: 1G
+          memory: 5G
   feishin:
     image: "ghcr.io/jeffvli/feishin:latest"
     container_name: feishin
