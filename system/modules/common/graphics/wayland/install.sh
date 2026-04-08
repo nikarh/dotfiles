@@ -4,4 +4,5 @@ pkg sway swayidle swaybg swaylock \
     xdg-desktop-portal-wlr \
     xdg-desktop-portal-gtk \
     wl-clip-persist wl-clipboard \
-    sway-nvidia-session
+    sway-nvidia-session \
+    pw-sinksource-status

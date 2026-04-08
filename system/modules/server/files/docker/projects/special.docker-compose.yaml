@@ -22,7 +22,7 @@ services:
       - /var/lib/docker-services/volumes/miniserve/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
       - /var/smalldata/Games:/usr/local/apache2/htdocs:ro
     tmpfs:
-      - /run/httpd
+      - /run/httpd:size=1M,uid=65534,gid=65534
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.miniserve.loadbalancer.server.port=8080"
