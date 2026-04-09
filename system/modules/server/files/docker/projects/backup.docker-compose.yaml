@@ -103,7 +103,6 @@ services:
     volumes:
       - /var/lib/docker-services/volumes/rclone:/config/rclone
       - /var/data/shares/nikarh/Documents:/backup/Documents
-      - /var/data/shares/nikarh/Syncthing/My Music/Projects/Mixdown:/backup/Mixdown
       - /var/data/shares/nikarh/Syncthing/KeePass:/backup/KeePass
       - /var/data/home/nikarh/data/Music/Melissa Cross/Baritone:/backup/Vocal Warm-Ups
     command: >
