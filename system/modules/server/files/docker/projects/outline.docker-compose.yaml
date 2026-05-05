@@ -64,6 +64,8 @@ services:
       - "traefik.docker.network=outline_net"
     networks:
       - outline_net
+    tmpfs:
+      - /home/nodejs/.yarn:rw,size=100M,uid=1001,gid=1001
     deploy:
       resources:
         limits:
