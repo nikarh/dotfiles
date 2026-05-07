@@ -44,9 +44,8 @@ entryPoints:
               - "*.home.arhipov.net"
               - "*.files.home.arhipov.net"
               - "*.pi.home.arhipov.net"
-              - "*.rpi.home.arhipov.net"
-              - "*.opi.home.arhipov.net"
-              - "u8.lv"
+          - main: "u8.lv"
+            sans:
               - "*.u8.lv"
     proxyProtocol:
       trustedIPs:

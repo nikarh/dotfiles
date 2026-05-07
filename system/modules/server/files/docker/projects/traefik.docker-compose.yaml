@@ -30,6 +30,8 @@ services:
       - traefik-data:/data
       - /var/lib/docker-services/volumes/traefik:/etc/traefik:ro
       - "socket-proxy.run:/run/proxy"
+    dns:
+      - 1.1.1.1
     networks:
       files_default:
       affine_net:
