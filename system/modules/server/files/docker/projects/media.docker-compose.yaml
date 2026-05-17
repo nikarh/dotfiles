@@ -214,21 +214,19 @@ services:
         reservations:
           memory: 10M
   qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent
+    image: ghcr.io/qbittorrent/docker-qbittorrent-nox
     container_name: qbittorrent
     <<: [*service-defaults, *hardened]
     user: "1000:1000"
     environment:
-      HOME: /config
-      TZ: Europe/Riga
-    entrypoint: ""
-    command: ["/usr/bin/qbittorrent-nox", "--webui-port=8080"]
+      QBT_LEGAL_NOTICE: confirm
+      QBT_WEBUI_PORT: 8080
     volumes:
       - qbittorrent-data:/config/qBittorrent
       - /var/data/shares/tmp:/downloads
       - qbittorrent-vuetorrent:/vuetorrent
     tmpfs:
-      - /config/.cache:noexec,size=10M,uid=1000,gid=1000
+      - /config/qBittorrent/cache:noexec,size=10M,uid=1000,gid=1000
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.torrents.loadbalancer.server.port=8080"
@@ -250,15 +248,13 @@ services:
         reservations:
           memory: 1G
   qbittorrent-raw:
-    image: lscr.io/linuxserver/qbittorrent
+    image: ghcr.io/qbittorrent/docker-qbittorrent-nox
     container_name: qbittorrent-raw
     <<: [*service-defaults, *hardened]
     user: "1000:1000"
     environment:
-      HOME: /config
-      TZ: Europe/Riga
-    entrypoint: ""
-    command: ["/usr/bin/qbittorrent-nox", "--webui-port=8080"]
+      QBT_LEGAL_NOTICE: confirm
+      QBT_WEBUI_PORT: 8080
     ports:
       - 49152:49152/tcp
       - 49152:49152/udp
@@ -267,7 +263,7 @@ services:
       - /var/data/shares/tmp:/downloads
       - qbittorrent-vuetorrent:/vuetorrent
     tmpfs:
-      - /config/.cache:noexec,size=10M,uid=1000,gid=1000
+      - /config/qBittorrent/cache:noexec,size=10M,uid=1000,gid=1000
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.torrents-raw.loadbalancer.server.port=8080"
