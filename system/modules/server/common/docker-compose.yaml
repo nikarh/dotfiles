@@ -189,6 +189,7 @@ networks:
   # No inter-container communication
   isolated_net:
     driver: bridge
+    enable_ipv6: false
     ipam:
       config:
         - subnet: 172.20.2.0/24

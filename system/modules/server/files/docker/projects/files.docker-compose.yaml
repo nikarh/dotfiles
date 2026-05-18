@@ -92,7 +92,9 @@ services:
       - /var/data/home:/home
       - /var/data/shares/nikarh/Syncthing/My Music/NT Shared:/home/nt
     networks:
-      - files_net
+      files_net:
+      backup_net:
+        aliases: ["files"]
     deploy:
       resources:
         limits:

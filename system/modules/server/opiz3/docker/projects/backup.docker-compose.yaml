@@ -11,19 +11,20 @@ x-hardened: &hardened
 secrets:
   SSH_KEY:
     file: ../common/docker/secrets/backup_rsa
+
 services:
-  backup: &backup
-    image: nikarh/fileserver-sftpd-backup
-    container_name: backup
+  volume-backup: &volume-backup
+    image: ghcr.io/nikarh/docker-volume-backups:main
+    container_name: volume-backup
     <<: [*service-defaults, *hardened]
     environment:
-      MAXIMUM_BACKUP_NUMBER: 3
-      SFTP_HOST: files.home.arhipov.net
-      SFTP_PORT: 2222
-      SFTP_USER: backups
-      SFTP_ROOT: /data/${DOMAIN}/
+      STORAGE_DRIVER: sftp
+      SFTP_URL: "ssh://backups@192.168.1.19:2222/data/${DOMAIN}-v2"
+      SFTP_PRIVATE_KEY_FILE: /run/secrets/SSH_KEY
+      RETENTION_POLICY: count
+      RETENTION_COUNT: 3
+      BACKUP_CRON: "0 1 * * *"
     volumes:
-      # Volumes to backup
       - mqtt-certs:/volumes/mqtt-certs:ro
       - mosquitto-data:/volumes/mosquitto-data:ro
       - zigbee2mqtt-data:/volumes/zigbee2mqtt-data:ro
@@ -40,16 +41,16 @@ services:
           memory: 1G
         reservations:
           memory: 40M
+
   restore:
-    <<: *backup
-    cap_add: ["CHOWN", "SETGID", "SETUID", "DAC_OVERRIDE"]
+    <<: *volume-backup
+    container_name: volume-restore
     restart: on-failure:1
-    profiles: 
+    profiles:
       - restore
-    container_name: restore
-    command: [ "/backup.sh", "restore_all", "${RESTORE_FROM}" ]
+    cap_add: ["CHOWN", "FOWNER", "SETGID", "SETUID", "DAC_OVERRIDE"]
+    command: ["restore-all"]
     volumes:
-      # Volumes to backup
       - mqtt-certs:/volumes/mqtt-certs
       - mosquitto-data:/volumes/mosquitto-data
       - zigbee2mqtt-data:/volumes/zigbee2mqtt-data

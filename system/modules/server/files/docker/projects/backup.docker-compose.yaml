@@ -12,18 +12,18 @@ secrets:
   SSH_KEY:
     file: ../common/docker/secrets/backup_rsa
 services:
-  # Backup docker volumes to ftp
-  # TODO: use labels for that
+  # Backup docker volumes to sftp
   volume-backup:
-    image: nikarh/fileserver-sftpd-backup
+    image: ghcr.io/nikarh/docker-volume-backups:main
     container_name: volume-backup
     <<: [*service-defaults, *hardened]
     environment:
-      MAXIMUM_BACKUP_NUMBER: 3
-      SFTP_HOST: files
-      SFTP_PORT: 2222
-      SFTP_USER: backups
-      SFTP_ROOT: /data/${DOMAIN}/
+      STORAGE_DRIVER: sftp
+      SFTP_URL: "ssh://backups@files:22/data/${DOMAIN}-v2"
+      SFTP_PRIVATE_KEY_FILE: /run/secrets/SSH_KEY
+      RETENTION_POLICY: count
+      RETENTION_COUNT: 3
+      BACKUP_CRON: "0 1 * * *"
     volumes:
       # Volumes to backup
       - traefik-data:/volumes/traefik-data:ro
