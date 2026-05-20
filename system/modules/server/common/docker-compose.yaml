@@ -147,7 +147,7 @@ services:
       - authelia
       - "--config=/etc/authelia/configuration.yml"
       - "--config=/etc/authelia/secrets/configuration.oidc.yml"
-      - "--config.experimental.filters=expand-env"
+      - "--config.experimental.filters=template"
     volumes:
       - authelia-data:/config/data:rw
       - /var/lib/docker-services/volumes/authelia:/etc/authelia:ro
