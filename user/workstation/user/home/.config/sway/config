@@ -84,7 +84,10 @@ font pango:Cantarell 12
 client.focused          #44475A #44475A #F8F8F2 #44475A   #44475A
 client.focused_inactive #44475A #44475A #F8F8F2 #44475A   #44475A
 client.unfocused        #303240 #303240 #BFBFBF #303240   #303240
-client.urgent           #44475A #44475A #F8F8F2 #44475A   #44475A
+#client.urgent           #44475A #44475A #F8F8F2 #44475A   #44475A
+#client.urgent           #ff0000 #ff0000 #ffffff #ff0000 #ff0000
+#client.urgent           #FF5555 #FF5555 #282A36 #FFB86C   #FF5555
+client.urgent           #E95678 #E95678 #F8F8F2 #FFB86C   #E95678
 client.placeholder      #282A36 #282A36 #F8F8F2 #282A36   #282A36
 client.background       #F8F8F2
 
@@ -197,7 +200,7 @@ mode "resize" {
 }
 
 bar {
-        swaybar_command waybar
+        swaybar_command /home/nikarh/workspace/claude/Waybar/build/waybar
     
         # swaybar_command sw_swaybar
         # swaybar_command ""
@@ -252,5 +255,6 @@ assign [app_id="audacious"] $ws7
 assign [instance="steamwebhelper"] $ws8
 assign [app_id="pritunl"] $ws9
 
+for_window [app_id="org.keepassxc.KeePassXC" title=".*Access Request.*"] floating enable, sticky enable, border pixel 4, urgent enable
 for_window [class="jetbrains-toolbox"] floating enable
-for_window [app_id="flameshot"] border pixel 0, floating enable, fullscreen disable, move absolute position 0 0
+
