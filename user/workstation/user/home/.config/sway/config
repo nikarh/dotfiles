@@ -1,3 +1,5 @@
+xwayland force
+
 set $ws1 "1:  "
 set $ws2 "2:  "
 set $ws3 "3:  "
@@ -61,7 +63,7 @@ seat seat0 hide_cursor 3000
 
 seat seat0 xcursor_theme Dracula-cursors 32
 
-output "*" bg "/usr/share/backgrounds/wallpaper.png" fit
+output "*" bg "/usr/share/backgrounds/wallpaper.png" fill
 
 bindsym XF86AudioPlay exec "betterlockscreen -l dim"
 bindsym XF86AudioStop exec "dm-tool switch-to-greeter"
