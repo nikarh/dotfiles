@@ -15,7 +15,9 @@ echo 'auto' > '/sys/block/sdc/device/power/control';
 echo 'auto' > '/sys/block/sdd/device/power/control';
 echo 'auto' > '/sys/block/sde/device/power/control';
 
-echo 'auto' > '/sys/bus/pci/devices/0000:03:00.0/power/control';
+# Keep eth always on, otherwise it goes to sleep when cable is unplugged, and when replugged kernel doesnt get carrier gained event
+#echo 'auto' > '/sys/bus/pci/devices/0000:03:00.0/power/control';
+
 echo 'auto' > '/sys/bus/pci/devices/0000:00:1f.0/power/control';
 echo 'auto' > '/sys/bus/pci/devices/0000:00:00.1/power/control';
 echo 'auto' > '/sys/bus/pci/devices/0000:04:00.0/power/control';
