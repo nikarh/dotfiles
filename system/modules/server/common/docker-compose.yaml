@@ -53,8 +53,9 @@ services:
     labels:
       - healthmon.role=task
   # Read-only docker.sock proxy
+  # Pin a checked version as yolo updating it is a sec risk
   docker-socket-proxy:
-    image: "11notes/socket-proxy:2.1.6"
+    image: "ghcr.io/11notes/socket-proxy:2.1.7@sha256:9972717989391a6fb5d0854529ca24147b6f7c9a729932535b7117399f751c39"
     container_name: docker-socket-proxy
     <<: [*service-defaults, *hardened]
     cap_add: ["CHOWN", "SETGID", "SETUID", "DAC_OVERRIDE"]
@@ -76,7 +77,8 @@ services:
           memory: 20M
   # Auto-update containers.
   watchtower:
-    image: nickfedor/watchtower
+    # Pin a checked version as yolo updating it is a sec risk
+    image: ghcr.io/nicholas-fedor/watchtower:1.17.1@sha256:201f6ce8beaece2df4d1554d0f42dc14b0e17c92bbba34c9d2d47e29dae0718b
     container_name: watchtower
     <<: [*service-defaults, *hardened]
     environment:
