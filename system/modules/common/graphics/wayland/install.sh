@@ -1,5 +1,5 @@
 pkg sway swayidle swaybg swaylock \
-    waybar \
+    waybar-nikarh \
     nwg-displays shikane \
     xdg-desktop-portal-wlr \
     xdg-desktop-portal-gtk \

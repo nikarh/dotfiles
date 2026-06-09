@@ -202,7 +202,7 @@ mode "resize" {
 }
 
 bar {
-        swaybar_command /home/nikarh/workspace/claude/Waybar/build/waybar
+        swaybar_command waybar
     
         # swaybar_command sw_swaybar
         # swaybar_command ""
