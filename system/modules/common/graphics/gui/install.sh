@@ -12,7 +12,6 @@ pkg alacritty xterm-alacritty-symlink \
     qdirstat keepassxc qbittorrent syncthing \
     flameshot \
     telegram-desktop \
-    onlyoffice-bin \
     krita inkscape \
     audacious vlc
 
@@ -30,4 +29,4 @@ pkg openscad-git openscad-bosl2-git
 sudo cp -ufrT "$ROOT/root/" /
 
 # Systemd units
-disable-unit getty@tty1.service 
+disable-unit getty@tty1.service

@@ -4,7 +4,6 @@ hooks:
   - groups
   - systemd
 modules:
-  - name: common/yay
   - name: common/base
     hostname: files
     timezone: Europe/Riga

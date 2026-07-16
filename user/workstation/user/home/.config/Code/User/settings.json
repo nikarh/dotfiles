@@ -545,7 +545,7 @@
   "[github-actions-workflow]": {
     "editor.defaultFormatter": "redhat.vscode-yaml"
   },
-  "extensions.autoUpdate": false,
+  "extensions.autoUpdate": "off",
   "go.alternateTools": {
     
   },
