@@ -55,7 +55,7 @@ services:
   # Read-only docker.sock proxy
   # Pin a checked version as yolo updating it is a sec risk
   docker-socket-proxy:
-    image: "ghcr.io/11notes/socket-proxy:2.1.7@sha256:9972717989391a6fb5d0854529ca24147b6f7c9a729932535b7117399f751c39"
+    image: "ghcr.io/11notes/socket-proxy:2.1.7@sha256:6806f9b3cfe64325ae2dc967381412e415d868c9542753962fd2e73f4f9686f1"
     container_name: docker-socket-proxy
     <<: [*service-defaults, *hardened]
     cap_add: ["CHOWN", "SETGID", "SETUID", "DAC_OVERRIDE"]
@@ -78,7 +78,7 @@ services:
   # Auto-update containers.
   watchtower:
     # Pin a checked version as yolo updating it is a sec risk
-    image: ghcr.io/nicholas-fedor/watchtower:1.17.1@sha256:201f6ce8beaece2df4d1554d0f42dc14b0e17c92bbba34c9d2d47e29dae0718b
+    image: ghcr.io/nicholas-fedor/watchtower:1.17.1@sha256:a0859caf70e234dcd4ac893a62b4a8b7ac08543250b85e9ccf060190a4cb847c
     container_name: watchtower
     <<: [*service-defaults, *hardened]
     environment:

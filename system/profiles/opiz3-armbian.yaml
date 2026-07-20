@@ -1,13 +1,12 @@
 hooks:
-  - pacman
-  - initrd
+  - apt
   - groups
   - systemd
 modules:
   - name: common/base
     hostname: opiz3
     timezone: Europe/Riga
-    kernel: linux-opi
   - name: common/docker
   - name: server/common
   - name: server/opiz3
+
