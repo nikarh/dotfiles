@@ -7,9 +7,9 @@ enable-unit --now systemd-networkd
 
 function run-compose {
     if command -v docker-compose > /dev/null 2>&1; then
-        docker-compose "$@"
+        sudo docker-compose "$@"
     else
-        docker compose "$@"
+        sudo docker compose "$@"
     fi
 }
 

@@ -16,6 +16,7 @@ modules:
   - name: common/ucode
   - name: common/btrfs
   - name: common/docker
+    insecure: true
   - name: common/console-tools
   - name: server/common
   - name: server/files

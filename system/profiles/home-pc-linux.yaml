@@ -25,6 +25,7 @@ modules:
     gui: true
   - name: common/docker
     enable: docker.socket
+    insecure: true
   - name: common/gpu-drivers
     drivers: nvidia
   - name: common/graphics/plymouth

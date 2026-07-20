@@ -45,4 +45,6 @@ fi
 
 enable-unit "${ARGS_enable:-docker.service}"
 
-add-user-to-groups docker
+if [ -n "$ARGS_insecure" ]; then
+    add-user-to-groups docker
+fi
